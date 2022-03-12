@@ -1,0 +1,39 @@
+{
+  "name": "remix-app-template",
+  "private": true,
+  "description": "",
+  "license": "",
+  "sideEffects": false,
+  "scripts": {
+    "build": "cross-env NODE_ENV=production remix build",
+    "dev": "cross-env NODE_ENV=development remix dev",
+    "postinstall": "remix setup node",
+    "start": "cross-env NODE_ENV=production remix-serve build"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.8.1",
+    "@prisma/client": "^3.10.0",
+    "@remix-run/react": "^1.2.3",
+    "@remix-run/serve": "^1.2.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.0",
+    "mongodb": "^4.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "remix": "^1.2.3"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.2.3",
+    "@remix-run/eslint-config": "^1.2.3",
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
+    "eslint": "^8.9.0",
+    "prisma": "^3.10.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
