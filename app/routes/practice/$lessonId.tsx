@@ -1,3 +1,6 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useReducer, useRef } from "react";
 import { redirect, useLoaderData, useSubmit } from "remix";
 import type { LoaderFunction, ActionFunction } from "remix";
@@ -72,6 +75,8 @@ export default function Lesson() {
     },
     dispatch,
   ] = useReducer(reducer, basicState);
+  console.log("VARIANTS: ", variants);
+  console.log("VARIANTS_STATE: ", variantsState);
   const {
     checkAnswer,
     showResultsPractice,

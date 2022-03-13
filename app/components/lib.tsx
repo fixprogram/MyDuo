@@ -1,6 +1,14 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
 
+type FormButtonProps = {
+  active?: boolean;
+};
+
+type ProgressProps = {
+  progress: number;
+};
+
 const HorizontalList = styled.ul((props) => ({
   display: "flex",
   alignItems: "center",
@@ -95,7 +103,7 @@ const UserImage = styled.img(
   (props) => ({ width: props.width, height: props.height })
 );
 
-const ProgressBar = styled("div")`
+const ProgressBar = styled("div")<ProgressProps>`
   width: 61%;
   height: 16px;
   position: relative;
@@ -115,6 +123,77 @@ const ProgressBar = styled("div")`
   }
 `;
 
+const Input = styled("input")`
+  background-color: #f7f7f7;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 100%;
+`;
+
+const Textarea = styled("textarea")`
+  background-color: #f7f7f7;
+  border-color: #e5e5e5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  -webkit-appearance: none;
+  resize: none;
+  flex-grow: 1;
+`;
+
+const Fieldset = styled("fieldset")`
+  margin-top: 20px;
+`;
+
+const InputTextLabel = styled("label")`
+  width: 49%;
+  margin-right: 1%;
+`;
+
+const TextareaLabel = styled("label")`
+  width: 100%;
+`;
+
+const LabelText = styled("span")`
+  margin-bottom: 10px;
+  display: block;
+  cursor: pointer;
+  color: #4b4b4b;
+  font-size: 15px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+`;
+
+const Legend = styled("legend")`
+  color: #4b4b4b;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  margin-top: 0;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+`;
+
+const FormButton = styled("button")<FormButtonProps>`
+  background-color: ${(props) => (props.active ? "#78C83D" : "#fff")};
+  color: ${(props) => (props.active ? "#fff" : "#1cb0f6")};
+  border: ${(props) => (props.active ? "none" : "2px solid #e5e5e5")};
+  height: 50px;
+  box-shadow: ${(props) =>
+    props.active ? "0px -4px 0px 0px rgba(108, 164, 48, 1) inset" : "none"};
+  width: 150px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: "Montserrat";
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 15px;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -127,4 +206,12 @@ export {
   RatingTitle,
   RatingItem,
   UserImage,
+  Input,
+  Textarea,
+  Fieldset,
+  InputTextLabel,
+  TextareaLabel,
+  LabelText,
+  Legend,
+  FormButton,
 };

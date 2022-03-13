@@ -42,7 +42,7 @@ const Menu = () => {
         </HorizontalList>
       </nav>
       <HorizontalList>
-        <ListItem>Language</ListItem>
+        <ListItem>Project</ListItem>
         <ListItem>Streak</ListItem>
         <ListItem>Profile</ListItem>
       </HorizontalList>
