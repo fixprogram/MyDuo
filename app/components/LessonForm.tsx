@@ -10,48 +10,43 @@ import {
   Legend,
   Textarea,
   TextareaLabel,
+  VisuallyHiddenInput,
 } from "./lib";
 
 type State = {
   steps: Number[];
-  isQuestion: Boolean[];
   active: Boolean;
 };
 
 const reducer = (state: any, action: { type: string; payload?: any }) => {
-  const { steps, isQuestion } = state;
+  const { steps } = state;
   switch (action.type) {
-    case "SHOW_QUESTION":
-      const newIsQuestion = isQuestion.map((item: boolean, index: number) =>
-        action.payload - 1 === index ? !item : item
-      );
-      return { ...state, isQuestion: newIsQuestion };
     case "ADD_STEP":
       const newSteps = [...steps, steps[steps.length - 1] + 1];
-      const addIsQuestion = [...isQuestion, false];
-      return { ...state, steps: newSteps, isQuestion: addIsQuestion };
+      return { ...state, steps: newSteps };
     case "REMOVE_STEP":
       const copySteps = steps.filter(
         (item: number, index: number) => action.payload - 1 !== index
       );
-      const copyQuestion = isQuestion.filter(
-        (item: boolean, index: number) => action.payload - 1 !== index
-      );
-      return { ...state, steps: copySteps, isQuestion: copyQuestion };
+      return { ...state, steps: copySteps };
     default:
       throw new Error(`We don't know this action type: ${action.type}`);
   }
 };
 
-const basicState: State = { steps: [1], isQuestion: [false], active: true };
-export default function NewForm() {
-  const [{ steps, isQuestion, active }, dispatch] = useReducer(
-    reducer,
-    basicState
-  );
+const basicState: State = { steps: [1], active: true };
+export default function LessonForm() {
+  const [{ steps, active }, dispatch] = useReducer(reducer, basicState);
   return (
     <form method="POST" css={{ display: "flex", flexDirection: "column" }}>
-      <Legend>Basic info</Legend>
+      <Legend>Basic info Lesson Form</Legend>
+
+      <VisuallyHiddenInput
+        type="text"
+        name="formType"
+        value="lesson"
+        readOnly
+      />
       <Fieldset>
         <InputTextLabel htmlFor="title">
           <LabelText>Title</LabelText>
@@ -60,15 +55,6 @@ export default function NewForm() {
             id="title"
             name="title"
             placeholder="Enter title for this lesson"
-          />
-        </InputTextLabel>
-        <InputTextLabel htmlFor="innerTitle">
-          <LabelText>Inner title</LabelText>
-          <Input
-            type="text"
-            id="innerTitle"
-            name="innerTitle"
-            placeholder="Enter inner title"
           />
         </InputTextLabel>
       </Fieldset>
@@ -88,88 +74,33 @@ export default function NewForm() {
         <Fragment key={step}>
           <h2>Step {step}</h2>
           <Fieldset>
-            <label htmlFor={`radio${step}`}>
-              Me
-              <input
-                type="radio"
-                name={`radio${step}`}
-                id={`radio${step}`}
-                value="me"
+            <InputTextLabel htmlFor="question">
+              <LabelText>Question</LabelText>
+              <Input
+                type="text"
+                id="question"
+                name="question"
+                placeholder="Enter question for this lesson"
               />
-            </label>
+            </InputTextLabel>
 
-            <label htmlFor={`radio1${step}`}>
-              Node
-              <input
-                type="radio"
-                name={`radio${step}`}
-                id={`radio1${step}`}
-                value="node"
-              />
-            </label>
-
-            <TextareaLabel>
-              <LabelText>Message</LabelText>
+            <TextareaLabel htmlFor={`answer${step}`}>
+              <LabelText>Answer</LabelText>
               <Textarea
-                id={`text${step}`}
-                name="text"
-                placeholder="Type message"
+                id={`answer${step}`}
+                name={`answer${step}`}
+                placeholder="Type answer"
               />
             </TextareaLabel>
 
-            <FormButton
-              type="button"
-              onClick={() => dispatch({ type: "SHOW_QUESTION", payload: step })}
-            >
-              Add question
-            </FormButton>
-
-            {isQuestion[step - 1] ? (
-              <Fieldset>
-                <Input
-                  type="text"
-                  name={`questionTitle${step}`}
-                  placeholder="Enter question title"
-                />
-                <ul>
-                  <li>
-                    <label>
-                      Variant 1
-                      <Input
-                        type="text"
-                        name={`variant${step}`}
-                        placeholder="type first variant"
-                      />
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      Variant 2
-                      <Input
-                        type="text"
-                        name={`variant${step}`}
-                        placeholder="type second variant"
-                      />
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      Variant 3
-                      <Input
-                        type="text"
-                        name={`variant${step}`}
-                        placeholder="type third variant"
-                      />
-                    </label>
-                  </li>
-                </ul>
-                <Input
-                  type="number"
-                  name={`answer${step}`}
-                  placeholder="type right answer"
-                />
-              </Fieldset>
-            ) : null}
+            <TextareaLabel htmlFor={`keywords${step}`}>
+              <LabelText>Keywords</LabelText>
+              <Textarea
+                id={`keywords${step}`}
+                name="keywords"
+                placeholder="Type keywords"
+              />
+            </TextareaLabel>
           </Fieldset>
           {step > 1 ? (
             <FormButton

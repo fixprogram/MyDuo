@@ -14,7 +14,7 @@ export const links = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const data = await db.lesson.findMany({
+  const data = await db.story.findMany({
     take: 20,
     select: { id: true, title: true, description: true, createdAt: true },
     orderBy: { createdAt: "desc" },
@@ -56,7 +56,7 @@ export default function Stories() {
                 <Link
                   key={id}
                   aria-labelledby={title}
-                  to={`/stories/${id}`}
+                  to={`/story/${id}`}
                   css={{
                     display: "flex",
                     flexDirection: "column",

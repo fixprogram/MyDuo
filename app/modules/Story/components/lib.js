@@ -2,26 +2,6 @@
 /** @jsx jsx */
 import styled from "@emotion/styled";
 
-const ProgressBar = styled("div")`
-  width: 61%;
-  height: 16px;
-  position: relative;
-  background-color: #e5e5e5;
-  position: relative;
-  border-radius: 7px;
-  &:before {
-    content: "";
-    display: block;
-    width: ${(props) => props.progress * 100}%;
-    height: 16px;
-    background-color: #79c93d;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 7px;
-  }
-`;
-
 const PracticeFooter = styled("div")`
   position: absolute;
   bottom: 0;
@@ -32,6 +12,7 @@ const PracticeFooter = styled("div")`
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 const PracticeButton = styled("button")`
@@ -118,7 +99,6 @@ const PracticeBodyWelcome = styled("div")``;
 const PracticeBodyResults = styled("div")``;
 
 export {
-  ProgressBar,
   PracticeFooter,
   PracticeButton,
   PracticeBody,

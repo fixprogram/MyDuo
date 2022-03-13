@@ -1,119 +1,49 @@
-const basicVariantsState = {
-  active: null,
-  fade: null,
-  correct: null,
-  incorrect: null,
-};
-
 const basicState = {
-  disabled: false,
-  progress: 0,
-  step: 0,
-  content: [],
-  variants: null,
-  variantsState: basicVariantsState,
-  chosenVariantNum: null,
-  answer: null,
-  caseItem: {},
-  maxSteps: 0,
-  title: "",
-  description: "",
-  taskTitle: "",
+  disabled: false, // For button
+  progress: 0, // Current progress
+  step: 0, // Current step number
+  content: {}, // Current step. Contains Question, Answer and Keywords
+  caseItem: [], // Array of all steps
+  maxSteps: 0, // Max steps
 };
 
-const changePrevItem = (content, chosenVariant) => {
-  let prevItem = content.pop();
-
-  if (prevItem.variants) {
-    prevItem.text = chosenVariant;
-  }
-
-  return [...content, prevItem];
-};
-
-const continueContent = (content, caseItem) => {
-  const newContent =
-    caseItem.steps.length > 0
-      ? [...content, caseItem.steps.shift(0, 1)]
-      : [...content];
-
-  return newContent;
-};
+// The function returns next step if there is any
+const continueContent = (content, caseItem) =>
+  caseItem.length > 0 ? caseItem.shift(0, 1) : content;
 
 const reducer = (state, action) => {
-  const {
-    content,
-    step,
-    maxSteps,
-    caseItem,
-    answer,
-    variants,
-    variantsState,
-    chosenVariantNum,
-  } = state;
-  const { chosenVariantId } = action;
+  const { content, step, maxSteps, caseItem } = state;
   switch (action.type) {
     case "CONTINUE":
-      const newContent = continueContent(content, caseItem);
-
-      const nextItemVariants = newContent[step]
-        ? newContent[step].variants
-        : null;
-
-      const nextItemAnswer = newContent[step].answer;
-
       return {
         ...state,
         progress: (step + 1) / maxSteps,
         step: step + 1,
-        variants: nextItemVariants,
-        answer: nextItemAnswer,
-        disabled: nextItemVariants ? true : false,
-        content: newContent,
+        disabled: true,
+        content: continueContent(content, caseItem),
       };
     case "START":
-      return { ...state, step: step + 1, progress: 1 / maxSteps };
-    case "CHOOSE_ANSWER":
       return {
         ...state,
-        disabled: false,
-        chosenVariant: variants[chosenVariantId],
-        variantsState: { ...variantsState, active: chosenVariantId },
-        chosenVariantNum: chosenVariantId,
+        disabled: true,
+        step: step + 1,
+        progress: 1 / maxSteps,
       };
     case "CHECK_ANSWER":
-      if (variantsState.correct !== null) {
+      if (action.payload === content.answer) {
         return {
           ...state,
           disabled: false,
-          variants: null,
           content: continueContent(content, caseItem),
           step: step + 1,
-          variantsState: basicVariantsState,
-        };
-      }
-      if (chosenVariantNum === answer) {
-        return {
-          ...state,
-          content: changePrevItem(
-            content,
-            variants[chosenVariantNum],
-            caseItem,
-            false
-          ),
-          variantsState: { correct: chosenVariantNum },
-          chosenVariantNum: null,
         };
       }
       return {
         ...state,
         disabled: true,
-        variantsState: {
-          ...variantsState,
-          active: null,
-          incorrect: chosenVariantNum,
-        },
       };
+    case "CHANGE_DISABLED":
+      return { ...state, disabled: action.payload };
     case "RESULTS":
       return {
         ...state,
@@ -125,15 +55,12 @@ const reducer = (state, action) => {
         ...basicState,
       };
     case "SET_CASE":
-      const data = action.payload;
-      console.log("SET_CASE:", data);
+      const { steps } = action.payload;
       return {
         ...basicState,
-        caseItem: data,
-        maxSteps: data.steps.length,
-        content: [data.steps.shift(0, 1)],
-        title: data.innerTitle,
-        description: data.description,
+        caseItem: steps,
+        maxSteps: steps.length + 1,
+        content: steps.shift(0, 1),
       };
     default:
       throw new Error(`We don't know this case: ${action.type}`);

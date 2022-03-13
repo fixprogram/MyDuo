@@ -1,32 +1,13 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { useEffect, useRef, Fragment } from "react";
 import { jsx } from "@emotion/react";
-import {
-  PracticeBody,
-  PracticeBodyTitle,
-  PracticeBodyWelcome,
-  PracticeBodyResults,
-  PracticeBodyMessage,
-} from "./lib";
-import { UserImage } from "../../../components/lib";
-import PracticeVariants from "./PracticeVariants";
+import { Fragment } from "react";
+import { PracticeBody, PracticeBodyWelcome, PracticeBodyResults } from "./lib";
+import { Textarea, TextareaLabel } from "~/components/lib";
 
-const Body = ({
-  title,
-  step,
-  maxSteps,
-  variants,
-  content,
-  check,
-  variantsState,
-  taskStory,
-  taskTitle,
-}) => {
+const Body = ({ step, maxSteps, content, setValue }) => {
   return (
     <PracticeBody>
-      <PracticeBodyTitle>{title}</PracticeBodyTitle>
-
       <div
         css={{
           paddingTop: 50,
@@ -37,34 +18,20 @@ const Body = ({
         }}
       >
         {step === 0 ? (
-          <PracticeBodyWelcome>{taskStory}</PracticeBodyWelcome>
+          <PracticeBodyWelcome>Welcome Screen</PracticeBodyWelcome>
         ) : step === maxSteps + 1 ? (
           <PracticeBodyResults>Results Screen</PracticeBodyResults>
         ) : (
           <Fragment>
-            {content.map((item, idx) => (
-              <div
-                key={idx}
-                css={{
-                  marginTop: `${idx === 0 ? "auto" : null}`,
-                  marginBottom: 26,
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: `${
-                    item.author === "node" ? "row" : "row-reverse"
-                  }`,
-                }}
-              >
-                {item.text}
-              </div>
-            ))}
-            {variants ? (
-              <PracticeVariants
-                variants={variants}
-                onCheck={check}
-                variantsState={variantsState}
+            <h2>{content.question}</h2>
+            <TextareaLabel>
+              <Textarea
+                id={`answer`}
+                name="answer"
+                placeholder="Enter answer"
+                onChange={(e) => setValue(e.target.value)}
               />
-            ) : null}
+            </TextareaLabel>
           </Fragment>
         )}
       </div>

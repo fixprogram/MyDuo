@@ -17,7 +17,7 @@ export const links = () => {
 export const loader: LoaderFunction = async () => {
   const data = await db.lesson.findMany({
     take: 20,
-    select: { id: true, title: true, description: true, createdAt: true },
+    select: { id: true, title: true, createdAt: true },
     orderBy: { createdAt: "desc" },
   });
   return data;
@@ -25,7 +25,6 @@ export const loader: LoaderFunction = async () => {
 
 export default function Lessons() {
   const lessons = useLoaderData();
-  console.log(lessons);
   return (
     <React.Fragment>
       <Menu />
@@ -44,7 +43,7 @@ export default function Lessons() {
               <Link
                 key={id}
                 aria-labelledby={title}
-                to={`/practice/${id}`}
+                to={`/lesson/${id}`}
                 css={{
                   display: "flex",
                   flexDirection: "column",

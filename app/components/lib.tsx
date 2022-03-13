@@ -194,6 +194,18 @@ const FormButton = styled("button")<FormButtonProps>`
   border-radius: 15px;
 `;
 
+const VisuallyHiddenInput = styled("input")`
+  position: absolute;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 0px;
+  margin: 0;
+  padding: 0;
+  border: none;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -214,4 +226,5 @@ export {
   LabelText,
   Legend,
   FormButton,
+  VisuallyHiddenInput,
 };

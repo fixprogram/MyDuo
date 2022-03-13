@@ -11,14 +11,28 @@ datasource db {
 model Lesson {
   id            String  @id @default(auto())  @map("_id") @db.ObjectId
   title         String
-  innerTitle    String
-  description   String
   createdAt     DateTime @default(now())
-  steps         Step[]
+  steps         LessonStep[]
   exp           Int
 }
 
-type Step {
+type LessonStep {
+  number        Int
+  question      String
+  answer        String
+}
+
+model Story {
+  id            String  @id @default(auto())  @map("_id") @db.ObjectId
+  title         String
+  innerTitle    String
+  description   String
+  createdAt     DateTime @default(now())
+  steps         StoryStep[]
+  exp           Int
+}
+
+type StoryStep {
   author        String
   text          String
   number        Int
