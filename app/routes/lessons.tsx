@@ -62,13 +62,15 @@ export default function Lessons() {
                 <b
                   css={{
                     fontSize: "17px",
-                    color: "#4b4b4b",
+                    fontWeight: 700,
+                    color: "#3c3c3c",
                     textAlign: "center",
+                    marginTop: 8,
                   }}
                 >
                   {title}
                 </b>
-                <span
+                {/* <span
                   css={{
                     fontFamily: "Roboto",
                     fontSize: "14px",
@@ -77,7 +79,7 @@ export default function Lessons() {
                   }}
                 >
                   +{16} XP
-                </span>
+                </span> */}
               </Link>
             </PracticeBlock>
           ))}

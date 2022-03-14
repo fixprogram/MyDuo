@@ -70,7 +70,6 @@ export default function Lesson() {
   const {
     checkAnswer,
     showResultsPractice,
-    startPractice,
     continuePractice,
     changeDisabled,
     setCase,
@@ -84,17 +83,15 @@ export default function Lesson() {
 
   const onContinue = () => {
     if (!disabled) {
-      if (currentStep > 0 && currentStep <= maxSteps) {
+      if (currentStep > -1 && currentStep <= maxSteps) {
         if (!nextStep) {
-          checkAnswer(value);
+          checkAnswer(value.trim());
         } else {
           continuePractice();
           setValue("");
         }
       } else {
-        currentStep === 0
-          ? startPractice()
-          : currentStep === maxSteps
+        currentStep === maxSteps
           ? showResultsPractice()
           : currentStep === maxSteps + 1
           ? submit(ref.current, { replace: true })
@@ -117,7 +114,7 @@ export default function Lesson() {
           content={content}
           value={value}
           setValue={(val: string) => {
-            setValue(val.trim());
+            setValue(val);
             if (val.length) {
               changeDisabled(false);
             } else {

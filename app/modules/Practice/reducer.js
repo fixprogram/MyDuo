@@ -29,21 +29,12 @@ const reducer = (state, action) => {
         stateWrong: false,
         nextStep: false,
       };
-    case "START": // Going to first step right after Welcome screen
-      return {
-        ...state,
-        disabled: true,
-        step: 1,
-        content: continueContent(content, caseItem),
-      };
     case "CHECK_ANSWER": // When click the button Check
       if (action.payload === content.answer) {
         return {
           ...state,
           disabled: false,
-          // content: continueContent(content, caseItem),
           nextStep: true,
-          // step: step + 1,
           stateRight: true,
           formDisabled: true,
           progress: step / maxSteps,
@@ -71,10 +62,11 @@ const reducer = (state, action) => {
       const { steps } = action.payload;
       return {
         ...basicState,
-        step: 0,
+        step: 1,
         caseItem: steps,
         maxSteps: steps.length,
-        // content: steps.shift(0, 1),
+        content: steps.shift(0, 1),
+        disabled: true,
       };
     default:
       throw new Error(`We don't know this case: ${action.type}`);

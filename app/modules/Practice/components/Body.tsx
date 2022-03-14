@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import { Fragment } from "react";
-import { PracticeBody, PracticeBodyWelcome, PracticeBodyResults } from "./lib";
+import { PracticeBody, PracticeBodyResults } from "./lib";
 import { Textarea, TextareaLabel } from "~/components/lib";
 
 const Body = ({ step, maxSteps, content, setValue, formDisabled, value }) => {
@@ -17,9 +17,7 @@ const Body = ({ step, maxSteps, content, setValue, formDisabled, value }) => {
           overflowY: "scroll",
         }}
       >
-        {step === 0 ? (
-          <PracticeBodyWelcome>Welcome Screen</PracticeBodyWelcome>
-        ) : step === maxSteps + 1 ? (
+        {step === maxSteps + 1 ? (
           <PracticeBodyResults>Results Screen</PracticeBodyResults>
         ) : (
           <Fragment>

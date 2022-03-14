@@ -3,8 +3,38 @@
 import { jsx } from "@emotion/react";
 import { NavLink } from "remix";
 import { HorizontalList, ListItem } from "./lib";
+import study from "~/styles/study.svg";
+import lessons from "~/styles/practice.svg";
+import stories from "~/styles/forum.svg";
+import shop from "~/styles/shop.svg";
+import studyActive from "~/styles/study-active.svg";
+import lessonsActive from "~/styles/practice-active.svg";
+import storiesActive from "~/styles/forum-active.svg";
+import shopActive from "~/styles/shop-active.svg";
+import { Fragment } from "react";
 
-const MENU = ["study", "lessons", "stories", "new"];
+const MENU = [
+  {
+    title: "study",
+    icon: study,
+    activeIcon: studyActive,
+  },
+  {
+    title: "lessons",
+    icon: lessons,
+    activeIcon: lessonsActive,
+  },
+  {
+    title: "stories",
+    icon: stories,
+    activeIcon: storiesActive,
+  },
+  {
+    title: "new",
+    icon: shop,
+    activeIcon: shopActive,
+  },
+];
 
 const Menu = () => {
   return (
@@ -21,10 +51,10 @@ const Menu = () => {
     >
       <nav>
         <HorizontalList>
-          {MENU.map((item) => (
-            <ListItem key={item}>
+          {MENU.map(({ title, icon, activeIcon }) => (
+            <ListItem key={title}>
               <NavLink
-                to={`/${item}`}
+                to={`/${title}`}
                 className="nav-link"
                 css={{
                   textDecoration: "none",
@@ -33,9 +63,22 @@ const Menu = () => {
                   fontWeight: 700,
                   color: "#AFAFAF",
                   letterSpacing: 0.8,
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                {item}
+                {({ isActive }) => (
+                  <Fragment>
+                    <img
+                      src={isActive ? activeIcon : icon}
+                      width={36}
+                      height={36}
+                      alt={title}
+                      css={{ marginRight: 10 }}
+                    />
+                    {title}
+                  </Fragment>
+                )}
               </NavLink>
             </ListItem>
           ))}

@@ -237,8 +237,9 @@ sup {
 a {
   color: #0d6efd;
 }
+
 a:hover {
-  color: #0a58ca;
+  color: #1cb0f6;
 }
 
 a:not([href]):not([class]),
@@ -488,7 +489,7 @@ progress {
 }
 
 .nav-link.active {
-  color: #0d6efd;
+  color: #1cb0f6;
 }
 
 /* HIDING SCROLLBAR FOR PRACTICE BODY */
@@ -501,3 +502,7 @@ progress {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* .nav-link:hover {
+  color: 
+} */
