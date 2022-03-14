@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import { PracticeBody, PracticeBodyWelcome, PracticeBodyResults } from "./lib";
 import { Textarea, TextareaLabel } from "~/components/lib";
 
-const Body = ({ step, maxSteps, content, setValue }) => {
+const Body = ({ step, maxSteps, content, setValue, formDisabled, value }) => {
   return (
     <PracticeBody>
       <div
@@ -29,7 +29,10 @@ const Body = ({ step, maxSteps, content, setValue }) => {
                 id={`answer`}
                 name="answer"
                 placeholder="Enter answer"
+                value={value}
                 onChange={(e) => setValue(e.target.value)}
+                disabled={formDisabled}
+                css={{ minHeight: 200 }}
               />
             </TextareaLabel>
           </Fragment>

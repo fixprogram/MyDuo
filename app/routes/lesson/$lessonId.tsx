@@ -7,6 +7,7 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { db } from "~/utils/db.server";
 import {
   PracticeFooter,
+  PracticeFooterMessage,
   PracticeButton,
 } from "~/modules/Practice/components/lib";
 import Progress from "~/components/Progress";
@@ -51,13 +52,24 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Lesson() {
   const ref = useRef();
 
-  const [{ disabled, progress, content, step, maxSteps }, dispatch] =
-    useReducer(reducer, basicState);
+  const [
+    {
+      disabled,
+      progress,
+      content,
+      step,
+      maxSteps,
+      stateRight,
+      stateWrong,
+      formDisabled,
+      nextStep,
+    },
+    dispatch,
+  ] = useReducer(reducer, basicState);
   const [value, setValue] = useState("");
   const {
     checkAnswer,
     showResultsPractice,
-    finishPractice,
     startPractice,
     continuePractice,
     changeDisabled,
@@ -70,22 +82,22 @@ export default function Lesson() {
     setCase(lesson);
   }, []);
 
-  const finishLesson = () => {
-    finishPractice();
-    submit(ref.current, { replace: true });
-  };
-
   const onContinue = () => {
     if (!disabled) {
-      if (currentStep > 0 && currentStep < maxSteps) {
-        checkAnswer(value);
+      if (currentStep > 0 && currentStep <= maxSteps) {
+        if (!nextStep) {
+          checkAnswer(value);
+        } else {
+          continuePractice();
+          setValue("");
+        }
       } else {
         currentStep === 0
           ? startPractice()
           : currentStep === maxSteps
           ? showResultsPractice()
           : currentStep === maxSteps + 1
-          ? finishLesson()
+          ? submit(ref.current, { replace: true })
           : continuePractice();
       }
     }
@@ -103,6 +115,7 @@ export default function Lesson() {
           step={step}
           maxSteps={maxSteps}
           content={content}
+          value={value}
           setValue={(val: string) => {
             setValue(val.trim());
             if (val.length) {
@@ -111,11 +124,25 @@ export default function Lesson() {
               changeDisabled(true);
             }
           }}
+          formDisabled={formDisabled}
         />
       )}
-      <PracticeFooter>
-        <PracticeButton active={!disabled} onClick={onContinue}>
-          Continue
+      <PracticeFooter stateRight={stateRight} stateWrong={stateWrong}>
+        <PracticeFooterMessage>
+          <h2 css={{ margin: 0 }}>
+            {stateWrong ? "Right answer: " : "Great!"}
+          </h2>
+          <p css={{ margin: "5px 0 0 0" }}>
+            {stateWrong ? content.answer : null}
+          </p>
+        </PracticeFooterMessage>
+        <PracticeButton
+          active={!disabled}
+          stateRight={stateRight}
+          stateWrong={stateWrong}
+          onClick={onContinue}
+        >
+          {stateRight ? "Next" : stateWrong ? "Continue" : "Check"}
         </PracticeButton>
       </PracticeFooter>
     </section>

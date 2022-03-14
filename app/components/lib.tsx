@@ -140,6 +140,7 @@ const Textarea = styled("textarea")`
   -webkit-appearance: none;
   resize: none;
   flex-grow: 1;
+  box-sizing: border-box;
 `;
 
 const Fieldset = styled("fieldset")`

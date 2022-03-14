@@ -5,6 +5,10 @@ const basicState = {
   content: {}, // Current step. Contains Question, Answer and Keywords
   caseItem: [], // Array of all steps
   maxSteps: 0, // Max steps
+  stateWrong: false, // Was the answer wrong
+  stateRight: false, // Was the answer right
+  formDisabled: false, // Disable form when check the answer
+  nextStep: false, // Next step if the answer was wrong
 };
 
 // The function returns next step if there is any
@@ -14,53 +18,63 @@ const continueContent = (content, caseItem) =>
 const reducer = (state, action) => {
   const { content, step, maxSteps, caseItem } = state;
   switch (action.type) {
-    case "CONTINUE":
+    case "CONTINUE": // Go to next step
       return {
         ...state,
-        progress: (step + 1) / maxSteps,
         step: step + 1,
+        disabled: step === maxSteps ? false : true,
+        content: continueContent(content, caseItem),
+        formDisabled: false,
+        stateRight: false,
+        stateWrong: false,
+        nextStep: false,
+      };
+    case "START": // Going to first step right after Welcome screen
+      return {
+        ...state,
         disabled: true,
+        step: 1,
         content: continueContent(content, caseItem),
       };
-    case "START":
-      return {
-        ...state,
-        disabled: true,
-        step: step + 1,
-        progress: 1 / maxSteps,
-      };
-    case "CHECK_ANSWER":
+    case "CHECK_ANSWER": // When click the button Check
       if (action.payload === content.answer) {
         return {
           ...state,
           disabled: false,
-          content: continueContent(content, caseItem),
-          step: step + 1,
+          // content: continueContent(content, caseItem),
+          nextStep: true,
+          // step: step + 1,
+          stateRight: true,
+          formDisabled: true,
+          progress: step / maxSteps,
         };
       }
       return {
         ...state,
-        disabled: true,
+        stateWrong: true,
+        formDisabled: true,
+        disabled: false,
+        caseItem: [...state.caseItem, content],
+        maxSteps: state.maxSteps + 1,
+        nextStep: true,
       };
     case "CHANGE_DISABLED":
       return { ...state, disabled: action.payload };
     case "RESULTS":
       return {
         ...state,
-        progress: step / maxSteps,
         step: step + 1,
+        stateRight: false,
+        stateWrong: false,
       };
-    case "FINISH":
-      return {
-        ...basicState,
-      };
-    case "SET_CASE":
+    case "SET_CASE": // Initial action to set data right after loading component
       const { steps } = action.payload;
       return {
         ...basicState,
+        step: 0,
         caseItem: steps,
-        maxSteps: steps.length + 1,
-        content: steps.shift(0, 1),
+        maxSteps: steps.length,
+        // content: steps.shift(0, 1),
       };
     default:
       throw new Error(`We don't know this case: ${action.type}`);

@@ -10,18 +10,33 @@ const PracticeFooter = styled("div")`
   border-top: 2px solid #e5e5e5;
   padding: 0 260px;
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
+  background-color: ${(props) =>
+    props.stateRight ? "#d7ffb8" : props.stateWrong ? "#ffdfe0" : "#fff"};
+  color: ${(props) =>
+    props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
+`;
+
+const PracticeFooterMessage = styled("div")`
+  padding-left: 96px;
 `;
 
 const PracticeButton = styled("button")`
-  background-color: ${(props) => (props.active ? "#78C83D" : "#E5E5E5")};
+  border: 0 solid transparent;
+  background-color: ${(props) =>
+    props.stateWrong
+      ? "#ff4b4b"
+      : props.stateRight
+      ? "#58cc02"
+      : props.active
+      ? "#78C83D"
+      : "#E5E5E5"};
   color: ${(props) => (props.active ? "#fff" : "#AFAFAF")};
-  border: none;
+  border-color: ${(props) =>
+    props.stateWrong ? "#ea2b2b" : props.stateRight ? "#58a700" : "white"};
   height: 50px;
-  box-shadow: ${(props) =>
-    props.active ? "0px -4px 0px 0px rgba(108, 164, 48, 1) inset" : "none"};
   width: 150px;
   cursor: ${(props) => (props.active ? "pointer" : "default")};
   text-transform: uppercase;
@@ -100,6 +115,7 @@ const PracticeBodyResults = styled("div")``;
 
 export {
   PracticeFooter,
+  PracticeFooterMessage,
   PracticeButton,
   PracticeBody,
   PracticeBodyTitle,
