@@ -20,6 +20,7 @@ type LessonStep {
   number        Int
   question      String
   answer        String
+  keywords      String[]
 }
 
 model Story {

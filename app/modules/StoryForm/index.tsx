@@ -11,7 +11,7 @@ import {
   Textarea,
   TextareaLabel,
   VisuallyHiddenInput,
-} from "./lib";
+} from "~/components/lib";
 
 type State = {
   steps: Number[];

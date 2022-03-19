@@ -503,6 +503,12 @@ progress {
   scrollbar-width: none; /* Firefox */
 }
 
-/* .nav-link:hover {
-  color: 
-} */
+@keyframes growProgressBar {
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+  100% {
+    --pgPercentage: var(--value);
+  }
+}

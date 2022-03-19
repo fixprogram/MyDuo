@@ -30,7 +30,10 @@ const reducer = (state, action) => {
         nextStep: false,
       };
     case "CHECK_ANSWER": // When click the button Check
-      if (action.payload === content.answer) {
+      const checkKeywords = content.keywords.filter((item) =>
+        action.payload.toLowerCase().includes(item)
+      );
+      if (checkKeywords.length === content.keywords.length) {
         return {
           ...state,
           disabled: false,

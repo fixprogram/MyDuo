@@ -9,6 +9,14 @@ type ProgressProps = {
   progress: number;
 };
 
+type KeywordProps = {
+  active: boolean;
+};
+
+type LessonProgressProps = {
+  exp: string;
+};
+
 const HorizontalList = styled.ul((props) => ({
   display: "flex",
   alignItems: "center",
@@ -207,6 +215,33 @@ const VisuallyHiddenInput = styled("input")`
   border: none;
 `;
 
+const KeywordTemplate = styled("span")<KeywordProps>`
+  margin-right: 10px;
+  cursor: pointer;
+  border: ${(props) => (props.active ? "1px solid blue" : null)};
+`;
+
+const LessonProgress = styled("div")<LessonProgressProps>`
+  animation: growProgressBar 3s 1 forwards;
+  width: 117px;
+  height: 117px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+      closest-side,
+      white 80%,
+      transparent 0 99.9%,
+      white 0
+    ),
+    conic-gradient(#ffd900 calc(${(props) => props.exp} * 1%), #e5e5e5 0);
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Roboto";
+  color: #1cb0f6;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -228,4 +263,6 @@ export {
   Legend,
   FormButton,
   VisuallyHiddenInput,
+  KeywordTemplate,
+  LessonProgress,
 };

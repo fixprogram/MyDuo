@@ -16,21 +16,25 @@ import { Fragment } from "react";
 const MENU = [
   {
     title: "study",
+    link: "study",
     icon: study,
     activeIcon: studyActive,
   },
   {
     title: "lessons",
+    link: "lessons",
     icon: lessons,
     activeIcon: lessonsActive,
   },
   {
     title: "stories",
+    link: "stories",
     icon: stories,
     activeIcon: storiesActive,
   },
   {
     title: "new",
+    link: "new/new-lesson",
     icon: shop,
     activeIcon: shopActive,
   },
@@ -51,10 +55,10 @@ const Menu = () => {
     >
       <nav>
         <HorizontalList>
-          {MENU.map(({ title, icon, activeIcon }) => (
+          {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
               <NavLink
-                to={`/${title}`}
+                to={`/${link}`}
                 className="nav-link"
                 css={{
                   textDecoration: "none",

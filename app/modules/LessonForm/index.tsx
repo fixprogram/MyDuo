@@ -11,30 +11,16 @@ import {
   Textarea,
   TextareaLabel,
   VisuallyHiddenInput,
-} from "./lib";
+} from "~/components/lib";
+import Keywords from "./components/Keywords";
+import { reducer, createId } from "./reducer";
+import type { State, Step } from "./types";
 
-type State = {
-  steps: Number[];
-  active: Boolean;
+const basicState: State = {
+  steps: [{ number: 0, keywords: [], answer: "", id: createId }],
+  active: true,
 };
 
-const reducer = (state: any, action: { type: string; payload?: any }) => {
-  const { steps } = state;
-  switch (action.type) {
-    case "ADD_STEP":
-      const newSteps = [...steps, steps[steps.length - 1] + 1];
-      return { ...state, steps: newSteps };
-    case "REMOVE_STEP":
-      const copySteps = steps.filter(
-        (item: number, index: number) => action.payload - 1 !== index
-      );
-      return { ...state, steps: copySteps };
-    default:
-      throw new Error(`We don't know this action type: ${action.type}`);
-  }
-};
-
-const basicState: State = { steps: [1], active: true };
 export default function LessonForm() {
   const [{ steps, active }, dispatch] = useReducer(reducer, basicState);
   return (
@@ -55,6 +41,7 @@ export default function LessonForm() {
             id="title"
             name="title"
             placeholder="Enter title for this lesson"
+            required
           />
         </InputTextLabel>
       </Fieldset>
@@ -65,14 +52,15 @@ export default function LessonForm() {
             id="description"
             name="description"
             placeholder="Add description of this lesson"
+            required
           />
         </TextareaLabel>
       </Fieldset>
       <hr />
       <Legend>Steps</Legend>
-      {steps.map((step: number) => (
-        <Fragment key={step}>
-          <h2>Step {step}</h2>
+      {steps.map(({ number, keywords, answer, id }: Step, idx: number) => (
+        <Fragment key={id}>
+          <h2>Step {idx + 1}</h2>
           <Fieldset>
             <InputTextLabel htmlFor="question">
               <LabelText>Question</LabelText>
@@ -81,31 +69,57 @@ export default function LessonForm() {
                 id="question"
                 name="question"
                 placeholder="Enter question for this lesson"
+                required
               />
             </InputTextLabel>
 
-            <TextareaLabel htmlFor={`answer${step}`}>
+            <TextareaLabel htmlFor={`answer${number}`}>
               <LabelText>Answer</LabelText>
               <Textarea
-                id={`answer${step}`}
-                name={`answer${step}`}
+                id={`answer${number}`}
+                name={`answer${number}`}
                 placeholder="Type answer"
+                value={answer}
+                onChange={(evt) =>
+                  dispatch({
+                    type: "SET_ANSWER",
+                    payload: { answer: evt.target.value, number },
+                  })
+                }
+                required
               />
             </TextareaLabel>
 
-            <TextareaLabel htmlFor={`keywords${step}`}>
-              <LabelText>Keywords</LabelText>
-              <Textarea
-                id={`keywords${step}`}
-                name="keywords"
+            <TextareaLabel htmlFor={`keywords${number}`}>
+              <LabelText>Choose keywords</LabelText>
+              <Keywords
+                answer={answer}
+                onSet={(keywords: any) =>
+                  dispatch({
+                    type: "SET_KEYWORDS",
+                    payload: {
+                      keywords,
+                      number,
+                    },
+                  })
+                }
+              />
+
+              <VisuallyHiddenInput
+                id={`keywords${number}`}
+                name={`keywords${number}`}
                 placeholder="Type keywords"
+                value={keywords}
+                readOnly
               />
             </TextareaLabel>
           </Fieldset>
-          {step > 1 ? (
+          {number > 0 ? (
             <FormButton
               type="button"
-              onClick={() => dispatch({ type: "REMOVE_STEP", payload: step })}
+              onClick={() =>
+                dispatch({ type: "REMOVE_STEP", payload: { number: id } })
+              }
             >
               Remove step
             </FormButton>

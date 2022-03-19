@@ -6,7 +6,7 @@ import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
 import Menu from "~/components/Menu";
 import Rating from "~/components/Rating";
-import { PracticeBlock } from "~/components/lib";
+import { LessonProgress, PracticeBlock } from "~/components/lib";
 import styles from "~/styles/index.css";
 import React from "react";
 
@@ -17,7 +17,7 @@ export const links = () => {
 export const loader: LoaderFunction = async () => {
   const data = await db.lesson.findMany({
     take: 20,
-    select: { id: true, title: true, createdAt: true },
+    select: { id: true, title: true, createdAt: true, exp: true },
     orderBy: { createdAt: "desc" },
   });
   return data;
@@ -38,7 +38,7 @@ export default function Lessons() {
         }}
       >
         <section css={{ width: "43%", marginLeft: "10%" }}>
-          {lessons?.map(({ title, id }, i) => (
+          {lessons?.map(({ title, id, exp }, i) => (
             <PracticeBlock key={i}>
               <Link
                 key={id}
@@ -52,13 +52,7 @@ export default function Lessons() {
                   textDecoration: "none",
                 }}
               >
-                <div
-                  css={{
-                    width: "117px",
-                    height: "117px",
-                    backgroundColor: "#AFAFAF",
-                  }}
-                ></div>
+                <LessonProgress exp={exp}>{exp}%</LessonProgress>
                 <b
                   css={{
                     fontSize: "17px",
@@ -70,16 +64,6 @@ export default function Lessons() {
                 >
                   {title}
                 </b>
-                {/* <span
-                  css={{
-                    fontFamily: "Roboto",
-                    fontSize: "14px",
-                    letterSpacing: 0.4,
-                    color: "#AFAFAF",
-                  }}
-                >
-                  +{16} XP
-                </span> */}
               </Link>
             </PracticeBlock>
           ))}
