@@ -174,14 +174,15 @@ address {
 
 ol,
 ul {
-  padding-left: 2rem;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
 ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
 }
 
 ol ol,

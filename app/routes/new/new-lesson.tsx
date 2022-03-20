@@ -1,4 +1,5 @@
 import { ActionFunction, redirect } from "remix";
+import Form from "~/modules/Form";
 import LessonForm from "~/modules/LessonForm";
 import { db } from "~/utils/db.server";
 
@@ -26,5 +27,5 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewLesson() {
-  return <LessonForm />;
+  return <Form />;
 }

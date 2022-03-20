@@ -6,6 +6,8 @@ import { Fragment } from "react";
 import Menu from "~/components/Menu";
 import styles from "~/styles/index.css";
 import { Link } from "react-router-dom";
+import { Main } from "~/components/lib";
+import Forms from "~/components/Forms";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -26,25 +28,35 @@ export default function New() {
   return (
     <Fragment>
       <Menu />
-      <main
-        css={{
-          padding: "0 10%",
-          display: "flex",
-        }}
-      >
+      <Main>
         <Outlet />
 
-        <div
-          css={{ marginLeft: 100, display: "flex", flexDirection: "column" }}
-        >
-          Saved Forms
-          {forms.map((item) => (
-            <NavLink to={item.link} key={item.title}>
-              {item.title}
-            </NavLink>
-          ))}
-        </div>
-      </main>
+        <Forms>
+          <ul>
+            {forms.map((item) => (
+              <li key={item.title} css={{ borderRadius: 16, marginBottom: 2 }}>
+                <NavLink
+                  to={item.link}
+                  css={{
+                    color: "#3c3c3c",
+                    display: "block",
+                    fontSize: "16px",
+                    fontWeight: 700,
+                    overflow: "hidden",
+                    padding: "15px 20px",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    textDecoration: "none",
+                  }}
+                >
+                  {item.title}
+                </NavLink>
+              </li>
+            ))}
+            <NavLink to={""}>Create a new form</NavLink>
+          </ul>
+        </Forms>
+      </Main>
     </Fragment>
   );
 }

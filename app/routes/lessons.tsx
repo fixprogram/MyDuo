@@ -1,12 +1,17 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Outlet, useLoaderData, Link } from "remix";
+import { useLoaderData, Link } from "remix";
 import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
 import Menu from "~/components/Menu";
 import Rating from "~/components/Rating";
-import { LessonProgress, PracticeBlock } from "~/components/lib";
+import {
+  LessonProgress,
+  LessonTitle,
+  Main,
+  PracticeBlock,
+} from "~/components/lib";
 import styles from "~/styles/index.css";
 import React from "react";
 
@@ -28,15 +33,7 @@ export default function Lessons() {
   return (
     <React.Fragment>
       <Menu />
-      <main
-        css={{
-          padding: "0 10%",
-          marginTop: 24,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
-      >
+      <Main>
         <section css={{ width: "43%", marginLeft: "10%" }}>
           {lessons?.map(({ title, id, exp }, i) => (
             <PracticeBlock key={i}>
@@ -53,24 +50,13 @@ export default function Lessons() {
                 }}
               >
                 <LessonProgress exp={exp}>{exp}%</LessonProgress>
-                <b
-                  css={{
-                    fontSize: "17px",
-                    fontWeight: 700,
-                    color: "#3c3c3c",
-                    textAlign: "center",
-                    marginTop: 8,
-                  }}
-                >
-                  {title}
-                </b>
+                <LessonTitle>{title}</LessonTitle>
               </Link>
             </PracticeBlock>
           ))}
         </section>
         {/* <Rating /> */}
-      </main>
-      <Outlet />
+      </Main>
     </React.Fragment>
   );
 }

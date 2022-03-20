@@ -21,19 +21,19 @@ const MENU = [
     activeIcon: studyActive,
   },
   {
-    title: "lessons",
+    title: "repeat",
     link: "lessons",
     icon: lessons,
     activeIcon: lessonsActive,
   },
   {
-    title: "stories",
+    title: "practice",
     link: "stories",
     icon: stories,
     activeIcon: storiesActive,
   },
   {
-    title: "new",
+    title: "constructor",
     link: "new/new-lesson",
     icon: shop,
     activeIcon: shopActive,
@@ -48,7 +48,7 @@ const Menu = () => {
         width: "100vw",
         borderTop: "1px solid #DADCDE",
         borderBottom: "2px solid #DADCDE",
-        padding: "0 150px",
+        padding: "0 10%",
         display: "flex",
         justifyContent: "space-between",
       }}

@@ -30,7 +30,6 @@ const Body = ({ step, maxSteps, content, setValue, formDisabled, value }) => {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 disabled={formDisabled}
-                css={{ minHeight: 200 }}
               />
             </TextareaLabel>
           </Fragment>

@@ -144,6 +144,7 @@ const Textarea = styled("textarea")`
   border-color: #e5e5e5;
   border-radius: 10px;
   padding: 10px 12px;
+  min-height: 200px;
   width: 100%;
   -webkit-appearance: none;
   resize: none;
@@ -242,6 +243,21 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   color: #1cb0f6;
 `;
 
+const Main = styled("main")`
+  padding: 0 10%;
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const LessonTitle = styled("b")`
+  font-size: 17px;
+  font-weight: 700;
+  color: #3c3c3c;
+  text-align: center;
+  margin-top: 8px;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -265,4 +281,6 @@ export {
   VisuallyHiddenInput,
   KeywordTemplate,
   LessonProgress,
+  Main,
+  LessonTitle,
 };
