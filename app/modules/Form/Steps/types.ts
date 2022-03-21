@@ -14,4 +14,6 @@ export type FieldsetType = {
   number: number;
   answer: string;
   setAnswer: Function;
+  setKeywords?: Function;
+  keywords?: string[];
 };

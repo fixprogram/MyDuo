@@ -34,6 +34,7 @@ export default function Steps() {
       {steps.map(
         ({ number, keywords, answer, style, id }: Step, idx: number) => (
           <Fragment key={id}>
+            <VisuallyHiddenInput type="text" name="step" value="idx" readOnly />
             <StepHeader>
               <h2 css={{ marginRight: "auto" }}>Step {idx + 1}</h2>
 
@@ -104,6 +105,16 @@ export default function Steps() {
                       payload: { answer, number },
                     })
                   }
+                  setKeywords={(keywords: any) =>
+                    dispatch({
+                      type: "SET_KEYWORDS",
+                      payload: {
+                        keywords,
+                        number,
+                      },
+                    })
+                  }
+                  keywords={keywords}
                 />
               ) : style === "Insert" ? (
                 <InsertWords
@@ -118,30 +129,6 @@ export default function Steps() {
                 />
               ) : null}
             </div>
-
-            <TextareaLabel htmlFor={`keywords${number}`}>
-              <LabelText>Choose keywords</LabelText>
-              <Keywords
-                answer={answer}
-                onSet={(keywords: any) =>
-                  dispatch({
-                    type: "SET_KEYWORDS",
-                    payload: {
-                      keywords,
-                      number,
-                    },
-                  })
-                }
-              />
-
-              <VisuallyHiddenInput
-                id={`keywords${number}`}
-                name={`keywords${number}`}
-                placeholder="Type keywords"
-                value={keywords}
-                readOnly
-              />
-            </TextareaLabel>
           </Fragment>
         )
       )}

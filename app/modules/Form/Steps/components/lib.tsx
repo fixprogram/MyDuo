@@ -22,4 +22,19 @@ const StyleButton = styled("button")`
   font-family: "Roboto";
 `;
 
-export { StepHeader, ChooseStyle, StyleButton };
+const InsertWordsTextBlock = styled("div")`
+  min-height: 200px;
+  width: 100%;
+  margin-top: -206px;
+  padding: 10px 12px;
+  border: 1px solid #e5e5e5;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  position: relative;
+  z-index: ${(props) => (props.showText ? "1" : "-1")};
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+`;
+
+export { StepHeader, ChooseStyle, StyleButton, InsertWordsTextBlock };

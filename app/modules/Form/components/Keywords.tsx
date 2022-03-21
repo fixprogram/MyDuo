@@ -21,7 +21,6 @@ export default function Keywords({ answer, onSet }) {
             key={idx}
             onSet={(word: any) =>
               setKeywords((prevArr) => {
-                console.log(prevArr);
                 if (prevArr?.find((word) => word === item)) {
                   prevArr.splice(prevArr.indexOf(word), 1);
                   return prevArr;

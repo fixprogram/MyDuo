@@ -150,6 +150,8 @@ const Textarea = styled("textarea")`
   resize: none;
   flex-grow: 1;
   box-sizing: border-box;
+  position: relative;
+  z-index: 0;
 `;
 
 const Fieldset = styled("fieldset")`
