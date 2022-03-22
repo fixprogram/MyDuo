@@ -16,10 +16,11 @@ const reducer = (
   const { steps } = state;
   switch (action.type) {
     case "SET_STYLE": {
-      const { style } = action.payload;
-      let lastChild = steps.pop();
-      lastChild.style = style;
-      return { ...state, steps: [...steps, lastChild] };
+      const { style, id } = action.payload;
+      const newSteps = steps.map((step) =>
+        step.id === id ? { ...step, style: style } : { ...step }
+      );
+      return { ...state, steps: [...newSteps] };
     }
     case "SET_ANSWER": {
       console.log("SEtting answer");

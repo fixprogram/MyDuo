@@ -11,11 +11,11 @@ import {
   PracticeFooterTitle,
   PracticeFooterText,
   PracticeButton,
-} from "~/modules/Practice/components/lib";
+} from "~/modules/Repeat/components/lib";
 import Progress from "~/components/Progress";
-import actionCreator from "~/modules/Practice/actions";
-import { reducer, basicState } from "~/modules/Practice/reducer";
-import Body from "~/modules/Practice/components/Body";
+import actionCreator from "~/modules/Repeat/actions";
+import { reducer, basicState } from "~/modules/Repeat/reducer";
+import Body from "~/modules/Repeat/components/Body";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const lesson = await db.lesson.findUnique({

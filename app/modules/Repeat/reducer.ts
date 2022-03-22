@@ -57,7 +57,7 @@ const reducer = (state, action) => {
             ) =>
               action.payload.find(
                 (payloadItem) =>
-                  payloadItem.value.toLowerCase() === item.toLowerCase()
+                  payloadItem.value.trim().toLowerCase() === item.toLowerCase()
               )
           );
           if (checkAnswer.length === content.answer.length) {
@@ -67,7 +67,7 @@ const reducer = (state, action) => {
         }
         case "Question": {
           const checkKeywords = content.keywords.filter((item) =>
-            action.payload.toLowerCase().includes(item.toLowerCase())
+            action.payload.trim().toLowerCase().includes(item.toLowerCase())
           );
           if (
             content.keywords[0].length > 0 &&
@@ -87,7 +87,7 @@ const reducer = (state, action) => {
           return negativeState;
         }
         default: {
-          return negativeState;
+          throw new Error(`We don't know this type: ${action.type}`);
         }
       }
     case "CHANGE_DISABLED":

@@ -68,7 +68,7 @@ export default function Steps() {
                     onClick={() =>
                       dispatch({
                         type: "SET_STYLE",
-                        payload: { style: "Question" },
+                        payload: { style: "Question", id },
                       })
                     }
                   >
@@ -79,7 +79,7 @@ export default function Steps() {
                     onClick={() =>
                       dispatch({
                         type: "SET_STYLE",
-                        payload: { style: "Insert" },
+                        payload: { style: "Insert", id },
                       })
                     }
                   >
@@ -90,7 +90,7 @@ export default function Steps() {
                     onClick={() =>
                       dispatch({
                         type: "SET_STYLE",
-                        payload: { style: "Variants" },
+                        payload: { style: "Variants", id },
                       })
                     }
                   >
@@ -101,7 +101,7 @@ export default function Steps() {
                     onClick={() =>
                       dispatch({
                         type: "SET_STYLE",
-                        payload: { style: "Pairs" },
+                        payload: { style: "Pairs", id },
                       })
                     }
                   >
@@ -132,7 +132,7 @@ export default function Steps() {
                   setStyles={() =>
                     dispatch({
                       type: "SET_STYLE",
-                      payload: { style: "" },
+                      payload: { style: "", id },
                     })
                   }
                   keywords={keywords}
@@ -150,7 +150,7 @@ export default function Steps() {
                   setStyles={() =>
                     dispatch({
                       type: "SET_STYLE",
-                      payload: { style: "" },
+                      payload: { style: "", id },
                     })
                   }
                 />
@@ -167,7 +167,7 @@ export default function Steps() {
                   setStyles={() =>
                     dispatch({
                       type: "SET_STYLE",
-                      payload: { style: "" },
+                      payload: { style: "", id },
                     })
                   }
                 />
@@ -184,17 +184,17 @@ export default function Steps() {
                   setStyles={() =>
                     dispatch({
                       type: "SET_STYLE",
-                      payload: { style: "" },
+                      payload: { style: "", id },
                     })
                   }
                 />
               ) : null}
             </div>
+            <div ref={myRef}></div>
           </Fragment>
         )
       )}
       <hr />
-      <div ref={myRef}></div>
     </Fragment>
   );
 }

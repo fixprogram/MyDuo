@@ -12,7 +12,7 @@ export default function QuestionAnswerPractice({
         name="answer"
         placeholder="Enter answer"
         value={value}
-        onChange={(e) => setValue(e.target.value.trim())}
+        onChange={(e) => setValue(e.target.value)}
         disabled={formDisabled}
       />
     </TextareaLabel>

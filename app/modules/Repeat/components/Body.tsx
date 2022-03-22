@@ -3,8 +3,6 @@
 import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useState } from "react";
 import { PracticeBody, PracticeBodyResults } from "./lib";
-import { Textarea, TextareaLabel } from "~/components/lib";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
 import QuestionAnswerPractice from "./QuestionAnswerPractice";
 import InsertWordsPractice from "./InsertWordsPractice";
 import VariantsPractice from "./VariantsPractice";

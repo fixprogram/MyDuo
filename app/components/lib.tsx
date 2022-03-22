@@ -118,16 +118,26 @@ const ProgressBar = styled("div")<ProgressProps>`
   background-color: #e5e5e5;
   position: relative;
   border-radius: 7px;
-  &:before {
+  &:before,
+  &:after {
     content: "";
     display: block;
     width: ${(props) => props.progress * 100}%;
     height: 16px;
-    background-color: #79c93d;
+    background-color: #58cc02;
     position: absolute;
     top: 0;
     left: 0;
     border-radius: 7px;
+  }
+  &:after {
+    height: 30%;
+    top: 25%;
+    left: 8px;
+    right: 8px;
+    width: calc(${(props) => props.progress * 100}% - 16px);
+    background: white;
+    opacity: 0.2;
   }
 `;
 
@@ -152,6 +162,12 @@ const Textarea = styled("textarea")`
   box-sizing: border-box;
   position: relative;
   z-index: 1;
+
+  line-height: 24px;
+  color: #3c3c3c;
+  font-size: 100%;
+  font-family: "Roboto";
+  font-weight: 500;
 `;
 
 const Fieldset = styled("fieldset")`
