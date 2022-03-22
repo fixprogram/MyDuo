@@ -151,7 +151,7 @@ const Textarea = styled("textarea")`
   flex-grow: 1;
   box-sizing: border-box;
   position: relative;
-  z-index: 0;
+  z-index: 1;
 `;
 
 const Fieldset = styled("fieldset")`
@@ -260,6 +260,10 @@ const LessonTitle = styled("b")`
   margin-top: 8px;
 `;
 
+const NavIcon = styled("img")`
+  margin-right: 10px;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -285,4 +289,5 @@ export {
   LessonProgress,
   Main,
   LessonTitle,
+  NavIcon,
 };

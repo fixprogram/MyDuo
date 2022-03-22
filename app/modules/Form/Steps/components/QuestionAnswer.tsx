@@ -21,6 +21,11 @@ export default function QuestionAnswer({
   return (
     <Fragment>
       <fieldset css={{ padding: "0 25%" }}>
+        <VisuallyHiddenInput
+          name={`type${number}`}
+          value={"Question"}
+          readOnly
+        />
         <input
           type="text"
           name={`question${number}`}

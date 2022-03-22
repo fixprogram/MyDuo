@@ -31,10 +31,11 @@ const InsertWordsTextBlock = styled("div")`
   background-color: #f7f7f7;
   border-radius: 10px;
   position: relative;
-  z-index: ${(props) => (props.showText ? "1" : "-1")};
+  z-index: ${(props) => (props.showText ? "2" : "0")};
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  box-sizing: border-box;
 `;
 
 export { StepHeader, ChooseStyle, StyleButton, InsertWordsTextBlock };

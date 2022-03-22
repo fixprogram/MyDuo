@@ -30,20 +30,8 @@ const reducer = (state, action) => {
         nextStep: false,
       };
     case "CHECK_ANSWER": // When click the button Check
-      const checkKeywords = content.keywords.filter((item) =>
-        action.payload.toLowerCase().includes(item)
-      );
-      if (checkKeywords.length === content.keywords.length) {
-        return {
-          ...state,
-          disabled: false,
-          nextStep: true,
-          stateRight: true,
-          formDisabled: true,
-          progress: step / maxSteps,
-        };
-      }
-      return {
+      const negativeState = {
+        // This state we return if wrong
         ...state,
         stateWrong: true,
         formDisabled: true,
@@ -52,6 +40,51 @@ const reducer = (state, action) => {
         maxSteps: state.maxSteps + 1,
         nextStep: true,
       };
+      const positiveState = {
+        // This one we return if right
+        ...state,
+        disabled: false,
+        nextStep: true,
+        stateRight: true,
+        formDisabled: true,
+        progress: step / maxSteps,
+      };
+      switch (content.type) {
+        case "Insert": {
+          console.log(action.payload);
+          const checkAnswer = content.answer.filter((item) =>
+            action.payload.find(
+              (payloadItem) =>
+                payloadItem.value.toLowerCase() === item.toLowerCase()
+            )
+          );
+          console.log(1111);
+          console.log(checkAnswer);
+          console.log(content.answer);
+          if (checkAnswer.length === content.answer.length) {
+            return positiveState;
+          }
+          return negativeState;
+        }
+        case "Question": {
+          const checkKeywords = content.keywords.filter((item) =>
+            action.payload.toLowerCase().includes(item.toLowerCase())
+          );
+          if (
+            content.keywords[0].length > 0 &&
+            checkKeywords.length === content.keywords.length
+          ) {
+            return positiveState;
+          } else if (action.payload === content.answer[0]) {
+            return positiveState;
+          } else {
+            return negativeState;
+          }
+        }
+        default: {
+          return negativeState;
+        }
+      }
     case "CHANGE_DISABLED":
       return { ...state, disabled: action.payload };
     case "RESULTS":

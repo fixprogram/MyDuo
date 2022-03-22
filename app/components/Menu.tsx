@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import { NavLink } from "remix";
-import { HorizontalList, ListItem } from "./lib";
+import { HorizontalList, ListItem, NavIcon } from "./lib";
 import study from "~/styles/study.svg";
 import lessons from "~/styles/practice.svg";
 import stories from "~/styles/forum.svg";
@@ -73,12 +73,11 @@ const Menu = () => {
               >
                 {({ isActive }) => (
                   <Fragment>
-                    <img
+                    <NavIcon
                       src={isActive ? activeIcon : icon}
                       width={36}
                       height={36}
                       alt={title}
-                      css={{ marginRight: 10 }}
                     />
                     {title}
                   </Fragment>

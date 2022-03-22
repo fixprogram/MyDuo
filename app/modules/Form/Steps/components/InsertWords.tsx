@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Textarea, VisuallyHiddenInput } from "~/components/lib";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
@@ -13,16 +13,15 @@ export default function InsertWords({
   const [words, setWords] = useState([]);
   const [showText, setShowText] = useState(false);
 
-  useEffect(() => {
-    console.log("CURRENT WORDS: ", words);
-  }, [words]);
-
   return (
     <fieldset css={{ padding: "0 25%" }}>
       <VisuallyHiddenInput name={`answer${number}`} value={words} readOnly />
 
+      <VisuallyHiddenInput name={`type${number}`} value={"Insert"} readOnly />
+
       <Textarea
-        placeholder="Type answer"
+        name={`text${number}`}
+        placeholder="Type text"
         value={answer}
         onChange={(evt) => {
           setAnswer(evt.target.value);

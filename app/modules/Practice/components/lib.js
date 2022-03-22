@@ -21,6 +21,16 @@ const PracticeFooter = styled("div")`
 
 const PracticeFooterMessage = styled("div")`
   padding-left: 96px;
+  visibility: ${(props) =>
+    props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
+`;
+
+const PracticeFooterTitle = styled("h2")`
+  margin: 0;
+`;
+
+const PracticeFooterText = styled("p")`
+  margin: 5px 0 0 0;
 `;
 
 const PracticeButton = styled("button")`
@@ -116,6 +126,8 @@ const PracticeBodyResults = styled("div")``;
 export {
   PracticeFooter,
   PracticeFooterMessage,
+  PracticeFooterTitle,
+  PracticeFooterText,
   PracticeButton,
   PracticeBody,
   PracticeBodyTitle,

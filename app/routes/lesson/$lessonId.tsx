@@ -8,6 +8,8 @@ import { db } from "~/utils/db.server";
 import {
   PracticeFooter,
   PracticeFooterMessage,
+  PracticeFooterTitle,
+  PracticeFooterText,
   PracticeButton,
 } from "~/modules/Practice/components/lib";
 import Progress from "~/components/Progress";
@@ -66,7 +68,7 @@ export default function Lesson() {
     },
     dispatch,
   ] = useReducer(reducer, basicState);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState();
   const {
     checkAnswer,
     showResultsPractice,
@@ -85,7 +87,7 @@ export default function Lesson() {
     if (!disabled) {
       if (currentStep > -1 && currentStep <= maxSteps) {
         if (!nextStep) {
-          checkAnswer(value.trim());
+          checkAnswer(value);
         } else {
           continuePractice();
           setValue("");
@@ -113,7 +115,7 @@ export default function Lesson() {
           maxSteps={maxSteps}
           content={content}
           value={value}
-          setValue={(val: string) => {
+          setValue={(val: string[]) => {
             setValue(val);
             if (val.length) {
               changeDisabled(false);
@@ -125,13 +127,13 @@ export default function Lesson() {
         />
       )}
       <PracticeFooter stateRight={stateRight} stateWrong={stateWrong}>
-        <PracticeFooterMessage>
-          <h2 css={{ margin: 0 }}>
+        <PracticeFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
+          <PracticeFooterTitle>
             {stateWrong ? "Right answer: " : "Great!"}
-          </h2>
-          <p css={{ margin: "5px 0 0 0" }}>
+          </PracticeFooterTitle>
+          <PracticeFooterText>
             {stateWrong ? content.answer : null}
-          </p>
+          </PracticeFooterText>
         </PracticeFooterMessage>
         <PracticeButton
           active={!disabled}

@@ -1,16 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import {
-  Fieldset,
-  FormButton,
-  Input,
-  InputTextLabel,
-  LabelText,
-  Legend,
-  Textarea,
-  TextareaLabel,
-  VisuallyHiddenInput,
-} from "~/components/lib";
+import { FormButton, Legend, VisuallyHiddenInput } from "~/components/lib";
 import BasicInfo from "./components/BasicInfo";
 import Steps from "./Steps";
 

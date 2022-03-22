@@ -91,7 +91,7 @@ export default function Steps() {
                     Insert words
                   </StyleButton>
                   <StyleButton type="button">Choose right variants</StyleButton>
-                  <StyleButton type="button">Connect definitions</StyleButton>
+                  <StyleButton type="button">Pairs</StyleButton>
                 </ChooseStyle>
               ) : null}
 

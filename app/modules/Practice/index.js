@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { useReducer, useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { PracticeButton, PracticeFooter } from "./components/lib";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -31,18 +31,16 @@ const Practice = () => {
   const {
     checkAnswer,
     showResultsPractice,
-    finishPractice,
     startPractice,
     continuePractice,
     setCase,
   } = actionCreator(dispatch);
-  const { data, error, isSuccess, isError, isLoading, run } = useAsync();
+  const { run } = useAsync();
   let currentStep = step;
   const { caseId } = useParams();
   const navigate = useNavigate();
 
   const finishCase = () => {
-    // finishPractice();
     navigate("/practice", { replace: true });
   };
 
@@ -80,23 +78,19 @@ const Practice = () => {
     >
       <Progress progress={progress} />
 
-      {isLoading ? <div>Loading</div> : null}
-
-      {isSuccess ? (
-        <Body
-          variants={variants}
-          step={currentStep}
-          maxSteps={maxSteps}
-          content={content}
-          title={title}
-          check={(chosenVariantId) =>
-            dispatch({ type: "CHOOSE_ANSWER", chosenVariantId })
-          }
-          variantsState={variantsState}
-          taskStory={taskStory}
-          taskTitle={taskTitle}
-        />
-      ) : null}
+      <Body
+        variants={variants}
+        step={currentStep}
+        maxSteps={maxSteps}
+        content={content}
+        title={title}
+        check={(chosenVariantId) =>
+          dispatch({ type: "CHOOSE_ANSWER", chosenVariantId })
+        }
+        variantsState={variantsState}
+        taskStory={taskStory}
+        taskTitle={taskTitle}
+      />
 
       <PracticeFooter>
         <PracticeButton active={!disabled} onClick={onContinue}>

@@ -18,7 +18,9 @@ model Lesson {
 
 type LessonStep {
   number        Int
+  type          String
   question      String?
+  text          String?
   answer        String[]
   keywords      String[]
 }
