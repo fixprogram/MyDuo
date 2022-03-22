@@ -1,7 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { Fragment } from "react";
+import { Main } from "~/components/lib";
 import Menu from "~/components/Menu";
 import styles from "~/styles/index.css";
 
@@ -13,13 +11,7 @@ export default function Study() {
   return (
     <Fragment>
       <Menu />
-      <main
-        css={{
-          padding: "0 250px",
-        }}
-      >
-        Study
-      </main>
+      <Main>Study</Main>
     </Fragment>
   );
 }

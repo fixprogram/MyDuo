@@ -9,6 +9,7 @@ export default function InsertWords({
   number,
   answer,
   setAnswer,
+  setStyles,
 }: FieldsetType) {
   const [words, setWords] = useState([]);
   const [showText, setShowText] = useState(false);
@@ -18,6 +19,13 @@ export default function InsertWords({
       <VisuallyHiddenInput name={`answer${number}`} value={words} readOnly />
 
       <VisuallyHiddenInput name={`type${number}`} value={"Insert"} readOnly />
+
+      <div>
+        <h2>Type and choose to insert</h2>
+        <button type="button" onClick={setStyles}>
+          Back to Styles
+        </button>
+      </div>
 
       <Textarea
         name={`text${number}`}

@@ -51,16 +51,15 @@ const reducer = (state, action) => {
       };
       switch (content.type) {
         case "Insert": {
-          console.log(action.payload);
-          const checkAnswer = content.answer.filter((item) =>
-            action.payload.find(
-              (payloadItem) =>
-                payloadItem.value.toLowerCase() === item.toLowerCase()
-            )
+          const checkAnswer = content.answer.filter(
+            (
+              item // Check that our array of responses has the same array as answers
+            ) =>
+              action.payload.find(
+                (payloadItem) =>
+                  payloadItem.value.toLowerCase() === item.toLowerCase()
+              )
           );
-          console.log(1111);
-          console.log(checkAnswer);
-          console.log(content.answer);
           if (checkAnswer.length === content.answer.length) {
             return positiveState;
           }
@@ -80,6 +79,12 @@ const reducer = (state, action) => {
           } else {
             return negativeState;
           }
+        }
+        case "Variants": {
+          if (content.answer[0] === action.payload) {
+            return positiveState;
+          }
+          return negativeState;
         }
         default: {
           return negativeState;

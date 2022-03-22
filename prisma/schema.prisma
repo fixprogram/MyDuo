@@ -23,6 +23,8 @@ type LessonStep {
   text          String?
   answer        String[]
   keywords      String[]
+  definition    String?
+  variants      String[]
 }
 
 model Story {

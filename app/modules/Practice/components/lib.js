@@ -123,6 +123,26 @@ const PracticeBodyWelcome = styled("div")``;
 
 const PracticeBodyResults = styled("div")``;
 
+const VariantItem = styled("button")`
+  background-color: inherit;
+  height: 60px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  border-width: 2px 2px 4px;
+  outline: 0;
+  cursor: pointer;
+  position: relative;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  user-select: none;
+  text-align: center;
+  color: #4b4b4b;
+  font-size: 19px;
+  line-height: 1.4;
+  padding: 12px 16px;
+  width: 100%;
+`;
+
 export {
   PracticeFooter,
   PracticeFooterMessage,
@@ -136,4 +156,5 @@ export {
   PracticeBodyVariant,
   PracticeBodyWelcome,
   PracticeBodyResults,
+  VariantItem,
 };

@@ -1,5 +1,5 @@
 import { ActionFunction, redirect } from "remix";
-import Form from "~/modules/Form";
+import Form from "~/modules/Constructor";
 import { db } from "~/utils/db.server";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -9,18 +9,37 @@ export const action: ActionFunction = async ({ request }) => {
 
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`); // Getting type of the step
-    const question = form.get(`question${index}`); // Getting question if it's Question type
-    const text = form.get(`text${index}`); // Getting text if it's Insert type
     const answer = form.get(`answer${index}`); // Getting answer
-    const keywords = form.get(`keywords${index}`); // Getting keywords if it's Question type
-    return {
-      type,
-      number: index,
-      question,
-      text,
-      answer: answer.indexOf(",") ? answer.split(",") : answer,
-      keywords: keywords?.split(","),
-    };
+    const returnData = { type, number: index };
+    switch (type) {
+      case "Question": {
+        const question = form.get(`question${index}`); // Getting question if it's Question type
+        const keywords = form.get(`keywords${index}`); // Getting keywords if it's Question type
+        return {
+          ...returnData,
+          question,
+          answer,
+          keywords: keywords?.split(","),
+        };
+      }
+      case "Insert": {
+        const text = form.get(`text${index}`); // Getting text if it's Insert type
+        return {
+          ...returnData,
+          answer: answer.indexOf(",") ? answer.split(",") : answer,
+          text,
+        };
+      }
+      case "Variants": {
+        const question = form.get(`question${index}`); // Getting question if it's Question type
+        const definition = form.get(`definition${index}`); //
+        const variants = form.getAll(`variant${index}`); //
+        return { ...returnData, answer, definition, question, variants };
+      }
+      default: {
+        return { ...returnData, answer };
+      }
+    }
   });
 
   const data = { title, steps, exp: 0 };

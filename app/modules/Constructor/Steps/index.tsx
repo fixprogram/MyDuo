@@ -1,14 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useReducer, useRef, useState } from "react";
-import {
-  Legend,
-  LabelText,
-  TextareaLabel,
-  VisuallyHiddenInput,
-  FormButton,
-} from "~/components/lib";
-import Keywords from "../components/Keywords";
+import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
 import { reducer } from "./reducer";
 import { State } from "./types";
@@ -16,6 +9,8 @@ import { createId } from "./utils";
 import QuestionAnswer from "./components/QuestionAnswer";
 import { ChooseStyle, StepHeader, StyleButton } from "./components/lib";
 import InsertWords from "./components/InsertWords";
+import Variants from "./components/Variants";
+import MatchingPairs from "./components/MatchingPairs";
 
 const basicState: State = {
   steps: [{ number: 0, keywords: [], answer: "", style: "", id: createId }],
@@ -90,8 +85,28 @@ export default function Steps() {
                   >
                     Insert words
                   </StyleButton>
-                  <StyleButton type="button">Choose right variants</StyleButton>
-                  <StyleButton type="button">Pairs</StyleButton>
+                  <StyleButton
+                    type="button"
+                    onClick={() =>
+                      dispatch({
+                        type: "SET_STYLE",
+                        payload: { style: "Variants" },
+                      })
+                    }
+                  >
+                    Choose right variant
+                  </StyleButton>
+                  <StyleButton
+                    type="button"
+                    onClick={() =>
+                      dispatch({
+                        type: "SET_STYLE",
+                        payload: { style: "Pairs" },
+                      })
+                    }
+                  >
+                    Matching pairs
+                  </StyleButton>
                 </ChooseStyle>
               ) : null}
 
@@ -114,6 +129,12 @@ export default function Steps() {
                       },
                     })
                   }
+                  setStyles={() =>
+                    dispatch({
+                      type: "SET_STYLE",
+                      payload: { style: "" },
+                    })
+                  }
                   keywords={keywords}
                 />
               ) : style === "Insert" ? (
@@ -124,6 +145,46 @@ export default function Steps() {
                     dispatch({
                       type: "SET_ANSWER",
                       payload: { answer, number },
+                    })
+                  }
+                  setStyles={() =>
+                    dispatch({
+                      type: "SET_STYLE",
+                      payload: { style: "" },
+                    })
+                  }
+                />
+              ) : style === "Variants" ? (
+                <Variants
+                  number={number}
+                  answer={answer}
+                  setAnswer={(answer: any) =>
+                    dispatch({
+                      type: "SET_ANSWER",
+                      payload: { answer, number },
+                    })
+                  }
+                  setStyles={() =>
+                    dispatch({
+                      type: "SET_STYLE",
+                      payload: { style: "" },
+                    })
+                  }
+                />
+              ) : style === "Pairs" ? (
+                <MatchingPairs
+                  number={number}
+                  answer={answer}
+                  setAnswer={(answer: any) =>
+                    dispatch({
+                      type: "SET_ANSWER",
+                      payload: { answer, number },
+                    })
+                  }
+                  setStyles={() =>
+                    dispatch({
+                      type: "SET_STYLE",
+                      payload: { style: "" },
                     })
                   }
                 />

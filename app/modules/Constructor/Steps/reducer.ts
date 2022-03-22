@@ -22,6 +22,8 @@ const reducer = (
       return { ...state, steps: [...steps, lastChild] };
     }
     case "SET_ANSWER": {
+      console.log("SEtting answer");
+      console.log(action.payload);
       const { answer, number } = action.payload;
       let newSteps = steps;
       newSteps[number].answer = answer;
