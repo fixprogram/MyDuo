@@ -58,15 +58,12 @@ const reducer = (state, action) => {
       const { activeIndex, index } = action.payload;
       let newPairs = state.pairs;
       let exists = newPairs.find(
-        (item: any) =>
-          item.indexes.includes(activeIndex) || item.indexes.includes(index)
+        (item: any) => item.includes(activeIndex) || item.includes(index)
       );
       if (exists) {
-        newPairs[newPairs.indexOf(exists)] = {
-          indexes: `${activeIndex}${index}`,
-        };
+        newPairs[newPairs.indexOf(exists)] = `${activeIndex}${index}`;
       } else {
-        newPairs.push({ indexes: `${activeIndex}${index}` });
+        newPairs.push(`${activeIndex}${index}`);
       }
 
       console.log("NEW: ", newPairs);
@@ -101,15 +98,15 @@ export default function MatchingPairs({
   }, []);
 
   useEffect(() => {
-    console.log(pairs);
     if (pairs.length === count / 2) {
       setAnswer(pairs);
     }
-  }, [pairs]);
+  }, [pairs.length]);
 
   return (
     <Fragment>
-      <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />
+      <VisuallyHiddenInput name={`type${number}`} value={"Pairs"} readOnly />
+      <VisuallyHiddenInput name={`answer${number}`} value={answer} readOnly />
       <div>
         <h2>Create and Connect pairs</h2>
         <button type="button" onClick={setStyles}>
@@ -152,9 +149,7 @@ export default function MatchingPairs({
                       });
                     }
                   }}
-                  connected={pairs.find((pair) =>
-                    pair.indexes.includes(item.index)
-                  )}
+                  connected={pairs.find((pair) => pair.includes(item.index))}
                   focused={item.active}
                 >
                   {/* {pairs.find((pair) => pair.indexes.includes(item.index))
@@ -170,9 +165,7 @@ export default function MatchingPairs({
                   placeholder="type first variant"
                   value={item.value}
                   autoComplete="off"
-                  connected={pairs.find((pair) =>
-                    pair.indexes.includes(item.index)
-                  )}
+                  connected={pairs.find((pair) => pair.includes(item.index))}
                   focused={item.active}
                   onChange={(e) =>
                     dispatch({
