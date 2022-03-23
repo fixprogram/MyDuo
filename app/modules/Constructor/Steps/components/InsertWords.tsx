@@ -9,7 +9,7 @@ export default function InsertWords({
   number,
   answer,
   setAnswer,
-  setStyles,
+  setStyle,
 }: FieldsetType) {
   const [words, setWords] = useState([]);
   const [showText, setShowText] = useState(false);
@@ -22,7 +22,7 @@ export default function InsertWords({
 
       <div>
         <h2>Type and choose to insert</h2>
-        <button type="button" onClick={setStyles}>
+        <button type="button" onClick={() => setStyle()}>
           Back to Styles
         </button>
       </div>

@@ -1,13 +1,18 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Fragment, useEffect, useReducer, useRef, useState } from "react";
+import { Fragment, useEffect, useReducer, useRef } from "react";
 import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
 import { reducer } from "./reducer";
 import { State } from "./types";
 import { createId } from "./utils";
 import QuestionAnswer from "./components/QuestionAnswer";
-import { ChooseStyle, StepHeader, StyleButton } from "./components/lib";
+import {
+  ChooseStyle,
+  StepContent,
+  StepHeader,
+  StyleButton,
+} from "./components/lib";
 import InsertWords from "./components/InsertWords";
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
@@ -18,10 +23,25 @@ const basicState: State = {
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
-  const myRef = useRef(null);
+  const myRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    myRef.current.scrollIntoView();
+    if (myRef.current !== null) {
+      myRef.current.scrollIntoView();
+    }
   }, [steps]);
+
+  const setStyle = (style = "", id: string) => {
+    dispatch({
+      type: "SET_STYLE",
+      payload: { style, id },
+    });
+  };
+  const setAnswer = (answer: any, number: number) => {
+    dispatch({
+      type: "SET_ANSWER",
+      payload: { answer, number },
+    });
+  };
 
   return (
     <Fragment>
@@ -52,58 +72,30 @@ export default function Steps() {
               </FormButton>
             </StepHeader>
 
-            <div
-              css={{
-                borderTop: "1px solid #e5e5e5",
-                borderBottom: "1px solid #e5e5e5",
-                padding: "60px 24px",
-                minHeight: 300,
-                marginTop: 20,
-              }}
-            >
+            <StepContent>
               {style === "" ? (
                 <ChooseStyle>
                   <StyleButton
                     type="button"
-                    onClick={() =>
-                      dispatch({
-                        type: "SET_STYLE",
-                        payload: { style: "Question", id },
-                      })
-                    }
+                    onClick={() => setStyle("Question", id)}
                   >
                     Question / Answer
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() =>
-                      dispatch({
-                        type: "SET_STYLE",
-                        payload: { style: "Insert", id },
-                      })
-                    }
+                    onClick={() => setStyle("Insert", id)}
                   >
                     Insert words
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() =>
-                      dispatch({
-                        type: "SET_STYLE",
-                        payload: { style: "Variants", id },
-                      })
-                    }
+                    onClick={() => setStyle("Variants", id)}
                   >
                     Choose right variant
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() =>
-                      dispatch({
-                        type: "SET_STYLE",
-                        payload: { style: "Pairs", id },
-                      })
-                    }
+                    onClick={() => setStyle("Pairs", id)}
                   >
                     Matching pairs
                   </StyleButton>
@@ -114,12 +106,7 @@ export default function Steps() {
                 <QuestionAnswer
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch({
-                      type: "SET_ANSWER",
-                      payload: { answer, number },
-                    })
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
                   setKeywords={(keywords: any) =>
                     dispatch({
                       type: "SET_KEYWORDS",
@@ -129,67 +116,32 @@ export default function Steps() {
                       },
                     })
                   }
-                  setStyles={() =>
-                    dispatch({
-                      type: "SET_STYLE",
-                      payload: { style: "", id },
-                    })
-                  }
+                  setStyle={() => setStyle("", id)}
                   keywords={keywords}
                 />
               ) : style === "Insert" ? (
                 <InsertWords
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch({
-                      type: "SET_ANSWER",
-                      payload: { answer, number },
-                    })
-                  }
-                  setStyles={() =>
-                    dispatch({
-                      type: "SET_STYLE",
-                      payload: { style: "", id },
-                    })
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setStyle={() => setStyle("", id)}
                 />
               ) : style === "Variants" ? (
                 <Variants
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch({
-                      type: "SET_ANSWER",
-                      payload: { answer, number },
-                    })
-                  }
-                  setStyles={() =>
-                    dispatch({
-                      type: "SET_STYLE",
-                      payload: { style: "", id },
-                    })
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setStyle={() => setStyle("", id)}
                 />
               ) : style === "Pairs" ? (
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch({
-                      type: "SET_ANSWER",
-                      payload: { answer, number },
-                    })
-                  }
-                  setStyles={() =>
-                    dispatch({
-                      type: "SET_STYLE",
-                      payload: { style: "", id },
-                    })
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setStyle={() => setStyle("", id)}
                 />
               ) : null}
-            </div>
+            </StepContent>
             <div ref={myRef}></div>
           </Fragment>
         )

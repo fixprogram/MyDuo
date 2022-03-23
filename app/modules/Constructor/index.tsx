@@ -29,17 +29,6 @@ export default function Form() {
 
       <BasicInfo />
 
-      {/* <Fieldset>
-        <TextareaLabel htmlFor="description">
-          <LabelText>Description</LabelText>
-          <Textarea
-            id="description"
-            name="description"
-            placeholder="Add description of this lesson"
-          />
-        </TextareaLabel>
-      </Fieldset> */}
-
       <Steps />
 
       <FormButton type="submit" active={true}>

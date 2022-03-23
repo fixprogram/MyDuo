@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import styled from "@emotion/styled";
 
-const PracticeFooter = styled("div")`
+const RepeatFooter = styled("div")`
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -19,21 +19,21 @@ const PracticeFooter = styled("div")`
     props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
 `;
 
-const PracticeFooterMessage = styled("div")`
+const RepeatFooterMessage = styled("div")`
   padding-left: 96px;
   visibility: ${(props) =>
     props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
 `;
 
-const PracticeFooterTitle = styled("h2")`
+const RepeatFooterTitle = styled("h2")`
   margin: 0;
 `;
 
-const PracticeFooterText = styled("p")`
+const RepeatFooterText = styled("p")`
   margin: 5px 0 0 0;
 `;
 
-const PracticeButton = styled("button")`
+const RepeatButton = styled("button")`
   border: 0 solid transparent;
   background-color: ${(props) =>
     props.stateWrong
@@ -57,14 +57,14 @@ const PracticeButton = styled("button")`
   border-radius: 15px;
 `;
 
-const PracticeBody = styled("div")`
+const RepeatBody = styled("div")`
   margin: 72px 29% 240px 32%;
   flex-grow: 1;
   position: relative;
   max-height: 70%;
 `;
 
-const PracticeBodyTitle = styled("h3")`
+const RepeatBodyTitle = styled("h3")`
   font-family: "Montserrat";
   font-size: 23px;
   font-weight: 700;
@@ -78,7 +78,7 @@ const PracticeBodyTitle = styled("h3")`
   background-color: #fff;
 `;
 
-const PracticeBodyMessage = styled("div")`
+const RepeatBodyMessage = styled("div")`
   padding: 12px 15px 12px 21px;
   border: 2px solid #dedede;
   font-family: "Roboto";
@@ -90,7 +90,7 @@ const PracticeBodyMessage = styled("div")`
   z-index: 1;
 `;
 
-const PracticeBodyVariants = styled("div")`
+const RepeatBodyVariants = styled("div")`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -98,7 +98,7 @@ const PracticeBodyVariants = styled("div")`
   bottom: 0;
 `;
 
-const PracticeBodyVariant = styled("div")`
+const RepeatBodyVariant = styled("div")`
   position: relative;
   border-radius: 15px;
   border: 2px solid #e5e5e5;
@@ -119,9 +119,9 @@ const PracticeBodyVariant = styled("div")`
   color: ${(props) => (props.active ? "#4897D1" : "inherit")};
 `;
 
-const PracticeBodyWelcome = styled("div")``;
+const RepeatBodyWelcome = styled("div")``;
 
-const PracticeBodyResults = styled("div")``;
+const RepeatBodyResults = styled("div")``;
 
 const VariantItem = styled("button")`
   background-color: inherit;
@@ -144,17 +144,17 @@ const VariantItem = styled("button")`
 `;
 
 export {
-  PracticeFooter,
-  PracticeFooterMessage,
-  PracticeFooterTitle,
-  PracticeFooterText,
-  PracticeButton,
-  PracticeBody,
-  PracticeBodyTitle,
-  PracticeBodyMessage,
-  PracticeBodyVariants,
-  PracticeBodyVariant,
-  PracticeBodyWelcome,
-  PracticeBodyResults,
+  RepeatFooter,
+  RepeatFooterMessage,
+  RepeatFooterTitle,
+  RepeatFooterText,
+  RepeatButton,
+  RepeatBody,
+  RepeatBodyTitle,
+  RepeatBodyMessage,
+  RepeatBodyVariants,
+  RepeatBodyVariant,
+  RepeatBodyWelcome,
+  RepeatBodyResults,
   VariantItem,
 };

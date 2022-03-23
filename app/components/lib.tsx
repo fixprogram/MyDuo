@@ -71,39 +71,6 @@ const PracticeBlockItem = styled.a(() => ({
   textDecoration: "none",
 }));
 
-const RatingBlock = styled.section(() => ({
-  width: "33.3%",
-  border: "1px solid #E5E5E5",
-  borderRadius: 15,
-}));
-
-const RatingTitle = styled.div(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  margin: 0,
-  padding: "29px 27px",
-  borderBottom: "2px solid #E5E5E5",
-  fontFamily: "Montserrat",
-  fontSize: 20,
-  fontWeight: 700,
-  color: "#3C3C3C",
-  letterSpacing: "0.8 px",
-}));
-
-const RatingItem = styled.div(() => ({
-  width: "100%",
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "9px 18px 9px 25px",
-  alignItems: "center",
-  fontFamily: "Montserrat",
-  fontWeight: 700,
-  fontSize: 18,
-  letterSpacing: 0.4,
-  color: "#3C3C3C",
-}));
-
 const UserImage = styled.img(
   {
     borderRadius: "100%",
@@ -288,9 +255,6 @@ export {
   PracticeBlock,
   PracticeBlockTitle,
   PracticeBlockItem,
-  RatingBlock,
-  RatingTitle,
-  RatingItem,
   UserImage,
   Input,
   Textarea,

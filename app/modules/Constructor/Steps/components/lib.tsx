@@ -1,5 +1,13 @@
 import styled from "@emotion/styled";
 
+const StepContent = styled("div")`
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 60px 24px;
+  min-height: 300px;
+  margin-top: 20px;
+`;
+
 const StepHeader = styled("div")`
   display: flex;
   justify-content: space-between;
@@ -77,6 +85,7 @@ const VariantItemNumber = styled("span")`
 
 export {
   StepHeader,
+  StepContent,
   ChooseStyle,
   StyleButton,
   InsertWordsTextBlock,

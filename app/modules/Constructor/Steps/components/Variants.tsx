@@ -2,9 +2,15 @@
 import { jsx } from "@emotion/react";
 import { Fragment, useState } from "react";
 import { Input, Textarea, VisuallyHiddenInput } from "~/components/lib";
+import { FieldsetType } from "../types";
 import { VariantItemInput, VariantItemNumber } from "./lib";
 
-export default function Variants({ number, answer, setAnswer, setStyles }) {
+export default function Variants({
+  number,
+  answer,
+  setAnswer,
+  setStyle,
+}: FieldsetType) {
   const [answers, setAnswers] = useState(Array(3).fill(answer));
 
   return (
@@ -15,7 +21,7 @@ export default function Variants({ number, answer, setAnswer, setStyles }) {
 
       <div>
         <h2>Read and Respond</h2>
-        <button type="button" onClick={setStyles}>
+        <button type="button" onClick={() => setStyle()}>
           Back to Styles
         </button>
       </div>

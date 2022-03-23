@@ -2,6 +2,7 @@
 import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useReducer } from "react";
 import { VisuallyHiddenInput } from "~/components/lib";
+import { FieldsetType } from "../types";
 import { VariantItemNumber, VariantItemInput } from "./lib";
 
 const basicState = {
@@ -88,9 +89,9 @@ export default function MatchingPairs({
   number,
   answer,
   setAnswer,
-  setStyles,
+  setStyle,
   count = 8,
-}) {
+}: FieldsetType) {
   const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
 
   useEffect(() => {
@@ -109,7 +110,7 @@ export default function MatchingPairs({
       <VisuallyHiddenInput name={`answer${number}`} value={answer} readOnly />
       <div>
         <h2>Create and Connect pairs</h2>
-        <button type="button" onClick={setStyles}>
+        <button type="button" onClick={() => setStyle()}>
           Back to Styles
         </button>
       </div>

@@ -5,7 +5,6 @@ import { NavLink, Outlet } from "remix";
 import { Fragment } from "react";
 import Menu from "~/components/Menu";
 import styles from "~/styles/index.css";
-import { Link } from "react-router-dom";
 import { Main } from "~/components/lib";
 import Forms from "~/components/Forms";
 
@@ -15,12 +14,8 @@ export const links = () => {
 
 const forms = [
   {
-    title: "Lesson form",
-    link: "new-lesson",
-  },
-  {
-    title: "Story form",
-    link: "new-story",
+    title: "Repeat form",
+    link: "new-repeat",
   },
 ];
 

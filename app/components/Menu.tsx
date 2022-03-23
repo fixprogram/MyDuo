@@ -4,12 +4,12 @@ import { jsx } from "@emotion/react";
 import { NavLink } from "remix";
 import { HorizontalList, ListItem, NavIcon } from "./lib";
 import study from "~/styles/study.svg";
-import lessons from "~/styles/practice.svg";
-import stories from "~/styles/forum.svg";
+import repeat from "~/styles/practice.svg";
+import practice from "~/styles/forum.svg";
 import shop from "~/styles/shop.svg";
 import studyActive from "~/styles/study-active.svg";
-import lessonsActive from "~/styles/practice-active.svg";
-import storiesActive from "~/styles/forum-active.svg";
+import repeatActive from "~/styles/practice-active.svg";
+import practiceActive from "~/styles/forum-active.svg";
 import shopActive from "~/styles/shop-active.svg";
 import { Fragment } from "react";
 
@@ -22,19 +22,19 @@ const MENU = [
   },
   {
     title: "repeat",
-    link: "lessons",
-    icon: lessons,
-    activeIcon: lessonsActive,
+    link: "repeat",
+    icon: repeat,
+    activeIcon: repeatActive,
   },
   {
     title: "practice",
-    link: "stories",
-    icon: stories,
-    activeIcon: storiesActive,
+    link: "practice",
+    icon: practice,
+    activeIcon: practiceActive,
   },
   {
     title: "constructor",
-    link: "new/new-lesson",
+    link: "new/new-repeat",
     icon: shop,
     activeIcon: shopActive,
   },

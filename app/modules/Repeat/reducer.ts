@@ -1,5 +1,5 @@
 const basicState = {
-  disabled: false, // For button
+  disabled: false, // Disabled state for
   progress: 0, // Current progress
   step: 0, // Current step number
   content: {}, // Current step. Contains Question, Answer and Keywords
@@ -85,6 +85,37 @@ const reducer = (state, action) => {
             return positiveState;
           }
           return negativeState;
+        }
+        case "Pairs": {
+          console.log("PAIRS");
+          console.log(action.payload);
+          const respond = action.payload;
+          let idx;
+          if (
+            content.answer.find((ans, id) => {
+              idx = id;
+              return (
+                ans === respond || ans === respond.split("").reverse().join("")
+              );
+            })
+          ) {
+            const newContent = content;
+            newContent.answer.splice(idx, 1);
+            if (newContent.answer.length === 0) {
+              return positiveState;
+            }
+            return {
+              ...state,
+              content: newContent,
+              disabled: true,
+            };
+            // return positiveState;
+          } else {
+            return {
+              ...state,
+              disabled: true,
+            };
+          }
         }
         default: {
           throw new Error(`We don't know this type: ${action.type}`);

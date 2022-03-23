@@ -1,14 +1,10 @@
-import { useEffect } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
 import { VariantItem } from "./lib";
 
-export default function VariantsPractice({ content, setValue, formDisabled }) {
-  //   const;
-  useEffect(() => {
-    console.log(content);
-  }, []);
+export default function VariantsPractice({ content, setValue }) {
   return (
     <section>
+      <h2>Choose right variant</h2>
       <div>
         <p>{content.definition}</p>
       </div>

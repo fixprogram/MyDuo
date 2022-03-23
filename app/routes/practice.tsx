@@ -1,5 +1,12 @@
-import { Outlet } from "remix";
+import { Fragment } from "react";
+import { Main } from "~/components/lib";
+import Menu from "~/components/Menu";
 
 export default function Practice() {
-  return <Outlet />;
+  return (
+    <Fragment>
+      <Menu />
+      <Main>Practice</Main>
+    </Fragment>
+  );
 }

@@ -1,37 +1,36 @@
-import type { Step } from "./types";
+import type { Step, State } from "./types";
 import { createId } from "./utils";
 
-const reducer = (
-  state: any,
-  action: {
-    type: string;
-    payload?: {
-      answer?: string;
-      number?: number;
-      keywords?: string[];
-      style?: string;
-    };
-  }
-) => {
+type Action = {
+  type: string;
+  payload?: {
+    answer?: string;
+    number?: number;
+    keywords?: string[];
+    style?: string;
+    id?: string;
+  };
+};
+
+const reducer = (state: State, action: Action) => {
   const { steps } = state;
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case "SET_STYLE": {
-      const { style, id } = action.payload;
+      const { style, id } = payload;
       const newSteps = steps.map((step) =>
         step.id === id ? { ...step, style: style } : { ...step }
       );
       return { ...state, steps: [...newSteps] };
     }
     case "SET_ANSWER": {
-      console.log("SEtting answer");
-      console.log(action.payload);
-      const { answer, number } = action.payload;
+      const { answer, number } = payload;
       let newSteps = steps;
       newSteps[number].answer = answer;
       return { ...state, steps: newSteps };
     }
     case "SET_KEYWORDS": {
-      let { keywords, number } = action.payload;
+      let { keywords, number } = payload;
       let newSteps = steps;
       newSteps[number].keywords = keywords;
       return { ...state, steps: newSteps };
@@ -51,7 +50,7 @@ const reducer = (
     }
     case "REMOVE_STEP": {
       const newSteps = steps
-        .filter((item: Step) => action.payload.number !== item.id)
+        .filter((item: Step) => payload.number !== item.id)
         .map((item: Step, i: number) => ({ ...item, number: i }));
       return {
         ...state,
@@ -59,7 +58,7 @@ const reducer = (
       };
     }
     default:
-      throw new Error(`We don't know this action type: ${action.type}`);
+      throw new Error(`We don't know this action type: ${type}`);
   }
 };
 

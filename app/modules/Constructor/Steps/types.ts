@@ -13,7 +13,9 @@ export type State = {
 export type FieldsetType = {
   number: number;
   answer: string;
+  setStyle: Function;
   setAnswer: Function;
   setKeywords?: Function;
   keywords?: string[];
+  count?: number;
 };

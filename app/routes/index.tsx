@@ -1,7 +1,7 @@
 import { redirect, useLoaderData } from "remix";
 
 export const loader = () => {
-  return redirect("/lessons");
+  return redirect("/repeat");
 };
 
 export default function Index() {

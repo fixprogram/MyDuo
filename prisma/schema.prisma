@@ -8,15 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Lesson {
+model Repeat {
   id            String  @id @default(auto())  @map("_id") @db.ObjectId
   title         String
   createdAt     DateTime @default(now())
-  steps         LessonStep[]
+  steps         RepeatStep[]
   exp           Int
 }
 
-type LessonStep {
+type RepeatStep {
   number        Int
   type          String
   question      String?
@@ -25,25 +25,6 @@ type LessonStep {
   keywords      String[]
   definition    String?
   variants      String[]
-}
-
-model Story {
-  id            String  @id @default(auto())  @map("_id") @db.ObjectId
-  title         String
-  innerTitle    String
-  description   String
-  createdAt     DateTime @default(now())
-  steps         StoryStep[]
-  exp           Int
-}
-
-type StoryStep {
-  author        String
-  text          String
-  number        Int
-  questionTitle String?
-  variants      Variants?
-  answer        Int?
 }
 
 type Variants {

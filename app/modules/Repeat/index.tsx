@@ -1,18 +1,23 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { useReducer, useEffect } from "react";
-import { PracticeButton, PracticeFooter } from "./components/lib";
-import { useParams, useNavigate } from "react-router-dom";
+import { useReducer, useEffect, useRef, useState } from "react";
+import {
+  RepeatButton,
+  RepeatFooter,
+  RepeatFooterMessage,
+  RepeatFooterText,
+  RepeatFooterTitle,
+} from "./components/lib";
 
-import Progress from "./components/Progress";
+import Progress from "~/components/Progress";
 import Body from "./components/Body";
 import { reducer, basicState } from "./reducer";
-import { getPractice } from "../../db/api";
-import { useAsync } from "../../db/useAsync";
 import actionCreator from "./actions";
+import { useSubmit } from "remix";
 
-const Practice = () => {
+const Repeat = ({ data }) => {
+  const ref = useRef();
   const [
     {
       disabled,
@@ -20,85 +25,93 @@ const Practice = () => {
       content,
       step,
       maxSteps,
-      title,
-      variants,
-      variantsState,
-      taskStory,
-      taskTitle,
+      stateRight,
+      stateWrong,
+      formDisabled,
+      nextStep,
     },
     dispatch,
   ] = useReducer(reducer, basicState);
+  const [value, setValue] = useState();
   const {
     checkAnswer,
     showResultsPractice,
-    startPractice,
     continuePractice,
+    changeDisabled,
     setCase,
   } = actionCreator(dispatch);
-  const { run } = useAsync();
+  const submit = useSubmit();
   let currentStep = step;
-  const { caseId } = useParams();
-  const navigate = useNavigate();
 
-  const finishCase = () => {
-    navigate("/practice", { replace: true });
-  };
+  useEffect(() => {
+    setCase(data);
+  }, []);
 
   const onContinue = () => {
     if (!disabled) {
-      if (variants) {
-        checkAnswer();
+      if (currentStep > -1 && currentStep <= maxSteps) {
+        if (!nextStep) {
+          checkAnswer(value);
+        } else {
+          continuePractice();
+          setValue("");
+        }
       } else {
-        currentStep === 0
-          ? startPractice()
-          : currentStep === maxSteps
+        currentStep === maxSteps
           ? showResultsPractice()
           : currentStep === maxSteps + 1
-          ? finishCase()
+          ? submit(ref.current, { replace: true })
           : continuePractice();
       }
     }
   };
 
-  useEffect(() => {
-    run(
-      getPractice(caseId).then((res) => res),
-      setCase
-    );
-  }, [caseId, getPractice, run]);
-
   return (
-    <section
-      css={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <section>
       <Progress progress={progress} />
-
-      <Body
-        variants={variants}
-        step={currentStep}
-        maxSteps={maxSteps}
-        content={content}
-        title={title}
-        check={(chosenVariantId) =>
-          dispatch({ type: "CHOOSE_ANSWER", chosenVariantId })
-        }
-        variantsState={variantsState}
-        taskStory={taskStory}
-        taskTitle={taskTitle}
-      />
-
-      <PracticeFooter>
-        <PracticeButton active={!disabled} onClick={onContinue}>
-          Continue
-        </PracticeButton>
-      </PracticeFooter>
+      {currentStep === maxSteps + 1 ? (
+        <form method="POST" ref={ref}>
+          <input type="text" name="exp" value="16" readOnly />
+          <input type="text" name="id" value={data.id} readOnly />
+        </form>
+      ) : (
+        <Body
+          step={step}
+          maxSteps={maxSteps}
+          content={content}
+          value={value}
+          setValue={(val: string[]) => {
+            setValue(val);
+            if (val.length) {
+              changeDisabled(false);
+            } else {
+              changeDisabled(true);
+            }
+          }}
+          formDisabled={formDisabled}
+          checkAnswer={checkAnswer}
+        />
+      )}
+      <RepeatFooter stateRight={stateRight} stateWrong={stateWrong}>
+        <RepeatFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
+          <RepeatFooterTitle>
+            {stateWrong ? "Right answer: " : "Great!"}
+          </RepeatFooterTitle>
+          <RepeatFooterText>
+            {stateWrong ? content.answer : null}
+          </RepeatFooterText>
+        </RepeatFooterMessage>
+        <RepeatButton
+          active={!disabled}
+          stateRight={stateRight}
+          stateWrong={stateWrong}
+          onClick={onContinue}
+        >
+          {stateRight ? "Next" : stateWrong ? "Continue" : "Check"}
+        </RepeatButton>
+      </RepeatFooter>
     </section>
   );
 };
 
-export default Practice;
+export default Repeat;

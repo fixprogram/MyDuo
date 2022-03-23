@@ -1,11 +1,12 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Fragment, useEffect, useState } from "react";
-import { PracticeBody, PracticeBodyResults } from "./lib";
-import QuestionAnswerPractice from "./QuestionAnswerPractice";
-import InsertWordsPractice from "./InsertWordsPractice";
-import VariantsPractice from "./VariantsPractice";
+import { Fragment } from "react";
+import { RepeatBody, RepeatBodyResults } from "./lib";
+import QuestionAnswer from "./QuestionAnswer";
+import InsertWords from "./InsertWords";
+import Variants from "./Variants";
+import Pairs from "./Pairs";
 
 const Body = ({
   step,
@@ -14,11 +15,10 @@ const Body = ({
   setValue,
   formDisabled,
   value,
-  text,
+  checkAnswer,
 }) => {
-  console.log(content);
   return (
-    <PracticeBody>
+    <RepeatBody>
       <div
         css={{
           paddingTop: 50,
@@ -29,33 +29,31 @@ const Body = ({
         }}
       >
         {step === maxSteps + 1 ? (
-          <PracticeBodyResults>Results Screen</PracticeBodyResults>
+          <RepeatBodyResults>Results Screen</RepeatBodyResults>
         ) : (
           <Fragment>
-            <h2>{content.title}</h2>
             {content.type === "Question" ? (
-              <QuestionAnswerPractice
+              <QuestionAnswer
+                content={content}
                 value={value}
                 setValue={setValue}
                 formDisabled={formDisabled}
               />
             ) : content.type === "Insert" ? (
-              <InsertWordsPractice
+              <InsertWords
                 content={content}
                 setValue={setValue}
                 formDisabled={formDisabled}
               />
             ) : content.type === "Variants" ? (
-              <VariantsPractice
-                content={content}
-                setValue={setValue}
-                formDisabled={formDisabled}
-              />
+              <Variants content={content} setValue={setValue} />
+            ) : content.type === "Pairs" ? (
+              <Pairs content={content} checkAnswer={checkAnswer} />
             ) : null}
           </Fragment>
         )}
       </div>
-    </PracticeBody>
+    </RepeatBody>
   );
 };
 

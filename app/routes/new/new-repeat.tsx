@@ -5,7 +5,6 @@ import { db } from "~/utils/db.server";
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const title = form.get("title"); // Getting the lesson title
-  const description = form.get("description"); // Getting the lesson description
 
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`); // Getting type of the step
@@ -48,8 +47,8 @@ export const action: ActionFunction = async ({ request }) => {
   });
 
   const data = { title, steps, exp: 0 };
-  const lesson = await db.lesson.create({ data });
-  return redirect(`/lessons`);
+  const repeat = await db.repeat.create({ data });
+  return redirect(`/repeat/${repeat.id}`);
 };
 
 export default function NewLesson() {

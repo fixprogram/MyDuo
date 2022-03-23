@@ -5,7 +5,6 @@ import { useLoaderData, Link } from "remix";
 import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
 import Menu from "~/components/Menu";
-import Rating from "~/components/Rating";
 import {
   LessonProgress,
   LessonTitle,
@@ -20,7 +19,7 @@ export const links = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const data = await db.lesson.findMany({
+  const data = await db.repeat.findMany({
     take: 20,
     select: { id: true, title: true, createdAt: true, exp: true },
     orderBy: { createdAt: "desc" },
@@ -28,19 +27,19 @@ export const loader: LoaderFunction = async () => {
   return data;
 };
 
-export default function Lessons() {
-  const lessons = useLoaderData();
+export default function Repeat() {
+  const repeat = useLoaderData();
   return (
     <React.Fragment>
       <Menu />
       <Main>
         <section css={{ width: "43%", marginLeft: "10%" }}>
-          {lessons?.map(({ title, id, exp }, i) => (
+          {repeat?.map(({ title, id, exp }, i) => (
             <PracticeBlock key={i}>
               <Link
                 key={id}
                 aria-labelledby={title}
-                to={`/lesson/${id}`}
+                to={`/repeat/${id}`}
                 css={{
                   display: "flex",
                   flexDirection: "column",
@@ -55,7 +54,6 @@ export default function Lessons() {
             </PracticeBlock>
           ))}
         </section>
-        {/* <Rating /> */}
       </Main>
     </React.Fragment>
   );
