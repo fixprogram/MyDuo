@@ -10,6 +10,17 @@ export type State = {
   steps: Step[];
 };
 
+export type Action = {
+  type: string;
+  payload?: {
+    answer?: string;
+    number?: number;
+    keywords?: string[];
+    style?: string;
+    id?: string;
+  };
+};
+
 export type FieldsetType = {
   number: number;
   answer: string;

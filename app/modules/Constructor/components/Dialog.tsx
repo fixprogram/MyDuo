@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Fieldset, TextareaLabel, LabelText, Textarea } from "~/components/lib";
 
-export default function Dialog({ step }) {
+export default function Dialog({ step }: { step: number }) {
   return (
     <Fragment>
       <Fieldset>

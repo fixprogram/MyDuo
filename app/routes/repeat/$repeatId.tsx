@@ -9,7 +9,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 
   if (!repeat) {
-    throw new Error("Lesson not found");
+    throw new Error("Repeat not found");
   }
 
   const data = { repeat };
@@ -34,11 +34,12 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
 
-  return redirect(`/repeat`);
+  return redirect(`/repeats`);
 };
 
-export default function Lesson() {
+export default function Repeat1() {
   const { repeat } = useLoaderData();
+  console.log(repeat);
 
   return <Repeat data={repeat} />;
 }

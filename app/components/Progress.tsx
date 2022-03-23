@@ -5,7 +5,7 @@ import { Link } from "remix";
 import Close from "~/styles/close.svg";
 import { ProgressBar } from "~/components/lib";
 
-const Progress = ({ progress }) => {
+const Progress = ({ progress }: { progress: number }) => {
   return (
     <div
       css={{
@@ -19,7 +19,7 @@ const Progress = ({ progress }) => {
       }}
     >
       <Link
-        to="/lessons"
+        to="/repeats"
         css={{ marginRight: "21px", height: "16px", marginTop: "-3px" }}
       >
         <img

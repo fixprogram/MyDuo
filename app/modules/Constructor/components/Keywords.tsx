@@ -3,7 +3,13 @@ import { jsx } from "@emotion/react";
 import { useEffect, useState } from "react";
 import Keyword from "./Keyword";
 
-export default function Keywords({ answer, onSet }) {
+export default function Keywords({
+  answer,
+  onSet,
+}: {
+  answer: any;
+  onSet: Function;
+}) {
   const [keywords, setKeywords] = useState([]);
 
   useEffect(() => {

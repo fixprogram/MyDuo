@@ -1,18 +1,11 @@
-import type { Step, State } from "./types";
+import type { Step, State, Action } from "./types";
 import { createId } from "./utils";
 
-type Action = {
-  type: string;
-  payload?: {
-    answer?: string;
-    number?: number;
-    keywords?: string[];
-    style?: string;
-    id?: string;
-  };
+export const basicState: State = {
+  steps: [{ number: 0, keywords: [], answer: "", style: "", id: createId }],
 };
 
-const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action) => {
   const { steps } = state;
   const { type, payload } = action;
   switch (type) {
@@ -61,5 +54,3 @@ const reducer = (state: State, action: Action) => {
       throw new Error(`We don't know this action type: ${type}`);
   }
 };
-
-export { reducer };

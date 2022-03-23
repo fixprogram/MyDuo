@@ -3,9 +3,7 @@ import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useReducer, useRef } from "react";
 import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
-import { reducer } from "./reducer";
-import { State } from "./types";
-import { createId } from "./utils";
+import { reducer, basicState } from "./reducer";
 import QuestionAnswer from "./components/QuestionAnswer";
 import {
   ChooseStyle,
@@ -16,10 +14,6 @@ import {
 import InsertWords from "./components/InsertWords";
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
-
-const basicState: State = {
-  steps: [{ number: 0, keywords: [], answer: "", style: "", id: createId }],
-};
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);

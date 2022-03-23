@@ -1,5 +1,14 @@
 import styled from "@emotion/styled";
 
+type InsertWordsTextBlockProps = {
+  showText: boolean;
+};
+
+type VariantItemNumberProps = {
+  connected: boolean;
+  focused: boolean;
+};
+
 const StepContent = styled("div")`
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
@@ -30,7 +39,7 @@ const StyleButton = styled("button")`
   font-family: "Roboto";
 `;
 
-const InsertWordsTextBlock = styled("div")`
+const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   min-height: 200px;
   width: 100%;
   margin-top: -206px;
@@ -63,7 +72,7 @@ const VariantItemInput = styled("input")`
   width: 100%;
 `;
 
-const VariantItemNumber = styled("span")`
+const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   border: 2px solid #e5e5e5;
   border-color: ${(props) =>
     props.connected ? "green" : props.focused ? "blue" : "#e5e5e5"};

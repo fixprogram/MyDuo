@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { FormButton, Legend, VisuallyHiddenInput } from "~/components/lib";
+import { FormButton, VisuallyHiddenInput } from "~/components/lib";
 import BasicInfo from "./components/BasicInfo";
 import Steps from "./Steps";
 
@@ -18,12 +18,10 @@ export default function Form() {
         maxWidth: "70%",
       }}
     >
-      <Legend>Basic info</Legend>
-
       <VisuallyHiddenInput
         type="text"
         name="formType"
-        value="lesson"
+        value="repeat"
         readOnly
       />
 
@@ -32,7 +30,7 @@ export default function Form() {
       <Steps />
 
       <FormButton type="submit" active={true}>
-        Save lesson
+        Save repeat
       </FormButton>
     </form>
   );

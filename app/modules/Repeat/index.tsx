@@ -16,7 +16,7 @@ import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
 import { useSubmit } from "remix";
 
-const Repeat = ({ data }) => {
+export default function Repeat({ data }) {
   const ref = useRef();
   const [
     {
@@ -112,6 +112,4 @@ const Repeat = ({ data }) => {
       </RepeatFooter>
     </section>
   );
-};
-
-export default Repeat;
+}

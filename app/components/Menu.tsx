@@ -22,7 +22,7 @@ const MENU = [
   },
   {
     title: "repeat",
-    link: "repeat",
+    link: "repeats",
     icon: repeat,
     activeIcon: repeatActive,
   },
