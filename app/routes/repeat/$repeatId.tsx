@@ -1,7 +1,14 @@
-import { redirect, useLoaderData } from "remix";
+import { redirect, useLoaderData, useParams } from "remix";
 import type { LoaderFunction, ActionFunction } from "remix";
 import { db } from "~/utils/db.server";
 import Repeat from "~/modules/Repeat";
+
+export function ErrorBoundary() {
+  const { repeatId } = useParams();
+  return (
+    <div className="error-container">{`There was an error loading joke by the id ${repeatId}. Sorry.`}</div>
+  );
+}
 
 export const loader: LoaderFunction = async ({ params }) => {
   const repeat = await db.repeat.findUnique({

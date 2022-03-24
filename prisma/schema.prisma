@@ -8,12 +8,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String  @id @default(auto())  @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  passwordHash String
+  repeats      Repeat[]
+}
+
 model Repeat {
   id            String  @id @default(auto())  @map("_id") @db.ObjectId
   title         String
   createdAt     DateTime @default(now())
   steps         RepeatStep[]
   exp           Int
+  userId        String
+  user          User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 type RepeatStep {

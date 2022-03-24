@@ -247,6 +247,79 @@ const NavIcon = styled("img")`
   margin-right: 10px;
 `;
 
+const LoginContainer = styled("section")`
+  padding: 30px;
+  height: 100vh;
+  left: 0;
+  overflow-y: auto;
+  top: 0;
+  width: 100vw;
+  box-sizing: border-box;
+`;
+
+const LoginContinerInner = styled(`div`)`
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+`;
+
+const LoginInput = styled("input")`
+  background: transparent;
+  flex-grow: 1;
+  line-height: 27px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  font-size: 100%;
+  background: #f7f7f7;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  padding: 8px 16px;
+  display: inline-flex;
+  margin-top: 8px;
+`;
+
+const LoginButton = styled("button")`
+  margin-top: 20px;
+  width: 100%;
+  letter-spacing: 0.8px;
+  font: 700 15px "Roboto";
+  padding: 0 16px;
+  height: 50px;
+  color: white;
+  border: none;
+  border-bottom: 4px solid rgba(133, 133, 133, 0.5);
+  border-radius: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  background-color: #1cb0f6;
+`;
+
+const LoginToggle = styled("label")`
+  position: absolute;
+  top: 0;
+  right: 0;
+  letter-spacing: 0.8px;
+  font: 700 15px "Roboto";
+  line-height: 1.2;
+  padding: 0 16px;
+  height: 50px;
+  color: #1cb0f6;
+  border: 1px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  border-radius: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  background-color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -270,4 +343,9 @@ export {
   Main,
   LessonTitle,
   NavIcon,
+  LoginContainer,
+  LoginContinerInner,
+  LoginButton,
+  LoginInput,
+  LoginToggle,
 };

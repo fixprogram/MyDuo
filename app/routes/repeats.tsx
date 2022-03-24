@@ -13,25 +13,32 @@ import {
 } from "~/components/lib";
 import styles from "~/styles/index.css";
 import React from "react";
+import { getUser } from "~/utils/session.server";
+
+export function ErrorBoundary() {
+  return <div className="error-container">I did a whoopsies.</div>;
+}
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
   const data = await db.repeat.findMany({
     take: 20,
+    where: { userId: user.id },
     select: { id: true, title: true, createdAt: true, exp: true },
     orderBy: { createdAt: "desc" },
   });
-  return data;
+  return { data, user };
 };
 
 export default function Repeats() {
-  const data = useLoaderData();
+  const { data, user } = useLoaderData();
   return (
     <React.Fragment>
-      <Menu />
+      <Menu user={user} />
       <Main>
         <section css={{ width: "43%", marginLeft: "10%" }}>
           {data?.map(({ title, id, exp }, i) => (

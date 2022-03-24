@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { NavLink } from "remix";
+import { Link, NavLink } from "remix";
 import { HorizontalList, ListItem, NavIcon } from "./lib";
 import study from "~/styles/study.svg";
 import repeat from "~/styles/practice.svg";
@@ -40,7 +40,7 @@ const MENU = [
   },
 ];
 
-const Menu = () => {
+const Menu = ({ user }) => {
   return (
     <div
       css={{
@@ -90,7 +90,20 @@ const Menu = () => {
       <HorizontalList>
         <ListItem>Project</ListItem>
         <ListItem>Streak</ListItem>
-        <ListItem>Profile</ListItem>
+        <ListItem>
+          {user ? (
+            <div className="user-info">
+              <span>{`Hi ${user.username}`}</span>
+              <form action="/logout" method="post">
+                <button type="submit" className="button">
+                  Logout
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
+        </ListItem>
       </HorizontalList>
     </div>
   );

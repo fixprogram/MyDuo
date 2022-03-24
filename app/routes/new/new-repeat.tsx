@@ -1,8 +1,10 @@
-import { ActionFunction, redirect } from "remix";
+import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
 import Form from "~/modules/Constructor";
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
   const form = await request.formData();
   const title = form.get("title"); // Getting the repeat title
 
@@ -46,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
   });
 
-  const data = { title, steps, exp: 0 };
+  const data = { title, steps, exp: 0, userId };
   const repeat = await db.repeat.create({ data });
   return redirect(`/repeat/${repeat.id}`);
 };
