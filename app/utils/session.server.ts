@@ -40,7 +40,7 @@ const storage = createCookieSessionStorage({
     // but that doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === "production",
-    secrets: [sessionSecret],
+    secrets: ["feriy4gf"],
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
