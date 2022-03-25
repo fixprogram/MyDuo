@@ -8,7 +8,6 @@ const RepeatFooter = styled("div")`
   width: 100%;
   height: 140px;
   border-top: 2px solid #e5e5e5;
-  padding: 0 260px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20,17 +19,24 @@ const RepeatFooter = styled("div")`
 `;
 
 const RepeatFooterMessage = styled("div")`
-  padding-left: 96px;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
   visibility: ${(props) =>
     props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
 `;
 
 const RepeatFooterTitle = styled("h2")`
   margin: 0;
+  font-family: "Montserrat", sans-serif;
+  line-height: 30px;
+  font-size: 24px;
+  letter-spacing: 0.2px;
 `;
 
 const RepeatFooterText = styled("p")`
   margin: 5px 0 0 0;
+  font-size: 17px;
 `;
 
 const RepeatButton = styled("button")`
@@ -51,9 +57,9 @@ const RepeatButton = styled("button")`
   cursor: ${(props) => (props.active ? "pointer" : "default")};
   text-transform: uppercase;
   font-family: "Montserrat";
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.8px;
   border-radius: 15px;
 `;
 
@@ -143,6 +149,60 @@ const VariantItem = styled("button")`
   width: 100%;
 `;
 
+const RepeatTitle = styled("h1")`
+  font-size: 32px;
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.25;
+  color: #3c3c3c;
+`;
+
+const RepeatQuestion = styled("p")`
+  font-size: 19px;
+  line-height: 39px;
+  font-family: "Montserrat", sans-serif;
+  color: #3c3c3c;
+  padding: 12px 24px;
+  margin-left: 8px;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 15px;
+  box-sizing: border-box;
+`;
+
+const RepeatQuestionTriangleContainer = styled("div")`
+  height: 10px;
+  overflow: hidden;
+  width: 20px;
+  position: absolute;
+  left: -5px;
+  margin: 15px 0;
+  top: calc(50% - 15px);
+  transform: translateY(-50%) rotate(-90deg);
+`;
+
+const RepeatQuestionTriangle = styled("span")`
+  box-sizing: border-box;
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 2px;
+  content: "";
+  height: 14.14427px;
+  left: 50%;
+  transform: rotate(45deg);
+  transform-origin: top left;
+  width: 14.14427px;
+`;
+
+const RepeatFooterIcon = styled("div")`
+  background: #fff;
+  border-radius: 98px;
+  display: block;
+  float: left;
+  height: 80px;
+  width: 80px;
+`;
+
 export {
   RepeatFooter,
   RepeatFooterMessage,
@@ -157,4 +217,9 @@ export {
   RepeatBodyWelcome,
   RepeatBodyResults,
   VariantItem,
+  RepeatTitle,
+  RepeatQuestion,
+  RepeatQuestionTriangleContainer,
+  RepeatQuestionTriangle,
+  RepeatFooterIcon,
 };

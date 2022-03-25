@@ -82,7 +82,6 @@ export default function InsertWords({
             key={idx}
             onClick={() => {
               setWords((prevArr) => {
-                console.log("PREVARRAY: ", prevArr);
                 if (prevArr?.find((word) => word === item)) {
                   prevArr.splice(prevArr.indexOf(item), 1);
                   return [...prevArr];
@@ -91,7 +90,6 @@ export default function InsertWords({
                 }
               });
               setShowText(true);
-              console.log("Current Words: ", words);
             }}
           >
             {item}

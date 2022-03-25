@@ -67,8 +67,6 @@ const reducer = (state, action) => {
         newPairs.push(`${activeIndex}${index}`);
       }
 
-      console.log("NEW: ", newPairs);
-
       return {
         ...state,
         variants: state.variants.map((variant) => ({

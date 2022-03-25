@@ -1,12 +1,13 @@
 import { Fragment, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
+import { RepeatTitle } from "./lib";
 
 export default function InsertWords({ content, setValue, formDisabled }) {
   const [values, setValues] = useState([]);
 
   return (
     <Fragment>
-      <h2>Insert words</h2>
+      <RepeatTitle>Insert words</RepeatTitle>
       <InsertWordsTextBlock style={{ marginTop: 0 }}>
         {content.text.split(" ").map((item: any, idx: number) =>
           content.answer.find((it: any) => it === item) ? (

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import { Fragment, useState } from "react";
-import { VariantItem } from "./lib";
+import { RepeatTitle, VariantItem } from "./lib";
 
 export default function Pairs({ content, checkAnswer }) {
   const [active, setActive] = useState("");
@@ -12,9 +12,7 @@ export default function Pairs({ content, checkAnswer }) {
 
   return (
     <Fragment>
-      <div>
-        <h2>Connect pairs</h2>
-      </div>
+      <RepeatTitle>Connect pairs</RepeatTitle>
 
       <ul
         css={{

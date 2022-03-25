@@ -42,7 +42,7 @@ export default function New() {
       <Main>
         <Outlet />
 
-        <Forms>
+        {/* <Forms>
           <ul>
             {forms.map((item) => (
               <li key={item.title} css={{ borderRadius: 16, marginBottom: 2 }}>
@@ -66,7 +66,7 @@ export default function New() {
             ))}
             <NavLink to={""}>Create a new form</NavLink>
           </ul>
-        </Forms>
+        </Forms> */}
       </Main>
     </Fragment>
   );

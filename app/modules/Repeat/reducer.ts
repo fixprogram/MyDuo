@@ -87,8 +87,6 @@ const reducer = (state, action) => {
           return negativeState;
         }
         case "Pairs": {
-          console.log("PAIRS");
-          console.log(action.payload);
           const respond = action.payload;
           let idx;
           if (

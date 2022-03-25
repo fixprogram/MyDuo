@@ -44,9 +44,8 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/repeats`);
 };
 
-export default function Repeat1() {
+export default function RepeatScreen() {
   const { repeat } = useLoaderData();
-  console.log(repeat);
 
   return <Repeat data={repeat} />;
 }

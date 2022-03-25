@@ -117,8 +117,9 @@ const Input = styled("input")`
 `;
 
 const Textarea = styled("textarea")`
-  background-color: #f7f7f7;
-  border-color: #e5e5e5;
+  background-color: rgb(247, 247, 247);
+  border: 2px solid rgb(229, 229, 229);
+  border-color: rgb(229, 229, 229);
   border-radius: 10px;
   padding: 10px 12px;
   min-height: 200px;
@@ -131,10 +132,11 @@ const Textarea = styled("textarea")`
   z-index: 1;
 
   line-height: 24px;
-  color: #3c3c3c;
-  font-size: 100%;
+  color: rgba(60, 60, 60, 0.8);
+  font-size: 19px;
   font-family: "Roboto";
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: 1px;
 `;
 
 const Fieldset = styled("fieldset")`

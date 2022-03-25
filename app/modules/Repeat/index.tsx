@@ -8,6 +8,7 @@ import {
   RepeatFooterMessage,
   RepeatFooterText,
   RepeatFooterTitle,
+  RepeatFooterIcon,
 } from "./components/lib";
 
 import Progress from "~/components/Progress";
@@ -15,6 +16,8 @@ import Body from "./components/Body";
 import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
 import { useSubmit } from "remix";
+import RightSvg from "~/styles/right.svg";
+import WrongSvg from "~/styles/wrong.svg";
 
 export default function Repeat({ data }) {
   const ref = useRef();
@@ -67,7 +70,9 @@ export default function Repeat({ data }) {
   };
 
   return (
-    <section>
+    <section
+      css={{ position: "relative", overflowY: "scroll", minHeight: "100vh" }}
+    >
       <Progress progress={progress} />
       {currentStep === maxSteps + 1 ? (
         <form method="POST" ref={ref}>
@@ -93,22 +98,51 @@ export default function Repeat({ data }) {
         />
       )}
       <RepeatFooter stateRight={stateRight} stateWrong={stateWrong}>
-        <RepeatFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
-          <RepeatFooterTitle>
-            {stateWrong ? "Right answer: " : "Great!"}
-          </RepeatFooterTitle>
-          <RepeatFooterText>
-            {stateWrong ? content.answer : null}
-          </RepeatFooterText>
-        </RepeatFooterMessage>
-        <RepeatButton
-          active={!disabled}
-          stateRight={stateRight}
-          stateWrong={stateWrong}
-          onClick={onContinue}
+        <div
+          css={{
+            maxWidth: 1000,
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: "0 auto",
+          }}
         >
-          {stateRight ? "Next" : stateWrong ? "Continue" : "Check"}
-        </RepeatButton>
+          <RepeatFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
+            {stateRight || stateWrong ? (
+              <RepeatFooterIcon>
+                <span
+                  css={{
+                    background: `url(${stateRight ? RightSvg : WrongSvg})`,
+                    backgroundPosition: `${
+                      stateRight ? "-166px -90px" : "-208px -90px"
+                    }`,
+                    width: stateRight ? 41 : 31,
+                    height: 31,
+                    display: "block",
+                    margin: stateWrong ? "26px 0 0 25px" : "27px 0 0 20px",
+                  }}
+                ></span>
+              </RepeatFooterIcon>
+            ) : null}
+            <div css={{ marginLeft: 16 }}>
+              <RepeatFooterTitle>
+                {stateWrong ? "Right answer: " : "Great!"}
+              </RepeatFooterTitle>
+              {stateWrong ? (
+                <RepeatFooterText> {content.answer}</RepeatFooterText>
+              ) : null}
+            </div>
+          </RepeatFooterMessage>
+          <RepeatButton
+            active={!disabled}
+            stateRight={stateRight}
+            stateWrong={stateWrong}
+            onClick={onContinue}
+          >
+            {stateRight ? "Next" : stateWrong ? "Continue" : "Check"}
+          </RepeatButton>
+        </div>
       </RepeatFooter>
     </section>
   );

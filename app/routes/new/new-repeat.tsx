@@ -38,7 +38,6 @@ export const action: ActionFunction = async ({ request }) => {
         return { ...returnData, answer, definition, question, variants };
       }
       case "Pairs": {
-        console.log("PAIRS");
         const variants = form.getAll(`variant${index}`); //
         return { ...returnData, answer: answer.split(","), variants };
       }
