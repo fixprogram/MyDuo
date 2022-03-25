@@ -28,10 +28,10 @@ export async function login({ username, password }: LoginForm) {
   return { id: user.id, username };
 }
 
-const sessionSecret = process.env.SESSION_SECRET;
-if (!sessionSecret) {
-  throw new Error(`SESSION_SECRET must be set11: ${sessionSecret}`);
-}
+// const sessionSecret = process.env.SESSION_SECRET;
+// if (!sessionSecret) {
+//   throw new Error(`SESSION_SECRET must be set11: ${sessionSecret}`);
+// }
 
 const storage = createCookieSessionStorage({
   cookie: {
