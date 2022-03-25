@@ -30,7 +30,7 @@ export async function login({ username, password }: LoginForm) {
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
-  throw new Error("SESSION_SECRET must be set");
+  throw new Error(`SESSION_SECRET must be set11: ${sessionSecret}`);
 }
 
 const storage = createCookieSessionStorage({
