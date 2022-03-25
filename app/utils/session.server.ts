@@ -28,10 +28,10 @@ export async function login({ username, password }: LoginForm) {
   return { id: user.id, username };
 }
 
-// const sessionSecret = process.env.SESSION_SECRET;
-// if (!sessionSecret) {
-//   throw new Error(`SESSION_SECRET must be set11: ${sessionSecret}`);
-// }
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error("SESSION_SECRET must be set");
+}
 
 const storage = createCookieSessionStorage({
   cookie: {
@@ -40,7 +40,7 @@ const storage = createCookieSessionStorage({
     // but that doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === "production",
-    secrets: ["feriy4gf"],
+    secrets: [sessionSecret],
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
