@@ -1,6 +1,13 @@
 import { redirect, useLoaderData } from "remix";
+import { getUser } from "~/utils/session.server";
 
-export const loader = () => {
+export const loader = async ({ request }) => {
+  const user = await getUser(request);
+
+  if (!user) {
+    return redirect("/login");
+  }
+
   return redirect("/repeats");
 };
 
