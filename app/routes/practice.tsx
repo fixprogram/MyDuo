@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
 import { Main } from "~/components/lib";
 import Menu from "~/components/Menu";
+import Practice from "~/modules/Practice";
 import styles from "~/styles/index.css";
 import { getUser } from "~/utils/session.server";
 
@@ -14,12 +15,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   return { user };
 };
 
-export default function Practice() {
+export default function PracticePage() {
   const { user } = useLoaderData();
+
   return (
     <Fragment>
       <Menu user={user} />
-      <Main>Practice</Main>
+      <Main>
+        <Practice />
+      </Main>
     </Fragment>
   );
 }

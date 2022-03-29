@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Fragment, useEffect, useReducer, useRef } from "react";
+import { Fragment, useEffect, useReducer, useRef, lazy, Suspense } from "react";
 import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
 import { reducer, basicState } from "./reducer";
@@ -11,9 +11,11 @@ import {
   StepHeader,
   StyleButton,
 } from "./components/lib";
-import InsertWords from "./components/InsertWords";
-import Variants from "./components/Variants";
-import MatchingPairs from "./components/MatchingPairs";
+const InsertWords = lazy(() => import("./components/InsertWords"));
+const Variants = lazy(() => import("./components/Variants"));
+const MatchingPairs = lazy(() => import("./components/MatchingPairs"));
+// import Variants from "./components/Variants";
+// import MatchingPairs from "./components/MatchingPairs";
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
@@ -38,7 +40,7 @@ export default function Steps() {
   };
 
   return (
-    <Fragment>
+    <section>
       <Legend>Steps</Legend>
       {steps.map(
         ({ number, keywords, answer, style, id }: Step, idx: number) => (
@@ -97,22 +99,24 @@ export default function Steps() {
               ) : null}
 
               {style === "Question" ? (
-                <QuestionAnswer
-                  number={number}
-                  answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
-                  setKeywords={(keywords: any) =>
-                    dispatch({
-                      type: "SET_KEYWORDS",
-                      payload: {
-                        keywords,
-                        number,
-                      },
-                    })
-                  }
-                  setStyle={() => setStyle("", id)}
-                  keywords={keywords}
-                />
+                <Suspense fallback={<div>...loading</div>}>
+                  <QuestionAnswer
+                    number={number}
+                    answer={answer}
+                    setAnswer={(answer: any) => setAnswer(answer, number)}
+                    setKeywords={(keywords: any) =>
+                      dispatch({
+                        type: "SET_KEYWORDS",
+                        payload: {
+                          keywords,
+                          number,
+                        },
+                      })
+                    }
+                    setStyle={() => setStyle("", id)}
+                    keywords={keywords}
+                  />
+                </Suspense>
               ) : style === "Insert" ? (
                 <InsertWords
                   number={number}
@@ -140,7 +144,6 @@ export default function Steps() {
           </Fragment>
         )
       )}
-      <hr />
-    </Fragment>
+    </section>
   );
 }

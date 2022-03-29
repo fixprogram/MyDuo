@@ -12,4 +12,14 @@ const LessonTitleInput = styled("input")`
   margin-top: 8px;
 `;
 
-export { LessonTitleInput };
+const ConstructorMenu = styled("div")`
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  display: block;
+  margin: 0 24px 24px;
+  padding: 24px;
+  width: 380px;
+`;
+
+export { LessonTitleInput, ConstructorMenu };
