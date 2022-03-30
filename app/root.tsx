@@ -20,6 +20,7 @@ function Document({
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <script src="https://cdn.skypack.dev/react-markdown@7?min" />
         <Links />
       </head>
       <body style={{ margin: 0 }}>
