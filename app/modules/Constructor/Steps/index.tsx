@@ -45,7 +45,7 @@ export default function Steps() {
       {steps.map(
         ({ number, keywords, answer, style, id }: Step, idx: number) => (
           <Fragment key={id}>
-            <VisuallyHiddenInput type="text" name="step" value="idx" readOnly />
+            <VisuallyHiddenInput type="text" name="step" value={idx} readOnly />
             <StepHeader>
               <h2 css={{ marginRight: "auto" }}>Step {idx + 1}</h2>
 

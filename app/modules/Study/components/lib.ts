@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 const StudyContainer = styled("section")`
   height: calc(100vh - 95px);
-  width: 100%;
+  width: 83%;
   cursor: text;
 `;
 

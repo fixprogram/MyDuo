@@ -66,20 +66,26 @@ const reducer = (state, action) => {
           return negativeState;
         }
         case "Question": {
+          const areThereAnyKeywords = content.keywords.length > 0;
           const checkKeywords = content.keywords.filter((item) =>
             action.payload.trim().toLowerCase().includes(item.toLowerCase())
           );
-          if (
-            content.keywords[0].length > 0 &&
-            checkKeywords.length === content.keywords.length
-          ) {
-            return positiveState;
-          } else if (action.payload === content.answer[0]) {
+          if (areThereAnyKeywords) {
+            if (
+              content.keywords[0].length > 0 &&
+              checkKeywords.length === content.keywords.length
+            ) {
+              return positiveState;
+            }
+          }
+
+          if (action.payload === content.answer[0]) {
             return positiveState;
           } else {
             return negativeState;
           }
         }
+
         case "Variants": {
           if (content.answer[0] === action.payload) {
             return positiveState;

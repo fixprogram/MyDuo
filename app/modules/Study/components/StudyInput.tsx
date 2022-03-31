@@ -5,6 +5,7 @@ export default function StudyInput({
   initialValue,
   placeholder,
   refName,
+  name,
 }: {
   initialValue: string;
   placeholder?: string;
@@ -17,6 +18,7 @@ export default function StudyInput({
       onChange={(event) => setValue(event.target.value)}
       placeholder={placeholder}
       ref={refName}
+      name={name}
     />
   );
 }

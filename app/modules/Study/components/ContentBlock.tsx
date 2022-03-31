@@ -8,6 +8,7 @@ function formatContent(tag, value, refName, onRemove) {
           <StudyInput
             initialValue={value}
             placeholder="Enter main title"
+            name={tag}
             refName={refName}
           />
         </h1>
@@ -15,8 +16,16 @@ function formatContent(tag, value, refName, onRemove) {
     case "p":
       return (
         <p style={{ margin: 0 }}>
-          <StudyInput initialValue={value} refName={refName} />
+          <StudyInput initialValue={value} refName={refName} name={tag} />
         </p>
+      );
+    case "div":
+      return (
+        <StudyInput
+          style={{ margin: "20px 0" }}
+          refName={refName}
+          name={"space"}
+        />
       );
     default:
       throw new Error(`Unkown tag name: ${tag}`);
@@ -31,7 +40,7 @@ export default function ContentBlock({ tag, value, refName, onRemove }) {
           onRemove();
         }
         if (evt.code === "Enter") {
-          // console.log("ht");
+          // console.log("ht"); // Make it real so tapping Enter inside an input we go futher
         }
       }}
     >

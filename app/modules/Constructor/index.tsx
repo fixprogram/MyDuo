@@ -6,11 +6,11 @@ import BasicInfo from "./components/BasicInfo";
 import { ConstructorMenu } from "./components/lib";
 import Steps from "./Steps";
 
-export default function Form() {
+export default function Constructor() {
   //   const [{ steps, active }, dispatch] = useReducer(reducer, basicState);
   // create active state when the form is fulfilled
 
-  const [state, setState] = useState("Basic");
+  // const [state, setState] = useState("Basic");
 
   return (
     <form
@@ -22,7 +22,7 @@ export default function Form() {
         maxWidth: "70%",
       }}
     >
-      {state === "Basic" ? <BasicInfo /> : <Steps />}
+      {/* {state === "Basic" ? <BasicInfo /> : <Steps />}
 
       <ConstructorMenu>
         <button type="button" onClick={() => setState("Basic")}>
@@ -31,12 +31,16 @@ export default function Form() {
         <button type="button" onClick={() => setState("Steps")}>
           Steps
         </button>
-        <button type="button">Results screen</button>
+        <button type="button">Results screen</button> */}
 
-        <FormButton type="submit" active={true}>
-          Save repeat
-        </FormButton>
-      </ConstructorMenu>
+      <BasicInfo />
+
+      <Steps />
+
+      <FormButton type="submit" active={true}>
+        Save repeat
+      </FormButton>
+      {/* </ConstructorMenu> */}
     </form>
   );
 }

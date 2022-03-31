@@ -1,45 +1,18 @@
-import { useEffect, useReducer, useRef } from "react";
+import { createContext, useEffect, useReducer, useRef } from "react";
+import { Link } from "remix";
 import ContentBlock from "./components/ContentBlock";
 import { StudyContainer } from "./components/lib";
+import StudySidebar from "./components/StudySidebar";
 import StudyTextarea from "./components/StudyTextarea";
+import { initialState, reducer } from "./reducer";
 
-const reducer = (state, action) => {
-  const { onText, content } = state;
-  switch (action.type) {
-    case "FOCUS_DOCUMENT": {
-      return { ...state, onText: true };
-    }
-    case "BLUR_DOCUMENT": {
-      return { ...state, onText: false };
-    }
-    case "ADD_CONTENT": {
-      const { tag, value } = action.payload;
-      return {
-        ...state,
-        onText: tag === "p" ? true : false,
-        content: [...content, { tag, value }],
-      };
-    }
-    case "REMOVE_LAST_CONTENT": {
-      const newContent = content;
-      newContent.splice(content.length - 1, 1);
+export const ContextItemsRef = createContext([]);
 
-      return {
-        ...state,
-        previous: true,
-        content: [...newContent],
-      };
-    }
-    default: {
-      throw new Error(`We don't know this action type: ${action.type}`);
-    }
-  }
-};
-
-export default function Study() {
+export default function Study({ data, children }) {
+  console.log("DATAA: ", data);
   const [{ onText, content, previous }, dispatch] = useReducer(reducer, {
-    onText: false,
-    content: [],
+    ...initialState,
+    content: data[0]?.content ? data[0].content : [],
   });
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -55,34 +28,51 @@ export default function Study() {
   }
 
   return (
-    <StudyContainer>
-      {content?.map(({ tag, value }: any, idx) => {
-        return (
-          <ContentBlock
-            tag={tag}
-            value={value}
-            key={idx + value}
-            onRemove={() => {
-              dispatch({ type: "REMOVE_LAST_CONTENT" });
-            }}
-            refName={(el) => (itemsRef.current[idx] = el)}
-          />
-        );
-      })}
+    <section style={{ display: "flex", width: "100%" }}>
+      <StudyContainer>
+        <form method="POST">
+          <input type="text" name="title" placeholder="Type list title" />
+          {content?.map(({ tag, value }: any, idx: number) => {
+            return (
+              <ContentBlock
+                tag={tag}
+                value={value}
+                key={idx + value}
+                onRemove={() => {
+                  dispatch({ type: "REMOVE_LAST_CONTENT" });
+                }}
+                refName={(el) => (itemsRef.current[idx] = el)}
+              />
+            );
+          })}
 
-      {onText ? (
-        <StudyTextarea
-          addContent={(payload) => dispatch({ type: "ADD_CONTENT", payload })}
-          setFocusOnLastContent={setFocusOnLastContent}
-        />
-      ) : (
-        <div
-          style={{ height: "100vh" }}
-          onClick={() => {
-            dispatch({ type: "FOCUS_DOCUMENT" });
-          }}
-        ></div>
-      )}
-    </StudyContainer>
+          {onText ? (
+            <StudyTextarea
+              addContent={(payload) =>
+                dispatch({ type: "ADD_CONTENT", payload })
+              }
+              addSpace={() => dispatch({ type: "ADD_SPACE" })}
+              setFocusOnLastContent={setFocusOnLastContent}
+            />
+          ) : (
+            <div
+              style={{ height: "100vh" }}
+              onClick={() => {
+                dispatch({ type: "FOCUS_DOCUMENT" });
+              }}
+            ></div>
+          )}
+          <button type="submit">Save changes</button>
+        </form>
+      </StudyContainer>
+
+      <Link to="transform-repeat">Transform REpeat</Link>
+
+      <ContextItemsRef.Provider value={itemsRef.current}>
+        {children}
+      </ContextItemsRef.Provider>
+
+      {/* <StudySidebar itemsRef={itemsRef} /> */}
+    </section>
   );
 }

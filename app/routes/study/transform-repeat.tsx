@@ -1,5 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
 import Constructor from "~/modules/Constructor";
+import StudySidebar from "~/modules/Study/components/StudySidebar";
 import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -52,6 +53,6 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/repeat/${repeat.id}`);
 };
 
-export default function NewRepeat() {
-  return <Constructor />;
+export default function TransformRepeat() {
+  return <StudySidebar />;
 }
