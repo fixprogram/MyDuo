@@ -1,21 +1,12 @@
-import { Fragment, useContext, useEffect, useState } from "react";
-import { Form, useSubmit } from "remix";
+import { Fragment, useContext, useState } from "react";
+import { Form } from "remix";
 import { ProjectContext } from "~/routes/$projectTitle";
 import { VisuallyHiddenInput } from "./lib";
 
 export default function Projects() {
-  // console.log("PRPRPR: ", projects);
-  //   const [project, setProject] = useState(() =>
-  //     projects.find((item) => item.active)
-  //   );
   const [showWindow, setShowWindow] = useState(false);
   const value = useContext(ProjectContext);
   const { activeProject, projects } = value;
-  const submit = useSubmit();
-
-  // useEffect(() => {
-  //   setActiveProject();
-  // }, []);
 
   return (
     <Fragment>
@@ -28,12 +19,7 @@ export default function Projects() {
           <ul>
             {projects?.map((item, idx) =>
               !item.active ? (
-                <li
-                  key={idx}
-                  // onClick={(event) =>
-                  //   submit(event.currentTarget, { replace: true })
-                  // }
-                >
+                <li key={idx}>
                   <Form method="post">
                     <VisuallyHiddenInput
                       type="text"

@@ -11,7 +11,7 @@ type LoginForm = {
 export async function register({ username, password }: LoginForm) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
-    data: { username, passwordHash },
+    data: { username, passwordHash, streak: 1, wasToday: true },
   });
   const project = await db.project.create({
     data: {
@@ -85,7 +85,7 @@ export async function getUser(request: Request) {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true },
+      select: { id: true, username: true, streak: true, wasToday: true },
     });
     return user;
   } catch {
@@ -126,18 +126,9 @@ export async function getActiveProject(request: Request) {
 }
 
 export async function setActiveProject(id) {
-  // const userId = await getUserId(request);
-  // if (typeof userId !== "string") {
-  //   return null;
-  // }
-  console.log("START");
   const project = await db.project.findUnique({
     where: { id },
   });
-
-  // const projects = await db.project.findMany({
-  //   where: {userId: project?.userId}
-  // })
 
   const projects = await db.project.updateMany({
     where: {
