@@ -19,7 +19,7 @@ const Progress = ({ progress }: { progress: number }) => {
       }}
     >
       <Link
-        to="/repeats"
+        to="/"
         css={{ marginRight: "21px", height: "16px", marginTop: "-3px" }}
       >
         <img

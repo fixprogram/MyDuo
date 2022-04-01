@@ -33,16 +33,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   return { user };
 };
 
-export default function New() {
+export default function NewPage() {
   const { user } = useLoaderData();
 
   return (
-    <Fragment>
-      <Menu user={user} />
-      <Main>
-        <Outlet />
+    // <Fragment>
+    //   <Menu user={user} />
+    //   <Main>
+    <Outlet />
 
-        {/* <Forms>
+    /* <Forms>
           <ul>
             {forms.map((item) => (
               <li key={item.title} css={{ borderRadius: 16, marginBottom: 2 }}>
@@ -66,8 +66,8 @@ export default function New() {
             ))}
             <NavLink to={""}>Create a new form</NavLink>
           </ul>
-        </Forms> */}
-      </Main>
-    </Fragment>
+        </Forms> */
+    //   </Main>
+    // </Fragment>
   );
 }

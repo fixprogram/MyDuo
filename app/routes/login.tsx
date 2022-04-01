@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
   const loginType = form.get("loginType");
   const username = form.get("username");
   const password = form.get("password");
-  const redirectTo = form.get("redirectTo") || "/repeats";
+  const redirectTo = form.get("redirectTo") || "/";
   if (
     typeof loginType !== "string" ||
     typeof username !== "string" ||
@@ -94,7 +94,7 @@ export const action: ActionFunction = async ({ request }) => {
           formError: `User with username ${username} already exists`,
         });
       }
-      const user = await register({ username, password });
+      const user = await register({ username, password, projects: [] });
       if (!user) {
         return badRequest({
           fields,

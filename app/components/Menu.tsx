@@ -11,7 +11,8 @@ import studyActive from "~/styles/study-active.svg";
 import repeatActive from "~/styles/practice-active.svg";
 import practiceActive from "~/styles/forum-active.svg";
 import shopActive from "~/styles/shop-active.svg";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
+import Projects from "./Projects";
 
 const MENU = [
   {
@@ -40,7 +41,11 @@ const MENU = [
   },
 ];
 
-const Menu = ({ user }) => {
+const Menu = ({ user, projects }) => {
+  // console.log("PRRPDF: ", projects);
+  // const [project, setProject] = useState(() =>
+  //   projects.active ? projects : null
+  // );
   return (
     <div
       css={{
@@ -58,7 +63,7 @@ const Menu = ({ user }) => {
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
               <NavLink
-                to={`/${link}`}
+                to={`${link}`}
                 className="nav-link"
                 css={{
                   textDecoration: "none",
@@ -88,7 +93,9 @@ const Menu = ({ user }) => {
         </HorizontalList>
       </nav>
       <HorizontalList>
-        <ListItem>Project</ListItem>
+        <ListItem>
+          <Projects projects={projects} />
+        </ListItem>
         <ListItem>Streak</ListItem>
         <ListItem>
           {user ? (

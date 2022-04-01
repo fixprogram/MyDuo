@@ -2,6 +2,7 @@ import { redirect, useLoaderData, useParams } from "remix";
 import type { LoaderFunction, ActionFunction } from "remix";
 import { db } from "~/utils/db.server";
 import Repeat from "~/modules/Repeat";
+import { getActiveProject } from "~/utils/session.server";
 
 export function ErrorBoundary() {
   const { repeatId } = useParams();
@@ -24,6 +25,8 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  const project = await getActiveProject(request);
+  console.log("Active project: ", project);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const id = form.get("id");
@@ -41,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
 
-  return redirect(`/repeats`);
+  return redirect(`/${project.title}/repeats`);
 };
 
 export default function RepeatScreen() {

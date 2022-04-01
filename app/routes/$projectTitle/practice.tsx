@@ -10,20 +10,20 @@ export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
-  return { user };
-};
+// export const loader: LoaderFunction = async ({ request }) => {
+//   const user = await getUser(request);
+//   return { user, project };
+// };
 
 export default function PracticePage() {
-  const { user } = useLoaderData();
+  // const { user, project } = useLoaderData();
 
   return (
-    <Fragment>
-      <Menu user={user} />
-      <Main>
-        <Practice />
-      </Main>
-    </Fragment>
+    // <Fragment>
+    //   <Menu user={user} projects={project} />
+    //   <Main>
+    <Practice />
+    /* </Main>
+    </Fragment> */
   );
 }

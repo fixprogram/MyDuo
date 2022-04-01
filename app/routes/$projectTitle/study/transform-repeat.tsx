@@ -2,10 +2,10 @@ import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
 import Constructor from "~/modules/Constructor";
 import StudySidebar from "~/modules/Study/components/StudySidebar";
 import { db } from "~/utils/db.server";
-import { requireUserId } from "~/utils/session.server";
+import { getProjects, requireUserId } from "~/utils/session.server";
 
-export const action: ActionFunction = async ({ request }) => {
-  const userId = await requireUserId(request);
+export const action: ActionFunction = async ({ request, params }) => {
+  // const userId = await requireUserId(request);
   const form = await request.formData();
   const title = form.get("title"); // Getting the repeat title
 
@@ -48,9 +48,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
   });
 
-  const data = { title, steps, exp: 0, userId };
+  const data = { title, steps, exp: 0, projectId: params.projectId };
   const repeat = await db.repeat.create({ data });
-  return redirect(`/repeat/${repeat.id}`);
+  return redirect(`repeat/${repeat.id}`);
 };
 
 export default function TransformRepeat() {

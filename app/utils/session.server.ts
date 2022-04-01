@@ -13,7 +13,14 @@ export async function register({ username, password }: LoginForm) {
   const user = await db.user.create({
     data: { username, passwordHash },
   });
-  return { id: user.id, username };
+  const project = await db.project.create({
+    data: {
+      title: "MyFirstProject",
+      active: true,
+      userId: user.id,
+    },
+  });
+  return { id: user.id, username, project };
 }
 
 export async function login({ username, password }: LoginForm) {
@@ -84,6 +91,73 @@ export async function getUser(request: Request) {
   } catch {
     throw logout(request);
   }
+}
+
+export async function getProjects(request: Request) {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  try {
+    const projects = await db.project.findMany({
+      where: { userId },
+    });
+    return projects;
+  } catch {
+    throw logout(request);
+  }
+}
+
+export async function getActiveProject(request: Request) {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  try {
+    const project = await db.project.findFirst({
+      where: { userId, active: true },
+    });
+    return project;
+  } catch {
+    throw logout(request);
+  }
+}
+
+export async function setActiveProject(id) {
+  // const userId = await getUserId(request);
+  // if (typeof userId !== "string") {
+  //   return null;
+  // }
+  console.log("START");
+  const project = await db.project.findUnique({
+    where: { id },
+  });
+
+  // const projects = await db.project.findMany({
+  //   where: {userId: project?.userId}
+  // })
+
+  const projects = await db.project.updateMany({
+    where: {
+      userId: project?.userId,
+    },
+    data: {
+      active: false,
+    },
+  });
+
+  await db.project.update({
+    where: {
+      id,
+    },
+    data: {
+      active: true,
+    },
+  });
+
+  return project;
 }
 
 export async function logout(request: Request) {
