@@ -1,17 +1,22 @@
 import { VisuallyHiddenInput, Textarea } from "~/components/lib";
 import { formatRef } from "../utils";
 import { ContextItemsRef } from "..";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export default function SidebarConstructor() {
   const value = useContext(ContextItemsRef);
+  console.log("Cont val: ", value);
+
   const blocks = formatRef(value);
+
+  const [title, setTitle] = useState(() => value.title);
   return (
     <form method="POST">
       <VisuallyHiddenInput
         type="text"
         name="title"
-        value={"Test title"}
+        value={title}
+        // onChange={(evt) => setTitle(evt.target.value)}
         readOnly
       />
 

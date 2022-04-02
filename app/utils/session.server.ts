@@ -76,6 +76,73 @@ export async function requireUserId(
   return userId;
 }
 
+async function getActivePractice(request: Request) {
+  const activeProject = await getActiveProject(request);
+
+  try {
+    const practice = await db.practice.findFirst({
+      where: { projectId: activeProject?.id },
+    });
+    return practice;
+  } catch {
+    throw logout(request);
+  }
+}
+
+export async function getPracticeGoals(request: Request) {
+  const activePractice = await getActivePractice(request);
+
+  return activePractice?.goals;
+}
+
+export async function getPracticeDay(request: Request, timestamp: string) {
+  const activePractice = await getActivePractice(request);
+
+  return activePractice?.days?.find((day) => day.timestamp == timestamp);
+}
+
+export async function setPracticeDay(
+  request: Request,
+  timestamp: string,
+  data: { tasks: []; habits: [] },
+  goals: string[] = []
+) {
+  const activeProject = await getActiveProject(request);
+  const activePractice = await getActivePractice(request);
+
+  if (!activePractice) {
+    const practice = await db.practice.create({
+      data: {
+        goals,
+        projectId: activeProject?.id,
+        days: [{ timestamp, ...data }],
+      },
+    });
+
+    return practice;
+  }
+
+  const newDays = activePractice?.days;
+  const newDay = newDays?.find((day) => toString(day.timestamp) === timestamp);
+  if (newDay) {
+    newDays?.splice(newDays.indexOf(newDay), 1);
+
+    const day = await db.practice.update({
+      where: {
+        id: activePractice.id,
+      },
+      data: {
+        ...activePractice,
+        day: { timestamp, ...data },
+      },
+    });
+
+    return day;
+  }
+
+  return null;
+}
+
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
   if (typeof userId !== "string") {
@@ -109,6 +176,21 @@ export async function getProjects(request: Request) {
   }
 }
 
+export async function createNewProject(request: Request, title) {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  await deactiveAllUserProjects(userId);
+
+  const project = await db.project.create({
+    data: { userId, title, active: true },
+  });
+
+  return project;
+}
+
 export async function getActiveProject(request: Request) {
   const userId = await getUserId(request);
   if (typeof userId !== "string") {
@@ -125,19 +207,37 @@ export async function getActiveProject(request: Request) {
   }
 }
 
-export async function setActiveProject(id) {
-  const project = await db.project.findUnique({
-    where: { id },
+export async function findArticleByTitle(request: Request, title: string) {
+  const project = await getActiveProject(request);
+
+  const article = await db.study.findFirst({
+    where: { projectId: project?.id, title },
   });
 
+  return article;
+}
+
+async function deactiveAllUserProjects(userId: string) {
   const projects = await db.project.updateMany({
     where: {
-      userId: project?.userId,
+      userId,
     },
     data: {
       active: false,
     },
   });
+
+  return projects;
+}
+
+export async function setActiveProject(id) {
+  const project = await db.project.findUnique({
+    where: { id },
+  });
+
+  if (project) {
+    await deactiveAllUserProjects(project.userId);
+  }
 
   await db.project.update({
     where: {

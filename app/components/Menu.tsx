@@ -19,7 +19,7 @@ import Projects from "./Projects";
 const MENU = [
   {
     title: "study",
-    link: "study",
+    link: "study/",
     icon: study,
     activeIcon: studyActive,
   },
@@ -44,7 +44,6 @@ const MENU = [
 ];
 
 const Menu = ({ user }) => {
-  console.log(user);
   return (
     <div
       css={{

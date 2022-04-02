@@ -9,10 +9,10 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  username     String    @unique
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
   passwordHash String
   streak       Int
   wasToday     Boolean
@@ -25,16 +25,17 @@ model Project {
   title      String
   repeats    Repeat[]
   study      Study[]
+  practice   Practice[]
 }
 
 model Repeat {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  createdAt  DateTime     @default(now())
-  steps      RepeatStep[]
-  exp        Int
-  Project    Project?     @relation(fields: [projectId], references: [id])
-  projectId  String      
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  createdAt DateTime     @default(now())
+  steps     RepeatStep[]
+  exp       Int
+  Project   Project?     @relation(fields: [projectId], references: [id])
+  projectId String
 }
 
 type RepeatStep {
@@ -49,18 +50,44 @@ type RepeatStep {
 }
 
 type Variants {
-  variants   String[]
+  variants String[]
 }
 
 model Study {
-  id         String        @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  content    ContentItem[]
-  Project    Project?      @relation(fields: [projectId], references: [id])
-  projectId  String
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   ContentItem[]
+  Project   Project?      @relation(fields: [projectId], references: [id])
+  projectId String
 }
 
 type ContentItem {
-  tag        String
-  value      String
+  tag   String
+  value String
+}
+
+model Practice {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  goals     String[]
+  projectId String
+  days      Day[]
+  Project   Project?      @relation(fields: [projectId], references: [id])
+}
+
+type Day {
+  timestamp String
+  tasks     Task[]
+  habits    Habit[]
+}
+
+type Task {
+  title       String
+  isFulfilled  Boolean
+  priority    Int?
+}
+
+type Habit {
+  title       String
+  isFulfilled  Boolean
+  priority    Int?
 }

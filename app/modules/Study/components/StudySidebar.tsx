@@ -6,6 +6,7 @@ import { ContextItemsRef } from "..";
 export default function StudySidebar() {
   const [isCreateRepeat, setIsCreateRepeat] = useState(false);
   const value = useContext(ContextItemsRef);
+  console.log("VALUE: ", value);
   const blocks = formatRef(value);
   return isCreateRepeat ? (
     <SidebarConstructor />

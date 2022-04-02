@@ -1,17 +1,27 @@
-import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
+import { LoaderFunction, redirect } from "@remix-run/node";
 import React, { createContext } from "react";
 import { Outlet, useLoaderData } from "remix";
 import { Main } from "~/components/lib";
 import Menu from "~/components/Menu";
-import { db } from "~/utils/db.server";
-import { getUser, getProjects, setActiveProject } from "~/utils/session.server";
+import {
+  getUser,
+  getProjects,
+  setActiveProject,
+  createNewProject,
+} from "~/utils/session.server";
 
 export async function action({ request }) {
   const form = await request.formData();
   const id = form.get("id");
-  const project = await setActiveProject(id);
+  const newProject = form.get("newProject");
+  let project;
+  if (newProject.length > 0) {
+    project = await createNewProject(request, newProject);
+  } else {
+    project = await setActiveProject(id);
+  }
 
-  return redirect(`/${project.title}/repeats`);
+  return redirect(`/${project?.title}/repeats`);
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -33,12 +43,12 @@ export const ProjectContext = createContext({});
 
 export default function ProjectPage() {
   const { user, projects } = useLoaderData();
-  const activeProject = projects.find((project) => project.active);
-  const value = { activeProject, projects };
+  // const activeProject = projects.find((project: any) => project.active);
   return (
     <React.Fragment>
-      <ProjectContext.Provider value={value}>
-        <Menu user={user} projects={projects} />
+      {/* <ProjectContext.Provider value={{ activeProject, projects }}> */}
+      <ProjectContext.Provider value={{ projects }}>
+        <Menu user={user} />
         <Main>
           <Outlet />
         </Main>

@@ -5,36 +5,63 @@ import { VisuallyHiddenInput } from "./lib";
 
 export default function Projects() {
   const [showWindow, setShowWindow] = useState(false);
-  const value = useContext(ProjectContext);
-  const { activeProject, projects } = value;
+  const value: any = useContext(ProjectContext);
+  // const { activeProject, projects } = value;
+  const { projects } = value;
 
   return (
     <Fragment>
-      <button type="button" onClick={() => setShowWindow(!showWindow)}>
-        {activeProject?.title}
+      <button
+        type="button"
+        onMouseEnter={() => setShowWindow(true)}
+        onMouseLeave={() => setShowWindow(false)}
+      >
+        {projects?.find((item) => item.active).title}
       </button>
 
-      {showWindow ? (
-        <div>
-          <ul>
-            {projects?.map((item, idx) =>
-              !item.active ? (
-                <li key={idx}>
-                  <Form method="post">
+      <Form
+        method="post"
+        style={{
+          position: "absolute",
+          top: 50,
+          right: 270,
+          width: 200,
+          padding: "20px 0",
+          zIndex: 9,
+        }}
+        onMouseEnter={() => setShowWindow(true)}
+        onMouseLeave={() => setShowWindow(false)}
+      >
+        {showWindow ? (
+          <div
+            style={{
+              border: "1px solid black",
+              borderRadius: "10px",
+              background: "white",
+            }}
+          >
+            <ul>
+              {projects?.map((item: any, idx: number) =>
+                !item.active ? (
+                  <li key={idx}>
                     <VisuallyHiddenInput
                       type="text"
                       name="id"
                       value={item.id}
                       readOnly
                     />
-                    <button type="submit">{item.title}</button>
-                  </Form>
-                </li>
-              ) : null
-            )}
-          </ul>
-        </div>
-      ) : null}
+                    <button type="submit" style={{ width: "100%" }}>
+                      {item.title}
+                    </button>
+                  </li>
+                ) : null
+              )}
+            </ul>
+            <input type="text" placeholder="Add new one" name="newProject" />
+            <button type="submit">Save</button>
+          </div>
+        ) : null}
+      </Form>
     </Fragment>
   );
 }

@@ -2,17 +2,22 @@ import { createContext, useEffect, useReducer, useRef } from "react";
 import { Link } from "remix";
 import ContentBlock from "./components/ContentBlock";
 import { StudyContainer } from "./components/lib";
-import StudySidebar from "./components/StudySidebar";
 import StudyTextarea from "./components/StudyTextarea";
 import { initialState, reducer } from "./reducer";
 
 export const ContextItemsRef = createContext([]);
 
-export default function Study({ data, children }) {
-  console.log("DATAA: ", data);
-  const [{ onText, content, previous }, dispatch] = useReducer(reducer, {
+export const Study: React.FC = ({
+  data,
+  children,
+}: {
+  data: { title: ""; content: [] };
+  children: any;
+}) => {
+  const [{ onText, content, previous, title }, dispatch] = useReducer(reducer, {
     ...initialState,
-    content: data[0]?.content ? data[0].content : [],
+    content: data ? data.content : [],
+    title: data ? data.title : "",
   });
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -28,10 +33,21 @@ export default function Study({ data, children }) {
   }
 
   return (
-    <section style={{ display: "flex", width: "100%" }}>
+    <section style={{ display: "flex", width: "100%", padding: "0 0 0 40px" }}>
       <StudyContainer>
         <form method="POST">
-          <input type="text" name="title" placeholder="Type list title" />
+          <input
+            type="text"
+            name="title"
+            value={title}
+            onChange={(evt) => {
+              dispatch({
+                type: "SET_TITLE",
+                payload: { value: evt.target.value },
+              });
+            }}
+            placeholder="Type list title"
+          />
           {content?.map(({ tag, value }: any, idx: number) => {
             return (
               <ContentBlock
@@ -66,13 +82,11 @@ export default function Study({ data, children }) {
         </form>
       </StudyContainer>
 
-      <Link to="transform-repeat">Transform REpeat</Link>
+      <Link to={`transform-repeat`}>Transform Repeat</Link>
 
       <ContextItemsRef.Provider value={itemsRef.current}>
         {children}
       </ContextItemsRef.Provider>
-
-      {/* <StudySidebar itemsRef={itemsRef} /> */}
     </section>
   );
-}
+};

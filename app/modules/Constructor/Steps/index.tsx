@@ -11,11 +11,12 @@ import {
   StepHeader,
   StyleButton,
 } from "./components/lib";
-const InsertWords = lazy(() => import("./components/InsertWords"));
-const Variants = lazy(() => import("./components/Variants"));
-const MatchingPairs = lazy(() => import("./components/MatchingPairs"));
-// import Variants from "./components/Variants";
-// import MatchingPairs from "./components/MatchingPairs";
+// const InsertWords = lazy(() => import("./components/InsertWords"));
+// const Variants = lazy(() => import("./components/Variants"));
+// const MatchingPairs = lazy(() => import("./components/MatchingPairs"));
+import Variants from "./components/Variants";
+import MatchingPairs from "./components/MatchingPairs";
+import InsertWords from "./components/InsertWords";
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);

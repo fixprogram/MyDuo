@@ -16,7 +16,6 @@ export default function Flex({
   wrap,
   ...otherProps
 }) {
-  console.log("1111: ", Date.parse(getBegin("day", new Date())));
   return (
     <div
       className={className}
@@ -32,6 +31,7 @@ export default function Flex({
         React.cloneElement(child, {
           ...child.props,
           style: {
+            textDecoration: "none",
             flexBasis: toPercent(100 / count),
             flexShrink: 0,
             flexGrow: 0,

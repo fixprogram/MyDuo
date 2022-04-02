@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import mergeClassNames from "merge-class-names";
 
 import { tileProps } from "./shared/propTypes";
+import { getBegin } from "./shared/dates.js";
+import { Link } from "remix";
 
 function datesAreDifferent(date1, date2) {
   return (
@@ -70,7 +72,7 @@ export default class Tile extends Component {
     const { tileClassName, tileContent } = this.state;
 
     return (
-      <button
+      <Link
         className={mergeClassNames(classes, tileClassName)}
         disabled={
           (minDate && minDateTransform(minDate) > date) ||
@@ -81,7 +83,7 @@ export default class Tile extends Component {
         onFocus={onMouseOver && (() => onMouseOver(date))}
         onMouseOver={onMouseOver && (() => onMouseOver(date))}
         style={style}
-        type="button"
+        to={`${Date.parse(getBegin("day", date))}`}
       >
         {formatAbbr ? (
           <abbr aria-label={formatAbbr(locale, date)}>{children}</abbr>
@@ -89,7 +91,7 @@ export default class Tile extends Component {
           children
         )}
         {tileContent}
-      </button>
+      </Link>
     );
   }
 }

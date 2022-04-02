@@ -1,26 +1,22 @@
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
-import Constructor from "~/modules/Constructor";
+import { ActionFunction, redirect } from "remix";
+import StudySidebar from "~/modules/Study/components/StudySidebar";
 import { db } from "~/utils/db.server";
-import {
-  getActiveProject,
-  getProject,
-  requireUserId,
-} from "~/utils/session.server";
+import { getActiveProject } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
   const activeProject = await getActiveProject(request);
+  console.log("ACT: ", activeProject);
   const form = await request.formData();
-  const title = form.get("title"); // Getting the repeat title
+  const title = form.get("title");
 
   const steps = form.getAll("step").map((item, index) => {
-    const type = form.get(`type${index}`); // Getting type of the step
-    const answer = form.get(`answer${index}`); // Getting answer
+    const type = form.get(`type${index}`);
+    const answer = form.get(`answer${index}`);
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {
-        const question = form.get(`question${index}`); // Getting question if it's Question type
-        const keywords = form.get(`keywords${index}`); // Getting keywords if it's Question type
+        const question = form.get(`question${index}`);
+        const keywords = form.get(`keywords${index}`);
         return {
           ...returnData,
           question,
@@ -29,7 +25,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Insert": {
-        const text = form.get(`text${index}`); // Getting text if it's Insert type
+        const text = form.get(`text${index}`);
         return {
           ...returnData,
           answer: answer.indexOf(",") ? answer.split(",") : answer,
@@ -37,13 +33,13 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Variants": {
-        const question = form.get(`question${index}`); // Getting question if it's Question type
-        const definition = form.get(`definition${index}`); //
-        const variants = form.getAll(`variant${index}`); //
+        const question = form.get(`question${index}`);
+        const definition = form.get(`definition${index}`);
+        const variants = form.getAll(`variant${index}`);
         return { ...returnData, answer, definition, question, variants };
       }
       case "Pairs": {
-        const variants = form.getAll(`variant${index}`); //
+        const variants = form.getAll(`variant${index}`);
         return { ...returnData, answer: answer.split(","), variants };
       }
       default: {
@@ -57,6 +53,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/repeat/${repeat.id}`);
 };
 
-export default function NewRepeat() {
-  return <Constructor />;
+export default function TransformRepeat() {
+  return <StudySidebar />;
 }

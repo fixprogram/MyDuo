@@ -1,23 +1,15 @@
-import { Fragment, useContext } from "react";
 import {
   ActionFunction,
   LoaderFunction,
+  NavLink,
   Outlet,
   redirect,
   useLoaderData,
 } from "remix";
-import { Main } from "~/components/lib";
-import Menu from "~/components/Menu";
 import styles from "~/styles/index.css";
-import {
-  getActiveProject,
-  getProjects,
-  getUser,
-  requireUserId,
-} from "~/utils/session.server";
-import Study from "~/modules/Study";
+import { getActiveProject, getUser } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
-import { ProjectContext } from "../$projectTitle";
+import { Link } from "react-router-dom";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -25,31 +17,25 @@ export const links = () => {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request);
-  // const project = await getProject(request);
-  // const study = await db.study.findUnique({ // Use this one once you have params links inside Study
-  //   where: { id: user.userId },
-  // });
   const activeProject = await getActiveProject(request);
 
   const data = await db.study.findMany({
     take: 20,
-    where: { projectId: activeProject.id },
+    where: { projectId: activeProject?.id },
     select: { id: true, title: true, content: true },
   });
 
-  // if (!study) {
-  //   throw new Error("Study not found");
-  // }
+  if (data.length > 0) {
+    redirect(`/${activeProject?.title}/study/${data[0]?.title}`);
+  }
 
-  // const data = { study };
-  return { user, data };
+  return { user, data, activeProject };
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  // const userId = await requireUserId(request);
   const project = await getActiveProject(request);
   const form = await request.formData();
-  const title = form.get("title"); // Getting the repeat title
+  const title: any = form.get("title");
   const content: any = [];
 
   form.forEach((value, tag) => {
@@ -60,21 +46,29 @@ export const action: ActionFunction = async ({ request }) => {
     }
   });
 
-  const data = { title, content, projectId: project.id };
-  const study = await db.study.create({ data });
-  return redirect(`study`);
+  await db.study.create({ data: { title, content, projectId: project?.id } });
+  return redirect(`study/${title}`);
 };
 
 export default function StudyPage() {
-  const { data } = useLoaderData();
+  const { data, activeProject } = useLoaderData();
   return (
-    // <Fragment>
-    //   <Menu user={user} projects={project} />
-    //   <Main>
-    <Study data={data}>
+    <section style={{ display: "flex", width: "100%" }}>
+      <div style={{ marginLeft: "calc(100vw / 100 * (-8))" }}>
+        <h2>Sidebar</h2>
+        <ul>
+          {data?.map((item: any, idx: number) => (
+            <NavLink
+              to={`/${activeProject?.title}/study/${item?.title}`}
+              key={idx}
+            >
+              {item?.title}
+            </NavLink>
+          ))}
+        </ul>
+        <Link to="new">New article</Link>
+      </div>
       <Outlet />
-    </Study>
-    //   </Main>
-    // </Fragment>
+    </section>
   );
 }
