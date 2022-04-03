@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { redirect } from "remix";
+import { Form, redirect } from "remix";
 import Calendar from "./calendar";
 import { getBegin } from "./calendar/shared/dates.js";
 
@@ -24,7 +24,15 @@ export default function Practice({ goals, children }) {
           ))}
         </div>
       ) : (
-        <input type="text" placeholder="enter goal" style={{ width: "100%" }} />
+        <Form method="post" style={{ width: "100%" }}>
+          <input
+            type="text"
+            placeholder="enter goal"
+            name="goal"
+            style={{ width: "80%" }}
+          />
+          <button type="submit">Save</button>
+        </Form>
       )}
       {/* <h1 style={{ width: "100%" }}>My main goal</h1> */}
 

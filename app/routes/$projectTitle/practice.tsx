@@ -1,13 +1,27 @@
 import { Fragment } from "react";
-import { LoaderFunction, Outlet, useLoaderData } from "remix";
+import {
+  ActionFunction,
+  LoaderFunction,
+  Outlet,
+  redirect,
+  useLoaderData,
+} from "remix";
 import { Main } from "~/components/lib";
 import Menu from "~/components/Menu";
 import Practice from "~/modules/Practice";
 import styles from "~/styles/index.css";
-import { getPracticeGoals, getUser } from "~/utils/session.server";
+import { getPracticeGoals, getUser, setGoals } from "~/utils/session.server";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData();
+  const goals = form.getAll("goal");
+
+  const practice = await setGoals(request, goals);
+  return redirect(`/`);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

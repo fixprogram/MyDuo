@@ -101,6 +101,31 @@ export async function getPracticeDay(request: Request, timestamp: string) {
   return activePractice?.days?.find((day) => day.timestamp == timestamp);
 }
 
+export async function setGoals(request: Request, goals: []) {
+  const activePractice = await getActivePractice(request);
+  const activeProject = await getActiveProject(request);
+
+  if (!activePractice) {
+    const practice = await db.practice.create({
+      data: {
+        goals,
+        projectId: activeProject?.id,
+        days: [],
+      },
+    });
+
+    return practice;
+  }
+
+  const { projectId, days } = activePractice;
+  await db.practice.update({
+    where: { id: activePractice.id },
+    data: { projectId, days, goals },
+  });
+
+  return activePractice;
+}
+
 export async function setPracticeDay(
   request: Request,
   timestamp: string,
@@ -123,24 +148,32 @@ export async function setPracticeDay(
   }
 
   const newDays = activePractice?.days;
-  const newDay = newDays?.find((day) => toString(day.timestamp) === timestamp);
+  console.log("newDays: ", newDays);
+  const newDay = newDays?.find((day) => day.timestamp == timestamp);
   if (newDay) {
-    newDays?.splice(newDays.indexOf(newDay), 1);
-
-    const day = await db.practice.update({
-      where: {
-        id: activePractice.id,
-      },
-      data: {
-        ...activePractice,
-        day: { timestamp, ...data },
-      },
-    });
-
-    return day;
+    newDays.splice(newDays.indexOf(newDay));
   }
 
-  return null;
+  const practice = await db.practice.update({
+    where: {
+      id: activePractice.id,
+    },
+    data: {
+      days: [...newDays, { timestamp, ...data }],
+    },
+  });
+
+  return practice;
+  // }
+
+  // const practice = await db.practice.create({
+  //   data: {
+  //     ...activePractice,
+  //     days: [...activePractice.days, { timestamp, ...data }],
+  //   },
+  // });
+
+  // return null;
 }
 
 export async function getUser(request: Request) {
