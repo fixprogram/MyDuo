@@ -164,16 +164,6 @@ export async function setPracticeDay(
   });
 
   return practice;
-  // }
-
-  // const practice = await db.practice.create({
-  //   data: {
-  //     ...activePractice,
-  //     days: [...activePractice.days, { timestamp, ...data }],
-  //   },
-  // });
-
-  // return null;
 }
 
 export async function getUser(request: Request) {
