@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
+import { Form, NavLink } from "@remix-run/react";
 
 type FormButtonProps = {
   active?: boolean;
@@ -322,6 +322,46 @@ const LoginToggle = styled("label")`
   justify-content: center;
 `;
 
+const MenuContainer = styled("div")`
+  height: 71px;
+  width: 100vw;
+  border-top: 1px solid #dadcde;
+  border-bottom: 2px solid #dadcde;
+  padding: 0 10%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const MenuNavLink = styled(NavLink)`
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Montserrat";
+  font-weight: 700;
+  color: #afafaf;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+`;
+
+const ActiveProjectButton = styled("button")`
+  color: #3c3c3c;
+  border: none;
+  background-color: inherit;
+  font-family: "Montserrat";
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+`;
+
+const ActiveProjectForm = styled(Form)`
+  position: absolute;
+  top: 50px;
+  right: 270px;
+  width: 200px;
+  padding: 20px 0;
+  z-index: 9;
+`;
+
 export {
   ProgressBar,
   HorizontalList,
@@ -350,4 +390,8 @@ export {
   LoginButton,
   LoginInput,
   LoginToggle,
+  MenuContainer,
+  MenuNavLink,
+  ActiveProjectButton,
+  ActiveProjectForm,
 };

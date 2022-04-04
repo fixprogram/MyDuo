@@ -5,10 +5,10 @@ export default function StudyTextarea({
   addContent,
   addSpace,
   setFocusOnLastContent,
+  height = "25px",
 }) {
   const [value, setValue] = useState("");
-  const ref = useRef(null);
-
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     ref.current.focus();
   }, []);
@@ -35,12 +35,17 @@ export default function StudyTextarea({
     <StudyTextareaTemplate
       ref={ref}
       value={value}
-      onChange={(evt) => setValue(evt.target.value)}
+      onChange={(evt) => {
+        setValue(evt.target.value);
+        evt.target.style.height = `${evt.target.scrollHeight}px`;
+      }}
       onKeyDown={(evt) => {
-        if (evt.code === "Backspace" && evt.target.value.length === 0) {
+        const target = evt.target as HTMLInputElement;
+        if (evt.code === "Backspace" && target.value.length === 0) {
           setFocusOnLastContent();
         }
       }}
+      style={{ height }}
     />
   );
 }

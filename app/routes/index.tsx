@@ -1,7 +1,8 @@
-import { redirect, useLoaderData } from "remix";
+import { redirect } from "remix";
+import { useLoaderData } from "@remix-run/react";
 import { getProjects, getUser } from "~/utils/session.server";
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }: { request: Request }) => {
   const user = await getUser(request);
   const projects = await getProjects(request);
 

@@ -15,6 +15,33 @@ export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
+// export const action: ActionFunction = async ({ request }) => {
+//   console.log("TITLE: ", title);
+//   console.log("CONTENT: ", content);
+
+//   const activeProject = await getActiveProject(request);
+//   const form = await request.formData();
+//   let title: any = form.get("title");
+//   const content: any = [];
+
+//   if (title === "") {
+//     title = "Untitled";
+//   }
+
+//   form.forEach((value, tag) => {
+//     if (tag === "space") {
+//       content.push({ tag: "div", value });
+//     } else if (tag !== "title") {
+//       content.push({ tag, value });
+//     }
+//   });
+
+//   await db.study.create({
+//     data: { title, content, projectId: activeProject?.id },
+//   });
+//   return redirect(`study/${title}`);
+// };
+
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request);
   const activeProject = await getActiveProject(request);
@@ -25,29 +52,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     select: { id: true, title: true, content: true },
   });
 
-  if (data.length > 0) {
-    redirect(`/${activeProject?.title}/study/${data[0]?.title}`);
+  // console.log(data[0]);
+  // console.log(2);
+
+  if (data[0]?.title.length > 0 && !params.articleTitle) {
+    return redirect(`/${activeProject?.title}/study/${data[0].title}`);
   }
 
   return { user, data, activeProject };
-};
-
-export const action: ActionFunction = async ({ request }) => {
-  const project = await getActiveProject(request);
-  const form = await request.formData();
-  const title: any = form.get("title");
-  const content: any = [];
-
-  form.forEach((value, tag) => {
-    if (tag === "space") {
-      content.push({ tag: "div", value });
-    } else if (tag !== "title") {
-      content.push({ tag, value });
-    }
-  });
-
-  await db.study.create({ data: { title, content, projectId: project?.id } });
-  return redirect(`study/${title}`);
 };
 
 export default function StudyPage() {
@@ -61,6 +73,14 @@ export default function StudyPage() {
             <NavLink
               to={`/${activeProject?.title}/study/${item?.title}`}
               key={idx}
+              style={{
+                color: "#3c3c3c",
+                display: "block",
+                fontSize: 16,
+                fontWeight: 700,
+                fontFamily: "Roboto",
+                textDecoration: "none",
+              }}
             >
               {item?.title}
             </NavLink>

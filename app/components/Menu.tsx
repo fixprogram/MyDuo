@@ -1,8 +1,11 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import { Link, NavLink } from "remix";
-import { HorizontalList, ListItem, NavIcon } from "./lib";
+import { Link } from "@remix-run/react";
+import {
+  HorizontalList,
+  ListItem,
+  MenuContainer,
+  MenuNavLink,
+  NavIcon,
+} from "./lib";
 import study from "~/styles/study.svg";
 import repeat from "~/styles/practice.svg";
 import practice from "~/styles/forum.svg";
@@ -31,7 +34,7 @@ const MENU = [
   },
   {
     title: "practice",
-    link: "practice",
+    link: "practice/",
     icon: practice,
     activeIcon: practiceActive,
   },
@@ -43,37 +46,14 @@ const MENU = [
   },
 ];
 
-const Menu = ({ user }) => {
+const Menu = ({ user }: { user: any }) => {
   return (
-    <div
-      css={{
-        height: 71,
-        width: "100vw",
-        borderTop: "1px solid #DADCDE",
-        borderBottom: "2px solid #DADCDE",
-        padding: "0 10%",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
+    <MenuContainer>
       <nav>
         <HorizontalList>
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
-              <NavLink
-                to={`${link}`}
-                className="nav-link"
-                css={{
-                  textDecoration: "none",
-                  textTransform: "uppercase",
-                  fontFamily: "Montserrat",
-                  fontWeight: 700,
-                  color: "#AFAFAF",
-                  letterSpacing: 0.8,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
+              <MenuNavLink to={`${link}`} className="nav-link">
                 {({ isActive }) => (
                   <Fragment>
                     <NavIcon
@@ -85,7 +65,7 @@ const Menu = ({ user }) => {
                     {title}
                   </Fragment>
                 )}
-              </NavLink>
+              </MenuNavLink>
             </ListItem>
           ))}
         </HorizontalList>
@@ -101,7 +81,7 @@ const Menu = ({ user }) => {
             style={{ width: 25, height: 30, marginRight: 6 }}
           />
           <b
-            css={{
+            style={{
               fontFamily: "Roboto",
               color: user.wasToday ? "#ff9600" : "#e5e5e5",
             }}
@@ -111,12 +91,13 @@ const Menu = ({ user }) => {
         </ListItem>
         <ListItem>
           {user ? (
-            <div className="user-info">
-              <span>{`Hi ${user.username}`}</span>
+            <div
+              className="user-info"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <span style={{ marginRight: 10 }}>{user.username}</span>
               <form action="/logout" method="post">
-                <button type="submit" className="button">
-                  Logout
-                </button>
+                <button type="submit">Logout</button>
               </form>
             </div>
           ) : (
@@ -124,7 +105,7 @@ const Menu = ({ user }) => {
           )}
         </ListItem>
       </HorizontalList>
-    </div>
+    </MenuContainer>
   );
 };
 

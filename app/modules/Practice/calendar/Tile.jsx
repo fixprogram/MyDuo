@@ -4,7 +4,7 @@ import mergeClassNames from "merge-class-names";
 
 import { tileProps } from "./shared/propTypes";
 import { getBegin } from "./shared/dates.js";
-import { Link } from "remix";
+import { Link, redirect } from "remix";
 
 function datesAreDifferent(date1, date2) {
   return (

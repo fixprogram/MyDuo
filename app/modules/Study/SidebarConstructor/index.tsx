@@ -5,19 +5,21 @@ import { useContext, useState } from "react";
 
 export default function SidebarConstructor() {
   const value = useContext(ContextItemsRef);
-  console.log("Cont val: ", value);
 
   const blocks = formatRef(value);
 
   const [title, setTitle] = useState(() => value.title);
   return (
     <form method="POST">
-      <VisuallyHiddenInput
+      <h3>Lesson title</h3>
+      <input
         type="text"
         name="title"
         value={title}
-        // onChange={(evt) => setTitle(evt.target.value)}
-        readOnly
+        onChange={(evt) => setTitle(evt.target.value)}
+        placeholder="Enter lesson title"
+        required
+        style={{ marginBottom: "20px" }}
       />
 
       {blocks?.map((item, index) => (

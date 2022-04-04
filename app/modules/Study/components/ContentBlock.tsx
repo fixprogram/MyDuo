@@ -1,6 +1,13 @@
 import StudyInput from "./StudyInput";
+import StudyText from "./StudyText";
 
-function formatContent(tag, value, refName, onRemove) {
+function formatContent(
+  tag: string,
+  value: any,
+  refName: any,
+  onRemove: Function,
+  setFocusOnPreviousContent: Function
+) {
   switch (tag) {
     case "h1":
       return (
@@ -16,15 +23,20 @@ function formatContent(tag, value, refName, onRemove) {
     case "p":
       return (
         <p style={{ margin: 0 }}>
-          <StudyInput initialValue={value} refName={refName} name={tag} />
+          <StudyText
+            initialValue={value}
+            refName={refName}
+            name={tag}
+            setFocusOnPreviousContent={setFocusOnPreviousContent}
+          />
         </p>
       );
     case "div":
       return (
-        <StudyInput
-          style={{ margin: "20px 0" }}
+        <StudyText
           refName={refName}
           name={"space"}
+          setFocusOnPreviousContent={setFocusOnPreviousContent}
         />
       );
     default:
@@ -32,19 +44,38 @@ function formatContent(tag, value, refName, onRemove) {
   }
 }
 
-export default function ContentBlock({ tag, value, refName, onRemove }) {
+export default function ContentBlock({
+  tag,
+  value,
+  refName,
+  onRemove,
+  onAdd,
+  setFocusOnDocument,
+  setFocusOnPreviousContent,
+}: {
+  tag: string;
+  value: string;
+  refName: any;
+  onRemove: Function;
+  onAdd: Function;
+  setFocusOnDocument: Function;
+  setFocusOnPreviousContent: Function;
+}) {
   return (
     <div
       onKeyDown={(evt) => {
-        if (evt.code === "Backspace" && evt.target.value.length === 0) {
+        const target = evt.target as HTMLInputElement;
+        if (evt.code === "Backspace" && target.value.length === 0) {
           onRemove();
         }
         if (evt.code === "Enter") {
-          // console.log("ht"); // Make it real so tapping Enter inside an input we go futher
+          evt?.preventDefault();
+          onAdd();
         }
       }}
+      tabIndex={0}
     >
-      {formatContent(tag, value, refName, onRemove)}
+      {formatContent(tag, value, refName, onRemove, setFocusOnPreviousContent)}
     </div>
   );
 }

@@ -3,15 +3,23 @@ import StudySidebar from "~/modules/Study/components/StudySidebar";
 import { db } from "~/utils/db.server";
 import { getActiveProject } from "~/utils/session.server";
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({
+  request,
+  params,
+}: {
+  request: Request;
+  params: any;
+}) => {
   const activeProject = await getActiveProject(request);
-  console.log("ACT: ", activeProject);
   const form = await request.formData();
   const title = form.get("title");
 
-  const steps = form.getAll("step").map((item, index) => {
+  const steps = form.getAll("step").map((item: any, index: number) => {
     const type = form.get(`type${index}`);
-    const answer = form.get(`answer${index}`);
+    let answer = form.get(`answer${index}`);
+    answer?.replace("\n", "");
+    answer?.replace("\r", "");
+    answer = answer?.trim().toLowerCase();
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {
@@ -28,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         const text = form.get(`text${index}`);
         return {
           ...returnData,
-          answer: answer.indexOf(",") ? answer.split(",") : answer,
+          answer: answer?.indexOf(",") ? answer.split(",") : answer,
           text,
         };
       }
@@ -40,7 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer: answer.split(","), variants };
+        return { ...returnData, answer: answer?.split(","), variants };
       }
       default: {
         return { ...returnData, answer };
@@ -48,8 +56,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   });
 
-  const data = { title, steps, exp: 0, projectId: activeProject.id };
-  const repeat = await db.repeat.create({ data });
+  const repeat = await db.repeat.create({
+    data: { title, steps, exp: 0, projectId: activeProject?.id },
+  });
   return redirect(`/repeat/${repeat.id}`);
 };
 

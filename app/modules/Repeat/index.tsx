@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { useReducer, useEffect, useRef, useState } from "react";
+import { useReducer, useEffect, useRef, useState, Fragment } from "react";
 import {
   RepeatButton,
   RepeatFooter,
@@ -15,11 +15,12 @@ import Progress from "~/components/Progress";
 import Body from "./components/Body";
 import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
-import { useSubmit } from "remix";
+import { useSubmit } from "@remix-run/react";
 import RightSvg from "~/styles/right.svg";
 import WrongSvg from "~/styles/wrong.svg";
+import Results from "./components/Results";
 
-export default function Repeat({ data }) {
+export default function Repeat({ data }: { data: any }) {
   const ref = useRef();
   const [
     {
@@ -70,32 +71,29 @@ export default function Repeat({ data }) {
   };
 
   return (
-    <section
-      css={{ position: "relative", overflowY: "scroll", minHeight: "100vh" }}
-    >
-      <Progress progress={progress} />
+    <section css={{ position: "relative", minHeight: "100vh" }}>
       {currentStep === maxSteps + 1 ? (
-        <form method="POST" ref={ref}>
-          <input type="text" name="exp" value="16" readOnly />
-          <input type="text" name="id" value={data.id} readOnly />
-        </form>
+        <Results refName={ref} id={data.id} />
       ) : (
-        <Body
-          step={step}
-          maxSteps={maxSteps}
-          content={content}
-          value={value}
-          setValue={(val: string[]) => {
-            setValue(val);
-            if (val.length) {
-              changeDisabled(false);
-            } else {
-              changeDisabled(true);
-            }
-          }}
-          formDisabled={formDisabled}
-          checkAnswer={checkAnswer}
-        />
+        <Fragment>
+          <Progress progress={progress} />
+          <Body
+            step={step}
+            maxSteps={maxSteps}
+            content={content}
+            value={value}
+            setValue={(val: string[]) => {
+              setValue(val);
+              if (val.length) {
+                changeDisabled(false);
+              } else {
+                changeDisabled(true);
+              }
+            }}
+            formDisabled={formDisabled}
+            checkAnswer={checkAnswer}
+          />
+        </Fragment>
       )}
       <RepeatFooter stateRight={stateRight} stateWrong={stateWrong}>
         <div
@@ -140,7 +138,11 @@ export default function Repeat({ data }) {
             stateWrong={stateWrong}
             onClick={onContinue}
           >
-            {stateRight ? "Next" : stateWrong ? "Continue" : "Check"}
+            {stateRight
+              ? "Next"
+              : stateWrong || currentStep === maxSteps + 1
+              ? "Continue"
+              : "Check"}
           </RepeatButton>
         </div>
       </RepeatFooter>

@@ -1,34 +1,30 @@
 import { Fragment, useContext, useState } from "react";
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 import { ProjectContext } from "~/routes/$projectTitle";
-import { VisuallyHiddenInput } from "./lib";
+import {
+  ActiveProject,
+  ActiveProjectButton,
+  ActiveProjectForm,
+  VisuallyHiddenInput,
+} from "./lib";
 
 export default function Projects() {
   const [showWindow, setShowWindow] = useState(false);
   const value: any = useContext(ProjectContext);
-  // const { activeProject, projects } = value;
   const { projects } = value;
 
   return (
     <Fragment>
-      <button
+      <ActiveProjectButton
         type="button"
         onMouseEnter={() => setShowWindow(true)}
         onMouseLeave={() => setShowWindow(false)}
       >
-        {projects?.find((item) => item.active).title}
-      </button>
+        {projects?.find((item: any) => item.active).title}
+      </ActiveProjectButton>
 
-      <Form
+      <ActiveProjectForm
         method="post"
-        style={{
-          position: "absolute",
-          top: 50,
-          right: 270,
-          width: 200,
-          padding: "20px 0",
-          zIndex: 9,
-        }}
         onMouseEnter={() => setShowWindow(true)}
         onMouseLeave={() => setShowWindow(false)}
       >
@@ -61,7 +57,7 @@ export default function Projects() {
             <button type="submit">Save</button>
           </div>
         ) : null}
-      </Form>
+      </ActiveProjectForm>
     </Fragment>
   );
 }

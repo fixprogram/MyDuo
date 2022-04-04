@@ -2,7 +2,13 @@ import { Fragment } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
 import { RepeatTitle, VariantItem } from "./lib";
 
-export default function VariantsPractice({ content, setValue }) {
+export default function VariantsPractice({
+  content,
+  setValue,
+}: {
+  content: any;
+  setValue: Function;
+}) {
   return (
     <Fragment>
       <RepeatTitle>Choose right variant</RepeatTitle>
@@ -14,7 +20,7 @@ export default function VariantsPractice({ content, setValue }) {
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
         {content.variants.map((variant, idx) => (
           <li key={idx} style={{ position: "relative" }}>
-            <VariantItemNumber> {idx + 1} </VariantItemNumber>
+            <VariantItemNumber>{idx + 1}</VariantItemNumber>
             <VariantItem type="button" onClick={() => setValue(variant)}>
               {variant}
             </VariantItem>

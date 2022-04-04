@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import {
   ActionFunction,
   LoaderFunction,
@@ -6,17 +5,19 @@ import {
   redirect,
   useLoaderData,
 } from "remix";
-import { Main } from "~/components/lib";
-import Menu from "~/components/Menu";
 import Practice from "~/modules/Practice";
 import styles from "~/styles/index.css";
-import { getPracticeGoals, getUser, setGoals } from "~/utils/session.server";
+import { getPracticeGoals, setGoals } from "~/utils/session.server";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({
+  request,
+}: {
+  request: Request;
+}) => {
   const form = await request.formData();
   const goals = form.getAll("goal");
 
@@ -24,8 +25,13 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/`);
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({
+  request,
+}: {
+  request: Request;
+}) => {
   const goals = await getPracticeGoals(request);
+
   return { goals };
 };
 

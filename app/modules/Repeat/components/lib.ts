@@ -2,7 +2,17 @@
 /** @jsx jsx */
 import styled from "@emotion/styled";
 
-const RepeatFooter = styled("div")`
+type RepeatFooterProps = {
+  stateRight: boolean;
+  stateWrong: boolean;
+};
+type RepeatButtonProps = {
+  active: boolean;
+  stateWrong: boolean;
+  stateRight: boolean;
+};
+
+const RepeatFooter = styled("div")<RepeatFooterProps>`
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -18,7 +28,7 @@ const RepeatFooter = styled("div")`
     props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
 `;
 
-const RepeatFooterMessage = styled("div")`
+const RepeatFooterMessage = styled("div")<RepeatFooterProps>`
   max-width: 1000px;
   display: flex;
   align-items: center;
@@ -37,9 +47,10 @@ const RepeatFooterTitle = styled("h2")`
 const RepeatFooterText = styled("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
+  font-family: "Roboto";
 `;
 
-const RepeatButton = styled("button")`
+const RepeatButton = styled("button")<RepeatButtonProps>`
   border: 0 solid transparent;
   background-color: ${(props) =>
     props.stateWrong
@@ -104,7 +115,7 @@ const RepeatBodyVariants = styled("div")`
   bottom: 0;
 `;
 
-const RepeatBodyVariant = styled("div")`
+const RepeatBodyVariant = styled("div")<RepeatButtonProps>`
   position: relative;
   border-radius: 15px;
   border: 2px solid #e5e5e5;
@@ -116,9 +127,9 @@ const RepeatBodyVariant = styled("div")`
   border-color: ${(props) =>
     props.active
       ? "#98D6FC"
-      : props.correct
+      : props.stateRight
       ? "#B6EB7E"
-      : props.incorrect
+      : props.stateWrong
       ? "#E9A8A6"
       : null};
   background-color: ${(props) => (props.active ? "#E1F3FE" : "inherit")};
@@ -203,6 +214,27 @@ const RepeatFooterIcon = styled("div")`
   width: 80px;
 `;
 
+const ResultsContainer = styled("section")`
+  display: flex;
+  height: calc(100vh - 140px);
+  justify-content: center;
+`;
+
+const ResultsTitle = styled("h2")`
+  margin: 0;
+  font-family: "Montserrat";
+`;
+
+const ResultsLeftBlock = styled("div")`
+  padding: 50px 100px;
+  width: calc(50% - 1px);
+`;
+
+const ResultsSeparateLine = styled("div")`
+  width: 4px;
+  background-color: #e5e5e5;
+`;
+
 export {
   RepeatFooter,
   RepeatFooterMessage,
@@ -222,4 +254,8 @@ export {
   RepeatQuestionTriangleContainer,
   RepeatQuestionTriangle,
   RepeatFooterIcon,
+  ResultsContainer,
+  ResultsTitle,
+  ResultsLeftBlock,
+  ResultsSeparateLine,
 };

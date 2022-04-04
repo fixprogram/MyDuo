@@ -66,6 +66,8 @@ const reducer = (state, action) => {
           return negativeState;
         }
         case "Question": {
+          console.log("ACTION: ", action.payload);
+          console.log("Content: ", content);
           const areThereAnyKeywords = content.keywords.length > 0;
           const checkKeywords = content.keywords.filter((item) =>
             action.payload.trim().toLowerCase().includes(item.toLowerCase())
@@ -79,7 +81,7 @@ const reducer = (state, action) => {
             }
           }
 
-          if (action.payload === content.answer[0]) {
+          if (action.payload.trim().toLowerCase() === content.answer[0]) {
             return positiveState;
           } else {
             return negativeState;

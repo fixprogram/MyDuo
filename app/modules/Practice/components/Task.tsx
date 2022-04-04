@@ -2,10 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { VisuallyHiddenInput } from "~/components/lib";
 
 export default function Task({ taskData, removeTask }) {
-  const [task, setTask] = useState(taskData);
+  const [task, setTask] = useState(() => taskData);
   useEffect(() => {
     setTask(taskData);
   }, [taskData]);
+  console.log("Task: ", task);
   return (
     <Fragment>
       <input

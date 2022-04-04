@@ -7,7 +7,7 @@ import { LessonTitleInput } from "./lib";
 
 export default function BasicInfo() {
   return (
-    <section>
+    <section style={{ textAlign: "center" }}>
       <VisuallyHiddenInput
         type="text"
         name="formType"

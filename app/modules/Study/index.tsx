@@ -1,9 +1,9 @@
 import { createContext, useEffect, useReducer, useRef } from "react";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import ContentBlock from "./components/ContentBlock";
 import { StudyContainer } from "./components/lib";
 import StudyTextarea from "./components/StudyTextarea";
-import { initialState, reducer } from "./reducer";
+import { ActionKind, initialState, reducer } from "./reducer";
 
 export const ContextItemsRef = createContext([]);
 
@@ -11,25 +11,43 @@ export const Study: React.FC = ({
   data,
   children,
 }: {
-  data: { title: ""; content: [] };
+  data: { title: ""; content: [{}] };
   children: any;
 }) => {
   const [{ onText, content, previous, title }, dispatch] = useReducer(reducer, {
     ...initialState,
-    content: data ? data.content : [],
-    title: data ? data.title : "",
   });
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
+  console.log(content);
 
   useEffect(() => {
-    itemsRef.current = itemsRef.current.slice(0, content.length);
+    if (data) {
+      dispatch({
+        type: ActionKind.SetContent,
+        payload: { title: data?.title, content: data?.content },
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    itemsRef.current = itemsRef.current.slice(0, content?.length);
     if (previous) {
       setFocusOnLastContent();
     }
   }, [content]);
 
   function setFocusOnLastContent() {
-    itemsRef.current[content.length - 1]?.focus();
+    itemsRef.current[content?.length - 1]?.focus();
+  }
+
+  function setFocusOnNextContent(idx: number) {
+    itemsRef.current[idx + 1]?.focus();
+  }
+
+  function setFocusOnPreviousContent(idx: number) {
+    if (itemsRef.current[idx - 1]) {
+      itemsRef.current[idx - 1]?.focus();
+    }
   }
 
   return (
@@ -42,11 +60,19 @@ export const Study: React.FC = ({
             value={title}
             onChange={(evt) => {
               dispatch({
-                type: "SET_TITLE",
+                type: ActionKind.SetTitle,
                 payload: { value: evt.target.value },
               });
             }}
             placeholder="Type list title"
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontSize: 25,
+              fontFamily: "Montserrat",
+              marginBottom: 20,
+              border: "none",
+            }}
           />
           {content?.map(({ tag, value }: any, idx: number) => {
             return (
@@ -55,30 +81,41 @@ export const Study: React.FC = ({
                 value={value}
                 key={idx + value}
                 onRemove={() => {
-                  dispatch({ type: "REMOVE_LAST_CONTENT" });
+                  dispatch({
+                    type: ActionKind.RemoveContent,
+                    payload: { idx },
+                  });
+                }}
+                onAdd={() => {
+                  dispatch({ type: ActionKind.AddSpace });
+                  setFocusOnNextContent(idx);
                 }}
                 refName={(el) => (itemsRef.current[idx] = el)}
+                setFocusOnNextContent={() => setFocusOnNextContent(idx)}
+                setFocusOnPreviousContent={() => setFocusOnPreviousContent(idx)}
+                setFocusOnDocument={() => dispatch({ type: ActionKind.Focus })}
               />
             );
           })}
 
           {onText ? (
             <StudyTextarea
-              addContent={(payload) =>
-                dispatch({ type: "ADD_CONTENT", payload })
+              addContent={(payload: any) =>
+                dispatch({ type: ActionKind.AddContent, payload })
               }
-              addSpace={() => dispatch({ type: "ADD_SPACE" })}
+              addSpace={() => dispatch({ type: ActionKind.AddSpace })}
               setFocusOnLastContent={setFocusOnLastContent}
+              height={"calc(100vh - 95px"}
             />
           ) : (
             <div
               style={{ height: "100vh" }}
               onClick={() => {
-                dispatch({ type: "FOCUS_DOCUMENT" });
+                dispatch({ type: ActionKind.Focus });
               }}
             ></div>
           )}
-          <button type="submit">Save changes</button>
+          <button onClick={() => {}}>Save changes</button>
         </form>
       </StudyContainer>
 

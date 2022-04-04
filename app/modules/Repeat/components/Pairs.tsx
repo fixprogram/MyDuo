@@ -3,11 +3,17 @@ import { jsx } from "@emotion/react";
 import { Fragment, useState } from "react";
 import { RepeatTitle, VariantItem } from "./lib";
 
-export default function Pairs({ content, checkAnswer }) {
+export default function Pairs({
+  content,
+  checkAnswer,
+}: {
+  content: any;
+  checkAnswer: Function;
+}) {
   const [active, setActive] = useState("");
 
-  const isDisabled = (idx) => {
-    return !content.answer.find((ans) => ans.includes(idx + 1));
+  const isDisabled = (idx: number) => {
+    return !content.answer.find((answer: any) => answer.includes(idx + 1));
   };
 
   return (
@@ -24,24 +30,25 @@ export default function Pairs({ content, checkAnswer }) {
           padding: 0,
         }}
       >
-        {content.variants.map((item, idx) => (
+        {content.variants.map((item: string, idx: number) => (
           <li
             key={idx}
             css={{ marginBottom: 5, position: "relative", width: "48%" }}
             onClick={(evt) => {
+              const target = evt.target as HTMLInputElement;
               if (!isDisabled(idx)) {
                 if (active) {
-                  checkAnswer(`${active}${evt.target.id}`);
+                  checkAnswer(`${active}${target.id}`);
                   setActive("");
                 } else {
-                  setActive(evt.target.id);
+                  setActive(target.id);
                 }
               }
             }}
           >
             <VariantItem
               type="button"
-              id={idx + 1}
+              id={(idx + 1).toString()}
               css={{
                 cursor: isDisabled(idx) ? "default" : "pointer",
                 color:

@@ -15,6 +15,11 @@ export default function QuestionAnswerPractice({
   content,
   setValue,
   formDisabled,
+}: {
+  value: string;
+  content: any;
+  setValue: Function;
+  formDisabled: boolean;
 }) {
   return (
     <Fragment>

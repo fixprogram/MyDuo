@@ -7,11 +7,10 @@ const StudyContainer = styled("section")`
 `;
 
 const StudyTextareaTemplate = styled("textarea")`
-  height: calc(100vh - 95px);
   width: 100%;
   border: none;
   resize: none;
-  overflow: auto;
+  overflow: hidden;
   outline: none;
   box-shadow: none;
   &:focus,
@@ -29,9 +28,5 @@ const StudyInputTemplate = styled("input")`
   padding: 3px 2px;
   width: 100%;
 `;
-
-const StudyTitle1 = styled("h1")``;
-
-const StudyTitle2 = styled("h2")``;
 
 export { StudyContainer, StudyTextareaTemplate, StudyInputTemplate };

@@ -9,13 +9,17 @@ export default function StudyInput({
 }: {
   initialValue: string;
   placeholder?: string;
+  refName: any;
+  name: string;
 }) {
   const [value, setValue] = useState(initialValue);
   return (
     <StudyInputTemplate
       type="text"
       value={value}
-      onChange={(event) => setValue(event.target.value)}
+      onChange={(event) => {
+        setValue(event.target.value);
+      }}
       placeholder={placeholder}
       ref={refName}
       name={name}
