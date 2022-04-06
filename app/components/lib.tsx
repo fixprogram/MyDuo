@@ -359,11 +359,45 @@ const ActiveProjectButton = styled("button")`
 
 const ActiveProjectForm = styled(Form)`
   position: absolute;
-  top: 50px;
-  right: 270px;
+  top: 40px;
+  right: 300px;
   width: 200px;
   padding: 20px 0;
   z-index: 9;
+`;
+
+const ProjectsContainer = styled("div")`
+  border: 2px solid #dadcde;
+  border-radius: 15px;
+  background-color: white;
+`;
+const ProjectsItem = styled("button")`
+  border: none;
+  border-bottom: 2px solid #dadcde;
+  width: 100%;
+  cursor: pointer;
+  padding: 20px 20px;
+  background-color: inherit;
+  color: #3c3c3c;
+  font-family: "Montserrat";
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: left;
+`;
+
+const ProjectsInput = styled("input")`
+  border: none;
+  border-bottom: 2px solid #dadcde;
+  border-radius: 0 0 10px 10px;
+  width: 100%;
+  cursor: pointer;
+  padding: 20px 30px 20px 20px;
+  background-color: inherit;
+  color: #3c3c3c;
+  font-family: "Montserrat";
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: left;
 `;
 
 const Overlay = styled("div")<OverlayProps>`
@@ -374,8 +408,18 @@ const Overlay = styled("div")<OverlayProps>`
   pointer-events: none;
   position: fixed;
   right: 0;
-  top: 0;
+  top: 71px;
   transition: opacity 0.3s;
+`;
+
+const Logout = styled("button")`
+  border: none;
+  cursor: pointer;
+  background-color: inherit;
+  color: #afafaf;
+  font-family: "Montserrat";
+  font-weight: 700;
+  letter-spacing: 0.8px;
 `;
 
 export {
@@ -408,7 +452,11 @@ export {
   LoginToggle,
   MenuContainer,
   MenuNavLink,
+  Logout,
+  Overlay,
   ActiveProjectButton,
   ActiveProjectForm,
-  Overlay,
+  ProjectsContainer,
+  ProjectsItem,
+  ProjectsInput,
 };

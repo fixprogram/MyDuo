@@ -4,11 +4,15 @@ import { ProjectContext } from "~/routes/$projectTitle";
 import {
   ActiveProjectButton,
   ActiveProjectForm,
+  ProjectsContainer,
+  ProjectsInput,
+  ProjectsItem,
   VisuallyHiddenInput,
 } from "./lib";
 
 export default function Projects({ onOverlay }: { onOverlay: Function }) {
   const [showWindow, setShowWindow] = useState(false);
+  const [isNewProject, setIsNewProject] = useState(false);
   const value: any = useContext(ProjectContext);
   const { projects } = value;
 
@@ -40,33 +44,64 @@ export default function Projects({ onOverlay }: { onOverlay: Function }) {
         }}
       >
         {showWindow ? (
-          <div
-            style={{
-              border: "1px solid black",
-              borderRadius: "10px",
-              background: "white",
-            }}
-          >
-            <ul>
-              {projects?.map((item: any, idx: number) =>
-                !item.active ? (
-                  <li key={idx}>
+          <ProjectsContainer>
+            <ul style={{ display: "flex", flexDirection: "column" }}>
+              {projects?.map((item: any, idx: number) => (
+                <li
+                  key={idx}
+                  style={{
+                    backgroundColor: item.active ? "#afafaf" : "inherit",
+                    order: item.active ? 0 : 1,
+                    borderRadius: item.active ? "10px 10px 0 0" : 0,
+                  }}
+                >
+                  <Form method="post">
                     <VisuallyHiddenInput
                       type="text"
                       name="id"
                       value={item.id}
                       readOnly
                     />
-                    <button type="submit" style={{ width: "100%" }}>
-                      {item.title}
-                    </button>
-                  </li>
-                ) : null
-              )}
+                    <ProjectsItem type="submit">{item.title}</ProjectsItem>
+                  </Form>
+                </li>
+              ))}
             </ul>
-            <input type="text" placeholder="Add new one" name="newProject" />
-            <button type="submit">Save</button>
-          </div>
+            <fieldset style={{ position: "relative" }}>
+              {isNewProject ? (
+                <Fragment>
+                  <ProjectsInput
+                    type="text"
+                    placeholder="Type it's title"
+                    name="newProject"
+                    onChange={() => {
+                      onOverlay(true);
+                      setShowWindow(true);
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      position: "absolute",
+                      fontSize: 30,
+                      top: 7,
+                      right: 15,
+                      color: "#afafaf",
+                    }}
+                  >
+                    +
+                  </button>
+                </Fragment>
+              ) : (
+                <ProjectsItem
+                  type="button"
+                  onClick={() => setIsNewProject(true)}
+                >
+                  Add new project
+                </ProjectsItem>
+              )}
+            </fieldset>
+          </ProjectsContainer>
         ) : null}
       </ActiveProjectForm>
     </Fragment>

@@ -337,6 +337,9 @@ label {
 
 button {
   border-radius: 0;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
 }
 
 button:focus:not(:focus-visible) {
@@ -380,12 +383,6 @@ button,
 [type="submit"] {
   -webkit-appearance: button;
 }
-/* button:not(:disabled),
-[type="button"]:not(:disabled),
-[type="reset"]:not(:disabled),
-[type="submit"]:not(:disabled) {
-  cursor: pointer;
-} */
 
 ::-moz-focus-inner {
   padding: 0;

@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import {
   HorizontalList,
   ListItem,
+  Logout,
   MenuContainer,
   MenuNavLink,
   NavIcon,
@@ -97,7 +98,7 @@ const Menu = ({ user, onOverlay }: { user: any; onOverlay: Function }) => {
             >
               <span style={{ marginRight: 10 }}>{user.username}</span>
               <form action="/logout" method="post">
-                <button type="submit">Logout</button>
+                <Logout type="submit">Logout</Logout>
               </form>
             </div>
           ) : (

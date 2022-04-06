@@ -12,12 +12,15 @@ import {
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
+  console.log("FORM: ", form);
   const id = form.get("id");
   const newProject = form.get("newProject");
   let project;
   if (newProject?.length > 0) {
     project = await createNewProject(request, newProject);
   } else {
+    console.log("Set new Active Project");
+    console.log("ID: ", id);
     project = await setActiveProject(id);
   }
 
