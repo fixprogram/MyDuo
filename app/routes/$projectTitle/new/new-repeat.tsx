@@ -1,11 +1,7 @@
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, redirect } from "remix";
 import Constructor from "~/modules/Constructor";
 import { db } from "~/utils/db.server";
-import {
-  getActiveProject,
-  getProject,
-  requireUserId,
-} from "~/utils/session.server";
+import { getActiveProject, requireUserId } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -15,7 +11,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`); // Getting type of the step
-    const answer = form.get(`answer${index}`); // Getting answer
+    const answer = form.get(`answer${index}`)?.toLowerCase(); // Getting answer
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {

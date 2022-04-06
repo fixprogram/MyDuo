@@ -5,12 +5,7 @@ import { Input, Textarea, VisuallyHiddenInput } from "~/components/lib";
 import { FieldsetType } from "../types";
 import { VariantItemInput, VariantItemNumber } from "./lib";
 
-export default function Variants({
-  number,
-  answer,
-  setAnswer,
-  setStyle,
-}: FieldsetType) {
+export default function Variants({ number, answer, setAnswer }: FieldsetType) {
   const [answers, setAnswers] = useState(Array(3).fill(answer));
 
   return (
@@ -21,9 +16,6 @@ export default function Variants({
 
       <div>
         <h2>Read and Respond</h2>
-        <button type="button" onClick={() => setStyle()}>
-          Back to Styles
-        </button>
       </div>
 
       <Textarea

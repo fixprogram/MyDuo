@@ -2,13 +2,12 @@ import { Fragment, useContext, useState } from "react";
 import { Form } from "@remix-run/react";
 import { ProjectContext } from "~/routes/$projectTitle";
 import {
-  ActiveProject,
   ActiveProjectButton,
   ActiveProjectForm,
   VisuallyHiddenInput,
 } from "./lib";
 
-export default function Projects() {
+export default function Projects({ onOverlay }: { onOverlay: Function }) {
   const [showWindow, setShowWindow] = useState(false);
   const value: any = useContext(ProjectContext);
   const { projects } = value;
@@ -17,16 +16,28 @@ export default function Projects() {
     <Fragment>
       <ActiveProjectButton
         type="button"
-        onMouseEnter={() => setShowWindow(true)}
-        onMouseLeave={() => setShowWindow(false)}
+        onMouseEnter={() => {
+          onOverlay(true);
+          setShowWindow(true);
+        }}
+        onMouseLeave={() => {
+          onOverlay(false);
+          setShowWindow(false);
+        }}
       >
         {projects?.find((item: any) => item.active).title}
       </ActiveProjectButton>
 
       <ActiveProjectForm
         method="post"
-        onMouseEnter={() => setShowWindow(true)}
-        onMouseLeave={() => setShowWindow(false)}
+        onMouseEnter={() => {
+          onOverlay(true);
+          setShowWindow(true);
+        }}
+        onMouseLeave={() => {
+          onOverlay(false);
+          setShowWindow(false);
+        }}
       >
         {showWindow ? (
           <div

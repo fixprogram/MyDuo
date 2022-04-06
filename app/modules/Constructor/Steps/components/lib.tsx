@@ -21,6 +21,7 @@ const StepHeader = styled("div")`
   display: flex;
   justify-content: space-between;
   margin-top: 70px;
+  position: relative;
 `;
 
 const ChooseStyle = styled("div")`
@@ -88,8 +89,11 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   left: 16px;
   z-index: 1;
   text-align: center;
-  line-height: 26px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto";
 `;
 
 export {

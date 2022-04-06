@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Fragment, useEffect, useReducer, useRef, lazy, Suspense } from "react";
+import { Fragment, useEffect, useReducer, useRef } from "react";
 import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
 import { reducer, basicState } from "./reducer";
@@ -11,12 +11,10 @@ import {
   StepHeader,
   StyleButton,
 } from "./components/lib";
-// const InsertWords = lazy(() => import("./components/InsertWords"));
-// const Variants = lazy(() => import("./components/Variants"));
-// const MatchingPairs = lazy(() => import("./components/MatchingPairs"));
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
+import Close from "~/styles/close.svg";
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
@@ -67,6 +65,34 @@ export default function Steps() {
               >
                 Add step
               </FormButton>
+
+              {style !== "" ? (
+                <button
+                  type="button"
+                  style={{
+                    position: "absolute",
+                    cursor: "pointer",
+                    width: 16,
+                    height: 16,
+                    border: "none",
+                    backgroundColor: "inherit",
+                    padding: 0,
+                    right: 30,
+                    bottom: -60,
+                  }}
+                  onClick={() => setStyle("", id)}
+                >
+                  <img
+                    src={Close}
+                    alt="close"
+                    css={{
+                      width: "16px",
+                      height: "16px",
+                      verticalAlign: "initial",
+                    }}
+                  />
+                </button>
+              ) : null}
             </StepHeader>
 
             <StepContent>
@@ -100,44 +126,38 @@ export default function Steps() {
               ) : null}
 
               {style === "Question" ? (
-                <Suspense fallback={<div>...loading</div>}>
-                  <QuestionAnswer
-                    number={number}
-                    answer={answer}
-                    setAnswer={(answer: any) => setAnswer(answer, number)}
-                    setKeywords={(keywords: any) =>
-                      dispatch({
-                        type: "SET_KEYWORDS",
-                        payload: {
-                          keywords,
-                          number,
-                        },
-                      })
-                    }
-                    setStyle={() => setStyle("", id)}
-                    keywords={keywords}
-                  />
-                </Suspense>
+                <QuestionAnswer
+                  number={number}
+                  answer={answer}
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setKeywords={(keywords: any) =>
+                    dispatch({
+                      type: "SET_KEYWORDS",
+                      payload: {
+                        keywords,
+                        number,
+                      },
+                    })
+                  }
+                  keywords={keywords}
+                />
               ) : style === "Insert" ? (
                 <InsertWords
                   number={number}
                   answer={answer}
                   setAnswer={(answer: any) => setAnswer(answer, number)}
-                  setStyle={() => setStyle("", id)}
                 />
               ) : style === "Variants" ? (
                 <Variants
                   number={number}
                   answer={answer}
                   setAnswer={(answer: any) => setAnswer(answer, number)}
-                  setStyle={() => setStyle("", id)}
                 />
               ) : style === "Pairs" ? (
                 <MatchingPairs
                   number={number}
                   answer={answer}
                   setAnswer={(answer: any) => setAnswer(answer, number)}
-                  setStyle={() => setStyle("", id)}
                 />
               ) : null}
             </StepContent>

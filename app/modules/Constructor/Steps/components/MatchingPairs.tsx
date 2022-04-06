@@ -87,7 +87,6 @@ export default function MatchingPairs({
   number,
   answer,
   setAnswer,
-  setStyle,
   count = 8,
 }: FieldsetType) {
   const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
@@ -108,9 +107,6 @@ export default function MatchingPairs({
       <VisuallyHiddenInput name={`answer${number}`} value={answer} readOnly />
       <div>
         <h2>Create and Connect pairs</h2>
-        <button type="button" onClick={() => setStyle()}>
-          Back to Styles
-        </button>
       </div>
 
       <fieldset

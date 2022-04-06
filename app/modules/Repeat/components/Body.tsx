@@ -21,8 +21,6 @@ const Body = ({
     <RepeatBody>
       <div
         css={{
-          paddingTop: 50,
-          height: "calc(100% - 240px)",
           display: "flex",
           flexDirection: "column",
           overflowY: "scroll",

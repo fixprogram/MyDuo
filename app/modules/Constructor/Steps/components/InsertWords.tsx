@@ -9,7 +9,6 @@ export default function InsertWords({
   number,
   answer,
   setAnswer,
-  setStyle,
 }: FieldsetType) {
   const [words, setWords] = useState([]);
   const [showText, setShowText] = useState(false);
@@ -22,9 +21,6 @@ export default function InsertWords({
 
       <div>
         <h2>Type and choose to insert</h2>
-        <button type="button" onClick={() => setStyle()}>
-          Back to Styles
-        </button>
       </div>
 
       <Textarea
@@ -62,7 +58,7 @@ export default function InsertWords({
         })}
       </InsertWordsTextBlock>
 
-      <div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         <h3>Mark words which should be hidden</h3>
         <button
           type="button"

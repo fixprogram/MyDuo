@@ -8,6 +8,8 @@ async function seed() {
       // this is a hashed version of "twixrox"
       passwordHash:
         "$2b$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdWoXehVzJptJ/op0lSsvqNu/1u",
+      streak: 1,
+      wasToday: true,
     },
   });
   await Promise.all(

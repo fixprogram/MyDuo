@@ -46,7 +46,7 @@ const MENU = [
   },
 ];
 
-const Menu = ({ user }: { user: any }) => {
+const Menu = ({ user, onOverlay }: { user: any; onOverlay: Function }) => {
   return (
     <MenuContainer>
       <nav>
@@ -72,7 +72,7 @@ const Menu = ({ user }: { user: any }) => {
       </nav>
       <HorizontalList>
         <ListItem>
-          <Projects />
+          <Projects onOverlay={onOverlay} />
         </ListItem>
         <ListItem>
           <img

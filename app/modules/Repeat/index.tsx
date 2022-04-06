@@ -71,7 +71,14 @@ export default function Repeat({ data }: { data: any }) {
   };
 
   return (
-    <section css={{ position: "relative", minHeight: "100vh" }}>
+    <section
+      css={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {currentStep === maxSteps + 1 ? (
         <Results refName={ref} id={data.id} />
       ) : (
@@ -123,7 +130,7 @@ export default function Repeat({ data }: { data: any }) {
                 ></span>
               </RepeatFooterIcon>
             ) : null}
-            <div css={{ marginLeft: 16 }}>
+            <div css={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
               <RepeatFooterTitle>
                 {stateWrong ? "Right answer: " : "Great!"}
               </RepeatFooterTitle>

@@ -2,7 +2,6 @@
 import { jsx } from "@emotion/react";
 import { Fragment } from "react";
 import {
-  Fieldset,
   LabelText,
   Textarea,
   TextareaLabel,
@@ -16,7 +15,6 @@ export default function QuestionAnswer({
   answer,
   setAnswer,
   setKeywords,
-  setStyles,
   keywords,
 }: FieldsetType) {
   return (
@@ -24,9 +22,6 @@ export default function QuestionAnswer({
       <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />
       <div>
         <h2>Ask and Answer</h2>
-        <button type="button" onClick={setStyles}>
-          Back to Styles
-        </button>
       </div>
       <fieldset css={{ padding: "0 25%" }}>
         <input

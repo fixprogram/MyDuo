@@ -13,8 +13,8 @@ type RepeatButtonProps = {
 };
 
 const RepeatFooter = styled("div")<RepeatFooterProps>`
-  position: absolute;
-  bottom: 0;
+  // position: absolute;
+  // bottom: 0;
   width: 100%;
   height: 140px;
   border-top: 2px solid #e5e5e5;
@@ -29,7 +29,7 @@ const RepeatFooter = styled("div")<RepeatFooterProps>`
 `;
 
 const RepeatFooterMessage = styled("div")<RepeatFooterProps>`
-  max-width: 1000px;
+  width: 100%;
   display: flex;
   align-items: center;
   visibility: ${(props) =>
@@ -48,6 +48,8 @@ const RepeatFooterText = styled("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
   font-family: "Roboto";
+  overflow-y: scroll;
+  max-height: 60px;
 `;
 
 const RepeatButton = styled("button")<RepeatButtonProps>`
@@ -75,10 +77,10 @@ const RepeatButton = styled("button")<RepeatButtonProps>`
 `;
 
 const RepeatBody = styled("div")`
-  margin: 72px 29% 240px 32%;
+  margin: 72px 29% 4% 32%; // 4% instead of 240px
   flex-grow: 1;
   position: relative;
-  max-height: 70%;
+  max-height: calc(100% - 240px);
 `;
 
 const RepeatBodyTitle = styled("h3")`
