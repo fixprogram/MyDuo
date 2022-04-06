@@ -16,6 +16,7 @@ export default function StudySidebar() {
           <li key={index}>{item.question}</li>
         ))}
       </ul>
+
       <button type="button" onClick={() => setIsCreateRepeat(!isCreateRepeat)}>
         {isCreateRepeat ? "back" : "create repeat"}
       </button>

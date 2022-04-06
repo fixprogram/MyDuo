@@ -5,18 +5,16 @@ import { getActiveProject } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({
   request,
-  params,
 }: {
   request: Request;
-  params: any;
 }) => {
   const activeProject = await getActiveProject(request);
   const form = await request.formData();
-  const title = form.get("title");
+  const title: any = form.get("title");
 
-  const steps = form.getAll("step").map((item: any, index: number) => {
+  const steps: any[] = form.getAll("step").map((item: any, index: number) => {
     const type = form.get(`type${index}`);
-    let answer = form.get(`answer${index}`);
+    let answer: any = form.get(`answer${index}`);
     answer?.replace("\n", "");
     answer?.replace("\r", "");
     answer = answer?.trim().toLowerCase();
@@ -24,7 +22,7 @@ export const action: ActionFunction = async ({
     switch (type) {
       case "Question": {
         const question = form.get(`question${index}`);
-        const keywords = form.get(`keywords${index}`);
+        const keywords: any = form.get(`keywords${index}`);
         return {
           ...returnData,
           question,

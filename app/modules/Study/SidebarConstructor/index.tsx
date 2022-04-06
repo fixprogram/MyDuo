@@ -4,11 +4,12 @@ import { ContextItemsRef } from "..";
 import { useContext, useState } from "react";
 
 export default function SidebarConstructor() {
-  const value = useContext(ContextItemsRef);
+  const value: any = useContext(ContextItemsRef);
 
   const blocks = formatRef(value);
 
   const [title, setTitle] = useState(() => value.title);
+
   return (
     <form method="POST">
       <h3>Lesson title</h3>
@@ -22,29 +23,33 @@ export default function SidebarConstructor() {
         style={{ marginBottom: "20px" }}
       />
 
-      {blocks?.map((item, index) => (
-        <fieldset key={index}>
-          <VisuallyHiddenInput type="text" name="step" value={index} readOnly />
-          <VisuallyHiddenInput
-            name={`type${index}`}
-            value={"Question"}
-            readOnly
-          />
-          <input
-            type="text"
-            name={`question${index}`}
-            value={item.question}
-            style={{
-              border: "none",
-              marginBottom: 10,
-              width: "100%",
-            }}
-            readOnly
-          />
+      {blocks?.map(
+        (item: { question: string; answer: string }, idx: number) => (
+          <fieldset key={idx}>
+            <VisuallyHiddenInput type="text" name="step" value={idx} readOnly />
+            <VisuallyHiddenInput
+              name={`type${idx}`}
+              value={"Question"}
+              readOnly
+              required
+            />
+            <input
+              type="text"
+              name={`question${idx}`}
+              value={item.question}
+              style={{
+                border: "none",
+                marginBottom: 10,
+                width: "100%",
+              }}
+              readOnly
+              required
+            />
 
-          <Textarea name={`answer${index}`} value={item.answer} readOnly />
-        </fieldset>
-      ))}
+            <Textarea name={`answer${idx}`} value={item.answer} readOnly />
+          </fieldset>
+        )
+      )}
 
       <button type="submit">Save repeat</button>
     </form>

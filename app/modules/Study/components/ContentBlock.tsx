@@ -5,7 +5,6 @@ function formatContent(
   tag: string,
   value: any,
   refName: any,
-  onRemove: Function,
   setFocusOnPreviousContent: Function
 ) {
   switch (tag) {
@@ -50,7 +49,6 @@ export default function ContentBlock({
   refName,
   onRemove,
   onAdd,
-  setFocusOnDocument,
   setFocusOnPreviousContent,
 }: {
   tag: string;
@@ -58,7 +56,6 @@ export default function ContentBlock({
   refName: any;
   onRemove: Function;
   onAdd: Function;
-  setFocusOnDocument: Function;
   setFocusOnPreviousContent: Function;
 }) {
   return (
@@ -74,8 +71,9 @@ export default function ContentBlock({
         }
       }}
       tabIndex={0}
+      style={{ position: "relative" }}
     >
-      {formatContent(tag, value, refName, onRemove, setFocusOnPreviousContent)}
+      {formatContent(tag, value, refName, setFocusOnPreviousContent)}
     </div>
   );
 }

@@ -1,22 +1,22 @@
 import { ActionFunction, redirect } from "remix";
 import Constructor from "~/modules/Constructor";
 import { db } from "~/utils/db.server";
-import { getActiveProject, requireUserId } from "~/utils/session.server";
+import { getActiveProject } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
   const activeProject = await getActiveProject(request);
   const form = await request.formData();
   const title = form.get("title"); // Getting the repeat title
 
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`); // Getting type of the step
-    const answer = form.get(`answer${index}`)?.toLowerCase(); // Getting answer
+    let answer: any = form.get(`answer${index}`); // Getting answer
+    answer = answer.toLowerCase();
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {
         const question = form.get(`question${index}`); // Getting question if it's Question type
-        const keywords = form.get(`keywords${index}`); // Getting keywords if it's Question type
+        const keywords: any = form.get(`keywords${index}`); // Getting keywords if it's Question type
         return {
           ...returnData,
           question,
@@ -48,7 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   });
 
-  const data = { title, steps, exp: 0, projectId: activeProject.id };
+  const data: any = { title, steps, exp: 0, projectId: activeProject?.id };
   const repeat = await db.repeat.create({ data });
   return redirect(`/repeat/${repeat.id}`);
 };

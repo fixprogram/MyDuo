@@ -12,15 +12,12 @@ import {
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
-  console.log("FORM: ", form);
   const id = form.get("id");
-  const newProject = form.get("newProject");
+  const newProject: any = form.get("newProject");
   let project;
   if (newProject?.length > 0) {
     project = await createNewProject(request, newProject);
   } else {
-    console.log("Set new Active Project");
-    console.log("ID: ", id);
     project = await setActiveProject(id);
   }
 
@@ -47,7 +44,6 @@ export const ProjectContext = createContext({});
 export default function ProjectPage() {
   const { user, projects } = useLoaderData();
   const [isOverlay, setIsOverlay] = useState(false);
-  // const activeProject = projects.find((project: any) => project.active);
   return (
     <React.Fragment>
       <ProjectContext.Provider value={{ projects }}>

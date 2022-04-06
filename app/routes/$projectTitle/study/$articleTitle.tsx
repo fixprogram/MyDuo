@@ -9,7 +9,13 @@ import { findArticleByTitle, getActiveProject } from "~/utils/session.server";
 import { Study } from "~/modules/Study";
 import { db } from "~/utils/db.server";
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({
+  request,
+  params,
+}: {
+  request: Request;
+  params: any;
+}) => {
   const article = await findArticleByTitle(request, params.articleTitle);
   const activeProject = await getActiveProject(request);
   const form = await request.formData();
@@ -45,7 +51,13 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`${title}`);
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({
+  request,
+  params,
+}: {
+  request: Request;
+  params: any;
+}) => {
   const article = await findArticleByTitle(request, params.articleTitle);
 
   return { article };

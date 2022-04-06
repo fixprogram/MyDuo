@@ -1,13 +1,13 @@
+import { Link } from "@remix-run/react/components";
 import { createContext, useEffect, useReducer, useRef } from "react";
-import { Link } from "@remix-run/react";
 import ContentBlock from "./components/ContentBlock";
-import { StudyContainer } from "./components/lib";
+import { PageTitleInput, StudyContainer } from "./components/lib";
 import StudyTextarea from "./components/StudyTextarea";
 import { ActionKind, initialState, reducer } from "./reducer";
 
 export const ContextItemsRef = createContext([]);
 
-export const Study: React.FC = ({
+export const Study = ({
   data,
   children,
 }: {
@@ -18,7 +18,6 @@ export const Study: React.FC = ({
     ...initialState,
   });
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
-  console.log(content);
 
   useEffect(() => {
     if (data) {
@@ -54,7 +53,7 @@ export const Study: React.FC = ({
     <section style={{ display: "flex", width: "100%", padding: "0 0 0 40px" }}>
       <StudyContainer>
         <form method="POST">
-          <input
+          <PageTitleInput
             type="text"
             name="title"
             value={title}
@@ -64,15 +63,7 @@ export const Study: React.FC = ({
                 payload: { value: evt.target.value },
               });
             }}
-            placeholder="Type list title"
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontSize: 25,
-              fontFamily: "Montserrat",
-              marginBottom: 20,
-              border: "none",
-            }}
+            placeholder="Page title"
           />
           {content?.map(({ tag, value }: any, idx: number) => {
             return (
@@ -90,10 +81,8 @@ export const Study: React.FC = ({
                   dispatch({ type: ActionKind.AddSpace });
                   setFocusOnNextContent(idx);
                 }}
-                refName={(el) => (itemsRef.current[idx] = el)}
-                setFocusOnNextContent={() => setFocusOnNextContent(idx)}
+                refName={(el: any) => (itemsRef.current[idx] = el)}
                 setFocusOnPreviousContent={() => setFocusOnPreviousContent(idx)}
-                setFocusOnDocument={() => dispatch({ type: ActionKind.Focus })}
               />
             );
           })}

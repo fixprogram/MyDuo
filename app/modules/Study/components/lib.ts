@@ -29,4 +29,18 @@ const StudyInputTemplate = styled("input")`
   width: 100%;
 `;
 
-export { StudyContainer, StudyTextareaTemplate, StudyInputTemplate };
+const PageTitleInput = styled("input")`
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
+  font-family: "Montserrat";
+  margin-bottom: 20px;
+  border: none;
+`;
+
+export {
+  StudyContainer,
+  StudyTextareaTemplate,
+  StudyInputTemplate,
+  PageTitleInput,
+};
