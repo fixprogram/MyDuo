@@ -1,7 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
-  binaryTargets   = ["native", "darwin-arm64"]
+  previewFeatures = ["mongodb"]
 }
 
 datasource db {
@@ -19,27 +18,27 @@ model User {
   wasToday     Boolean
 }
 
-model Project {
+model Language {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   active     Boolean
   userId     String
   title      String
-  repeats    Repeat[]
-  study      Study[]
-  practice   Practice[]
+  lessons    Lesson[]
+  // study      Study[]
+  // practice   Practice[]
 }
 
-model Repeat {
+model Lesson {
   id        String       @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   createdAt DateTime     @default(now())
-  steps     RepeatStep[]
+  steps     LessonStep[]
   exp       Int
-  Project   Project?     @relation(fields: [projectId], references: [id])
+  Language  Language?     @relation(fields: [projectId], references: [id])
   projectId String
 }
 
-type RepeatStep {
+type LessonStep {
   number     Int
   type       String
   question   String?
@@ -54,41 +53,41 @@ type Variants {
   variants String[]
 }
 
-model Study {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   ContentItem[]
-  Project   Project?      @relation(fields: [projectId], references: [id])
-  projectId String
-}
+// model Study {
+//   id        String        @id @default(auto()) @map("_id") @db.ObjectId
+//   title     String
+//   content   ContentItem[]
+//   Project   Project?      @relation(fields: [projectId], references: [id])
+//   projectId String
+// }
 
-type ContentItem {
-  tag   String
-  value String
-}
+// type ContentItem {
+//   tag   String
+//   value String
+// }
 
-model Practice {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  goals     String[]
-  projectId String
-  days      Day[]
-  Project   Project?      @relation(fields: [projectId], references: [id])
-}
+// model Practice {
+//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+//   goals     String[]
+//   projectId String
+//   days      Day[]
+//   Project   Project?      @relation(fields: [projectId], references: [id])
+// }
 
-type Day {
-  timestamp String
-  tasks     Task[]
-  habits    Habit[]
-}
+// type Day {
+//   timestamp String
+//   tasks     Task[]
+//   habits    Habit[]
+// }
 
-type Task {
-  title       String
-  isFulfilled  Boolean
-  priority    Int?
-}
+// type Task {
+//   title       String
+//   isFulfilled  Boolean
+//   priority    Int?
+// }
 
-type Habit {
-  title       String
-  isFulfilled  Boolean
-  priority    Int?
-}
+// type Habit {
+//   title       String
+//   isFulfilled  Boolean
+//   priority    Int?
+// }

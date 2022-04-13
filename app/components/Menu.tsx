@@ -21,33 +21,41 @@ import { Fragment } from "react";
 import Projects from "./Projects";
 
 const MENU = [
+  // {
+  //   title: "study",
+  //   link: "study/",
+  //   icon: study,
+  //   activeIcon: studyActive,
+  // },
   {
-    title: "study",
-    link: "study/",
+    title: "Study",
+    link: "lessons",
     icon: study,
     activeIcon: studyActive,
   },
-  {
-    title: "repeat",
-    link: "repeats",
-    icon: repeat,
-    activeIcon: repeatActive,
-  },
-  {
-    title: "practice",
-    link: "practice/",
-    icon: practice,
-    activeIcon: practiceActive,
-  },
+  // {
+  //   title: "practice",
+  //   link: "practice/",
+  //   icon: practice,
+  //   activeIcon: practiceActive,
+  // },
   {
     title: "constructor",
-    link: "new/new-repeat",
+    link: "constructor",
     icon: shop,
     activeIcon: shopActive,
   },
 ];
 
-const Menu = ({ user, onOverlay }: { user: any; onOverlay: Function }) => {
+const Menu = ({
+  user,
+  languages,
+  onOverlay,
+}: {
+  user: any;
+  languages: any;
+  onOverlay: Function;
+}) => {
   return (
     <MenuContainer>
       <nav>
@@ -73,7 +81,7 @@ const Menu = ({ user, onOverlay }: { user: any; onOverlay: Function }) => {
       </nav>
       <HorizontalList>
         <ListItem>
-          <Projects onOverlay={onOverlay} />
+          <Projects languages={languages} onOverlay={onOverlay} />
         </ListItem>
         <ListItem>
           <img

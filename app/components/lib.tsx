@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Form, NavLink } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
 
 type FormButtonProps = {
   active?: boolean;
@@ -36,6 +36,7 @@ const ListItem = styled.li((props) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  position: "relative",
 }));
 
 const PracticeBlock = styled.section((props) => ({
@@ -357,10 +358,10 @@ const ActiveProjectButton = styled("button")`
   cursor: pointer;
 `;
 
-const ActiveProjectForm = styled(Form)`
+const ActiveProjectContainer = styled("div")`
   position: absolute;
   top: 40px;
-  right: 300px;
+  right: -30px;
   width: 200px;
   padding: 20px 0;
   z-index: 9;
@@ -455,7 +456,7 @@ export {
   Logout,
   Overlay,
   ActiveProjectButton,
-  ActiveProjectForm,
+  ActiveProjectContainer,
   ProjectsContainer,
   ProjectsItem,
   ProjectsInput,
