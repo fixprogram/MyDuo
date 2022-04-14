@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Children, FC } from "react";
 
 type InsertWordsTextBlockProps = {
   showText: boolean;

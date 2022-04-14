@@ -1,20 +1,20 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import styled from "@emotion/styled";
+import RightIcon from "~/styles/right.svg";
+import WrongIcon from "~/styles/wrong.svg";
 
-type RepeatFooterProps = {
+type LessonFooterProps = {
   stateRight: boolean;
   stateWrong: boolean;
 };
-type RepeatButtonProps = {
+type LessonButtonProps = {
   active: boolean;
   stateWrong: boolean;
   stateRight: boolean;
 };
 
-const RepeatFooter = styled("div")<RepeatFooterProps>`
-  // position: absolute;
-  // bottom: 0;
+const LessonFooter = styled("section")<LessonFooterProps>`
   width: 100%;
   height: 140px;
   border-top: 2px solid #e5e5e5;
@@ -28,7 +28,16 @@ const RepeatFooter = styled("div")<RepeatFooterProps>`
     props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
 `;
 
-const RepeatFooterMessage = styled("div")<RepeatFooterProps>`
+const LessonFooterInner = styled("div")`
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+`;
+
+const LessonFooterMessage = styled("div")<LessonFooterProps>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -36,7 +45,7 @@ const RepeatFooterMessage = styled("div")<RepeatFooterProps>`
     props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
 `;
 
-const RepeatFooterTitle = styled("h2")`
+const LessonFooterTitle = styled("h2")`
   margin: 0;
   font-family: "Montserrat", sans-serif;
   line-height: 30px;
@@ -44,7 +53,7 @@ const RepeatFooterTitle = styled("h2")`
   letter-spacing: 0.2px;
 `;
 
-const RepeatFooterText = styled("p")`
+const LessonFooterText = styled("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
   font-family: "Roboto";
@@ -52,7 +61,7 @@ const RepeatFooterText = styled("p")`
   max-height: 60px;
 `;
 
-const RepeatButton = styled("button")<RepeatButtonProps>`
+const LessonButton = styled("button")<LessonButtonProps>`
   border: 0 solid transparent;
   background-color: ${(props) =>
     props.stateWrong
@@ -74,16 +83,17 @@ const RepeatButton = styled("button")<RepeatButtonProps>`
   font-weight: 700;
   letter-spacing: 0.8px;
   border-radius: 15px;
+  padding: 0 20px;
 `;
 
-const RepeatBody = styled("div")`
+const LessonBody = styled("div")`
   margin: 72px 29% 4% 32%; // 4% instead of 240px
   flex-grow: 1;
   position: relative;
   max-height: calc(100% - 240px);
 `;
 
-const RepeatBodyTitle = styled("h3")`
+const LessonBodyTitle = styled("h3")`
   font-family: "Montserrat";
   font-size: 23px;
   font-weight: 700;
@@ -97,7 +107,7 @@ const RepeatBodyTitle = styled("h3")`
   background-color: #fff;
 `;
 
-const RepeatBodyMessage = styled("div")`
+const LessonBodyMessage = styled("div")`
   padding: 12px 15px 12px 21px;
   border: 2px solid #dedede;
   font-family: "Roboto";
@@ -109,7 +119,7 @@ const RepeatBodyMessage = styled("div")`
   z-index: 1;
 `;
 
-const RepeatBodyVariants = styled("div")`
+const LessonBodyVariants = styled("div")`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -117,7 +127,7 @@ const RepeatBodyVariants = styled("div")`
   bottom: 0;
 `;
 
-const RepeatBodyVariant = styled("div")<RepeatButtonProps>`
+const LessonBodyVariant = styled("div")<LessonButtonProps>`
   position: relative;
   border-radius: 15px;
   border: 2px solid #e5e5e5;
@@ -138,9 +148,9 @@ const RepeatBodyVariant = styled("div")<RepeatButtonProps>`
   color: ${(props) => (props.active ? "#4897D1" : "inherit")};
 `;
 
-const RepeatBodyWelcome = styled("div")``;
+const LessonBodyWelcome = styled("div")``;
 
-const RepeatBodyResults = styled("div")``;
+const LessonBodyResults = styled("div")``;
 
 const VariantItem = styled("button")`
   background-color: inherit;
@@ -162,14 +172,14 @@ const VariantItem = styled("button")`
   width: 100%;
 `;
 
-const RepeatTitle = styled("h1")`
+const LessonTitle = styled("h1")`
   font-size: 32px;
   font-family: "Montserrat", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
 `;
 
-const RepeatQuestion = styled("p")`
+const LessonQuestion = styled("p")`
   font-size: 19px;
   line-height: 39px;
   font-family: "Montserrat", sans-serif;
@@ -182,7 +192,7 @@ const RepeatQuestion = styled("p")`
   box-sizing: border-box;
 `;
 
-const RepeatQuestionTriangleContainer = styled("div")`
+const LessonQuestionTriangleContainer = styled("div")`
   height: 10px;
   overflow: hidden;
   width: 20px;
@@ -193,7 +203,7 @@ const RepeatQuestionTriangleContainer = styled("div")`
   transform: translateY(-50%) rotate(-90deg);
 `;
 
-const RepeatQuestionTriangle = styled("span")`
+const LessonQuestionTriangle = styled("span")`
   box-sizing: border-box;
   position: absolute;
   background-color: #fff;
@@ -207,13 +217,17 @@ const RepeatQuestionTriangle = styled("span")`
   width: 14.14427px;
 `;
 
-const RepeatFooterIcon = styled("div")`
-  background: #fff;
+const LessonFooterIcon = styled("div")<LessonFooterProps>`
   border-radius: 98px;
   display: block;
   float: left;
   height: 80px;
   width: 80px;
+  background: url(${(props) => (props.stateRight ? RightIcon : WrongIcon)});
+  background-position: ${(props) =>
+    props.stateRight ? "-145px -64px" : "-183px -65px"};
+  background-color: #fff;
+  display: block;
 `;
 
 const ResultsContainer = styled("section")`
@@ -238,24 +252,25 @@ const ResultsSeparateLine = styled("div")`
 `;
 
 export {
-  RepeatFooter,
-  RepeatFooterMessage,
-  RepeatFooterTitle,
-  RepeatFooterText,
-  RepeatButton,
-  RepeatBody,
-  RepeatBodyTitle,
-  RepeatBodyMessage,
-  RepeatBodyVariants,
-  RepeatBodyVariant,
-  RepeatBodyWelcome,
-  RepeatBodyResults,
+  LessonFooter,
+  LessonFooterInner,
+  LessonFooterMessage,
+  LessonFooterTitle,
+  LessonFooterText,
+  LessonButton,
+  LessonBody,
+  LessonBodyTitle,
+  LessonBodyMessage,
+  LessonBodyVariants,
+  LessonBodyVariant,
+  LessonBodyWelcome,
+  LessonBodyResults,
   VariantItem,
-  RepeatTitle,
-  RepeatQuestion,
-  RepeatQuestionTriangleContainer,
-  RepeatQuestionTriangle,
-  RepeatFooterIcon,
+  LessonTitle,
+  LessonQuestion,
+  LessonQuestionTriangleContainer,
+  LessonQuestionTriangle,
+  LessonFooterIcon,
   ResultsContainer,
   ResultsTitle,
   ResultsLeftBlock,

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
-import { RepeatTitle, VariantItem } from "./lib";
+import { LessonTitle, VariantItem } from "./lib";
 
 export default function VariantsPractice({
   content,
@@ -11,7 +11,7 @@ export default function VariantsPractice({
 }) {
   return (
     <Fragment>
-      <RepeatTitle>Choose right variant</RepeatTitle>
+      <LessonTitle>Choose right variant</LessonTitle>
       <div>
         <p>{content.definition}</p>
       </div>

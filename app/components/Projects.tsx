@@ -15,7 +15,7 @@ export default function Projects({
   onOverlay: Function;
   languages: any;
 }) {
-  const [showWindow, setShowWindow] = useState(true);
+  const [showWindow, setShowWindow] = useState(false);
 
   return (
     <Fragment>

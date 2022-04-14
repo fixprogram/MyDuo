@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { NavLink } from "@remix-run/react";
+import { NavLink, Link } from "@remix-run/react";
 
 type FormButtonProps = {
   active?: boolean;
@@ -83,6 +83,16 @@ const UserImage = styled.img(
   (props) => ({ width: props.width, height: props.height })
 );
 
+const ProgressBarContainer = styled("div")`
+  width: 100%;
+  margin-top: 1px;
+  border-top: 1px solid #dbdddd;
+  padding-top: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ProgressBar = styled("div")<ProgressProps>`
   width: 61%;
   height: 16px;
@@ -111,6 +121,12 @@ const ProgressBar = styled("div")<ProgressProps>`
     background: white;
     opacity: 0.2;
   }
+`;
+
+const ProgressLeaveLesson = styled(Link)`
+  margin-right: 21px;
+  height: 16px;
+  margin-top: -3px;
 `;
 
 const Input = styled("input")`
@@ -424,7 +440,9 @@ const Logout = styled("button")`
 `;
 
 export {
+  ProgressBarContainer,
   ProgressBar,
+  ProgressLeaveLesson,
   HorizontalList,
   ListItem,
   NavLink,

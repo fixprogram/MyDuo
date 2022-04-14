@@ -4,29 +4,6 @@ import { getUserId, logout } from "~/session.server";
 
 export type { Language } from "@prisma/client";
 
-// export async function getUserById(id: User["id"]) {
-//   return prisma.user.findUnique({ where: { id } });
-// }
-
-// export async function getUserByUsername(username: User["username"]) {
-//   return prisma.user.findUnique({ where: { username } });
-// }
-
-// export async function createUser(username: User["username"], password: string) {
-//   const passwordHash = await bcrypt.hash(password, 10);
-
-//   return prisma.user.create({
-//     data: {
-//       username,
-//       passwordHash,
-//     },
-//   });
-// }
-
-// export async function deleteUserByUsername(username: User["username"]) {
-//   return prisma.user.delete({ where: { username } });
-// }
-
 async function deactiveAllUserLanguages(userId: Language["userId"]) {
   const languages = await prisma.language.updateMany({
     where: {

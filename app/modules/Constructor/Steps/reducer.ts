@@ -1,29 +1,32 @@
-import type { Step, State, Action } from "./types";
+import type { Step, State } from "./types";
 import { createId } from "./utils";
+import { Action } from "./actions";
 
 export const basicState: State = {
-  steps: [{ number: 0, keywords: [], answer: "", style: "", id: createId }],
+  steps: [
+    { number: 0, keywords: [], answer: "", lessonType: "", id: createId },
+  ],
 };
 
 export const reducer = (state: State, action: Action) => {
   const { steps } = state;
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     case "SET_STYLE": {
-      const { style, id } = payload;
+      const { lessonType, id } = action.payload;
       const newSteps = steps.map((step) =>
-        step.id === id ? { ...step, style: style } : { ...step }
+        step.id === id ? { ...step, lessonType: lessonType } : { ...step }
       );
       return { ...state, steps: [...newSteps] };
     }
     case "SET_ANSWER": {
-      const { answer, number } = payload;
+      const { answer, number } = action.payload;
       let newSteps = steps;
       newSteps[number].answer = answer;
       return { ...state, steps: newSteps };
     }
     case "SET_KEYWORDS": {
-      let { keywords, number } = payload;
+      let { keywords, number } = action.payload;
       let newSteps = steps;
       newSteps[number].keywords = keywords;
       return { ...state, steps: newSteps };
@@ -36,14 +39,14 @@ export const reducer = (state: State, action: Action) => {
           keywords: [],
           answer: "",
           id: createId(),
-          style: "",
+          lessonType: "",
         },
       ];
       return { ...state, steps: newSteps };
     }
     case "REMOVE_STEP": {
       const newSteps = steps
-        .filter((item: Step) => payload.number !== item.id)
+        .filter((item: Step) => action.payload.number !== item.id)
         .map((item: Step, i: number) => ({ ...item, number: i }));
       return {
         ...state,

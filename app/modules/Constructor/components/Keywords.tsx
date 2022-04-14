@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { useEffect, useState } from "react";
 import Keyword from "./Keyword";
 
@@ -10,15 +8,15 @@ export default function Keywords({
   answer: any;
   onSet: Function;
 }) {
-  const [keywords, setKeywords] = useState([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
 
   useEffect(() => {
     onSet(keywords);
   }, [keywords]);
 
   return (
-    <div css={{ display: "flex", flexWrap: "wrap" }}>
-      {answer.split(" ").map((item, idx) => {
+    <div style={{ display: "flex", flexWrap: "wrap" }}>
+      {answer.split(" ").map((item: string, idx: number) => {
         if (item.includes(",")) {
           item = item.slice(0, -1);
         }
@@ -26,8 +24,8 @@ export default function Keywords({
           <Keyword
             key={idx}
             onSet={(word: any) =>
-              setKeywords((prevArr) => {
-                if (prevArr?.find((word) => word === item)) {
+              setKeywords((prevArr: string[]) => {
+                if (prevArr?.find((wordItem) => wordItem === item)) {
                   prevArr.splice(prevArr.indexOf(word), 1);
                   return prevArr;
                 } else {

@@ -1,12 +1,10 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Textarea } from "~/components/lib";
 import {
-  RepeatQuestion,
-  RepeatQuestionTriangle,
-  RepeatQuestionTriangleContainer,
-  RepeatTitle,
+  LessonQuestion,
+  LessonQuestionTriangle,
+  LessonQuestionTriangleContainer,
+  LessonTitle,
 } from "./lib";
 import Duo from "~/styles/duo.svg";
 
@@ -21,16 +19,22 @@ export default function QuestionAnswerPractice({
   setValue: Function;
   formDisabled: boolean;
 }) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    ref?.current?.focus();
+  }, [value]);
+
   return (
     <Fragment>
-      <RepeatTitle>Answer the question</RepeatTitle>
-      <div css={{ display: "flex", alignItems: "center" }}>
-        <img src={Duo} alt="Duo" height={150} css={{ marginBottom: -60 }} />
-        <div css={{ position: "relative" }}>
-          <RepeatQuestion>{content.question}</RepeatQuestion>
-          <RepeatQuestionTriangleContainer>
-            <RepeatQuestionTriangle />
-          </RepeatQuestionTriangleContainer>
+      <LessonTitle>Answer the question</LessonTitle>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
+        <div style={{ position: "relative" }}>
+          <LessonQuestion>{content.question}</LessonQuestion>
+          <LessonQuestionTriangleContainer>
+            <LessonQuestionTriangle />
+          </LessonQuestionTriangleContainer>
         </div>
       </div>
       <Textarea
@@ -40,6 +44,7 @@ export default function QuestionAnswerPractice({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         disabled={formDisabled}
+        ref={ref}
       />
     </Fragment>
   );

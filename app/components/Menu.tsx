@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import {
   HorizontalList,
   ListItem,
@@ -8,12 +7,8 @@ import {
   NavIcon,
 } from "./lib";
 import study from "~/styles/study.svg";
-import repeat from "~/styles/practice.svg";
-import practice from "~/styles/forum.svg";
 import shop from "~/styles/shop.svg";
 import studyActive from "~/styles/study-active.svg";
-import repeatActive from "~/styles/practice-active.svg";
-import practiceActive from "~/styles/forum-active.svg";
 import streak from "~/styles/streak.svg";
 import streakActive from "~/styles/streak-active.svg";
 import shopActive from "~/styles/shop-active.svg";
@@ -21,24 +16,12 @@ import { Fragment } from "react";
 import Projects from "./Projects";
 
 const MENU = [
-  // {
-  //   title: "study",
-  //   link: "study/",
-  //   icon: study,
-  //   activeIcon: studyActive,
-  // },
   {
     title: "Study",
     link: "lessons",
     icon: study,
     activeIcon: studyActive,
   },
-  // {
-  //   title: "practice",
-  //   link: "practice/",
-  //   icon: practice,
-  //   activeIcon: practiceActive,
-  // },
   {
     title: "constructor",
     link: "constructor",
@@ -99,19 +82,12 @@ const Menu = ({
           </b>
         </ListItem>
         <ListItem>
-          {user ? (
-            <div
-              className="user-info"
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <span style={{ marginRight: 10 }}>{user.username}</span>
-              <form action="/logout" method="post">
-                <Logout type="submit">Logout</Logout>
-              </form>
-            </div>
-          ) : (
-            <Link to="/login">Login</Link>
-          )}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: 10 }}>{user.username}</span>
+            <form action="/logout" method="post">
+              <Logout type="submit">Logout</Logout>
+            </form>
+          </div>
         </ListItem>
       </HorizontalList>
     </MenuContainer>

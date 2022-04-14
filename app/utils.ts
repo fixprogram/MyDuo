@@ -1,5 +1,5 @@
 import { useMatches } from "@remix-run/react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import type { User } from "~/models/user.server";
 
@@ -21,7 +21,7 @@ export function useMatchesData(
 }
 
 function isUser(user: any): user is User {
-  return user && typeof user === "object" && typeof user.email === "string";
+  return user && typeof user === "object" && typeof user.username === "string";
 }
 
 export function useOptionalUser(): User | undefined {
@@ -45,3 +45,22 @@ export function useUser(): User {
 export function validateUsername(username: unknown): username is string {
   return typeof username === "string" && username.length > 3;
 }
+
+export const useFocus = () => {
+  const ref = useRef<any>(null);
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
+  return ref;
+};
+
+// export const changeArray = (prevArr, existingItem) => {
+//   if (prevArr?.find((word) => word === existingItem)) {
+//     prevArr.splice(prevArr.indexOf(word), 1);
+//     return prevArr;
+//   } else {
+//     return [...prevArr, word];
+//   }
+// };

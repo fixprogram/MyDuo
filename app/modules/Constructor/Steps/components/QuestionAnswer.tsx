@@ -10,13 +10,18 @@ import {
 import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
+type QA = FieldsetType & {
+  setKeywords: Function;
+  keywords: string[];
+};
+
 export default function QuestionAnswer({
   number,
   answer,
   setAnswer,
   setKeywords,
   keywords,
-}: FieldsetType) {
+}: QA) {
   return (
     <Fragment>
       <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />

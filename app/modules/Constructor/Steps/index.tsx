@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { Fragment, useEffect, useReducer, useRef } from "react";
 import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
 import type { Step } from "./types";
@@ -15,58 +13,51 @@ import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
 import Close from "~/styles/close.svg";
+import {
+  addStep,
+  removeStep,
+  setAnswer,
+  setKeywords,
+  setLessonType,
+} from "./actions";
 
 export default function Steps() {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
   const myRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (myRef.current !== null) {
       myRef.current.scrollIntoView();
     }
   }, [steps]);
 
-  const setStyle = (style = "", id: string) => {
-    dispatch({
-      type: "SET_STYLE",
-      payload: { style, id },
-    });
-  };
-  const setAnswer = (answer: any, number: number) => {
-    dispatch({
-      type: "SET_ANSWER",
-      payload: { answer, number },
-    });
-  };
-
   return (
     <section>
       <Legend>Steps</Legend>
       {steps.map(
-        ({ number, keywords, answer, style, id }: Step, idx: number) => (
+        ({ number, keywords, answer, lessonType, id }: Step, idx: number) => (
           <Fragment key={id}>
             <VisuallyHiddenInput type="text" name="step" value={idx} readOnly />
             <StepHeader>
-              <h2 css={{ marginRight: "auto" }}>Step {idx + 1}</h2>
+              <h2 style={{ marginRight: "auto" }}>Step {idx + 1}</h2>
 
               {number > 0 ? (
                 <FormButton
                   type="button"
-                  onClick={() =>
-                    dispatch({ type: "REMOVE_STEP", payload: { number: id } })
-                  }
+                  onClick={() => dispatch(removeStep(id))}
                 >
                   Remove step
                 </FormButton>
               ) : null}
               <FormButton
                 type="button"
-                onClick={() => dispatch({ type: "ADD_STEP" })}
-                css={{ marginLeft: 10 }}
+                onClick={() => dispatch(addStep())}
+                style={{ marginLeft: 10 }}
               >
                 Add step
               </FormButton>
 
-              {style !== "" ? (
+              {lessonType !== "" ? (
                 <button
                   type="button"
                   style={{
@@ -80,12 +71,12 @@ export default function Steps() {
                     right: 30,
                     bottom: -60,
                   }}
-                  onClick={() => setStyle("", id)}
+                  onClick={() => dispatch(setLessonType("", id))}
                 >
                   <img
                     src={Close}
                     alt="close"
-                    css={{
+                    style={{
                       width: "16px",
                       height: "16px",
                       verticalAlign: "initial",
@@ -96,68 +87,71 @@ export default function Steps() {
             </StepHeader>
 
             <StepContent>
-              {style === "" ? (
+              {lessonType === "" ? (
                 <ChooseStyle>
                   <StyleButton
                     type="button"
-                    onClick={() => setStyle("Question", id)}
+                    onClick={() => dispatch(setLessonType("Question", id))}
                   >
                     Question / Answer
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => setStyle("Insert", id)}
+                    onClick={() => dispatch(setLessonType("Insert", id))}
                   >
                     Insert words
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => setStyle("Variants", id)}
+                    onClick={() => dispatch(setLessonType("Variants", id))}
                   >
                     Choose right variant
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => setStyle("Pairs", id)}
+                    onClick={() => dispatch(setLessonType("Pairs", id))}
                   >
                     Matching pairs
                   </StyleButton>
                 </ChooseStyle>
               ) : null}
 
-              {style === "Question" ? (
+              {lessonType === "Question" ? (
                 <QuestionAnswer
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: any) =>
+                    dispatch(setAnswer(answer, number))
+                  }
                   setKeywords={(keywords: any) =>
-                    dispatch({
-                      type: "SET_KEYWORDS",
-                      payload: {
-                        keywords,
-                        number,
-                      },
-                    })
+                    dispatch(setKeywords(keywords, number))
                   }
                   keywords={keywords}
                 />
-              ) : style === "Insert" ? (
+              ) : lessonType === "Insert" ? (
                 <InsertWords
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: any) =>
+                    dispatch(setAnswer(answer, number))
+                  }
                 />
-              ) : style === "Variants" ? (
+              ) : lessonType === "Variants" ? (
                 <Variants
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: any) =>
+                    dispatch(setAnswer(answer, number))
+                  }
                 />
-              ) : style === "Pairs" ? (
+              ) : lessonType === "Pairs" ? (
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: any) =>
+                    dispatch(setAnswer(answer, number))
+                  }
+                  variantsCount={8}
                 />
               ) : null}
             </StepContent>

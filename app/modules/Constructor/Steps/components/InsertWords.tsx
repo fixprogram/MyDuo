@@ -1,7 +1,6 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { useState } from "react";
 import { Textarea, VisuallyHiddenInput } from "~/components/lib";
+import { useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
 
@@ -12,9 +11,10 @@ export default function InsertWords({
 }: FieldsetType) {
   const [words, setWords] = useState([]);
   const [showText, setShowText] = useState(false);
+  const ref = useFocus();
 
   return (
-    <fieldset css={{ padding: "0 25%" }}>
+    <fieldset style={{ padding: "0 25%" }}>
       <VisuallyHiddenInput name={`answer${number}`} value={words} readOnly />
 
       <VisuallyHiddenInput name={`type${number}`} value={"Insert"} readOnly />
@@ -30,6 +30,7 @@ export default function InsertWords({
         onChange={(evt) => {
           setAnswer(evt.target.value);
         }}
+        ref={ref}
         required
       />
 
@@ -40,7 +41,7 @@ export default function InsertWords({
               <input
                 type="text"
                 key={idx}
-                css={{
+                style={{
                   width: `${item.length * 10}px`,
                   margin: "0 7px",
                   border: "none",
@@ -50,7 +51,7 @@ export default function InsertWords({
             );
           } else {
             return (
-              <span css={{ marginRight: 3 }} key={idx}>
+              <span style={{ marginRight: 3 }} key={idx}>
                 {item}
               </span>
             );
@@ -62,14 +63,14 @@ export default function InsertWords({
         <h3>Mark words which should be hidden</h3>
         <button
           type="button"
-          css={{ display: showText ? "block" : "none" }}
+          style={{ display: showText ? "block" : "none" }}
           onClick={() => setShowText(false)}
         >
           Edit text
         </button>
         {answer.split(" ").map((item, idx) => (
           <span
-            css={{
+            style={{
               marginRight: 3,
               border: words.find((word) => word === item)
                 ? "1px solid green"

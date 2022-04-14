@@ -1,5 +1,4 @@
 import { redirect } from "remix";
-import { useLoaderData } from "@remix-run/react";
 import { getUser } from "~/session.server";
 import { getLanguages } from "~/models/language.server";
 
@@ -13,8 +12,3 @@ export const loader = async ({ request }: { request: Request }) => {
 
   return redirect(`/${languages?.find((it) => it.active)?.title}/lessons`);
 };
-
-export default function Index() {
-  useLoaderData();
-  return <div></div>;
-}

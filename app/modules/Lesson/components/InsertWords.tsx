@@ -1,13 +1,26 @@
 import { Fragment, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
-import { RepeatTitle } from "./lib";
+import { LessonTitle } from "./lib";
 
-export default function InsertWords({ content, setValue, formDisabled }) {
-  const [values, setValues] = useState([]);
+type ContentItem = {
+  id: string;
+  value: string;
+};
+
+export default function InsertWords({
+  content,
+  setValue,
+  formDisabled,
+}: {
+  content: any;
+  setValue: Function;
+  formDisabled: boolean;
+}) {
+  const [values, setValues] = useState<ContentItem[]>([]);
 
   return (
     <Fragment>
-      <RepeatTitle>Insert words</RepeatTitle>
+      <LessonTitle>Insert words</LessonTitle>
       <InsertWordsTextBlock style={{ marginTop: 0 }}>
         {content.text.split(" ").map((item: any, idx: number) =>
           content.answer.find((it: any) => it === item) ? (
@@ -21,7 +34,7 @@ export default function InsertWords({ content, setValue, formDisabled }) {
                 borderBottom: "1px solid #e5e5e5",
               }}
               onChange={(e) => {
-                let newItem;
+                let newItem: ContentItem;
                 if (values.length === 0) {
                   setValues([{ id: e.target.id, value: e.target.value }]);
                   setValue([{ id: e.target.id, value: e.target.value }]);
@@ -34,10 +47,10 @@ export default function InsertWords({ content, setValue, formDisabled }) {
                   if (newItem) {
                     newArr.splice(values.indexOf(newItem), 1);
                     newItem.value = e.target.value;
-                    setValues(() => [...newArr, newItem]);
+                    setValues([...newArr, newItem]);
                     setValue([...newArr, newItem]);
                   } else {
-                    setValues(() => [
+                    setValues([
                       ...newArr,
                       { id: e.target.id, value: e.target.value },
                     ]);

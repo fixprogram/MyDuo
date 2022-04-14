@@ -1,14 +1,12 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { useReducer, useEffect, useRef, useState, Fragment } from "react";
 import {
-  RepeatButton,
-  RepeatFooter,
-  RepeatFooterMessage,
-  RepeatFooterText,
-  RepeatFooterTitle,
-  RepeatFooterIcon,
+  LessonButton,
+  LessonFooter,
+  LessonFooterMessage,
+  LessonFooterText,
+  LessonFooterTitle,
+  LessonFooterIcon,
+  LessonFooterInner,
 } from "./components/lib";
 
 import Progress from "~/components/Progress";
@@ -16,12 +14,11 @@ import Body from "./components/Body";
 import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
 import { useSubmit } from "@remix-run/react";
-import RightSvg from "~/styles/right.svg";
-import WrongSvg from "~/styles/wrong.svg";
 import Results from "./components/Results";
 
-export default function Repeat({ data }: { data: any }) {
-  const ref = useRef();
+export default function Lesson({ data }: { data: any }) {
+  const ref = useRef<HTMLFormElement>(null);
+  const sectionRef = useRef<HTMLFormElement>(null);
   const [
     {
       disabled,
@@ -36,7 +33,7 @@ export default function Repeat({ data }: { data: any }) {
     },
     dispatch,
   ] = useReducer(reducer, basicState);
-  const [value, setValue] = useState();
+  const [value, setValue] = useState<any>();
   const {
     checkAnswer,
     showResultsPractice,
@@ -48,8 +45,13 @@ export default function Repeat({ data }: { data: any }) {
   let currentStep = step;
 
   useEffect(() => {
-    setCase(data);
+    setCase(data); // Ones the data is loaded, we set the it in reducer
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    sectionRef.current?.focus(); // always have focus in order to make Enter key events work
+  }, [formDisabled]);
 
   const onContinue = () => {
     if (!disabled) {
@@ -72,12 +74,26 @@ export default function Repeat({ data }: { data: any }) {
 
   return (
     <section
-      css={{
+      style={{
         position: "relative",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
+      onKeyDown={(e) => {
+        if (
+          (e.key === "Enter" && value?.length) ||
+          currentStep === maxSteps + 1
+        ) {
+          if (stateRight || stateWrong || currentStep === maxSteps + 1) {
+            onContinue();
+          } else {
+            checkAnswer(value);
+          }
+        }
+      }}
+      tabIndex={0}
+      ref={sectionRef}
     >
       {currentStep === maxSteps + 1 ? (
         <Results refName={ref} id={data.id} />
@@ -89,7 +105,7 @@ export default function Repeat({ data }: { data: any }) {
             maxSteps={maxSteps}
             content={content}
             value={value}
-            setValue={(val: string[]) => {
+            setValue={(val: any) => {
               setValue(val);
               if (val.length) {
                 changeDisabled(false);
@@ -102,44 +118,25 @@ export default function Repeat({ data }: { data: any }) {
           />
         </Fragment>
       )}
-      <RepeatFooter stateRight={stateRight} stateWrong={stateWrong}>
-        <div
-          css={{
-            maxWidth: 1000,
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            margin: "0 auto",
-          }}
-        >
-          <RepeatFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
+      <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
+        <LessonFooterInner>
+          <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
             {stateRight || stateWrong ? (
-              <RepeatFooterIcon>
-                <span
-                  css={{
-                    background: `url(${stateRight ? RightSvg : WrongSvg})`,
-                    backgroundPosition: `${
-                      stateRight ? "-166px -90px" : "-208px -90px"
-                    }`,
-                    width: stateRight ? 41 : 31,
-                    height: 31,
-                    display: "block",
-                    margin: stateWrong ? "26px 0 0 25px" : "27px 0 0 20px",
-                  }}
-                ></span>
-              </RepeatFooterIcon>
+              <LessonFooterIcon
+                stateRight={stateRight}
+                stateWrong={stateWrong}
+              />
             ) : null}
-            <div css={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
-              <RepeatFooterTitle>
+            <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
+              <LessonFooterTitle>
                 {stateWrong ? "Right answer: " : "Great!"}
-              </RepeatFooterTitle>
+              </LessonFooterTitle>
               {stateWrong ? (
-                <RepeatFooterText> {content.answer}</RepeatFooterText>
+                <LessonFooterText> {content.answer}</LessonFooterText>
               ) : null}
             </div>
-          </RepeatFooterMessage>
-          <RepeatButton
+          </LessonFooterMessage>
+          <LessonButton
             active={!disabled}
             stateRight={stateRight}
             stateWrong={stateWrong}
@@ -150,9 +147,9 @@ export default function Repeat({ data }: { data: any }) {
               : stateWrong || currentStep === maxSteps + 1
               ? "Continue"
               : "Check"}
-          </RepeatButton>
-        </div>
-      </RepeatFooter>
+          </LessonButton>
+        </LessonFooterInner>
+      </LessonFooter>
     </section>
   );
 }

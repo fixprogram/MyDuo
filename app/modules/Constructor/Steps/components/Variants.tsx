@@ -32,7 +32,7 @@ export default function Variants({ number, answer, setAnswer }: FieldsetType) {
       />
       <ul>
         <li>
-          <label css={{ position: "relative" }}>
+          <label style={{ position: "relative" }}>
             <VariantItemNumber> 1 </VariantItemNumber>
             <VariantItemInput
               type="text"
@@ -53,7 +53,7 @@ export default function Variants({ number, answer, setAnswer }: FieldsetType) {
           </label>
         </li>
         <li>
-          <label css={{ position: "relative" }}>
+          <label style={{ position: "relative" }}>
             <VariantItemNumber> 2 </VariantItemNumber>
             <VariantItemInput
               type="text"
@@ -74,8 +74,8 @@ export default function Variants({ number, answer, setAnswer }: FieldsetType) {
           </label>
         </li>
         <li>
-          <label css={{ position: "relative" }}>
-            <VariantItemNumber> 3 </VariantItemNumber>
+          <label style={{ position: "relative" }}>
+            <VariantItemNumber>{3}</VariantItemNumber>
             <VariantItemInput
               type="text"
               name={`variant${number}`}

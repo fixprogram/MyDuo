@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import { Fragment, useState } from "react";
-import { RepeatTitle, VariantItem } from "./lib";
+import { LessonTitle, VariantItem } from "./lib";
 
 export default function Pairs({
   content,
@@ -18,7 +18,7 @@ export default function Pairs({
 
   return (
     <Fragment>
-      <RepeatTitle>Connect pairs</RepeatTitle>
+      <LessonTitle>Connect pairs</LessonTitle>
 
       <ul
         css={{
