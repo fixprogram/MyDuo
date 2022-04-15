@@ -8,17 +8,17 @@ export type Variant = {
   isConnected: boolean;
 };
 
-type MP_State = {
-  variants: Variant[];
+export type State = {
+  variants: Variant[] | any;
   pairs: string[];
 };
 
-export const basicState: MP_State = {
+export const basicState: State = {
   variants: [],
   pairs: [],
 };
 
-export const reducer = (state: MP_State, action: Action) => {
+export const reducer = (state: State, action: Action) => {
   const { variants, pairs } = state;
   switch (action.type) {
     case "SETUP": {
@@ -39,21 +39,25 @@ export const reducer = (state: MP_State, action: Action) => {
       const { value, idx } = action.payload;
       const newVariants = variants;
       newVariants[
-        newVariants.indexOf(newVariants.find((variant) => variant.idx === idx))
+        newVariants.indexOf(
+          newVariants.find((variant: Variant) => variant.idx === idx) as Variant
+        )
       ].value = value;
       return { ...state, variants: [...newVariants] };
     }
     case "CHOOSE": {
       const { idx } = action.payload;
-      const variantItem = variants.find((variant) => variant.idx === idx);
+      const variantItem = variants.find(
+        (variant: Variant) => variant.idx === idx
+      );
       if (variantItem?.type === "left") {
-        const newVariants = variants.map((variant) => ({
+        const newVariants = variants.map((variant: Variant) => ({
           ...variant,
           isFocused: variant.idx === idx,
         }));
         return { ...state, variants: newVariants };
       }
-      const newVariants = variants.map((variant) => ({
+      const newVariants = variants.map((variant: Variant) => ({
         ...variant,
         isFocused: variant.idx === idx,
       }));
@@ -72,7 +76,7 @@ export const reducer = (state: MP_State, action: Action) => {
       }
       return {
         ...state,
-        variants: variants.map((variant) => ({
+        variants: variants.map((variant: Variant) => ({
           ...variant,
           isFocused: false,
           isConnected: newPairs.filter((pair) => pair.includes(variant.idx))

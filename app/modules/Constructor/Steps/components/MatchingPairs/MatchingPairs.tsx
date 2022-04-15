@@ -13,23 +13,26 @@ export default function MatchingPairs({
   answer,
   setAnswer,
   variantsCount = 8,
+  setReady,
 }: MP) {
   const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
 
   useEffect(() => {
     dispatch(pairsSetup(variantsCount));
-  }, []);
+  }, [variantsCount]);
 
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {
       setAnswer(pairs);
+      setReady(true);
     }
-  }, [pairs.length]);
+    if (pairs.length !== variantsCount / 2) {
+      setReady(false);
+    }
+  }, [pairs.length, pairs]);
 
   return (
     <Fragment>
-      {/* <VisuallyHiddenInput name={`type${number}`} value={"Pairs"} readOnly />
-      <VisuallyHiddenInput name={`answer${number}`} value={answer} readOnly /> */}
       <input type="hidden" name={`type${number}`} value={"Pairs"} />
       <input type="hidden" name={`answer${number}`} value={answer} />
       <div>
@@ -64,7 +67,6 @@ export default function MatchingPairs({
                     dispatch(pairsChoose(variant.idx));
                   }
                 }}
-                // connected={!!pairs.find((pair) => pair.includes(variant.idx))}
                 connected={variant.isConnected}
                 focused={variant.isFocused}
               >
@@ -76,8 +78,6 @@ export default function MatchingPairs({
                 placeholder="type first variant"
                 value={variant.value}
                 autoComplete="off"
-                // connected={pairs.find((pair) => pair.includes(item.idx))}
-                // focused={item.isFocused}
                 onChange={(e) =>
                   dispatch(pairsType(e.target.value, variant.idx))
                 }

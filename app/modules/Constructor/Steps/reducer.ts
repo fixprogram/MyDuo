@@ -1,10 +1,17 @@
 import type { Step, State } from "./types";
-import { createId } from "./utils";
 import { Action } from "./actions";
+import { nanoid } from "nanoid";
 
 export const basicState: State = {
   steps: [
-    { number: 0, keywords: [], answer: "", lessonType: "", id: createId },
+    {
+      number: 0,
+      keywords: [],
+      answer: "",
+      lessonType: "",
+      ready: false,
+      id: nanoid(),
+    },
   ],
 };
 
@@ -23,13 +30,13 @@ export const reducer = (state: State, action: Action) => {
       const { answer, number } = action.payload;
       let newSteps = steps;
       newSteps[number].answer = answer;
-      return { ...state, steps: newSteps };
+      return { ...state, steps: [...newSteps] };
     }
     case "SET_KEYWORDS": {
       let { keywords, number } = action.payload;
       let newSteps = steps;
       newSteps[number].keywords = keywords;
-      return { ...state, steps: newSteps };
+      return { ...state, steps: [...newSteps] };
     }
     case "ADD_STEP": {
       const newSteps = [
@@ -38,11 +45,12 @@ export const reducer = (state: State, action: Action) => {
           number: steps.length,
           keywords: [],
           answer: "",
-          id: createId(),
+          ready: false,
+          id: nanoid(),
           lessonType: "",
         },
       ];
-      return { ...state, steps: newSteps };
+      return { ...state, steps: [...newSteps] };
     }
     case "REMOVE_STEP": {
       const newSteps = steps
@@ -50,7 +58,16 @@ export const reducer = (state: State, action: Action) => {
         .map((item: Step, i: number) => ({ ...item, number: i }));
       return {
         ...state,
-        steps: newSteps,
+        steps: [...newSteps],
+      };
+    }
+    case "SET_STEP_READY": {
+      const { isReady, number } = action.payload;
+      const newSteps = steps;
+      newSteps[number].ready = isReady;
+      return {
+        ...state,
+        steps: [...newSteps],
       };
     }
     default:

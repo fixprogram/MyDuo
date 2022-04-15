@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea, VisuallyHiddenInput } from "~/components/lib";
 import { useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
@@ -8,10 +8,19 @@ export default function InsertWords({
   number,
   answer,
   setAnswer,
+  setReady,
 }: FieldsetType) {
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const ref = useFocus();
+
+  useEffect(() => {
+    if (words.length) {
+      setReady(true);
+    } else {
+      setReady(false);
+    }
+  }, [words.length, setReady]);
 
   return (
     <fieldset style={{ padding: "0 25%" }}>

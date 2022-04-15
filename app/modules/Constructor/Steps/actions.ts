@@ -3,7 +3,8 @@ export type Action =
   | { type: "SET_ANSWER"; payload: { answer: string; number: number } }
   | { type: "SET_KEYWORDS"; payload: { keywords: string[]; number: number } }
   | { type: "ADD_STEP" }
-  | { type: "REMOVE_STEP"; payload: { number: number } };
+  | { type: "REMOVE_STEP"; payload: { number: number } }
+  | { type: "SET_STEP_READY"; payload: { isReady: boolean; number: number } };
 
 export const setLessonType = (lessonType: string, id: string): Action => ({
   type: "SET_STYLE",
@@ -30,4 +31,9 @@ export const addStep = (): Action => ({
 export const removeStep = (number: number): Action => ({
   type: "REMOVE_STEP",
   payload: { number },
+});
+
+export const setStepReady = (isReady: boolean, number: number): Action => ({
+  type: "SET_STEP_READY",
+  payload: { isReady, number },
 });

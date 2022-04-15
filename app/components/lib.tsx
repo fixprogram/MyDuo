@@ -196,14 +196,16 @@ const Legend = styled("legend")`
 `;
 
 const FormButton = styled("button")<FormButtonProps>`
-  background-color: ${(props) => (props.active ? "#78C83D" : "#fff")};
-  color: ${(props) => (props.active ? "#fff" : "#1cb0f6")};
+  background-color: ${(props) =>
+    props.active ? "#78C83D" : props.disabled ? "#E5E5E5" : "#fff"};
+  color: ${(props) =>
+    props.active ? "#fff" : props.disabled ? "#AFAFAF" : "#1cb0f6"};
   border: ${(props) => (props.active ? "none" : "2px solid #e5e5e5")};
   height: 50px;
   box-shadow: ${(props) =>
     props.active ? "0px -4px 0px 0px rgba(108, 164, 48, 1) inset" : "none"};
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   width: 150px;
-  cursor: pointer;
   text-transform: uppercase;
   font-family: "Montserrat";
   font-size: 15px;

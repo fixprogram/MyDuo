@@ -4,6 +4,7 @@ export type Step = {
   number: number;
   keywords: string[];
   lessonType: string;
+  ready: boolean;
 };
 
 export type State = {
@@ -25,6 +26,7 @@ export type FieldsetType = {
   number: number;
   answer: string;
   setAnswer: Function;
+  setReady: Function;
   // setKeywords: Function;
   // keywords?: string[];
   // count?: number;

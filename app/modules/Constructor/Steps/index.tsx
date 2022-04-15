@@ -19,9 +19,10 @@ import {
   setAnswer,
   setKeywords,
   setLessonType,
+  setStepReady,
 } from "./actions";
 
-export default function Steps() {
+export default function Steps({ setReady }: { setReady: Function }) {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
   const myRef = useRef<HTMLDivElement>(null);
 
@@ -29,13 +30,19 @@ export default function Steps() {
     if (myRef.current !== null) {
       myRef.current.scrollIntoView();
     }
-  }, [steps]);
+    if (!steps.find((step: Step) => step.ready === false)) {
+      setReady(true);
+    }
+  }, [steps, setReady]);
 
   return (
     <section>
       <Legend>Steps</Legend>
       {steps.map(
-        ({ number, keywords, answer, lessonType, id }: Step, idx: number) => (
+        (
+          { number, keywords, answer, lessonType, id, ready }: Step,
+          idx: number
+        ) => (
           <Fragment key={id}>
             <VisuallyHiddenInput type="text" name="step" value={idx} readOnly />
             <StepHeader>
@@ -127,6 +134,9 @@ export default function Steps() {
                     dispatch(setKeywords(keywords, number))
                   }
                   keywords={keywords}
+                  setReady={(isReady: boolean) =>
+                    dispatch(setStepReady(isReady, number))
+                  }
                 />
               ) : lessonType === "Insert" ? (
                 <InsertWords
@@ -135,6 +145,9 @@ export default function Steps() {
                   setAnswer={(answer: any) =>
                     dispatch(setAnswer(answer, number))
                   }
+                  setReady={(isReady: boolean) =>
+                    dispatch(setStepReady(isReady, number))
+                  }
                 />
               ) : lessonType === "Variants" ? (
                 <Variants
@@ -142,6 +155,9 @@ export default function Steps() {
                   answer={answer}
                   setAnswer={(answer: any) =>
                     dispatch(setAnswer(answer, number))
+                  }
+                  setReady={(isReady: boolean) =>
+                    dispatch(setStepReady(isReady, number))
                   }
                 />
               ) : lessonType === "Pairs" ? (
@@ -152,6 +168,9 @@ export default function Steps() {
                     dispatch(setAnswer(answer, number))
                   }
                   variantsCount={8}
+                  setReady={(isReady: boolean) =>
+                    dispatch(setStepReady(isReady, number))
+                  }
                 />
               ) : null}
             </StepContent>

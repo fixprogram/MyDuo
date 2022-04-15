@@ -19,17 +19,17 @@ export const links = () => {
 export const action: ActionFunction = async ({ request, params }) => {
   const activeProject = await getActiveLanguage(request);
   const form = await request.formData();
-  const title = form.get("title"); // Getting the repeat title
+  const title = form.get("title");
 
   const steps = form.getAll("step").map((item, index) => {
-    const type = form.get(`type${index}`); // Getting type of the step
-    let answer: any = form.get(`answer${index}`); // Getting answer
+    const type = form.get(`type${index}`);
+    let answer: any = form.get(`answer${index}`);
     answer = answer.toLowerCase();
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {
-        const question = form.get(`question${index}`); // Getting question if it's Question type
-        const keywords: any = form.get(`keywords${index}`); // Getting keywords if it's Question type
+        const question = form.get(`question${index}`);
+        const keywords: any = form.get(`keywords${index}`);
         return {
           ...returnData,
           question,
@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Insert": {
-        const text = form.get(`text${index}`); // Getting text if it's Insert type
+        const text = form.get(`text${index}`);
         return {
           ...returnData,
           answer: answer.indexOf(",") ? answer.split(",") : answer,
@@ -46,13 +46,13 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Variants": {
-        const question = form.get(`question${index}`); // Getting question if it's Question type
-        const definition = form.get(`definition${index}`); //
-        const variants = form.getAll(`variant${index}`); //
+        const question = form.get(`question${index}`);
+        const definition = form.get(`definition${index}`);
+        const variants = form.getAll(`variant${index}`);
         return { ...returnData, answer, definition, question, variants };
       }
       case "Pairs": {
-        const variants = form.getAll(`variant${index}`); //
+        const variants = form.getAll(`variant${index}`);
         return { ...returnData, answer: answer.split(","), variants };
       }
       default: {
