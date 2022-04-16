@@ -47,9 +47,9 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Variants": {
         const question = form.get(`question${index}`);
-        const definition = form.get(`definition${index}`);
+        // const definition = form.get(`definition${index}`);
         const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer, definition, question, variants };
+        return { ...returnData, answer, question, variants };
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`);

@@ -36,14 +36,14 @@ export default function Pairs({
             css={{ marginBottom: 5, position: "relative", width: "48%" }}
             onClick={(evt) => {
               const target = evt.target as HTMLInputElement;
-              if (!isDisabled(idx)) {
-                if (active) {
-                  checkAnswer(`${active}${target.id}`);
-                  setActive("");
-                } else {
-                  setActive(target.id);
-                }
+              if (isDisabled(idx)) {
+                return;
               }
+              if (!active) {
+                return setActive(target.id);
+              }
+              checkAnswer(`${active}${target.id}`);
+              setActive("");
             }}
           >
             <VariantItem

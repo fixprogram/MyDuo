@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isItemInArray } from "~/utils";
 import Keyword from "./Keyword";
 
 export default function Keywords({
@@ -25,9 +26,9 @@ export default function Keywords({
             key={idx}
             onSet={(word: any) =>
               setKeywords((prevArr: string[]) => {
-                if (prevArr?.find((wordItem) => wordItem === item)) {
+                if (isItemInArray(prevArr, item)) {
                   prevArr.splice(prevArr.indexOf(word), 1);
-                  return prevArr;
+                  return [...prevArr];
                 } else {
                   return [...prevArr, word];
                 }

@@ -54,21 +54,22 @@ export default function Lesson({ data }: { data: any }) {
   }, [formDisabled]);
 
   const onContinue = () => {
-    if (!disabled) {
-      if (currentStep > -1 && currentStep <= maxSteps) {
-        if (!nextStep) {
-          checkAnswer(value);
-        } else {
-          continuePractice();
-          setValue("");
-        }
+    if (disabled) {
+      return;
+    }
+    if (currentStep > -1 && currentStep <= maxSteps) {
+      if (!nextStep) {
+        checkAnswer(value);
       } else {
-        currentStep === maxSteps
-          ? showResultsPractice()
-          : currentStep === maxSteps + 1
-          ? submit(ref.current, { replace: true })
-          : continuePractice();
+        continuePractice();
+        setValue("");
       }
+    } else {
+      currentStep === maxSteps
+        ? showResultsPractice()
+        : currentStep === maxSteps + 1
+        ? submit(ref.current, { replace: true })
+        : continuePractice();
     }
   };
 
@@ -81,15 +82,15 @@ export default function Lesson({ data }: { data: any }) {
         flexDirection: "column",
       }}
       onKeyDown={(e) => {
-        if (
-          (e.key === "Enter" && value?.length) ||
-          currentStep === maxSteps + 1
-        ) {
-          if (stateRight || stateWrong || currentStep === maxSteps + 1) {
-            onContinue();
-          } else {
-            checkAnswer(value);
-          }
+        if (e.key !== "Enter") {
+          return;
+        }
+        if (value?.length) {
+          checkAnswer(value);
+        }
+        // Go futher if the answer was checked already or it's the results page
+        if (stateRight || stateWrong || currentStep === maxSteps + 1) {
+          onContinue();
         }
       }}
       tabIndex={0}
@@ -107,6 +108,8 @@ export default function Lesson({ data }: { data: any }) {
             value={value}
             setValue={(val: any) => {
               setValue(val);
+              // Insert words will return an array of objects and it won't work with the disabling button
+              console.log("val: ", val);
               if (val.length) {
                 changeDisabled(false);
               } else {

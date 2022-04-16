@@ -67,8 +67,8 @@ export default function MatchingPairs({
                     dispatch(pairsChoose(variant.idx));
                   }
                 }}
-                connected={variant.isConnected}
-                focused={variant.isFocused}
+                isConnected={variant.isConnected}
+                isFocused={variant.isFocused}
               >
                 {variant.idx}
               </VariantItemNumber>

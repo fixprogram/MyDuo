@@ -18,11 +18,18 @@ import {
   removeStep,
   setAnswer,
   setKeywords,
-  setLessonType,
+  setStepType,
   setStepReady,
+  removeStepType,
 } from "./actions";
 
-export default function Steps({ setReady }: { setReady: Function }) {
+export default function Steps({
+  setReady,
+  screen,
+}: {
+  setReady: Function;
+  screen: string;
+}) {
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
   const myRef = useRef<HTMLDivElement>(null);
 
@@ -30,17 +37,22 @@ export default function Steps({ setReady }: { setReady: Function }) {
     if (myRef.current !== null) {
       myRef.current.scrollIntoView();
     }
-    if (!steps.find((step: Step) => step.ready === false)) {
-      setReady(true);
-    }
+    setReady(!steps.find((step: Step) => step.ready === false));
   }, [steps, setReady]);
 
   return (
-    <section>
+    <section
+      style={{
+        position: "absolute",
+        width: "100%",
+        top: 0,
+        visibility: screen !== "Steps" ? "hidden" : "visible",
+      }}
+    >
       <Legend>Steps</Legend>
       {steps.map(
         (
-          { number, keywords, answer, lessonType, id, ready }: Step,
+          { number, keywords, answer, stepType, id, ready }: Step,
           idx: number
         ) => (
           <Fragment key={id}>
@@ -64,7 +76,7 @@ export default function Steps({ setReady }: { setReady: Function }) {
                 Add step
               </FormButton>
 
-              {lessonType !== "" ? (
+              {stepType !== "" ? (
                 <button
                   type="button"
                   style={{
@@ -78,7 +90,7 @@ export default function Steps({ setReady }: { setReady: Function }) {
                     right: 30,
                     bottom: -60,
                   }}
-                  onClick={() => dispatch(setLessonType("", id))}
+                  onClick={() => dispatch(removeStepType(id))}
                 >
                   <img
                     src={Close}
@@ -94,36 +106,36 @@ export default function Steps({ setReady }: { setReady: Function }) {
             </StepHeader>
 
             <StepContent>
-              {lessonType === "" ? (
+              {stepType === "" ? (
                 <ChooseStyle>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setLessonType("Question", id))}
+                    onClick={() => dispatch(setStepType("Question", id))}
                   >
                     Question / Answer
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setLessonType("Insert", id))}
+                    onClick={() => dispatch(setStepType("Insert", id))}
                   >
                     Insert words
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setLessonType("Variants", id))}
+                    onClick={() => dispatch(setStepType("Variants", id))}
                   >
                     Choose right variant
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setLessonType("Pairs", id))}
+                    onClick={() => dispatch(setStepType("Pairs", id))}
                   >
                     Matching pairs
                   </StyleButton>
                 </ChooseStyle>
               ) : null}
 
-              {lessonType === "Question" ? (
+              {stepType === "Question" ? (
                 <QuestionAnswer
                   number={number}
                   answer={answer}
@@ -138,7 +150,7 @@ export default function Steps({ setReady }: { setReady: Function }) {
                     dispatch(setStepReady(isReady, number))
                   }
                 />
-              ) : lessonType === "Insert" ? (
+              ) : stepType === "Insert" ? (
                 <InsertWords
                   number={number}
                   answer={answer}
@@ -149,7 +161,7 @@ export default function Steps({ setReady }: { setReady: Function }) {
                     dispatch(setStepReady(isReady, number))
                   }
                 />
-              ) : lessonType === "Variants" ? (
+              ) : stepType === "Variants" ? (
                 <Variants
                   number={number}
                   answer={answer}
@@ -159,8 +171,9 @@ export default function Steps({ setReady }: { setReady: Function }) {
                   setReady={(isReady: boolean) =>
                     dispatch(setStepReady(isReady, number))
                   }
+                  variantsCount={3}
                 />
-              ) : lessonType === "Pairs" ? (
+              ) : stepType === "Pairs" ? (
                 <MatchingPairs
                   number={number}
                   answer={answer}

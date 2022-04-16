@@ -1,11 +1,11 @@
 import { Action } from "./actions";
 
 export type Variant = {
-  type: string;
+  type?: string;
   value: string;
   idx: string;
   isFocused: boolean;
-  isConnected: boolean;
+  isConnected?: boolean;
 };
 
 export type State = {
@@ -24,6 +24,7 @@ export const reducer = (state: State, action: Action) => {
     case "SETUP": {
       const { variantsCount } = action.payload;
       const variants = [];
+      // if(variantsType)
       for (let i = 1; i <= variantsCount; i++) {
         variants.push({
           type: i - 1 < variantsCount / 2 ? "left" : "right", // Dividing on halfs.
@@ -34,6 +35,24 @@ export const reducer = (state: State, action: Action) => {
         });
       }
       return { ...state, variants };
+    }
+    case "VARIANTS_SETUP": {
+      const { variantsCount } = action.payload;
+      const variants = [];
+      for (let i = 1; i <= variantsCount; i++) {
+        variants.push({
+          value: "",
+          isFocused: false,
+          idx: i,
+        });
+      }
+      return { ...state, variants };
+    }
+    case "VARIANT_SET_VALUE": {
+      const { idx, value } = action.payload;
+      const newVariants = variants;
+      newVariants[idx].value = value;
+      return { ...state, variants: [...newVariants] };
     }
     case "TYPE": {
       const { value, idx } = action.payload;
@@ -62,6 +81,15 @@ export const reducer = (state: State, action: Action) => {
         isFocused: variant.idx === idx,
       }));
       return { ...state, variants: newVariants };
+    }
+    case "VARIANT_CHOOSE": {
+      const { idx } = action.payload;
+      const newVariants = variants.map((variant: Variant) => ({
+        ...variant,
+        isFocused: false,
+      }));
+      newVariants[idx].isFocused = true;
+      return { ...state, variants: [...newVariants] };
     }
     case "CONNECT": {
       const { activeIdx, idx } = action.payload;

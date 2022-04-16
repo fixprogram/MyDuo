@@ -56,11 +56,10 @@ export const useFocus = () => {
   return ref;
 };
 
-// export const changeArray = (prevArr, existingItem) => {
-//   if (prevArr?.find((word) => word === existingItem)) {
-//     prevArr.splice(prevArr.indexOf(word), 1);
-//     return prevArr;
-//   } else {
-//     return [...prevArr, word];
-//   }
-// };
+export const isItemInArray = (arr: string[], item: string) => {
+  return arr.find((arrItem) => arrItem === item);
+};
+
+export const findInArrayById = (arr: any, id: { id: string }) => {
+  return arr.find((arrItem: any) => (arrItem.id = id));
+};

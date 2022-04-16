@@ -8,7 +8,7 @@ export const basicState: State = {
       number: 0,
       keywords: [],
       answer: "",
-      lessonType: "",
+      stepType: "",
       ready: false,
       id: nanoid(),
     },
@@ -19,11 +19,28 @@ export const reducer = (state: State, action: Action) => {
   const { steps } = state;
   const { type } = action;
   switch (type) {
-    case "SET_STYLE": {
-      const { lessonType, id } = action.payload;
+    case "SET_STEP_TYPE": {
+      const { stepType, id } = action.payload;
       const newSteps = steps.map((step) =>
-        step.id === id ? { ...step, lessonType: lessonType } : { ...step }
+        step.id === id ? { ...step, stepType: stepType } : { ...step }
       );
+      return { ...state, steps: [...newSteps] };
+    }
+    case "REMOVE_STEP_TYPE": {
+      const { id } = action.payload;
+      const newSteps = steps.map((step) => {
+        if (step.id === id) {
+          return {
+            ...step,
+            stepType: "",
+            keywords: [],
+            answer: "",
+            ready: false,
+          };
+        } else {
+          return { ...step };
+        }
+      });
       return { ...state, steps: [...newSteps] };
     }
     case "SET_ANSWER": {
@@ -47,7 +64,7 @@ export const reducer = (state: State, action: Action) => {
           answer: "",
           ready: false,
           id: nanoid(),
-          lessonType: "",
+          stepType: "",
         },
       ];
       return { ...state, steps: [...newSteps] };

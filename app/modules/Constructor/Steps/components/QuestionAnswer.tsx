@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import {
   LabelText,
   Textarea,
@@ -19,9 +19,24 @@ export default function QuestionAnswer({
   number,
   answer,
   setAnswer,
+  setReady,
   setKeywords,
   keywords,
 }: QA) {
+  const questionRef = useRef<HTMLInputElement>(null);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (
+      questionRef?.current?.value.length &&
+      answerRef?.current?.value.length
+    ) {
+      setReady(true);
+    } else {
+      setReady(false);
+    }
+  }, [questionRef.current?.value, answerRef?.current?.value, answer]);
+
   return (
     <Fragment>
       <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />
@@ -38,6 +53,7 @@ export default function QuestionAnswer({
             marginBottom: 10,
             width: "100%",
           }}
+          ref={questionRef}
           required
         />
 
@@ -46,6 +62,7 @@ export default function QuestionAnswer({
           placeholder="Type answer"
           value={answer}
           onChange={(evt) => setAnswer(evt.target.value)}
+          ref={answerRef}
           required
         />
       </fieldset>

@@ -6,12 +6,16 @@ export async function action({ request }: { request: Request }) {
   const form = await request.formData();
   const id = form.get("id") as string;
   const newProject: any = form.get("newProject");
-  let project;
-  if (newProject?.length > 0) {
-    project = await createNewLanguage(request, newProject);
-  } else {
-    project = await setActiveLanguage(id);
-  }
+  // let project;
+  // if (newProject?.length > 0) {
+  //   project = await createNewLanguage(request, newProject);
+  // } else {
+  //   project = await setActiveLanguage(id);
+  // }
+
+  const project = newProject?.length
+    ? await createNewLanguage(request, newProject)
+    : await setActiveLanguage(id);
 
   return redirect(`/${project?.title}/lessons`);
 }

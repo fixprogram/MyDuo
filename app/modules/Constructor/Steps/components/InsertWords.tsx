@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Textarea, VisuallyHiddenInput } from "~/components/lib";
-import { useFocus } from "~/utils";
+import { isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
 
@@ -15,12 +15,8 @@ export default function InsertWords({
   const ref = useFocus();
 
   useEffect(() => {
-    if (words.length) {
-      setReady(true);
-    } else {
-      setReady(false);
-    }
-  }, [words.length, setReady]);
+    setReady(!!words.length);
+  }, [words.length]);
 
   return (
     <fieldset style={{ padding: "0 25%" }}>
@@ -45,26 +41,22 @@ export default function InsertWords({
 
       <InsertWordsTextBlock showText={showText}>
         {answer.split(" ").map((item, idx) => {
-          if (words.find((word) => word === item)) {
-            return (
-              <input
-                type="text"
-                key={idx}
-                style={{
-                  width: `${item.length * 10}px`,
-                  margin: "0 7px",
-                  border: "none",
-                  borderBottom: "1px solid #e5e5e5",
-                }}
-              />
-            );
-          } else {
-            return (
-              <span style={{ marginRight: 3 }} key={idx}>
-                {item}
-              </span>
-            );
-          }
+          return isItemInArray(words, item) ? (
+            <input
+              type="text"
+              key={idx}
+              style={{
+                width: `${item.length * 10}px`,
+                margin: "0 7px",
+                border: "none",
+                borderBottom: "1px solid #e5e5e5",
+              }}
+            />
+          ) : (
+            <span style={{ marginRight: 3 }} key={idx}>
+              {item}
+            </span>
+          );
         })}
       </InsertWordsTextBlock>
 
@@ -88,7 +80,7 @@ export default function InsertWords({
             key={idx}
             onClick={() => {
               setWords((prevArr) => {
-                if (prevArr?.find((word) => word === item)) {
+                if (isItemInArray(words, item)) {
                   prevArr.splice(prevArr.indexOf(item), 1);
                   return [...prevArr];
                 } else {

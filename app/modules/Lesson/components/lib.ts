@@ -15,6 +15,7 @@ type LessonButtonProps = {
 };
 
 const LessonFooter = styled("section")<LessonFooterProps>`
+  padding: 0 40px;
   width: 100%;
   height: 140px;
   border-top: 2px solid #e5e5e5;

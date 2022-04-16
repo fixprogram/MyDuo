@@ -3,7 +3,7 @@ export type Step = {
   answer: string;
   number: number;
   keywords: string[];
-  lessonType: string;
+  stepType: string;
   ready: boolean;
 };
 

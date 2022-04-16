@@ -258,6 +258,7 @@ const Main = styled("main")`
   margin-top: 24px;
   display: flex;
   justify-content: space-between;
+  height: calc(100vh - 95px); // margin 24px + menu height 71px
 `;
 
 const LessonTitle = styled("b")`
