@@ -1,5 +1,9 @@
+import { doesArrayContainItems } from "~/utils";
+import { Action } from "./actions";
+import { LessonState } from "./types";
+
 const basicState = {
-  disabled: false, // Disabled state for
+  disabled: false, // Disabled state for preventing actions when the asnwer is checked
   progress: 0, // Current progress
   step: 0, // Current step number
   content: {}, // Current step. Contains Question, Answer and Keywords
@@ -15,7 +19,7 @@ const basicState = {
 const continueContent = (content, caseItem) =>
   caseItem.length > 0 ? caseItem.shift(0, 1) : content;
 
-const reducer = (state, action) => {
+const reducer = (state: LessonState, action: Action) => {
   const { content, step, maxSteps, caseItem } = state;
   switch (action.type) {
     case "CONTINUE": // Go to next step
@@ -36,8 +40,8 @@ const reducer = (state, action) => {
         stateWrong: true,
         formDisabled: true,
         disabled: false,
-        caseItem: [...state.caseItem, content],
-        maxSteps: state.maxSteps + 1,
+        caseItem: [...caseItem, content],
+        maxSteps: maxSteps + 1,
         nextStep: true,
       };
       const positiveState = {
@@ -49,13 +53,15 @@ const reducer = (state, action) => {
         formDisabled: true,
         progress: step / maxSteps,
       };
+      const { answer } = action.payload;
+
       switch (content.type) {
         case "Insert": {
           const checkAnswer = content.answer.filter(
             (
               item // Check that our array of responses has the same array as answers
             ) =>
-              action.payload.find(
+              answer.find(
                 (payloadItem) =>
                   payloadItem.value.trim().toLowerCase() === item.toLowerCase()
               )
@@ -66,42 +72,42 @@ const reducer = (state, action) => {
           return negativeState;
         }
         case "Question": {
-          console.log("ACTION: ", action.payload);
-          console.log("Content: ", content);
-          const areThereAnyKeywords = content.keywords.length > 0;
-          const checkKeywords = content.keywords.filter((item) =>
-            action.payload.trim().toLowerCase().includes(item.toLowerCase())
-          );
-          if (areThereAnyKeywords) {
-            if (
-              content.keywords[0].length > 0 &&
-              checkKeywords.length === content.keywords.length
-            ) {
-              return positiveState;
-            }
+          if (doesArrayContainItems(content.keywords, answer).state) {
+            return positiveState;
           }
 
-          if (action.payload.trim().toLowerCase() === content.answer[0]) {
-            return positiveState;
-          } else {
+          const { state, length } = doesArrayContainItems(
+            content.answer,
+            answer
+          );
+
+          if (!state) {
             return negativeState;
           }
+
+          if (length < content.answer.length * 0.8) {
+            // if user's response is less than 80% right, then return negative
+            return negativeState;
+          }
+
+          return positiveState;
         }
 
         case "Variants": {
-          if (content.answer[0] === action.payload) {
+          console.log("Ans: ", answer);
+          if (content.answer[0] === answer[0]) {
             return positiveState;
           }
           return negativeState;
         }
         case "Pairs": {
-          const respond = action.payload;
           let idx;
           if (
-            content.answer.find((ans, id) => {
+            content.answer.find((answerItem, id) => {
               idx = id;
               return (
-                ans === respond || ans === respond.split("").reverse().join("")
+                answerItem === answer ||
+                answerItem === answer[0].split("").reverse().join("")
               );
             })
           ) {
@@ -128,7 +134,7 @@ const reducer = (state, action) => {
         }
       }
     case "CHANGE_DISABLED":
-      return { ...state, disabled: action.payload };
+      return { ...state, disabled: action.payload.isDisabled };
     case "RESULTS":
       return {
         ...state,
@@ -137,6 +143,7 @@ const reducer = (state, action) => {
         stateWrong: false,
       };
     case "SET_CASE": // Initial action to set data right after loading component
+      console.log("SET_CASE: ", action.payload);
       const { steps } = action.payload;
       return {
         ...basicState,

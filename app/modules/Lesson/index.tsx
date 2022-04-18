@@ -33,7 +33,7 @@ export default function Lesson({ data }: { data: any }) {
     },
     dispatch,
   ] = useReducer(reducer, basicState);
-  const [value, setValue] = useState<any>();
+  const [value, setValue] = useState<string[]>([""]);
   const {
     checkAnswer,
     showResultsPractice,
@@ -60,9 +60,10 @@ export default function Lesson({ data }: { data: any }) {
     if (currentStep > -1 && currentStep <= maxSteps) {
       if (!nextStep) {
         checkAnswer(value);
+        // setValue("");
       } else {
         continuePractice();
-        setValue("");
+        // setValue([""]);
       }
     } else {
       currentStep === maxSteps
@@ -82,15 +83,19 @@ export default function Lesson({ data }: { data: any }) {
         flexDirection: "column",
       }}
       onKeyDown={(e) => {
+        if (disabled) {
+          return;
+        }
         if (e.key !== "Enter") {
           return;
         }
-        if (value?.length) {
+        if (value[0] !== "" && !stateRight && !stateWrong) {
           checkAnswer(value);
         }
         // Go futher if the answer was checked already or it's the results page
         if (stateRight || stateWrong || currentStep === maxSteps + 1) {
           onContinue();
+          setValue([""]);
         }
       }}
       tabIndex={0}
@@ -105,16 +110,17 @@ export default function Lesson({ data }: { data: any }) {
             step={step}
             maxSteps={maxSteps}
             content={content}
-            value={value}
-            setValue={(val: any) => {
-              setValue(val);
-              // Insert words will return an array of objects and it won't work with the disabling button
+            answer={value}
+            setAnswer={(val: string[]) => {
               console.log("val: ", val);
-              if (val.length) {
+
+              // Insert words will return an array of objects and it won't work with the disabling button
+              if (val[0] !== "") {
                 changeDisabled(false);
               } else {
                 changeDisabled(true);
               }
+              setValue(val);
             }}
             formDisabled={formDisabled}
             checkAnswer={checkAnswer}
@@ -135,7 +141,7 @@ export default function Lesson({ data }: { data: any }) {
                 {stateWrong ? "Right answer: " : "Great!"}
               </LessonFooterTitle>
               {stateWrong ? (
-                <LessonFooterText> {content.answer}</LessonFooterText>
+                <LessonFooterText> {content.answer.join(" ")}</LessonFooterText>
               ) : null}
             </div>
           </LessonFooterMessage>

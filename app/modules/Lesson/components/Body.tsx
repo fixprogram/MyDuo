@@ -9,17 +9,17 @@ const Body = ({
   step,
   maxSteps,
   content,
-  setValue,
+  setAnswer,
   formDisabled,
-  value,
+  answer,
   checkAnswer,
 }: {
   step: number;
   maxSteps: number;
   content: any;
-  setValue: Function;
+  setAnswer: Function;
   formDisabled: boolean;
-  value: any;
+  answer: any;
   checkAnswer: Function;
 }) => {
   return (
@@ -30,19 +30,20 @@ const Body = ({
         <Fragment>
           {content.type === "Question" ? (
             <QuestionAnswer
-              content={content}
-              value={value}
-              setValue={setValue}
+              // content={content}
+              question={content.question}
+              answer={answer}
+              setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
           ) : content.type === "Insert" ? (
             <InsertWords
               content={content}
-              setValue={setValue}
+              setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
           ) : content.type === "Variants" ? (
-            <Variants content={content} setValue={setValue} />
+            <Variants content={content} setAnswer={setAnswer} />
           ) : content.type === "Pairs" ? (
             <Pairs content={content} checkAnswer={checkAnswer} />
           ) : null}

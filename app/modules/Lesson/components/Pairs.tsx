@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
@@ -10,9 +8,9 @@ export default function Pairs({
   content: any;
   checkAnswer: Function;
 }) {
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState<string>("");
 
-  const isDisabled = (idx: number) => {
+  const isDisabled = (idx: string) => {
     return !content.answer.find((answer: any) => answer.includes(idx + 1));
   };
 
@@ -21,7 +19,7 @@ export default function Pairs({
       <LessonTitle>Connect pairs</LessonTitle>
 
       <ul
-        css={{
+        style={{
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-evenly",
@@ -30,10 +28,10 @@ export default function Pairs({
           padding: 0,
         }}
       >
-        {content.variants.map((item: string, idx: number) => (
+        {content.variants.map((item: string, idx: string) => (
           <li
             key={idx}
-            css={{ marginBottom: 5, position: "relative", width: "48%" }}
+            style={{ marginBottom: 5, position: "relative", width: "48%" }}
             onClick={(evt) => {
               const target = evt.target as HTMLInputElement;
               if (isDisabled(idx)) {
@@ -49,7 +47,7 @@ export default function Pairs({
             <VariantItem
               type="button"
               id={(idx + 1).toString()}
-              css={{
+              style={{
                 cursor: isDisabled(idx) ? "default" : "pointer",
                 color:
                   active == idx + 1

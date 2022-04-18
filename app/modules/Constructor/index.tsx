@@ -42,6 +42,7 @@ export default function Constructor() {
           display: "flex",
           flexDirection: "column",
           paddingBottom: 71,
+          position: "relative",
         }}
       >
         <h2>Sidebar</h2>

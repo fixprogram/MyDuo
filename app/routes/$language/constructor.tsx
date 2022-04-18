@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
-    answer = answer.toLowerCase();
+    answer = answer.trim().toLowerCase().split(" ");
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {
@@ -39,9 +39,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Insert": {
         const text = form.get(`text${index}`);
+        console.log("Answer: ", answer);
         return {
           ...returnData,
-          answer: answer.indexOf(",") ? answer.split(",") : answer,
+          answer: answer.length > 1 ? answer.split(",") : answer,
           text,
         };
       }

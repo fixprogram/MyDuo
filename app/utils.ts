@@ -63,3 +63,13 @@ export const isItemInArray = (arr: string[], item: string) => {
 export const findInArrayById = (arr: any, id: { id: string }) => {
   return arr.find((arrItem: any) => (arrItem.id = id));
 };
+
+export const doesArrayContainItems = (arr: any, items: any) => {
+  const filtered = arr.filter((arrItem: string) =>
+    items.find(
+      (item: string) =>
+        item.trim().toLocaleLowerCase() === arrItem.trim().toLowerCase()
+    )
+  );
+  return { state: !!filtered.length, length: filtered.length, items: filtered };
+};

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Textarea } from "~/components/lib";
 import {
   LessonQuestion,
@@ -9,21 +9,21 @@ import {
 import Duo from "~/styles/duo.svg";
 
 export default function QuestionAnswerPractice({
-  value,
-  content,
-  setValue,
+  answer,
+  question,
+  setAnswer,
   formDisabled,
 }: {
-  value: string;
-  content: any;
-  setValue: Function;
+  answer: string[];
+  question: string;
+  setAnswer: Function;
   formDisabled: boolean;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    ref?.current?.focus();
-  }, [value]);
+    ref.current?.focus();
+  });
 
   return (
     <Fragment>
@@ -31,7 +31,7 @@ export default function QuestionAnswerPractice({
       <div style={{ display: "flex", alignItems: "center" }}>
         <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
         <div style={{ position: "relative" }}>
-          <LessonQuestion>{content.question}</LessonQuestion>
+          <LessonQuestion>{question}</LessonQuestion>
           <LessonQuestionTriangleContainer>
             <LessonQuestionTriangle />
           </LessonQuestionTriangleContainer>
@@ -41,8 +41,8 @@ export default function QuestionAnswerPractice({
         id={`answer`}
         name="answer"
         placeholder="Enter answer"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={answer[0]}
+        onChange={(e) => setAnswer([e.target.value])}
         disabled={formDisabled}
         ref={ref}
       />

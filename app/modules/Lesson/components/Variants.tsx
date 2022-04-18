@@ -4,10 +4,10 @@ import { LessonTitle, VariantItem } from "./lib";
 
 export default function VariantsPractice({
   content,
-  setValue,
+  setAnswer,
 }: {
   content: any;
-  setValue: Function;
+  setAnswer(arg: string[]): Function;
 }) {
   return (
     <Fragment>
@@ -18,10 +18,10 @@ export default function VariantsPractice({
       <b>{content.question}</b>
 
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-        {content.variants.map((variant, idx) => (
+        {content.variants.map((variant: string, idx: string) => (
           <li key={idx} style={{ position: "relative" }}>
             <VariantItemNumber>{idx + 1}</VariantItemNumber>
-            <VariantItem type="button" onClick={() => setValue(variant)}>
+            <VariantItem type="button" onClick={() => setAnswer([variant])}>
               {variant}
             </VariantItem>
           </li>
