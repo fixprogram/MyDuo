@@ -57,16 +57,9 @@ const reducer = (state: LessonState, action: Action) => {
 
       switch (content.type) {
         case "Insert": {
-          const checkAnswer = content.answer.filter(
-            (
-              item // Check that our array of responses has the same array as answers
-            ) =>
-              answer.find(
-                (payloadItem) =>
-                  payloadItem.value.trim().toLowerCase() === item.toLowerCase()
-              )
-          );
-          if (checkAnswer.length === content.answer.length) {
+          console.log(answer);
+          const { length } = doesArrayContainItems(content.answer, answer);
+          if (length === content.answer.length) {
             return positiveState;
           }
           return negativeState;
@@ -94,7 +87,6 @@ const reducer = (state: LessonState, action: Action) => {
         }
 
         case "Variants": {
-          console.log("Ans: ", answer);
           if (content.answer[0] === answer[0]) {
             return positiveState;
           }

@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         console.log("Answer: ", answer);
         return {
           ...returnData,
-          answer: answer.length > 1 ? answer.split(",") : answer,
+          answer: answer[0].length > 1 ? [...answer[0].split(",")] : answer,
           text,
         };
       }

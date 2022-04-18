@@ -38,6 +38,7 @@ const Body = ({
             />
           ) : content.type === "Insert" ? (
             <InsertWords
+              answer={answer}
               content={content}
               setAnswer={setAnswer}
               formDisabled={formDisabled}

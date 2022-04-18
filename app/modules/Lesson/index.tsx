@@ -60,10 +60,8 @@ export default function Lesson({ data }: { data: any }) {
     if (currentStep > -1 && currentStep <= maxSteps) {
       if (!nextStep) {
         checkAnswer(value);
-        // setValue("");
       } else {
         continuePractice();
-        // setValue([""]);
       }
     } else {
       currentStep === maxSteps

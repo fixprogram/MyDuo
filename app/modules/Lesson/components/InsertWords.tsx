@@ -1,75 +1,77 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
 import { LessonTitle } from "./lib";
 
-type ContentItem = {
-  id: string;
-  value: string;
-};
-
 export default function InsertWords({
   content,
-  setValue,
+  setAnswer,
   formDisabled,
 }: {
   content: any;
-  setValue: Function;
+  setAnswer: Function;
   formDisabled: boolean;
 }) {
-  const [values, setValues] = useState<ContentItem[]>([]);
+  console.log("Content: ", content);
+
+  const [values, setValues] = useState<any[]>([
+    ...Array(content.answer.length).fill(""),
+  ]);
+
+  useEffect(() => {
+    if (formDisabled === true) {
+      return;
+    }
+
+    setValues([...Array(content.answer.length).fill("")]);
+  }, [formDisabled]);
+
+  useEffect(() => {
+    if (values.find((val) => val === "")) {
+      return;
+    }
+
+    setAnswer(values);
+  }, [values]);
 
   return (
     <Fragment>
       <LessonTitle>Insert words</LessonTitle>
       <InsertWordsTextBlock style={{ marginTop: 0 }}>
-        {content.text.split(" ").map((item: any, idx: number) =>
-          content.answer.find((it: any) => it === item) ? (
-            <input
-              type="text"
-              id={`input${idx}`}
-              style={{
-                width: `${item.length * 10}px`,
-                margin: "0 7px",
-                border: "none",
-                borderBottom: "1px solid #e5e5e5",
-              }}
-              onChange={(e) => {
-                let newItem: ContentItem;
-                if (values.length === 0) {
-                  setValues([{ id: e.target.id, value: e.target.value }]);
-                  setValue([{ id: e.target.id, value: e.target.value }]);
-                } else {
-                  newItem = values.find((item) => {
-                    return item.id === e.target.id;
-                  });
-
-                  let newArr = values;
-                  if (newItem) {
-                    newArr.splice(values.indexOf(newItem), 1);
-                    newItem.value = e.target.value;
-                    setValues([...newArr, newItem]);
-                    setValue([...newArr, newItem]);
-                  } else {
-                    setValues([
-                      ...newArr,
-                      { id: e.target.id, value: e.target.value },
-                    ]);
-                    setValue([
-                      ...newArr,
-                      { id: e.target.id, value: e.target.value },
-                    ]);
-                  }
-                }
-              }}
-              disabled={formDisabled}
-              key={idx}
-            />
-          ) : (
-            <span key={idx} style={{ marginRight: 4 }}>
+        {content.text.split(" ").map((item: string, idx: number) => {
+          if (content.answer.includes(item)) {
+            return content.answer.map((it: string, index: number) => {
+              if (it === item) {
+                return (
+                  <input
+                    type="text"
+                    id={`input${0}`}
+                    style={{
+                      width: `${item.length * 20}px`,
+                      margin: "0 7px",
+                      border: "none",
+                      borderBottom: "1px solid #e5e5e5",
+                    }}
+                    value={values[index]}
+                    onChange={(e) => {
+                      setValues((prevArr) => {
+                        prevArr[index] = e.target.value;
+                        return [...prevArr];
+                      });
+                    }}
+                    disabled={formDisabled}
+                    key={idx}
+                  />
+                );
+              }
+              return null;
+            });
+          }
+          return (
+            <span style={{ marginRight: 4 }} key={idx}>
               {item}
             </span>
-          )
-        )}
+          );
+        })}
       </InsertWordsTextBlock>
     </Fragment>
   );
