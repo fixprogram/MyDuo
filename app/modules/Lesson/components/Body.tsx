@@ -39,12 +39,13 @@ const Body = ({
           ) : content.type === "Insert" ? (
             <InsertWords
               answer={answer}
-              content={content}
+              text={content.text}
+              contentAnswer={content.answer}
               setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
           ) : content.type === "Variants" ? (
-            <Variants content={content} setAnswer={setAnswer} />
+            <Variants content={content} setAnswer={setAnswer} answer={answer} />
           ) : content.type === "Pairs" ? (
             <Pairs content={content} checkAnswer={checkAnswer} />
           ) : null}

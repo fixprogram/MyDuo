@@ -3,18 +3,20 @@ import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib
 import { LessonTitle } from "./lib";
 
 export default function InsertWords({
-  content,
+  answer,
+  text,
+  contentAnswer,
   setAnswer,
   formDisabled,
 }: {
-  content: any;
+  answer: string[];
+  text: string;
+  contentAnswer: string[];
   setAnswer: Function;
   formDisabled: boolean;
 }) {
-  console.log("Content: ", content);
-
   const [values, setValues] = useState<any[]>([
-    ...Array(content.answer.length).fill(""),
+    ...Array(answer.length).fill(""),
   ]);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function InsertWords({
       return;
     }
 
-    setValues([...Array(content.answer.length).fill("")]);
+    setValues([...Array(answer.length).fill("")]);
   }, [formDisabled]);
 
   useEffect(() => {
@@ -37,9 +39,9 @@ export default function InsertWords({
     <Fragment>
       <LessonTitle>Insert words</LessonTitle>
       <InsertWordsTextBlock style={{ marginTop: 0 }}>
-        {content.text.split(" ").map((item: string, idx: number) => {
-          if (content.answer.includes(item)) {
-            return content.answer.map((it: string, index: number) => {
+        {text.split(" ").map((item: string, idx: number) => {
+          if (contentAnswer.includes(item)) {
+            return contentAnswer.map((it: string, index: number) => {
               if (it === item) {
                 return (
                   <input

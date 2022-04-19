@@ -57,7 +57,6 @@ const reducer = (state: LessonState, action: Action) => {
 
       switch (content.type) {
         case "Insert": {
-          console.log(answer);
           const { length } = doesArrayContainItems(content.answer, answer);
           if (length === content.answer.length) {
             return positiveState;
@@ -65,7 +64,10 @@ const reducer = (state: LessonState, action: Action) => {
           return negativeState;
         }
         case "Question": {
-          if (doesArrayContainItems(content.keywords, answer).state) {
+          // split the answer because the whole user input is in answer[0]
+          if (
+            doesArrayContainItems(content.keywords, answer[0].split(" ")).state
+          ) {
             return positiveState;
           }
 
@@ -135,7 +137,6 @@ const reducer = (state: LessonState, action: Action) => {
         stateWrong: false,
       };
     case "SET_CASE": // Initial action to set data right after loading component
-      console.log("SET_CASE: ", action.payload);
       const { steps } = action.payload;
       return {
         ...basicState,

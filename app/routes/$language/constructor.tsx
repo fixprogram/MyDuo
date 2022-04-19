@@ -39,7 +39,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Insert": {
         const text = form.get(`text${index}`);
-        console.log("Answer: ", answer);
         return {
           ...returnData,
           answer: answer[0].length > 1 ? [...answer[0].split(",")] : answer,
@@ -48,13 +47,12 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Variants": {
         const question = form.get(`question${index}`);
-        // const definition = form.get(`definition${index}`);
         const variants = form.getAll(`variant${index}`);
         return { ...returnData, answer, question, variants };
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer: answer.split(","), variants };
+        return { ...returnData, answer: answer[0].split(","), variants };
       }
       default: {
         return { ...returnData, answer };

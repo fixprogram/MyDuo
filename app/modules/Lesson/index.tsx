@@ -50,15 +50,22 @@ export default function Lesson({ data }: { data: any }) {
   }, []);
 
   useEffect(() => {
-    sectionRef.current?.focus(); // always have focus in order to make Enter key events work
-  }, [formDisabled]);
+    if (stateRight || stateWrong) {
+      return sectionRef.current?.focus();
+    }
+    if (content.type === "Question") {
+      return;
+    }
+
+    return sectionRef.current?.focus(); // always have focus in order to make Enter key events work
+  }, [stateRight, stateWrong]);
 
   const onContinue = () => {
     if (disabled) {
       return;
     }
     if (currentStep > -1 && currentStep <= maxSteps) {
-      if (!nextStep) {
+      if (!nextStep && value[0] !== "") {
         checkAnswer(value);
       } else {
         continuePractice();
@@ -72,6 +79,16 @@ export default function Lesson({ data }: { data: any }) {
     }
   };
 
+  const setAnswer = (val: string[]) => {
+    // Insert words will return an array of objects and it won't work with the disabling button
+    if (val[0] !== "") {
+      changeDisabled(false);
+    } else {
+      changeDisabled(true);
+    }
+    setValue(val);
+  };
+
   return (
     <section
       style={{
@@ -81,19 +98,31 @@ export default function Lesson({ data }: { data: any }) {
         flexDirection: "column",
       }}
       onKeyDown={(e) => {
+        if (content.type === "Variants") {
+          if (e.key === "1") {
+            setAnswer([content.variants[0]]);
+          }
+          if (e.key === "2") {
+            setAnswer([content.variants[1]]);
+          }
+          if (e.key === "3") {
+            setAnswer([content.variants[2]]);
+          }
+        }
         if (disabled) {
           return;
         }
-        if (e.key !== "Enter") {
-          return;
-        }
-        if (value[0] !== "" && !stateRight && !stateWrong) {
-          checkAnswer(value);
-        }
-        // Go futher if the answer was checked already or it's the results page
-        if (stateRight || stateWrong || currentStep === maxSteps + 1) {
-          onContinue();
-          setValue([""]);
+        if (e.key === "Enter") {
+          // return;
+          if (value[0] !== "" && !stateRight && !stateWrong) {
+            checkAnswer(value);
+          }
+          // Go futher if the answer was checked already or it's the results page
+          if (stateRight || stateWrong || currentStep === maxSteps + 1) {
+            e.preventDefault(); // prevent next line in textarea
+            onContinue();
+            setValue([""]);
+          }
         }
       }}
       tabIndex={0}
@@ -109,17 +138,7 @@ export default function Lesson({ data }: { data: any }) {
             maxSteps={maxSteps}
             content={content}
             answer={value}
-            setAnswer={(val: string[]) => {
-              console.log("val: ", val);
-
-              // Insert words will return an array of objects and it won't work with the disabling button
-              if (val[0] !== "") {
-                changeDisabled(false);
-              } else {
-                changeDisabled(true);
-              }
-              setValue(val);
-            }}
+            setAnswer={setAnswer}
             formDisabled={formDisabled}
             checkAnswer={checkAnswer}
           />
@@ -147,7 +166,12 @@ export default function Lesson({ data }: { data: any }) {
             active={!disabled}
             stateRight={stateRight}
             stateWrong={stateWrong}
-            onClick={onContinue}
+            onClick={() => {
+              onContinue();
+              if (stateRight || stateWrong) {
+                setValue([""]);
+              }
+            }}
           >
             {stateRight
               ? "Next"

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Textarea } from "~/components/lib";
 import {
   LessonQuestion,
@@ -23,7 +23,15 @@ export default function QuestionAnswerPractice({
 
   useEffect(() => {
     ref.current?.focus();
-  });
+  }, [formDisabled]);
+
+  // const formatInput = (value: string) => {
+  //   if (!value.includes(" ")) {
+  //     // return [value, " "];
+  //   }
+
+  //   return [...value.split(" ")];
+  // };
 
   return (
     <Fragment>
@@ -41,7 +49,7 @@ export default function QuestionAnswerPractice({
         id={`answer`}
         name="answer"
         placeholder="Enter answer"
-        value={answer[0]}
+        value={answer}
         onChange={(e) => setAnswer([e.target.value])}
         disabled={formDisabled}
         ref={ref}

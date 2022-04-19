@@ -89,7 +89,6 @@ export const meta: MetaFunction = () => {
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/";
-  console.log("REdirect, ", redirectTo);
   const actionData = useActionData() as ActionData;
   const usernameRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);

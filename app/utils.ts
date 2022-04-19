@@ -64,7 +64,8 @@ export const findInArrayById = (arr: any, id: { id: string }) => {
   return arr.find((arrItem: any) => (arrItem.id = id));
 };
 
-export const doesArrayContainItems = (arr: any, items: any) => {
+// export const doesArrayContainItems = (arr: any, items: any) => {
+export const doesArrayContainItems = (items: any, arr: any) => {
   const filtered = arr.filter((arrItem: string) =>
     items.find(
       (item: string) =>
