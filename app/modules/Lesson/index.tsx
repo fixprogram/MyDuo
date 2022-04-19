@@ -15,8 +15,14 @@ import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
 import { useSubmit } from "@remix-run/react";
 import Results from "./components/Results";
+import { LessonStep } from "@prisma/client";
 
-export default function Lesson({ data }: { data: any }) {
+export default function Lesson({
+  data = { steps: [], id: "" },
+}: {
+  // data: { steps: LessonStep[]; id: string };
+  data: any;
+}) {
   const ref = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLFormElement>(null);
   const [
@@ -24,7 +30,7 @@ export default function Lesson({ data }: { data: any }) {
       disabled,
       progress,
       content,
-      step,
+      stepNumber,
       maxSteps,
       stateRight,
       stateWrong,
@@ -42,10 +48,10 @@ export default function Lesson({ data }: { data: any }) {
     setCase,
   } = actionCreator(dispatch);
   const submit = useSubmit();
-  let currentStep = step;
+  let currentStep = stepNumber;
 
   useEffect(() => {
-    setCase(data); // Ones the data is loaded, we set the it in reducer
+    setCase(data.steps, data.id); // Ones the data is loaded, we set the it in reducer
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +140,7 @@ export default function Lesson({ data }: { data: any }) {
         <Fragment>
           <Progress progress={progress} />
           <Body
-            step={step}
+            stepNumber={stepNumber}
             maxSteps={maxSteps}
             content={content}
             answer={value}

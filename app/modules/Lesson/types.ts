@@ -1,9 +1,11 @@
+import { LessonStep } from "@prisma/client";
+
 export type LessonState = {
   disabled: boolean;
   progress: number;
-  step: number;
-  content: any;
-  caseItem: any[];
+  stepNumber: number;
+  content: LessonContent;
+  lessonSteps: LessonStep[];
   maxSteps: number;
   stateWrong: boolean;
   stateRight: boolean;
@@ -13,4 +15,6 @@ export type LessonState = {
 
 export type LessonData = {};
 
-export type LessonContent = {};
+export type LessonContent = LessonStep & {
+  answer: string[];
+};

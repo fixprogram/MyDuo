@@ -2,16 +2,20 @@ import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
 export default function Pairs({
-  content,
+  contentAnswer,
+  variants,
   checkAnswer,
 }: {
-  content: any;
+  contentAnswer: string[];
+  variants: any;
   checkAnswer: Function;
 }) {
   const [active, setActive] = useState<string>("");
 
   const isDisabled = (idx: string) => {
-    return !content.answer.find((answer: any) => answer.includes(idx + 1));
+    return !contentAnswer.find((answerItem: any) =>
+      answerItem.includes(idx + 1)
+    );
   };
 
   return (
@@ -28,7 +32,7 @@ export default function Pairs({
           padding: 0,
         }}
       >
-        {content.variants.map((item: string, idx: string) => (
+        {variants.map((item: string, idx: string) => (
           <li
             key={idx}
             style={{ marginBottom: 5, position: "relative", width: "48%" }}
@@ -40,7 +44,7 @@ export default function Pairs({
               if (!active) {
                 return setActive(target.id);
               }
-              checkAnswer(`${active}${target.id}`);
+              checkAnswer([`${active}${target.id}`]);
               setActive("");
             }}
           >

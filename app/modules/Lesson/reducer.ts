@@ -1,3 +1,4 @@
+import { LessonStep } from "@prisma/client";
 import { doesArrayContainItems } from "~/utils";
 import { Action } from "./actions";
 import { LessonState } from "./types";
@@ -5,29 +6,31 @@ import { LessonState } from "./types";
 const basicState = {
   disabled: false, // Disabled state for preventing actions when the asnwer is checked
   progress: 0, // Current progress
-  step: 0, // Current step number
-  content: {}, // Current step. Contains Question, Answer and Keywords
-  caseItem: [], // Array of all steps
+  stepNumber: 0, // Current stepNumber number
+  content: {}, // Current stepNumber. Contains Question, Answer and Keywords
+  lessonSteps: [{}], // Array of all steps
   maxSteps: 0, // Max steps
   stateWrong: false, // Was the answer wrong
   stateRight: false, // Was the answer right
   formDisabled: false, // Disable form when check the answer
-  nextStep: false, // Next step if the answer was wrong
+  nextStep: false, // Next stepNumber if the answer was wrong
 };
 
-// The function returns next step if there is any
-const continueContent = (content, caseItem) =>
-  caseItem.length > 0 ? caseItem.shift(0, 1) : content;
+// The function returns next stepNumber if there is any
+const continueContent = (
+  content: LessonStep,
+  lessonSteps: LessonStep[] | any
+) => (lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content);
 
 const reducer = (state: LessonState, action: Action) => {
-  const { content, step, maxSteps, caseItem } = state;
+  const { content, stepNumber, maxSteps, lessonSteps } = state;
   switch (action.type) {
-    case "CONTINUE": // Go to next step
+    case "CONTINUE": // Go to next stepNumber
       return {
         ...state,
-        step: step + 1,
-        disabled: step === maxSteps ? false : true,
-        content: continueContent(content, caseItem),
+        stepNumber: stepNumber + 1,
+        disabled: stepNumber === maxSteps ? false : true,
+        content: continueContent(content, lessonSteps),
         formDisabled: false,
         stateRight: false,
         stateWrong: false,
@@ -40,8 +43,8 @@ const reducer = (state: LessonState, action: Action) => {
         stateWrong: true,
         formDisabled: true,
         disabled: false,
-        caseItem: [...caseItem, content],
-        maxSteps: maxSteps + 1,
+        lessonSteps: [...lessonSteps, content],
+        stepNumber: stepNumber - 1,
         nextStep: true,
       };
       const positiveState = {
@@ -51,7 +54,7 @@ const reducer = (state: LessonState, action: Action) => {
         nextStep: true,
         stateRight: true,
         formDisabled: true,
-        progress: step / maxSteps,
+        progress: stepNumber / maxSteps,
       };
       const { answer } = action.payload;
 
@@ -95,13 +98,13 @@ const reducer = (state: LessonState, action: Action) => {
           return negativeState;
         }
         case "Pairs": {
-          let idx;
+          let idx: any;
           if (
             content.answer.find((answerItem, id) => {
               idx = id;
               return (
-                answerItem === answer ||
-                answerItem === answer[0].split("").reverse().join("")
+                answerItem === answer[0] ||
+                answerItem.split("").reverse().join("") === answer[0]
               );
             })
           ) {
@@ -132,7 +135,7 @@ const reducer = (state: LessonState, action: Action) => {
     case "RESULTS":
       return {
         ...state,
-        step: step + 1,
+        stepNumber: stepNumber + 1,
         stateRight: false,
         stateWrong: false,
       };
@@ -140,8 +143,8 @@ const reducer = (state: LessonState, action: Action) => {
       const { steps } = action.payload;
       return {
         ...basicState,
-        step: 1,
-        caseItem: steps,
+        stepNumber: 1,
+        lessonSteps: steps,
         maxSteps: steps.length,
         content: steps.shift(0, 1),
         disabled: true,

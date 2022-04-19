@@ -25,14 +25,6 @@ export default function QuestionAnswerPractice({
     ref.current?.focus();
   }, [formDisabled]);
 
-  // const formatInput = (value: string) => {
-  //   if (!value.includes(" ")) {
-  //     // return [value, " "];
-  //   }
-
-  //   return [...value.split(" ")];
-  // };
-
   return (
     <Fragment>
       <LessonTitle>Answer the question</LessonTitle>

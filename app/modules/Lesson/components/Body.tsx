@@ -6,7 +6,7 @@ import Variants from "./Variants";
 import Pairs from "./Pairs";
 
 const Body = ({
-  step,
+  stepNumber,
   maxSteps,
   content,
   setAnswer,
@@ -14,7 +14,7 @@ const Body = ({
   answer,
   checkAnswer,
 }: {
-  step: number;
+  stepNumber: number;
   maxSteps: number;
   content: any;
   setAnswer: Function;
@@ -24,13 +24,12 @@ const Body = ({
 }) => {
   return (
     <LessonBody>
-      {step === maxSteps + 1 ? (
+      {stepNumber === maxSteps + 1 ? (
         <LessonBodyResults>Results Screen</LessonBodyResults>
       ) : (
         <Fragment>
           {content.type === "Question" ? (
             <QuestionAnswer
-              // content={content}
               question={content.question}
               answer={answer}
               setAnswer={setAnswer}
@@ -47,7 +46,11 @@ const Body = ({
           ) : content.type === "Variants" ? (
             <Variants content={content} setAnswer={setAnswer} answer={answer} />
           ) : content.type === "Pairs" ? (
-            <Pairs content={content} checkAnswer={checkAnswer} />
+            <Pairs
+              contentAnswer={content.answer}
+              variants={content.variants}
+              checkAnswer={checkAnswer}
+            />
           ) : null}
         </Fragment>
       )}

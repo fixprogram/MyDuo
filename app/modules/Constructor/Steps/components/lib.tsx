@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 type InsertWordsTextBlockProps = {
-  showText: boolean;
+  showText?: boolean;
 };
 
 type VariantItemNumberProps = {

@@ -9,7 +9,7 @@ export default function VariantsPractice({
 }: {
   answer: string;
   content: any;
-  setAnswer(arg: string[]): Function;
+  setAnswer: Function;
 }) {
   return (
     <Fragment>

@@ -37,8 +37,16 @@ export default function InsertWords({
 
   return (
     <Fragment>
-      <LessonTitle>Insert words</LessonTitle>
-      <InsertWordsTextBlock style={{ marginTop: 0 }}>
+      <LessonTitle>Add missing words</LessonTitle>
+      <InsertWordsTextBlock
+        style={{
+          marginTop: 0,
+          fontSize: 19,
+          backgroundColor: "white",
+          padding: 0,
+          border: "none",
+        }}
+      >
         {text.split(" ").map((item: string, idx: number) => {
           if (contentAnswer.includes(item)) {
             return contentAnswer.map((it: string, index: number) => {
@@ -48,10 +56,11 @@ export default function InsertWords({
                     type="text"
                     id={`input${0}`}
                     style={{
-                      width: `${item.length * 20}px`,
-                      margin: "0 7px",
+                      width: `${item.length * 13}px`,
+                      margin: "0 7px -2px",
                       border: "none",
-                      borderBottom: "1px solid #e5e5e5",
+                      borderBottom: "2px solid #afafaf",
+                      fontSize: 19,
                     }}
                     value={values[index]}
                     onChange={(e) => {
