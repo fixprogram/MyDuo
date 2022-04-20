@@ -60,6 +60,11 @@ const reducer = (state: LessonState, action: Action) => {
 
       switch (content.type) {
         case "Insert": {
+          console.log("//////////////");
+          console.log("Reducer");
+          console.log(content.answer);
+          console.log(answer);
+          console.log("//////////////");
           const { length } = doesArrayContainItems(content.answer, answer);
           if (length === content.answer.length) {
             return positiveState;

@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect } from "@remix-run/node";
-import React, { createContext, useState } from "react";
+import React, { useState } from "react";
 import { Outlet, useLoaderData } from "remix";
 import { Main, Overlay } from "~/components/lib";
 import Menu from "~/components/Menu";
@@ -39,20 +39,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   return { user, projects };
 };
 
-export const ProjectContext = createContext({});
-
 export default function ProjectPage() {
   const { user, projects } = useLoaderData();
   const [isOverlay, setIsOverlay] = useState(false);
   return (
     <React.Fragment>
-      <ProjectContext.Provider value={{ projects }}>
-        <Menu user={user} languages={projects} onOverlay={setIsOverlay} />
-        <Main>
-          <Outlet />
-        </Main>
-        <Overlay active={isOverlay} />
-      </ProjectContext.Provider>
+      <Menu user={user} languages={projects} onOverlay={setIsOverlay} />
+      <Main>
+        <Outlet />
+      </Main>
+      <Overlay active={isOverlay} />
     </React.Fragment>
   );
 }

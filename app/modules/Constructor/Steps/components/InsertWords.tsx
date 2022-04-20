@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Textarea, VisuallyHiddenInput } from "~/components/lib";
-import { isItemInArray, useFocus } from "~/utils";
+import { Fragment, useEffect, useState } from "react";
+import { Textarea } from "~/components/lib";
+import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
 
@@ -20,9 +20,19 @@ export default function InsertWords({
 
   return (
     <fieldset style={{ padding: "0 25%" }}>
-      <VisuallyHiddenInput name={`answer${number}`} value={words} readOnly />
+      <input
+        type="hidden"
+        name={`answer${number}`}
+        value={words
+          .map((word) => {
+            const { newItem } = doesItemContainSign(word);
 
-      <VisuallyHiddenInput name={`type${number}`} value={"Insert"} readOnly />
+            return newItem + " ";
+          })
+          .join("")}
+      />
+
+      <input type="hidden" name={`type${number}`} value={"Insert"} />
 
       <div>
         <h2>Type and choose to insert</h2>
@@ -41,21 +51,44 @@ export default function InsertWords({
 
       <InsertWordsTextBlock showText={showText}>
         {answer.split(" ").map((item, idx) => {
-          return isItemInArray(words, item) ? (
+          const { newItem, sign } = doesItemContainSign(item);
+
+          if (!isItemInArray(words, item)) {
+            return (
+              <span style={{ marginRight: 3 }} key={idx}>
+                {item}
+              </span>
+            );
+          }
+
+          if (sign) {
+            return (
+              <Fragment key={idx}>
+                <input
+                  type="text"
+                  style={{
+                    width: `${newItem.length * 13}px`,
+                    margin: "0 7px",
+                    border: "none",
+                    borderBottom: "1px solid #e5e5e5",
+                  }}
+                />
+                <span>{sign}</span>
+              </Fragment>
+            );
+          }
+
+          return (
             <input
               type="text"
               key={idx}
               style={{
-                width: `${item.length * 10}px`,
+                width: `${newItem.length * 10}px`,
                 margin: "0 7px",
                 border: "none",
                 borderBottom: "1px solid #e5e5e5",
               }}
             />
-          ) : (
-            <span style={{ marginRight: 3 }} key={idx}>
-              {item}
-            </span>
           );
         })}
       </InsertWordsTextBlock>
@@ -69,30 +102,32 @@ export default function InsertWords({
         >
           Edit text
         </button>
-        {answer.split(" ").map((item, idx) => (
-          <span
-            style={{
-              marginRight: 3,
-              border: words.find((word) => word === item)
-                ? "1px solid green"
-                : "none",
-            }}
-            key={idx}
-            onClick={() => {
-              setWords((prevArr) => {
-                if (isItemInArray(words, item)) {
-                  prevArr.splice(prevArr.indexOf(item), 1);
-                  return [...prevArr];
-                } else {
-                  return [...prevArr, item];
-                }
-              });
-              setShowText(true);
-            }}
-          >
-            {item}
-          </span>
-        ))}
+        {answer.split(" ").map((item, idx) => {
+          return (
+            <span
+              style={{
+                marginRight: 3,
+                border: words.find((word) => word === item)
+                  ? "1px solid green"
+                  : "none",
+              }}
+              key={idx}
+              onClick={() => {
+                setWords(() => {
+                  if (isItemInArray(words, item)) {
+                    words.splice(words.indexOf(item), 1);
+                    return [...words];
+                  }
+
+                  return [...words, item];
+                });
+                setShowText(true);
+              }}
+            >
+              {item}
+            </span>
+          );
+        })}
       </div>
     </fieldset>
   );

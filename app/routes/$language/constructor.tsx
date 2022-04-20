@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         const text = form.get(`text${index}`);
         return {
           ...returnData,
-          answer: answer[0].length > 1 ? [...answer[0].split(",")] : answer,
+          answer,
           text,
         };
       }

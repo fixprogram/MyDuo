@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
+import { doesItemContainSign } from "~/utils";
 import { LessonTitle } from "./lib";
 
 export default function InsertWords({
@@ -16,7 +17,7 @@ export default function InsertWords({
   formDisabled: boolean;
 }) {
   const [values, setValues] = useState<any[]>([
-    ...Array(answer.length).fill(""),
+    ...Array(contentAnswer.length).fill(""),
   ]);
 
   useEffect(() => {
@@ -24,14 +25,13 @@ export default function InsertWords({
       return;
     }
 
-    setValues([...Array(answer.length).fill("")]);
+    setValues([...Array(contentAnswer.length).fill("")]);
   }, [formDisabled]);
 
   useEffect(() => {
     if (values.find((val) => val === "")) {
       return;
     }
-
     setAnswer(values);
   }, [values]);
 
@@ -48,30 +48,35 @@ export default function InsertWords({
         }}
       >
         {text.split(" ").map((item: string, idx: number) => {
-          if (contentAnswer.includes(item)) {
+          const { newItem, sign } = doesItemContainSign(item);
+
+          if (contentAnswer.includes(newItem)) {
             return contentAnswer.map((it: string, index: number) => {
-              if (it === item) {
+              if (newItem === it) {
                 return (
-                  <input
-                    type="text"
-                    id={`input${0}`}
-                    style={{
-                      width: `${item.length * 13}px`,
-                      margin: "0 7px -2px",
-                      border: "none",
-                      borderBottom: "2px solid #afafaf",
-                      fontSize: 19,
-                    }}
-                    value={values[index]}
-                    onChange={(e) => {
-                      setValues((prevArr) => {
-                        prevArr[index] = e.target.value;
-                        return [...prevArr];
-                      });
-                    }}
-                    disabled={formDisabled}
-                    key={idx}
-                  />
+                  <Fragment key={idx}>
+                    <input
+                      type="text"
+                      id={`input${0}`}
+                      style={{
+                        width: `${newItem.length * 13}px`,
+                        margin: "0 7px -2px",
+                        border: "none",
+                        borderBottom: "2px solid #afafaf",
+                        fontSize: 19,
+                      }}
+                      value={values[index]}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setValues((prevArray) => {
+                          prevArray[index] = e.target.value;
+                          return [...prevArray];
+                        });
+                      }}
+                      disabled={formDisabled}
+                    />
+                    <span style={{ marginRight: 4 }}>{sign}</span>
+                  </Fragment>
                 );
               }
               return null;

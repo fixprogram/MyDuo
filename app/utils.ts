@@ -64,6 +64,21 @@ export const findInArrayById = (arr: any, id: { id: string }) => {
   return arr.find((arrItem: any) => (arrItem.id = id));
 };
 
+export const doesItemContainSign = (item: string) => {
+  const newItem = item.split("").slice(0, -1).join("");
+  switch (item.slice(-1)) {
+    case ",": {
+      return {
+        newItem,
+        sign: ",",
+      };
+    }
+    default: {
+      return { newItem: item, sign: "" };
+    }
+  }
+};
+
 // export const doesArrayContainItems = (arr: any, items: any) => {
 export const doesArrayContainItems = (items: any, arr: any) => {
   const filtered = arr.filter((arrItem: string) =>
