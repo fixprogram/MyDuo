@@ -12,6 +12,7 @@ export function ErrorBoundary() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
+  const today = new Date();
   const language = await getActiveLanguage(request);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
@@ -27,6 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
     },
     data: {
       exp: exp + expData,
+      updatedAt: today.getDate().toString(),
     },
   });
 

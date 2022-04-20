@@ -17,6 +17,7 @@ export const links = () => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
+  const today = new Date();
   const activeProject = await getActiveLanguage(request);
   const form = await request.formData();
   const title = form.get("title");
@@ -60,7 +61,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   });
 
-  const data: any = { title, steps, exp: 0, projectId: activeProject?.id };
+  const data: any = {
+    title,
+    steps,
+    exp: 0,
+    projectId: activeProject?.id,
+    updatedAt: today.getDate().toString(),
+  };
   const lesson = await prisma.lesson.create({ data });
   return redirect(`/lesson/${lesson.id}`);
 };

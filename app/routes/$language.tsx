@@ -8,6 +8,8 @@ import {
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
+import { getLastActiveLesson } from "~/models/lesson.server";
+import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 
 export async function action({ request }: { request: Request }) {
@@ -25,26 +27,44 @@ export async function action({ request }: { request: Request }) {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const today = new Date();
   const user = await getUser(request);
-  const projects = await getLanguages(request);
+  const languages = await getLanguages(request);
 
   if (!user) {
     return redirect("/login");
   }
 
-  if (!projects) {
-    throw new Error("Projects are not found");
+  const lastActive = await getLastActiveLesson(
+    languages?.find((item: any) => item.active)
+  );
+  if (!lastActive) {
+    await updateUserStreak(user.id, false, 0);
   }
 
-  return { user, projects };
+  if (Number(lastActive?.updatedAt) === today.getDate() - 1) {
+    await updateUserStreak(user.id, false, user.streak);
+    return { user, languages };
+  }
+
+  if (!user?.wasToday && Number(lastActive?.updatedAt) === today.getDate()) {
+    await updateUserStreak(user.id, true, user.streak + 1);
+    return { user, languages };
+  }
+
+  if (!languages) {
+    throw new Error("languages are not found");
+  }
+
+  return { user, languages };
 };
 
 export default function ProjectPage() {
-  const { user, projects } = useLoaderData();
+  const { user, languages } = useLoaderData();
   const [isOverlay, setIsOverlay] = useState(false);
   return (
     <React.Fragment>
-      <Menu user={user} languages={projects} onOverlay={setIsOverlay} />
+      <Menu user={user} languages={languages} onOverlay={setIsOverlay} />
       <Main>
         <Outlet />
       </Main>

@@ -68,22 +68,22 @@ const Menu = ({
         </ListItem>
         <ListItem>
           <img
-            src={user.wasToday ? streakActive : streak}
+            src={user?.wasToday ? streakActive : streak}
             alt="streak"
             style={{ width: 25, height: 30, marginRight: 6 }}
           />
           <b
             style={{
               fontFamily: "Roboto",
-              color: user.wasToday ? "#ff9600" : "#e5e5e5",
+              color: user?.wasToday ? "#ff9600" : "#e5e5e5",
             }}
           >
-            {user.streak}
+            {user?.streak}
           </b>
         </ListItem>
         <ListItem>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <span style={{ marginRight: 10 }}>{user.username}</span>
+            <span style={{ marginRight: 10 }}>{user?.username}</span>
             <form action="/logout" method="post">
               <Logout type="submit">Logout</Logout>
             </form>

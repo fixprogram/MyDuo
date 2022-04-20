@@ -29,9 +29,10 @@ model Language {
 }
 
 model Lesson {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
   title     String
-  createdAt DateTime     @default(now())
+  createdAt DateTime      @default(now())
+  updatedAt String      
   steps     LessonStep[]
   exp       Int
   Language  Language?     @relation(fields: [projectId], references: [id])

@@ -8,3 +8,23 @@ export async function getLessons(languageId: string) {
     orderBy: { createdAt: "desc" },
   });
 }
+
+export async function getLastActiveLesson(languageId: string) {
+  const today = new Date();
+  const todaysActivity = await prisma.lesson.findFirst({
+    where: { updatedAt: today.getDate().toString() },
+  });
+
+  if (todaysActivity) {
+    return todaysActivity;
+  }
+
+  const yesterdaysActivity = await prisma.lesson.findFirst({
+    where: { updatedAt: (today.getDate() - 1).toString() },
+  });
+  if (yesterdaysActivity) {
+    return yesterdaysActivity;
+  }
+
+  return null;
+}
