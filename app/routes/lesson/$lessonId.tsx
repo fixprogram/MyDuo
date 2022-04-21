@@ -32,7 +32,8 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
 
-  return redirect(`/${language.title}/lessons`);
+  // return redirect(`/${language.title}/lessons`);
+  return redirect(`/`);
 };
 
 export const loader: LoaderFunction = async ({ params }) => {

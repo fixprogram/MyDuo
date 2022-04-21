@@ -28,7 +28,7 @@ export async function action({ request }: { request: Request }) {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const today = new Date();
-  const user = await getUser(request);
+  let user = await getUser(request);
   const languages = await getLanguages(request);
 
   if (!user) {
@@ -39,16 +39,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     languages?.find((item: any) => item.active)
   );
   if (!lastActive) {
-    await updateUserStreak(user.id, false, 0);
+    user = await updateUserStreak(user.id, false, 0);
   }
 
   if (Number(lastActive?.updatedAt) === today.getDate() - 1) {
-    await updateUserStreak(user.id, false, user.streak);
+    user = await updateUserStreak(user.id, false, user.streak);
+    console.log(user);
     return { user, languages };
   }
 
   if (!user?.wasToday && Number(lastActive?.updatedAt) === today.getDate()) {
-    await updateUserStreak(user.id, true, user.streak + 1);
+    user = await updateUserStreak(user.id, true, user.streak + 1);
     return { user, languages };
   }
 
