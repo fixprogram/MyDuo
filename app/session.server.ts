@@ -151,7 +151,6 @@ export async function setPracticeDay(
   //   }
 
   //   const newDays = activePractice?.days;
-  //   console.log("newDays: ", newDays);
   //   const newDay = newDays?.find((day) => day.timestamp == timestamp);
   //   if (newDay) {
   //     newDays.splice(newDays.indexOf(newDay));

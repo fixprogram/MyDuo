@@ -15,10 +15,10 @@ import { getUser } from "~/session.server";
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
   const id = form.get("id") as string;
-  const newProject: any = form.get("newProject");
+  const newLanguage: any = form.get("newLanguage");
   let project;
-  if (newProject?.length > 0) {
-    project = await createNewLanguage(request, newProject);
+  if (newLanguage?.length > 0) {
+    project = await createNewLanguage(request, newLanguage);
   } else {
     project = await setActiveLanguage(id);
   }
@@ -30,21 +30,23 @@ export const loader: LoaderFunction = async ({ request }) => {
   const today = new Date();
   let user = await getUser(request);
   const languages = await getLanguages(request);
+  const activeLanguage = languages?.find((item: any) => item.active);
 
   if (!user) {
     return redirect("/login");
   }
 
-  const lastActive = await getLastActiveLesson(
-    languages?.find((item: any) => item.active)
-  );
+  if (!activeLanguage) {
+    throw new Error("Active language wasnt found");
+  }
+
+  const lastActive = await getLastActiveLesson(activeLanguage.id);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
   }
 
   if (Number(lastActive?.updatedAt) === today.getDate() - 1) {
     user = await updateUserStreak(user.id, false, user.streak);
-    console.log(user);
     return { user, languages };
   }
 

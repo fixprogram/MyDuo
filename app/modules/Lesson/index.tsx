@@ -18,10 +18,9 @@ import Results from "./components/Results";
 import { LessonStep } from "@prisma/client";
 
 export default function Lesson({
-  data = { steps: [], id: "" },
+  data = { steps: [] },
 }: {
-  // data: { steps: LessonStep[]; id: string };
-  data: any;
+  data: { steps: LessonStep[] };
 }) {
   const ref = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLFormElement>(null);
@@ -51,7 +50,7 @@ export default function Lesson({
   let currentStep = stepNumber;
 
   useEffect(() => {
-    setCase(data.steps, data.id); // Ones the data is loaded, we set the it in reducer
+    setCase(data.steps); // Ones the data is loaded, we set the it in reducer
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -118,24 +117,24 @@ export default function Lesson({
         if (disabled) {
           return;
         }
-        if (e.key === "Enter") {
-          // return;
-          if (value[0] !== "" && !stateRight && !stateWrong) {
-            checkAnswer(value);
-          }
-          // Go futher if the answer was checked already or it's the results page
-          if (stateRight || stateWrong || currentStep === maxSteps + 1) {
-            e.preventDefault(); // prevent next line in textarea
-            onContinue();
-            setValue([""]);
-          }
+        if (e.key !== "Enter") {
+          return;
+        }
+        if (value[0] !== "" && !stateRight && !stateWrong) {
+          checkAnswer(value);
+        }
+        // Go futher if the answer was checked already or it's the results page
+        if (stateRight || stateWrong || currentStep === maxSteps + 1) {
+          e.preventDefault(); // prevent next line in textarea
+          onContinue();
+          setValue([""]);
         }
       }}
       tabIndex={0}
       ref={sectionRef}
     >
       {currentStep === maxSteps + 1 ? (
-        <Results refName={ref} id={data.id} />
+        <Results refName={ref} />
       ) : (
         <Fragment>
           <Progress progress={progress} />

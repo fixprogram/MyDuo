@@ -25,7 +25,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const steps = form.getAll("step").map((item, index) => {
     const type = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
-    answer = answer.trim().toLowerCase().split(" ");
+    // answer = answer.trim().toLowerCase().split(" ");
+    answer = answer.trim().split(" ");
     const returnData = { type, number: index };
     switch (type) {
       case "Question": {

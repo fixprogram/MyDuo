@@ -67,7 +67,6 @@ export default function InsertWords({
                       }}
                       value={values[index]}
                       onChange={(e) => {
-                        console.log(e.target.value);
                         setValues((prevArray) => {
                           prevArray[index] = e.target.value;
                           return [...prevArray];

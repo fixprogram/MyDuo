@@ -28,3 +28,8 @@ export async function getLastActiveLesson(languageId: string) {
 
   return null;
 }
+
+export async function deleteLessonById(id: string) {
+  console.log("id");
+  return await prisma.lesson.delete({ where: { id } });
+}

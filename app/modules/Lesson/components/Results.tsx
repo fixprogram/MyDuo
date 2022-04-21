@@ -5,7 +5,7 @@ import {
   ResultsTitle,
 } from "./lib";
 
-export default function Results({ refName, id }: { refName: any; id: string }) {
+export default function Results({ refName }: { refName: any }) {
   return (
     <ResultsContainer>
       <ResultsLeftBlock>
@@ -27,7 +27,6 @@ export default function Results({ refName, id }: { refName: any; id: string }) {
         }}
       >
         <input type="text" name="exp" value="16" readOnly />
-        <input type="text" name="id" value={id} readOnly />
       </form>
     </ResultsContainer>
   );

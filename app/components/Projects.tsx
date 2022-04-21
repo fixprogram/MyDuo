@@ -1,93 +1,12 @@
-// import { Fragment, useState } from "react";
-// import { Form, Link } from "@remix-run/react";
-// import {
-//   ActiveProjectButton,
-//   ActiveProjectContainer,
-//   ProjectsContainer,
-//   ProjectsItem,
-//   VisuallyHiddenInput,
-// } from "./lib";
-
-// export default function Projects({
-//   onOverlay,
-//   languages,
-// }: {
-//   onOverlay: Function;
-//   languages: any;
-// }) {
-//   const [showWindow, setShowWindow] = useState(false);
-
-//   return (
-//     <Fragment>
-//       <ActiveProjectButton
-//         type="button"
-//         onMouseEnter={() => {
-//           onOverlay(true);
-//           setShowWindow(true);
-//         }}
-//         onMouseLeave={() => {
-//           onOverlay(false);
-//           setShowWindow(false);
-//         }}
-//       >
-//         {languages?.find((item: any) => item.active).title}
-//       </ActiveProjectButton>
-
-//       <ActiveProjectContainer
-//         onMouseEnter={() => {
-//           onOverlay(true);
-//           setShowWindow(true);
-//         }}
-//         onMouseLeave={() => {
-//           onOverlay(false);
-//           setShowWindow(false);
-//         }}
-//       >
-//         {showWindow ? (
-//           <ProjectsContainer>
-//             <ul style={{ display: "flex", flexDirection: "column" }}>
-//               {languages?.map((item: any, idx: number) => (
-//                 <li
-//                   key={idx}
-//                   style={{
-//                     backgroundColor: item.active ? "#afafaf" : "inherit",
-//                     order: item.active ? 0 : 1,
-//                     borderRadius: item.active ? "10px 10px 0 0" : 0,
-//                   }}
-//                 >
-//                   <Form method="post">
-//                     <VisuallyHiddenInput
-//                       type="text"
-//                       name="id"
-//                       value={item.id}
-//                       readOnly
-//                     />
-//                     <ProjectsItem type="submit">{item.title}</ProjectsItem>
-//                   </Form>
-//                 </li>
-//               ))}
-//             </ul>
-//             <ProjectsItem
-//               style={{ borderRadius: "0 0 12px 12px", borderBottom: 0 }}
-//             >
-//               <Link to="/new-language">Add new language</Link>
-//             </ProjectsItem>
-//           </ProjectsContainer>
-//         ) : null}
-//       </ActiveProjectContainer>
-//     </Fragment>
-//   );
-// }
-
 import { Fragment, useState } from "react";
-import { Form, Link } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import {
-  ActiveProjectButton,
-  ActiveProjectContainer,
-  ProjectsContainer,
-  ProjectsItem,
+  ActiveLanguageButton,
+  ActiveLanguageContainer,
   VisuallyHiddenInput,
-  ProjectsInput,
+  LanguagesItem,
+  LanguagesInput,
+  LanguagesContainer,
 } from "./lib";
 
 export default function Projects({
@@ -98,11 +17,11 @@ export default function Projects({
   languages: any;
 }) {
   const [showWindow, setShowWindow] = useState(false);
-  const [isNewProject, setIsNewProject] = useState(false);
+  const [isNewLanguage, setIsNewLanguage] = useState(false);
 
   return (
     <Fragment>
-      <ActiveProjectButton
+      <ActiveLanguageButton
         type="button"
         onMouseEnter={() => {
           onOverlay(true);
@@ -114,9 +33,9 @@ export default function Projects({
         }}
       >
         {languages?.find((item: any) => item.active).title}
-      </ActiveProjectButton>
+      </ActiveLanguageButton>
 
-      <ActiveProjectContainer
+      <ActiveLanguageContainer
         onMouseEnter={() => {
           onOverlay(true);
           setShowWindow(true);
@@ -126,69 +45,70 @@ export default function Projects({
           setShowWindow(false);
         }}
       >
-        <Form method="post">
-          {showWindow ? (
-            <ProjectsContainer>
-              <ul style={{ display: "flex", flexDirection: "column" }}>
-                {languages?.map((item: any, idx: number) => (
-                  <li
-                    key={idx}
+        {showWindow ? (
+          <LanguagesContainer>
+            <ul style={{ display: "flex", flexDirection: "column" }}>
+              {languages?.map((item: any, idx: number) => (
+                <li
+                  key={idx}
+                  style={{
+                    backgroundColor: item.active
+                      ? "rgb(221, 244, 255)"
+                      : "inherit",
+                    order: item.active ? 0 : 1,
+                    borderRadius: item.active ? "10px 10px 0 0" : 0,
+                  }}
+                >
+                  <Form method="post">
+                    <VisuallyHiddenInput
+                      type="text"
+                      name="id"
+                      value={item.id}
+                      readOnly
+                    />
+                    <LanguagesItem type="submit">{item.title}</LanguagesItem>
+                  </Form>
+                </li>
+              ))}
+            </ul>
+            <fieldset style={{ position: "relative" }}>
+              {isNewLanguage ? (
+                <Form method="post">
+                  <LanguagesInput
+                    type="text"
+                    placeholder="Type it's title"
+                    name="newLanguage"
+                    onChange={() => {
+                      onOverlay(true);
+                      setShowWindow(true);
+                    }}
+                    required
+                  />
+                  <button
+                    type="submit"
                     style={{
-                      backgroundColor: item.active ? "#afafaf" : "inherit",
-                      order: item.active ? 0 : 1,
-                      borderRadius: item.active ? "10px 10px 0 0" : 0,
+                      position: "absolute",
+                      fontSize: 30,
+                      top: 7,
+                      right: 15,
+                      color: "#afafaf",
                     }}
                   >
-                    <Form method="post">
-                      <VisuallyHiddenInput
-                        type="text"
-                        name="id"
-                        value={item.id}
-                        readOnly
-                      />
-                      <ProjectsItem type="submit">{item.title}</ProjectsItem>
-                    </Form>
-                  </li>
-                ))}
-              </ul>
-              <fieldset style={{ position: "relative" }}>
-                {isNewProject ? (
-                  <Fragment>
-                    <ProjectsInput
-                      type="text"
-                      placeholder="Type it's title"
-                      name="newProject"
-                      onChange={() => {
-                        onOverlay(true);
-                        setShowWindow(true);
-                      }}
-                    />
-                    <button
-                      type="submit"
-                      style={{
-                        position: "absolute",
-                        fontSize: 30,
-                        top: 7,
-                        right: 15,
-                        color: "#afafaf",
-                      }}
-                    >
-                      +
-                    </button>
-                  </Fragment>
-                ) : (
-                  <ProjectsItem
-                    type="button"
-                    onClick={() => setIsNewProject(true)}
-                  >
-                    Add new project
-                  </ProjectsItem>
-                )}
-              </fieldset>
-            </ProjectsContainer>
-          ) : null}
-        </Form>
-      </ActiveProjectContainer>
+                    +
+                  </button>
+                </Form>
+              ) : (
+                <LanguagesItem
+                  type="button"
+                  onClick={() => setIsNewLanguage(true)}
+                >
+                  Add new language
+                </LanguagesItem>
+              )}
+            </fieldset>
+          </LanguagesContainer>
+        ) : null}
+      </ActiveLanguageContainer>
     </Fragment>
   );
 }

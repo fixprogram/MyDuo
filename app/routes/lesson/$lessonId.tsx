@@ -11,29 +11,32 @@ export function ErrorBoundary() {
   );
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
   const language = await getActiveLanguage(request);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
-  const id = form.get("id");
+  const id = params.lessonId;
 
-  const { exp } = await prisma.lesson.findUnique({
+  const lesson = await prisma.lesson.findUnique({
     where: { id },
   });
+
+  if (!lesson) {
+    throw new Error(`Lesson with this id: ${id} is underfined`);
+  }
 
   await prisma.lesson.update({
     where: {
       id,
     },
     data: {
-      exp: exp + expData,
+      exp: lesson.exp + expData,
       updatedAt: today.getDate().toString(),
     },
   });
 
-  // return redirect(`/${language.title}/lessons`);
-  return redirect(`/`);
+  return redirect(`/${language?.title}/lessons`);
 };
 
 export const loader: LoaderFunction = async ({ params }) => {

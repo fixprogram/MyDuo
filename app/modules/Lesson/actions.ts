@@ -9,7 +9,7 @@ export type Action =
   | { type: "CHANGE_DISABLED"; payload: { isDisabled: boolean } }
   | {
       type: "SET_CASE";
-      payload: { steps: LessonStep[] | any; id: string };
+      payload: { steps: LessonStep[] | any };
     };
 
 const actionCreator = (dispatch: Function) => ({
@@ -21,8 +21,8 @@ const actionCreator = (dispatch: Function) => ({
   showResultsPractice: () => dispatch({ type: "RESULTS" }),
   changeDisabled: (isDisabled: boolean) =>
     dispatch({ type: "CHANGE_DISABLED", payload: { isDisabled } }),
-  setCase: (steps: LessonStep[], id: string) =>
-    dispatch({ type: "SET_CASE", payload: { steps, id } }),
+  setCase: (steps: LessonStep[]) =>
+    dispatch({ type: "SET_CASE", payload: { steps } }),
 });
 
 export default actionCreator;

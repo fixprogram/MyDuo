@@ -1,9 +1,22 @@
-import { useLoaderData, Link } from "remix";
+import { useLoaderData, Form, ActionFunction } from "remix";
 import type { LoaderFunction } from "remix";
-import { LessonProgress, LessonTitle, PracticeBlock } from "~/components/lib";
+import {
+  LessonProgress,
+  LessonProgressInner,
+  LessonTitle,
+  LessonBlock,
+  LessonBlockLink,
+  LessonBlockInner,
+  LessonBlockMenuTriangleContent,
+  LessonBlockMenuTriangle,
+  LessonBlockMenu,
+  LessonBlockButton,
+} from "~/components/lib";
 import styles from "~/styles/index.css";
 import { getActiveLanguage } from "~/models/language.server";
-import { getLessons } from "~/models/lesson.server";
+import { deleteLessonById, getLessons } from "~/models/lesson.server";
+import { useState } from "react";
+import Bin from "~/styles/bin.svg";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -11,6 +24,17 @@ export function ErrorBoundary() {
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const id = data.get("lessonId");
+
+  if (!id) {
+    throw new Error("Lesson ID wasnt found");
+  }
+
+  return await deleteLessonById(id);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -21,6 +45,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Repeats() {
   const data = useLoaderData();
+  const [openedLesson, setOpenedLesson] = useState(-1);
   return (
     <section style={{ width: "43%", marginLeft: "10%" }}>
       {data?.map(
@@ -28,11 +53,10 @@ export default function Repeats() {
           { title, id, exp }: { title: string; id: string; exp: string },
           i: number
         ) => (
-          <PracticeBlock key={i}>
-            <Link
+          <LessonBlock key={i}>
+            <button
               key={id}
               aria-labelledby={title}
-              to={`/lesson/${id}`}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -40,11 +64,41 @@ export default function Repeats() {
                 width: "33.33%",
                 textDecoration: "none",
               }}
+              onClick={() => {
+                if (openedLesson !== i) {
+                  return setOpenedLesson(i);
+                }
+                return setOpenedLesson(-1);
+              }}
             >
-              <LessonProgress exp={exp}>{exp}%</LessonProgress>
+              <LessonProgress exp={exp}>
+                <LessonProgressInner>{`${exp}%`}</LessonProgressInner>
+              </LessonProgress>
               <LessonTitle>{title}</LessonTitle>
-            </Link>
-          </PracticeBlock>
+            </button>
+            <LessonBlockMenu isOpened={openedLesson === i}>
+              <LessonBlockMenuTriangle>
+                <LessonBlockMenuTriangleContent />
+              </LessonBlockMenuTriangle>
+              <LessonBlockInner>
+                <div style={{ display: "flex" }}>
+                  <LessonBlockLink to={`/lesson/${id}`}>Edit</LessonBlockLink>
+                  <Form
+                    method="post"
+                    //  onSubmit={() => setOpenedLesson(-1)}
+                  >
+                    <input type="hidden" name="lessonId" value={id} />
+                    <LessonBlockButton type="submit">
+                      <img src={Bin} alt="delete" width={20} height={20} />
+                    </LessonBlockButton>
+                  </Form>
+                </div>
+                <LessonBlockLink to={`/lesson/${id}`}>
+                  Start +16 XP
+                </LessonBlockLink>
+              </LessonBlockInner>
+            </LessonBlockMenu>
+          </LessonBlock>
         )
       )}
     </section>
