@@ -28,7 +28,7 @@ export const links = () => {
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
-  const id = data.get("lessonId");
+  const id: any = data.get("lessonId");
 
   if (!id) {
     throw new Error("Lesson ID wasnt found");
@@ -39,12 +39,17 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
-  const data = await getLessons(activeLanguage?.id);
-  return data;
+
+  if (!activeLanguage) {
+    throw new Error(`We could not find the active language`);
+  }
+
+  const data = await getLessons(activeLanguage.id);
+  return { data, languageIitle: activeLanguage.title };
 };
 
 export default function Repeats() {
-  const data = useLoaderData();
+  const { data, languageIitle } = useLoaderData();
   const [openedLesson, setOpenedLesson] = useState(-1);
   return (
     <section style={{ width: "43%", marginLeft: "10%" }}>
@@ -82,11 +87,10 @@ export default function Repeats() {
               </LessonBlockMenuTriangle>
               <LessonBlockInner>
                 <div style={{ display: "flex" }}>
-                  <LessonBlockLink to={`/lesson/${id}`}>Edit</LessonBlockLink>
-                  <Form
-                    method="post"
-                    //  onSubmit={() => setOpenedLesson(-1)}
-                  >
+                  <LessonBlockLink to={`/${languageIitle}/constructor/${id}`}>
+                    Edit
+                  </LessonBlockLink>
+                  <Form method="post">
                     <input type="hidden" name="lessonId" value={id} />
                     <LessonBlockButton type="submit">
                       <img src={Bin} alt="delete" width={20} height={20} />

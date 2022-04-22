@@ -44,7 +44,7 @@ export default function MatchingPairs({
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-evenly",
-          margin: "0 10%",
+          // margin: "0 10%",
         }}
       >
         {variants.map((variant: Variant) => (

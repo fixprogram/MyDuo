@@ -28,14 +28,14 @@ const Body = ({
         <LessonBodyResults>Results Screen</LessonBodyResults>
       ) : (
         <Fragment>
-          {content.type === "Question" ? (
+          {content.stepType === "Question" ? (
             <QuestionAnswer
               question={content.question}
               answer={answer}
               setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
-          ) : content.type === "Insert" ? (
+          ) : content.stepType === "Insert" ? (
             <InsertWords
               answer={answer}
               text={content.text}
@@ -43,9 +43,9 @@ const Body = ({
               setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
-          ) : content.type === "Variants" ? (
+          ) : content.stepType === "Variants" ? (
             <Variants content={content} setAnswer={setAnswer} answer={answer} />
-          ) : content.type === "Pairs" ? (
+          ) : content.stepType === "Pairs" ? (
             <Pairs
               contentAnswer={content.answer}
               variants={content.variants}

@@ -24,8 +24,6 @@ model Language {
   userId     String
   title      String
   lessons    Lesson[]
-  // study      Study[]
-  // practice   Practice[]
 }
 
 model Lesson {
@@ -40,8 +38,9 @@ model Lesson {
 }
 
 type LessonStep {
+  id         String
   number     Int
-  type       String
+  stepType   String
   question   String?
   text       String?
   answer     String[]
@@ -53,42 +52,3 @@ type LessonStep {
 type Variants {
   variants String[]
 }
-
-// model Study {
-//   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-//   title     String
-//   content   ContentItem[]
-//   Project   Project?      @relation(fields: [projectId], references: [id])
-//   projectId String
-// }
-
-// type ContentItem {
-//   tag   String
-//   value String
-// }
-
-// model Practice {
-//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-//   goals     String[]
-//   projectId String
-//   days      Day[]
-//   Project   Project?      @relation(fields: [projectId], references: [id])
-// }
-
-// type Day {
-//   timestamp String
-//   tasks     Task[]
-//   habits    Habit[]
-// }
-
-// type Task {
-//   title       String
-//   isFulfilled  Boolean
-//   priority    Int?
-// }
-
-// type Habit {
-//   title       String
-//   isFulfilled  Boolean
-//   priority    Int?
-// }

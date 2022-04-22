@@ -24,7 +24,7 @@ const MENU = [
   },
   {
     title: "constructor",
-    link: "constructor",
+    link: "constructor/new",
     icon: shop,
     activeIcon: shopActive,
   },

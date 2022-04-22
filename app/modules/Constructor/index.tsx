@@ -1,13 +1,37 @@
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Form } from "remix";
 import { FormButton } from "~/components/lib";
 import BasicInfo from "./components/BasicInfo";
 import Steps from "./Steps";
+import { basicState, reducer } from "./Steps/reducer";
+import actionCreator from "./Steps/actions";
 
-export default function Constructor() {
+export default function Constructor({ data }: { data?: any }) {
   const [basicInfoReady, setBasicInfoReady] = useState(false);
   const [stepsReady, setStepsReady] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("Basic");
+  const [activeStep, setActiveStep] = useState(-1);
+  const [{ steps }, dispatch] = useReducer(reducer, basicState);
+
+  const {
+    addStep,
+    removeStep,
+    setAnswer,
+    setKeywords,
+    setStepType,
+    setStepReady,
+    removeStepType,
+    setData,
+    setQuestion,
+  } = actionCreator(dispatch);
+
+  useEffect(() => {
+    console.log("daata: ", data);
+    if (data) {
+      setData(data.steps);
+    }
+  }, [data]);
+
   return (
     <Form
       method="post"
@@ -27,13 +51,30 @@ export default function Constructor() {
         }}
       >
         <BasicInfo
+          data={data}
           setReady={(val: boolean) => setBasicInfoReady(val)}
           screen={currentScreen}
         />
 
         <Steps
+          steps={steps}
+          activeStep={activeStep}
           setReady={(val: boolean) => setStepsReady(val)}
           screen={currentScreen}
+          setStepType={(type: string, id: string) => setStepType(type, id)}
+          removeStepType={(id: string) => removeStepType(id)}
+          setAnswer={(answer: string, number: number) =>
+            setAnswer(answer, number)
+          }
+          setQuestion={(question: string, number: number) =>
+            setQuestion(question, number)
+          }
+          setKeywords={(keywords: string[], number: number) => {
+            setKeywords(keywords, number);
+          }}
+          setStepReady={(isReady: boolean, number: number) => {
+            setStepReady(isReady, number);
+          }}
         />
       </div>
       <div
@@ -71,7 +112,7 @@ export default function Constructor() {
             <button
               type="button"
               onClick={() => {
-                setCurrentScreen("Steps");
+                // setCurrentScreen("Steps");
               }}
               style={{
                 color: "#3c3c3c",
@@ -85,6 +126,45 @@ export default function Constructor() {
               }}
             >
               Steps
+            </button>
+            <ul>
+              {steps.map((stepsItem) => (
+                // <li key={stepsItem.id}>
+                <li key={stepsItem.number}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentScreen("Steps");
+                      setActiveStep(stepsItem.number);
+                    }}
+                  >
+                    Step {stepsItem.number + 1}
+                  </button>
+                  {stepsItem.number > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // setActiveStep(steps.length - 1);
+                        removeStep(stepsItem.id);
+                      }}
+                    >
+                      Remove step
+                    </button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => {
+                addStep();
+                if (currentScreen !== "Steps") {
+                  setCurrentScreen("Steps");
+                }
+                setActiveStep(steps.length);
+              }}
+            >
+              Add step
             </button>
           </li>
         </ul>

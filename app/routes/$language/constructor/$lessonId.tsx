@@ -1,33 +1,27 @@
-import styles from "~/styles/index.css";
-import { ActionFunction, Outlet, redirect } from "remix";
+import { redirect, useLoaderData, useParams } from "remix";
+import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
-import { getActiveLanguage } from "~/models/language.server";
+import Constructor from "~/modules/Constructor";
 import { nanoid } from "nanoid";
 
 export function ErrorBoundary() {
+  const { lessonId } = useParams();
   return (
-    <div className="error-container">
-      Something unexpected went wrong. Sorry about that.
-    </div>
+    <div className="error-container">{`There was an error loading lesson by the id ${lessonId}. Sorry.`}</div>
   );
 }
 
-export const links = () => {
-  return [{ rel: "stylesheet", href: styles }];
-};
-
 export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
-  const activeProject = await getActiveLanguage(request);
   const form = await request.formData();
   const title = form.get("title");
 
   const steps = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
-    const id = nanoid();
     // answer = answer.trim().toLowerCase().split(" ");
     answer = answer.trim().split(" ");
+    const id = nanoid();
     const returnData = { stepType, number: index, id };
     switch (stepType) {
       case "Question": {
@@ -66,13 +60,31 @@ export const action: ActionFunction = async ({ request, params }) => {
   const data: any = {
     title,
     steps,
-    exp: 0,
-    projectId: activeProject?.id,
     updatedAt: today.getDate().toString(),
   };
-  const lesson = await prisma.lesson.create({ data });
-  return redirect(`/lesson/${lesson.id}`);
+
+  const updatedLesson = await prisma.lesson.update({
+    where: { id: params.lessonId },
+    data: { ...data },
+  });
+  return redirect(`/lesson/${updatedLesson.id}`);
 };
-export default function NewLesson() {
-  return <Outlet />;
+
+export const loader: LoaderFunction = async ({ params }) => {
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: params.lessonId },
+  });
+
+  if (!lesson) {
+    throw new Error("lesson not found");
+  }
+
+  const data = { lesson };
+  return data;
+};
+
+export default function ConstructorEdit() {
+  const { lesson } = useLoaderData();
+
+  return <Constructor data={lesson} />;
 }

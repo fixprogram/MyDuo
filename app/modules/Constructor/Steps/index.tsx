@@ -1,7 +1,6 @@
-import { Fragment, useEffect, useReducer, useRef } from "react";
-import { Legend, VisuallyHiddenInput, FormButton } from "~/components/lib";
+import { Fragment, useEffect } from "react";
+import { Legend } from "~/components/lib";
 import type { Step } from "./types";
-import { reducer, basicState } from "./reducer";
 import QuestionAnswer from "./components/QuestionAnswer";
 import {
   ChooseStyle,
@@ -13,32 +12,41 @@ import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
 import Close from "~/styles/close.svg";
-import {
-  addStep,
-  removeStep,
-  setAnswer,
-  setKeywords,
-  setStepType,
-  setStepReady,
-  removeStepType,
-} from "./actions";
 
 export default function Steps({
+  activeStep,
+  steps,
   setReady,
   screen,
+  setStepType,
+  removeStepType,
+  setAnswer,
+  setKeywords,
+  setStepReady,
+  setQuestion,
 }: {
+  setStepType: Function;
+  removeStepType: Function;
+  setAnswer: Function;
+  setKeywords: Function;
+  setStepReady: Function;
+  activeStep: number;
+  steps: any;
   setReady: Function;
+  setQuestion: Function;
   screen: string;
 }) {
-  const [{ steps }, dispatch] = useReducer(reducer, basicState);
-  const myRef = useRef<HTMLDivElement>(null);
+  // const [steps, dispatch] = useReducer(reducer, basicSteps);
+  // const myRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (myRef.current !== null) {
-      myRef.current.scrollIntoView();
-    }
+    // if (myRef.current !== null) {
+    //   myRef.current.scrollIntoView();
+    // }
     setReady(!steps.find((step: Step) => step.ready === false));
   }, [steps, setReady]);
+
+  console.log("STEPS: ", steps);
 
   return (
     <section
@@ -49,33 +57,19 @@ export default function Steps({
         visibility: screen !== "Steps" ? "hidden" : "visible",
       }}
     >
-      <Legend>Steps</Legend>
       {steps.map(
         (
-          { number, keywords, answer, stepType, id, ready }: Step,
+          { question, number, keywords, answer, stepType, id, ready }: Step,
           idx: number
         ) => (
-          <Fragment key={id}>
-            <VisuallyHiddenInput type="text" name="step" value={idx} readOnly />
+          <section
+            className={`${activeStep !== idx && "visuallyHidden"}`}
+            key={id}
+            // key={number}
+          >
+            <input type="hidden" name="step" value={idx} />
+            <Legend>Step {idx + 1}</Legend>
             <StepHeader>
-              <h2 style={{ marginRight: "auto" }}>Step {idx + 1}</h2>
-
-              {number > 0 ? (
-                <FormButton
-                  type="button"
-                  onClick={() => dispatch(removeStep(id))}
-                >
-                  Remove step
-                </FormButton>
-              ) : null}
-              <FormButton
-                type="button"
-                onClick={() => dispatch(addStep())}
-                style={{ marginLeft: 10 }}
-              >
-                Add step
-              </FormButton>
-
               {stepType !== "" ? (
                 <button
                   type="button"
@@ -90,7 +84,7 @@ export default function Steps({
                     right: 30,
                     bottom: -60,
                   }}
-                  onClick={() => dispatch(removeStepType(id))}
+                  onClick={() => removeStepType(id)}
                 >
                   <img
                     src={Close}
@@ -110,25 +104,25 @@ export default function Steps({
                 <ChooseStyle>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setStepType("Question", id))}
+                    onClick={() => setStepType("Question", id)}
                   >
                     Question / Answer
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setStepType("Insert", id))}
+                    onClick={() => setStepType("Insert", id)}
                   >
                     Insert words
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setStepType("Variants", id))}
+                    onClick={() => setStepType("Variants", id)}
                   >
                     Choose right variant
                   </StyleButton>
                   <StyleButton
                     type="button"
-                    onClick={() => dispatch(setStepType("Pairs", id))}
+                    onClick={() => setStepType("Pairs", id)}
                   >
                     Matching pairs
                   </StyleButton>
@@ -137,58 +131,46 @@ export default function Steps({
 
               {stepType === "Question" ? (
                 <QuestionAnswer
+                  question={question}
                   number={number}
-                  answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch(setAnswer(answer, number))
+                  answer={
+                    typeof answer !== "string" ? answer.join(" ") : answer
                   }
-                  setKeywords={(keywords: any) =>
-                    dispatch(setKeywords(keywords, number))
+                  setQuestion={(question: string) =>
+                    setQuestion(question, number)
                   }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setKeywords={(keywords: any) => setKeywords(keywords, number)}
                   keywords={keywords}
-                  setReady={(isReady: boolean) =>
-                    dispatch(setStepReady(isReady, number))
-                  }
+                  setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : stepType === "Insert" ? (
                 <InsertWords
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch(setAnswer(answer, number))
-                  }
-                  setReady={(isReady: boolean) =>
-                    dispatch(setStepReady(isReady, number))
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : stepType === "Variants" ? (
                 <Variants
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch(setAnswer(answer, number))
-                  }
-                  setReady={(isReady: boolean) =>
-                    dispatch(setStepReady(isReady, number))
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   variantsCount={3}
                 />
               ) : stepType === "Pairs" ? (
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) =>
-                    dispatch(setAnswer(answer, number))
-                  }
+                  setAnswer={(answer: any) => setAnswer(answer, number)}
                   variantsCount={8}
-                  setReady={(isReady: boolean) =>
-                    dispatch(setStepReady(isReady, number))
-                  }
+                  setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : null}
             </StepContent>
-            <div ref={myRef}></div>
-          </Fragment>
+            {/* <div ref={myRef}></div> */}
+          </section>
         )
       )}
     </section>

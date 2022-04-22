@@ -1,21 +1,14 @@
 import { useReducer, useEffect, useRef, useState, Fragment } from "react";
-import {
-  LessonButton,
-  LessonFooter,
-  LessonFooterMessage,
-  LessonFooterText,
-  LessonFooterTitle,
-  LessonFooterIcon,
-  LessonFooterInner,
-} from "./components/lib";
 
 import Progress from "~/components/Progress";
 import Body from "./components/Body";
 import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
-import { useSubmit } from "@remix-run/react";
+import { useSubmit, useTransition } from "@remix-run/react";
 import Results from "./components/Results";
 import { LessonStep } from "@prisma/client";
+import Footer from "./components/Footer";
+import { LessonContainer } from "./components/lib";
 
 export default function Lesson({
   data = { steps: [] },
@@ -47,6 +40,8 @@ export default function Lesson({
     setCase,
   } = actionCreator(dispatch);
   const submit = useSubmit();
+  const transition = useTransition();
+  const submitting = transition.state !== "idle";
   let currentStep = stepNumber;
 
   useEffect(() => {
@@ -58,7 +53,7 @@ export default function Lesson({
     if (stateRight || stateWrong) {
       return sectionRef.current?.focus();
     }
-    if (content.type === "Question") {
+    if (content.stepType === "Question") {
       return;
     }
 
@@ -95,15 +90,9 @@ export default function Lesson({
   };
 
   return (
-    <section
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
+    <LessonContainer
       onKeyDown={(e) => {
-        if (content.type === "Variants") {
+        if (content.stepType === "Variants") {
           if (e.key === "1") {
             setAnswer([content.variants[0]]);
           }
@@ -121,10 +110,16 @@ export default function Lesson({
           return;
         }
         if (value[0] !== "" && !stateRight && !stateWrong) {
-          checkAnswer(value);
+          return checkAnswer(value);
         }
-        // Go futher if the answer was checked already or it's the results page
-        if (stateRight || stateWrong || currentStep === maxSteps + 1) {
+        if (currentStep === maxSteps + 1) {
+          if (submitting) {
+            return;
+          }
+          onContinue();
+        }
+        // Go futher if the answer was checked already
+        if (stateRight || stateWrong) {
           e.preventDefault(); // prevent next line in textarea
           onContinue();
           setValue([""]);
@@ -149,43 +144,15 @@ export default function Lesson({
           />
         </Fragment>
       )}
-      <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
-        <LessonFooterInner>
-          <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
-            {stateRight || stateWrong ? (
-              <LessonFooterIcon
-                stateRight={stateRight}
-                stateWrong={stateWrong}
-              />
-            ) : null}
-            <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
-              <LessonFooterTitle>
-                {stateWrong ? "Right answer: " : "Great!"}
-              </LessonFooterTitle>
-              {stateWrong ? (
-                <LessonFooterText> {content.answer.join(" ")}</LessonFooterText>
-              ) : null}
-            </div>
-          </LessonFooterMessage>
-          <LessonButton
-            active={!disabled}
-            stateRight={stateRight}
-            stateWrong={stateWrong}
-            onClick={() => {
-              onContinue();
-              if (stateRight || stateWrong) {
-                setValue([""]);
-              }
-            }}
-          >
-            {stateRight
-              ? "Next"
-              : stateWrong || currentStep === maxSteps + 1
-              ? "Continue"
-              : "Check"}
-          </LessonButton>
-        </LessonFooterInner>
-      </LessonFooter>
-    </section>
+      <Footer
+        stateRight={stateRight}
+        stateWrong={stateWrong}
+        isResult={currentStep === maxSteps + 1}
+        setValue={setValue}
+        answer={content.answer}
+        onContinue={onContinue}
+        disabled={disabled}
+      />
+    </LessonContainer>
   );
 }

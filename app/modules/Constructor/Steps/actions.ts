@@ -1,3 +1,5 @@
+import { Step } from "./types";
+
 export type Action =
   | { type: "SET_STEP_TYPE"; payload: { stepType: string; id: string } }
   | { type: "REMOVE_STEP_TYPE"; payload: { id: string } }
@@ -5,41 +7,28 @@ export type Action =
   | { type: "SET_KEYWORDS"; payload: { keywords: string[]; number: number } }
   | { type: "ADD_STEP" }
   | { type: "REMOVE_STEP"; payload: { number: number } }
-  | { type: "SET_STEP_READY"; payload: { isReady: boolean; number: number } };
+  | { type: "SET_STEP_READY"; payload: { isReady: boolean; number: number } }
+  | { type: "SET_DATA"; payload: { steps: Step[] } }
+  | { type: "SET_QUESTION"; payload: { question: string; number: number } };
 
-export const setStepType = (stepType: string, id: string): Action => ({
-  type: "SET_STEP_TYPE",
-  payload: { stepType, id },
+const actionCreator = (dispatch: Function) => ({
+  setStepType: (stepType: string, id: string): Action =>
+    dispatch({ type: "SET_STEP_TYPE", payload: { stepType, id } }),
+  removeStepType: (id: string): Action =>
+    dispatch({ type: "REMOVE_STEP_TYPE", payload: { id } }),
+  setAnswer: (answer: string, number: number): Action =>
+    dispatch({ type: "SET_ANSWER", payload: { answer, number } }),
+  setKeywords: (keywords: string[], number: number): Action =>
+    dispatch({ type: "SET_KEYWORDS", payload: { keywords, number } }),
+  addStep: (): Action => dispatch({ type: "ADD_STEP" }),
+  removeStep: (number: number): Action =>
+    dispatch({ type: "REMOVE_STEP", payload: { number } }),
+  setStepReady: (isReady: boolean, number: number): Action =>
+    dispatch({ type: "SET_STEP_READY", payload: { isReady, number } }),
+  setData: (steps: Step[]): Action =>
+    dispatch({ type: "SET_DATA", payload: { steps } }),
+  setQuestion: (question: string, number: number): Action =>
+    dispatch({ type: "SET_QUESTION", payload: { question, number } }),
 });
 
-export const removeStepType = (id: string): Action => ({
-  type: "REMOVE_STEP_TYPE",
-  payload: { id },
-});
-
-export const setAnswer = (answer: string, number: number): Action => ({
-  type: "SET_ANSWER",
-  payload: { answer, number },
-});
-
-export const setKeywords = (keywords: string[], number: number): Action => ({
-  type: "SET_KEYWORDS",
-  payload: {
-    keywords,
-    number,
-  },
-});
-
-export const addStep = (): Action => ({
-  type: "ADD_STEP",
-});
-
-export const removeStep = (number: number): Action => ({
-  type: "REMOVE_STEP",
-  payload: { number },
-});
-
-export const setStepReady = (isReady: boolean, number: number): Action => ({
-  type: "SET_STEP_READY",
-  payload: { isReady, number },
-});
+export default actionCreator;

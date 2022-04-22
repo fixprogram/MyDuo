@@ -4,13 +4,17 @@ import { Legend, LessonProgress, VisuallyHiddenInput } from "~/components/lib";
 import { LessonTitleInput } from "./lib";
 
 export default function BasicInfo({
+  data,
   setReady,
   screen,
 }: {
+  data?: any;
   setReady: Function;
   screen: string;
 }) {
-  const [lessonTitle, setLessonTitle] = useState("");
+  const [lessonTitle, setLessonTitle] = useState(() =>
+    data ? data.title : ""
+  );
   useEffect(() => {
     setReady(!!lessonTitle.length);
   }, [lessonTitle, setReady]);

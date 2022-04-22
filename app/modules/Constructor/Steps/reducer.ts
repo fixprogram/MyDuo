@@ -5,12 +5,15 @@ import { nanoid } from "nanoid";
 export const basicState: State = {
   steps: [
     {
+      question: "",
       number: 0,
       keywords: [],
       answer: "",
       stepType: "",
       ready: false,
       id: nanoid(),
+      text: "",
+      variants: [],
     },
   ],
 };
@@ -21,14 +24,14 @@ export const reducer = (state: State, action: Action) => {
   switch (type) {
     case "SET_STEP_TYPE": {
       const { stepType, id } = action.payload;
-      const newSteps = steps.map((step) =>
+      const newSteps = steps.map((step: Step) =>
         step.id === id ? { ...step, stepType: stepType } : { ...step }
       );
       return { ...state, steps: [...newSteps] };
     }
     case "REMOVE_STEP_TYPE": {
       const { id } = action.payload;
-      const newSteps = steps.map((step) => {
+      const newSteps = steps.map((step: Step) => {
         if (step.id === id) {
           return {
             ...step,
@@ -71,7 +74,7 @@ export const reducer = (state: State, action: Action) => {
     }
     case "REMOVE_STEP": {
       const newSteps = steps
-        .filter((item: Step) => action.payload.number !== item.id)
+        .filter((item: Step) => action.payload.number !== Number(item.id))
         .map((item: Step, i: number) => ({ ...item, number: i }));
       return {
         ...state,
@@ -86,6 +89,19 @@ export const reducer = (state: State, action: Action) => {
         ...state,
         steps: [...newSteps],
       };
+    }
+    case "SET_DATA": {
+      const { steps } = action.payload;
+      return {
+        ...state,
+        steps,
+      };
+    }
+    case "SET_QUESTION": {
+      const { question, number } = action.payload;
+      let newSteps = steps;
+      newSteps[number].question = question;
+      return { ...state, steps: [...newSteps] };
     }
     default:
       throw new Error(`We don't know this action type: ${type}`);

@@ -11,11 +11,15 @@ import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
 type QA = FieldsetType & {
+  question?: string;
+  setQuestion: Function;
   setKeywords: Function;
   keywords: string[];
 };
 
 export default function QuestionAnswer({
+  question,
+  setQuestion,
   number,
   answer,
   setAnswer,
@@ -23,23 +27,20 @@ export default function QuestionAnswer({
   setKeywords,
   keywords,
 }: QA) {
-  const questionRef = useRef<HTMLInputElement>(null);
-  const answerRef = useRef<HTMLTextAreaElement>(null);
+  // const questionRef = useRef<HTMLInputElement>(null);
+  // const answerRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (
-      questionRef?.current?.value.length &&
-      answerRef?.current?.value.length
-    ) {
+    if (question && answer) {
       setReady(true);
     } else {
       setReady(false);
     }
-  }, [questionRef.current?.value, answerRef?.current?.value, answer]);
+  }, [question, answer]);
 
   return (
     <Fragment>
-      <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />
+      <input type="hidden" name={`type${number}`} value={"Question"} />
       <div>
         <h2>Ask and Answer</h2>
       </div>
@@ -53,7 +54,9 @@ export default function QuestionAnswer({
             marginBottom: 10,
             width: "100%",
           }}
-          ref={questionRef}
+          value={question}
+          onChange={(evt) => setQuestion(evt.target.value)}
+          // ref={questionRef}
           required
         />
 
@@ -62,7 +65,7 @@ export default function QuestionAnswer({
           placeholder="Type answer"
           value={answer}
           onChange={(evt) => setAnswer(evt.target.value)}
-          ref={answerRef}
+          // ref={answerRef}
           required
         />
       </fieldset>

@@ -14,6 +14,13 @@ type LessonButtonProps = {
   stateRight: boolean;
 };
 
+const LessonContainer = styled("section")`
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
 const LessonFooter = styled("section")<LessonFooterProps>`
   padding: 0 40px;
   width: 100%;
@@ -253,6 +260,7 @@ const ResultsSeparateLine = styled("div")`
 `;
 
 export {
+  LessonContainer,
   LessonFooter,
   LessonFooterInner,
   LessonFooterMessage,

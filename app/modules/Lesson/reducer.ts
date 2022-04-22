@@ -58,7 +58,7 @@ const reducer = (state: LessonState, action: Action) => {
       };
       const { answer } = action.payload;
 
-      switch (content.type) {
+      switch (content.stepType) {
         case "Insert": {
           const { length } = doesArrayContainItems(content.answer, answer);
           if (length === content.answer.length) {

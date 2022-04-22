@@ -1,20 +1,16 @@
-import styles from "~/styles/index.css";
-import { ActionFunction, Outlet, redirect } from "remix";
+import { redirect, useLoaderData, useParams } from "remix";
+import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
+import Constructor from "~/modules/Constructor";
 import { nanoid } from "nanoid";
 
 export function ErrorBoundary() {
+  const { lessonId } = useParams();
   return (
-    <div className="error-container">
-      Something unexpected went wrong. Sorry about that.
-    </div>
+    <div className="error-container">{`There was an error loading lesson by the id ${lessonId}. Sorry.`}</div>
   );
 }
-
-export const links = () => {
-  return [{ rel: "stylesheet", href: styles }];
-};
 
 export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
@@ -23,10 +19,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const title = form.get("title");
 
   const steps = form.getAll("step").map((item, index) => {
+    console.log("STEPS step-item: ", item);
     const stepType = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
-    const id = nanoid();
     // answer = answer.trim().toLowerCase().split(" ");
+    const id = nanoid();
+
     answer = answer.trim().split(" ");
     const returnData = { stepType, number: index, id };
     switch (stepType) {
@@ -73,6 +71,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const lesson = await prisma.lesson.create({ data });
   return redirect(`/lesson/${lesson.id}`);
 };
-export default function NewLesson() {
-  return <Outlet />;
+
+export default function ConstructorNew() {
+  return <Constructor />;
 }
