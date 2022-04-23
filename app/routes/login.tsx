@@ -4,12 +4,11 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 
 import { createUserSession, getUserId } from "~/session.server";
 import { createUser, verifyLogin } from "~/models/user.server";
-import { validateUsername } from "~/utils";
 import {
   LoginContainer,
   LoginContinerInner,
@@ -28,37 +27,18 @@ interface ActionData {
     username?: string;
     password?: string;
   };
-  loginType: string;
+  fields?: {
+    loginType: string;
+  };
 }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const loginType = formData.get("loginType");
-  const username = formData.get("username");
-  const password = formData.get("password");
+  const username: any = formData.get("username");
+  const password: any = formData.get("password");
   const redirectTo = formData.get("redirectTo");
   const remember = formData.get("remember");
-
-  if (!validateUsername(username)) {
-    return json<ActionData>(
-      { errors: { username: "Username is invalid" } },
-      { status: 400 }
-    );
-  }
-
-  if (typeof password !== "string") {
-    return json<ActionData>(
-      { errors: { password: "Password is required" } },
-      { status: 400 }
-    );
-  }
-
-  if (password.length < 5) {
-    return json<ActionData>(
-      { errors: { password: "Password is too short" } },
-      { status: 400 }
-    );
-  }
 
   let user = await verifyLogin(username, password);
 
@@ -154,7 +134,6 @@ export default function LoginPage() {
             <LoginInput
               type="text"
               name="username"
-              aria-invalid={actionData?.errors?.email ? true : undefined}
               aria-describedby="username-error"
               placeholder="Username"
               ref={usernameRef}
@@ -170,7 +149,6 @@ export default function LoginPage() {
             <LoginInput
               name="password"
               id="password"
-              defaultValue={actionData?.fields?.password}
               type="password"
               aria-invalid={actionData?.errors?.password ? true : undefined}
               placeholder="Password"
@@ -183,16 +161,6 @@ export default function LoginPage() {
               </p>
             ) : null}
           </div>
-          {/* <div
-            id="form-error-message"
-            css={{ color: "#ea2b2b", margin: "20px 0 10px", textAlign: "left" }}
-          >
-            {actionData?.formError ? (
-              <p role="alert" css={{ fontFamily: "Roboto" }}>
-                {actionData.formError}
-              </p>
-            ) : null}
-          </div> */}
           <LoginButton type="submit">
             {isLogin ? "Login" : "Register"}
           </LoginButton>
