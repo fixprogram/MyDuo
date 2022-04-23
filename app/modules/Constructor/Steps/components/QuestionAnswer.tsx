@@ -1,6 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect } from "react";
 import {
   LabelText,
   Textarea,
@@ -44,12 +42,12 @@ export default function QuestionAnswer({
       <div>
         <h2>Ask and Answer</h2>
       </div>
-      <fieldset css={{ padding: "0 25%" }}>
+      <fieldset style={{ padding: "0 25%" }}>
         <input
           type="text"
           name={`question${number}`}
           placeholder="Set question"
-          css={{
+          style={{
             border: "none",
             marginBottom: 10,
             width: "100%",

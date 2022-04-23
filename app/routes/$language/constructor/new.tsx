@@ -1,5 +1,5 @@
-import { redirect, useLoaderData, useParams } from "remix";
-import type { LoaderFunction, ActionFunction } from "remix";
+import { redirect, useParams } from "remix";
+import type { ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
@@ -19,7 +19,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const title = form.get("title");
 
   const steps = form.getAll("step").map((item, index) => {
-    console.log("STEPS step-item: ", item);
     const stepType = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
     // answer = answer.trim().toLowerCase().split(" ");

@@ -25,7 +25,11 @@ export default function VariantsPractice({
             <VariantItemNumber isFocused={variant === answer[0]}>
               {idx + 1}
             </VariantItemNumber>
-            <VariantItem type="button" onClick={() => setAnswer([variant])}>
+            <VariantItem
+              type="button"
+              onClick={() => setAnswer([variant])}
+              isFocused={variant === answer[0]}
+            >
               {variant}
             </VariantItem>
           </li>

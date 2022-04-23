@@ -43,6 +43,11 @@ export default function QuestionAnswerPractice({
         placeholder="Enter answer"
         value={answer}
         onChange={(e) => setAnswer([e.target.value])}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
         disabled={formDisabled}
         ref={ref}
       />

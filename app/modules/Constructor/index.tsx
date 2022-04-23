@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import { Form } from "remix";
+import { Form, useTransition } from "remix";
 import { FormButton } from "~/components/lib";
 import BasicInfo from "./components/BasicInfo";
 import Steps from "./Steps";
@@ -24,6 +24,14 @@ export default function Constructor({ data }: { data?: any }) {
     setData,
     setQuestion,
   } = actionCreator(dispatch);
+
+  const transition = useTransition();
+  const submitText =
+    transition.state === "submitting"
+      ? "Saving"
+      : transition.state === "loading"
+      ? "Saved!"
+      : "Save";
 
   useEffect(() => {
     console.log("daata: ", data);
@@ -112,7 +120,8 @@ export default function Constructor({ data }: { data?: any }) {
             <button
               type="button"
               onClick={() => {
-                // setCurrentScreen("Steps");
+                setCurrentScreen("Steps");
+                setActiveStep(steps[steps.length - 1].number);
               }}
               style={{
                 color: "#3c3c3c",
@@ -129,8 +138,7 @@ export default function Constructor({ data }: { data?: any }) {
             </button>
             <ul>
               {steps.map((stepsItem) => (
-                // <li key={stepsItem.id}>
-                <li key={stepsItem.number}>
+                <li key={stepsItem.id}>
                   <button
                     type="button"
                     onClick={() => {
@@ -144,8 +152,8 @@ export default function Constructor({ data }: { data?: any }) {
                     <button
                       type="button"
                       onClick={() => {
-                        // setActiveStep(steps.length - 1);
                         removeStep(stepsItem.id);
+                        setActiveStep(steps.length - 2);
                       }}
                     >
                       Remove step
@@ -171,10 +179,14 @@ export default function Constructor({ data }: { data?: any }) {
         <FormButton
           type="submit"
           active={stepsReady === true && basicInfoReady === true}
-          disabled={stepsReady === false || basicInfoReady === false}
+          disabled={
+            stepsReady === false ||
+            basicInfoReady === false ||
+            submitText !== "Save"
+          }
           style={{ marginTop: "auto" }}
         >
-          Save repeat
+          {submitText}
         </FormButton>
       </div>
     </Form>

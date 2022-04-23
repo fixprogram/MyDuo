@@ -74,7 +74,7 @@ export const reducer = (state: State, action: Action) => {
     }
     case "REMOVE_STEP": {
       const newSteps = steps
-        .filter((item: Step) => action.payload.number !== Number(item.id))
+        .filter((item: Step) => action.payload.id !== item.id)
         .map((item: Step, i: number) => ({ ...item, number: i }));
       return {
         ...state,

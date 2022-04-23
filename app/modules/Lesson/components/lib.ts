@@ -13,6 +13,9 @@ type LessonButtonProps = {
   stateWrong: boolean;
   stateRight: boolean;
 };
+type VariantItemProps = {
+  isFocused: boolean;
+};
 
 const LessonContainer = styled("section")`
   position: relative;
@@ -160,10 +163,13 @@ const LessonBodyWelcome = styled("div")``;
 
 const LessonBodyResults = styled("div")``;
 
-const VariantItem = styled("button")`
-  background-color: inherit;
+const VariantItem = styled("button")<VariantItemProps>`
+  background-color: ${(props) =>
+    props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
   height: 60px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid;
+  border-color: ${(props) =>
+    props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
   border-radius: 12px;
   border-width: 2px 2px 4px;
   outline: 0;
@@ -173,7 +179,7 @@ const VariantItem = styled("button")`
   transform: translateZ(0);
   user-select: none;
   text-align: center;
-  color: #4b4b4b;
+  color: ${(props) => (props.isFocused ? "rgb(24, 153, 214)" : "#4b4b4b")};
   font-size: 19px;
   line-height: 1.4;
   padding: 12px 16px;

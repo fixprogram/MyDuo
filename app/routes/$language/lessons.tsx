@@ -1,4 +1,4 @@
-import { useLoaderData, Form, ActionFunction } from "remix";
+import { useLoaderData, Form, ActionFunction, useTransition } from "remix";
 import type { LoaderFunction } from "remix";
 import {
   LessonProgress,
@@ -15,7 +15,7 @@ import {
 import styles from "~/styles/index.css";
 import { getActiveLanguage } from "~/models/language.server";
 import { deleteLessonById, getLessons } from "~/models/lesson.server";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Bin from "~/styles/bin.svg";
 
 export function ErrorBoundary() {
@@ -51,6 +51,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Repeats() {
   const { data, languageIitle } = useLoaderData();
   const [openedLesson, setOpenedLesson] = useState(-1);
+  const transition = useTransition();
+  const isDisabled = transition.state !== "idle";
+
+  useEffect(() => {
+    if (transition.state === "loading") {
+      setOpenedLesson(-1);
+    }
+  }, [transition.state]);
+
   return (
     <section style={{ width: "43%", marginLeft: "10%" }}>
       {data?.map(
@@ -92,7 +101,7 @@ export default function Repeats() {
                   </LessonBlockLink>
                   <Form method="post">
                     <input type="hidden" name="lessonId" value={id} />
-                    <LessonBlockButton type="submit">
+                    <LessonBlockButton type="submit" disabled={isDisabled}>
                       <img src={Bin} alt="delete" width={20} height={20} />
                     </LessonBlockButton>
                   </Form>

@@ -6,7 +6,7 @@ export type Action =
   | { type: "SET_ANSWER"; payload: { answer: string; number: number } }
   | { type: "SET_KEYWORDS"; payload: { keywords: string[]; number: number } }
   | { type: "ADD_STEP" }
-  | { type: "REMOVE_STEP"; payload: { number: number } }
+  | { type: "REMOVE_STEP"; payload: { id: string } }
   | { type: "SET_STEP_READY"; payload: { isReady: boolean; number: number } }
   | { type: "SET_DATA"; payload: { steps: Step[] } }
   | { type: "SET_QUESTION"; payload: { question: string; number: number } };
@@ -21,8 +21,8 @@ const actionCreator = (dispatch: Function) => ({
   setKeywords: (keywords: string[], number: number): Action =>
     dispatch({ type: "SET_KEYWORDS", payload: { keywords, number } }),
   addStep: (): Action => dispatch({ type: "ADD_STEP" }),
-  removeStep: (number: number): Action =>
-    dispatch({ type: "REMOVE_STEP", payload: { number } }),
+  removeStep: (id: string): Action =>
+    dispatch({ type: "REMOVE_STEP", payload: { id } }),
   setStepReady: (isReady: boolean, number: number): Action =>
     dispatch({ type: "SET_STEP_READY", payload: { isReady, number } }),
   setData: (steps: Step[]): Action =>

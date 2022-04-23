@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { Legend } from "~/components/lib";
 import type { Step } from "./types";
 import QuestionAnswer from "./components/QuestionAnswer";
@@ -36,13 +36,7 @@ export default function Steps({
   setQuestion: Function;
   screen: string;
 }) {
-  // const [steps, dispatch] = useReducer(reducer, basicSteps);
-  // const myRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    // if (myRef.current !== null) {
-    //   myRef.current.scrollIntoView();
-    // }
     setReady(!steps.find((step: Step) => step.ready === false));
   }, [steps, setReady]);
 
@@ -65,7 +59,6 @@ export default function Steps({
           <section
             className={`${activeStep !== idx && "visuallyHidden"}`}
             key={id}
-            // key={number}
           >
             <input type="hidden" name="step" value={idx} />
             <Legend>Step {idx + 1}</Legend>
@@ -169,7 +162,6 @@ export default function Steps({
                 />
               ) : null}
             </StepContent>
-            {/* <div ref={myRef}></div> */}
           </section>
         )
       )}
