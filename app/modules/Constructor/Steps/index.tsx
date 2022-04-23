@@ -140,7 +140,9 @@ export default function Steps({
               ) : stepType === "Insert" ? (
                 <InsertWords
                   number={number}
-                  answer={answer}
+                  answer={
+                    typeof answer !== "string" ? answer.join(" ") : answer
+                  }
                   setAnswer={(answer: any) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />

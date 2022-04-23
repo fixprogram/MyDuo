@@ -25,9 +25,6 @@ export default function QuestionAnswer({
   setKeywords,
   keywords,
 }: QA) {
-  // const questionRef = useRef<HTMLInputElement>(null);
-  // const answerRef = useRef<HTMLTextAreaElement>(null);
-
   useEffect(() => {
     if (question && answer) {
       setReady(true);
@@ -54,7 +51,6 @@ export default function QuestionAnswer({
           }}
           value={question}
           onChange={(evt) => setQuestion(evt.target.value)}
-          // ref={questionRef}
           required
         />
 
@@ -63,7 +59,6 @@ export default function QuestionAnswer({
           placeholder="Type answer"
           value={answer}
           onChange={(evt) => setAnswer(evt.target.value)}
-          // ref={answerRef}
           required
         />
       </fieldset>

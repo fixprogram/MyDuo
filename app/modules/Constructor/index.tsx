@@ -34,7 +34,6 @@ export default function Constructor({ data }: { data?: any }) {
       : "Save";
 
   useEffect(() => {
-    console.log("daata: ", data);
     if (data) {
       setData(data.steps);
     }

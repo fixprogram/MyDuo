@@ -12,7 +12,6 @@ import {
   LessonBlockMenu,
   LessonBlockButton,
 } from "~/components/lib";
-import styles from "~/styles/index.css";
 import { getActiveLanguage } from "~/models/language.server";
 import { deleteLessonById, getLessons } from "~/models/lesson.server";
 import { useEffect, useState } from "react";
@@ -21,10 +20,6 @@ import Bin from "~/styles/bin.svg";
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
 }
-
-export const links = () => {
-  return [{ rel: "stylesheet", href: styles }];
-};
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();

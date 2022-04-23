@@ -19,7 +19,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const steps = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
     let answer: any = form.get(`answer${index}`);
-    // answer = answer.trim().toLowerCase().split(" ");
     answer = answer.trim().split(" ");
     const id = nanoid();
     const returnData = { stepType, number: index, id };

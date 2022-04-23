@@ -11,6 +11,11 @@ import {
 import { getLastActiveLesson } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
+import styles from "~/styles/index.css";
+
+export const links = () => {
+  return [{ rel: "stylesheet", href: styles }];
+};
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
