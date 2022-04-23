@@ -76,8 +76,9 @@ const reducer = (state: LessonState, action: Action) => {
 
           const { state, length } = doesArrayContainItems(
             content.answer,
-            answer
+            answer[0].split(" ")
           );
+          console.log("state, ", answer);
 
           if (!state) {
             return negativeState;
