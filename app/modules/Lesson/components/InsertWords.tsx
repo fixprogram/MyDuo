@@ -52,33 +52,33 @@ export default function InsertWords({
 
           if (contentAnswer.includes(newItem)) {
             return contentAnswer.map((it: string, index: number) => {
-              if (newItem === it) {
-                return (
-                  <Fragment key={idx}>
-                    <input
-                      type="text"
-                      id={`input${0}`}
-                      style={{
-                        width: `${newItem.length * 13}px`,
-                        margin: "0 7px -2px",
-                        border: "none",
-                        borderBottom: "2px solid #afafaf",
-                        fontSize: 19,
-                      }}
-                      value={values[index]}
-                      onChange={(e) => {
-                        setValues((prevArray) => {
-                          prevArray[index] = e.target.value;
-                          return [...prevArray];
-                        });
-                      }}
-                      disabled={formDisabled}
-                    />
-                    <span style={{ marginRight: 4 }}>{sign}</span>
-                  </Fragment>
-                );
+              if (newItem !== it) {
+                return null;
               }
-              return null;
+              return (
+                <Fragment key={idx}>
+                  <input
+                    type="text"
+                    id={`input${0}`}
+                    style={{
+                      width: `${newItem.length * 13}px`,
+                      margin: "0 7px -2px",
+                      border: "none",
+                      borderBottom: "2px solid #afafaf",
+                      fontSize: 19,
+                    }}
+                    value={values[index]}
+                    onChange={(e) => {
+                      setValues((prevArray) => {
+                        prevArray[index] = e.target.value;
+                        return [...prevArray];
+                      });
+                    }}
+                    disabled={formDisabled}
+                  />
+                  <span style={{ marginRight: 4 }}>{sign}</span>
+                </Fragment>
+              );
             });
           }
           return (

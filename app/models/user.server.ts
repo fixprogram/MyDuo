@@ -38,8 +38,8 @@ export async function createUser(username: User["username"], password: string) {
     data: {
       username,
       passwordHash,
-      streak: 1,
-      wasToday: true,
+      streak: 0,
+      wasToday: false,
     },
   });
 

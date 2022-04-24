@@ -46,6 +46,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const lastActive = await getLastActiveLesson(activeLanguage.id);
+  console.log(lastActive);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
   }

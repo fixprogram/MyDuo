@@ -45,7 +45,7 @@ export default function Projects({
           setShowWindow(false);
         }}
       >
-        {showWindow ? (
+        {showWindow && (
           <LanguagesContainer>
             <ul style={{ display: "flex", flexDirection: "column" }}>
               {languages?.map((item: any, idx: number) => (
@@ -107,7 +107,7 @@ export default function Projects({
               )}
             </fieldset>
           </LanguagesContainer>
-        ) : null}
+        )}
       </ActiveLanguageContainer>
     </Fragment>
   );

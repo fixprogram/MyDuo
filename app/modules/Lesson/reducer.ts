@@ -78,7 +78,6 @@ const reducer = (state: LessonState, action: Action) => {
             content.answer,
             answer[0].split(" ")
           );
-          console.log("state, ", answer);
 
           if (!state) {
             return negativeState;

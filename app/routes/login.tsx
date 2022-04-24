@@ -141,11 +141,11 @@ export default function LoginPage() {
               autoFocus={true}
               required
             />
-            {actionData?.errors?.username ? (
+            {actionData?.errors?.username && (
               <p role="alert" id="username-error">
                 {actionData.errors.username}
               </p>
-            ) : null}
+            )}
             <LoginInput
               name="password"
               id="password"
@@ -155,11 +155,11 @@ export default function LoginPage() {
               ref={passwordRef}
               required
             />
-            {actionData?.errors?.password ? (
+            {actionData?.errors?.password && (
               <p role="alert" id="password-error">
                 {actionData.errors.password}
               </p>
-            ) : null}
+            )}
           </div>
           <LoginButton type="submit">
             {isLogin ? "Login" : "Register"}

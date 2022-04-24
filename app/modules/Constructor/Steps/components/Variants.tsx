@@ -24,6 +24,7 @@ export default function Variants({
   const [question, setQuestion] = useState("");
 
   useEffect(() => {
+    console.log(answer);
     dispatch(variantsSetup(variantsCount));
   }, [variantsCount]);
 

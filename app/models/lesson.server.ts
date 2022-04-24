@@ -12,7 +12,7 @@ export async function getLessons(languageId: string) {
 export async function getLastActiveLesson(languageId: string) {
   const today = new Date();
   const todaysActivity = await prisma.lesson.findFirst({
-    where: { updatedAt: today.getDate().toString() },
+    where: { projectId: languageId, updatedAt: today.getDate().toString() },
   });
 
   if (todaysActivity) {
@@ -20,7 +20,10 @@ export async function getLastActiveLesson(languageId: string) {
   }
 
   const yesterdaysActivity = await prisma.lesson.findFirst({
-    where: { updatedAt: (today.getDate() - 1).toString() },
+    where: {
+      projectId: languageId,
+      updatedAt: (today.getDate() - 1).toString(),
+    },
   });
   if (yesterdaysActivity) {
     return yesterdaysActivity;

@@ -63,7 +63,7 @@ export default function Steps({
             <input type="hidden" name="step" value={idx} />
             <Legend>Step {idx + 1}</Legend>
             <StepHeader>
-              {stepType !== "" ? (
+              {stepType !== "" && (
                 <button
                   type="button"
                   style={{
@@ -89,11 +89,11 @@ export default function Steps({
                     }}
                   />
                 </button>
-              ) : null}
+              )}
             </StepHeader>
 
             <StepContent>
-              {stepType === "" ? (
+              {stepType === "" && (
                 <ChooseStyle>
                   <StyleButton
                     type="button"
@@ -120,7 +120,7 @@ export default function Steps({
                     Matching pairs
                   </StyleButton>
                 </ChooseStyle>
-              ) : null}
+              )}
 
               {stepType === "Question" ? (
                 <QuestionAnswer

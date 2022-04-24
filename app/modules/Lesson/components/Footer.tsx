@@ -43,16 +43,20 @@ export default function Footer({
     <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
       <LessonFooterInner>
         <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
-          {stateRight || stateWrong ? (
-            <LessonFooterIcon stateRight={stateRight} stateWrong={stateWrong} />
-          ) : null}
+          {stateRight ||
+            (stateWrong && (
+              <LessonFooterIcon
+                stateRight={stateRight}
+                stateWrong={stateWrong}
+              />
+            ))}
           <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
             <LessonFooterTitle>
               {stateWrong ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
-            {stateWrong ? (
+            {stateWrong && (
               <LessonFooterText> {answer.join(" ")}</LessonFooterText>
-            ) : null}
+            )}
           </div>
         </LessonFooterMessage>
         <LessonButton

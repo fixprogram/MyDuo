@@ -317,7 +317,7 @@ const VisuallyHiddenInput = styled("input")`
 const KeywordTemplate = styled("span")<KeywordProps>`
   margin-right: 10px;
   cursor: pointer;
-  border: ${(props) => (props.active ? "1px solid blue" : null)};
+  border: ${(props) => props.active && "1px solid blue"};
 `;
 
 const LessonProgress = styled("div")<LessonProgressProps>`
