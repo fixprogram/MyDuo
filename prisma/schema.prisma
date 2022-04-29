@@ -46,9 +46,12 @@ type LessonStep {
   answer     String[]
   keywords   String[]
   definition  String?
-  variants   String[]
+  variants   Variant[]
 }
 
-type Variants {
-  variants String[]
+type Variant {
+  type        String?
+  value       String
+  isFocused   Boolean
+  isConnected Boolean?
 }

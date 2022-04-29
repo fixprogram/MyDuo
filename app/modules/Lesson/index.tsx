@@ -94,13 +94,13 @@ export default function Lesson({
       onKeyDown={(e) => {
         if (content.stepType === "Variants") {
           if (e.key === "1") {
-            setAnswer([content.variants[0]]);
+            setAnswer([content.variants[0].value]);
           }
           if (e.key === "2") {
-            setAnswer([content.variants[1]]);
+            setAnswer([content.variants[1].value]);
           }
           if (e.key === "3") {
-            setAnswer([content.variants[2]]);
+            setAnswer([content.variants[2].value]);
           }
         }
         if (disabled) {

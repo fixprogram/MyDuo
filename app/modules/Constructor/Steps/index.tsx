@@ -53,7 +53,16 @@ export default function Steps({
     >
       {steps.map(
         (
-          { question, number, keywords, answer, stepType, id, ready }: Step,
+          {
+            question,
+            number,
+            keywords,
+            answer,
+            stepType,
+            id,
+            variants,
+            ready,
+          }: Step,
           idx: number
         ) => (
           <section
@@ -148,6 +157,8 @@ export default function Steps({
                 />
               ) : stepType === "Variants" ? (
                 <Variants
+                  initialQuestion={question}
+                  initialVariants={variants}
                   number={number}
                   answer={answer}
                   setAnswer={(answer: any) => setAnswer(answer, number)}

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useReducer, useState } from "react";
 import { Textarea } from "~/components/lib";
 import { FieldsetType } from "../types";
 import { VariantItemInput, VariantItemNumber } from "./lib";
-import { basicState, reducer, Variant } from "./MatchingPairs/reducer";
+import { reducer, Variant } from "./MatchingPairs/reducer";
 import {
   variantChoose,
   variantSetValue,
@@ -14,18 +14,23 @@ type VariantsProps = FieldsetType & {
 };
 
 export default function Variants({
+  initialQuestion = "",
+  initialVariants = [],
   number,
   answer,
   setAnswer,
   setReady,
   variantsCount,
 }: VariantsProps) {
-  const [{ variants }, dispatch] = useReducer(reducer, basicState);
-  const [question, setQuestion] = useState("");
+  const [{ variants }, dispatch] = useReducer(reducer, {
+    variants: initialVariants,
+  });
+  const [question, setQuestion] = useState(initialQuestion);
 
   useEffect(() => {
-    console.log(answer);
-    dispatch(variantsSetup(variantsCount));
+    if (variants.length === 0) {
+      dispatch(variantsSetup(variantsCount));
+    }
   }, [variantsCount]);
 
   useEffect(() => {
@@ -35,7 +40,11 @@ export default function Variants({
       return setReady(false);
     }
 
-    if (variants.find((variant: Variant) => variant.isFocused)) {
+    if (
+      variants.find(
+        (variant: Variant) => variant.isFocused || variant.value === answer[0]
+      )
+    ) {
       setReady(true);
     } else {
       return setReady(false);
@@ -75,7 +84,7 @@ export default function Variants({
                   dispatch(variantChoose(index));
                   setAnswer(variant.value);
                 }}
-                isFocused={variant.isFocused}
+                isFocused={variant.isFocused || variant.value === answer[0]}
               >
                 {variant.idx}
               </VariantItemNumber>

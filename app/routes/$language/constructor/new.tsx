@@ -46,7 +46,16 @@ export const action: ActionFunction = async ({ request, params }) => {
       case "Variants": {
         const question = form.get(`question${index}`);
         const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer, question, variants };
+        return {
+          ...returnData,
+          answer,
+          question,
+          variants: variants.map((variant, idx) => ({
+            value: variant,
+            idx: idx + 1,
+            isFocused: false,
+          })),
+        };
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`);

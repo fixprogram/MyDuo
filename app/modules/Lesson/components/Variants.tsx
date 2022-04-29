@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
 import { LessonTitle, VariantItem } from "./lib";
 
@@ -11,6 +11,7 @@ export default function VariantsPractice({
   content: any;
   setAnswer: Function;
 }) {
+  console.log(answer);
   return (
     <Fragment>
       <LessonTitle>Choose right variant</LessonTitle>
@@ -20,17 +21,17 @@ export default function VariantsPractice({
       <b>{content.question}</b>
 
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-        {content.variants.map((variant: string, idx: string) => (
+        {content.variants.map((variant: { value: string }, idx: string) => (
           <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
-            <VariantItemNumber isFocused={variant === answer[0]}>
+            <VariantItemNumber isFocused={variant.value === answer[0]}>
               {idx + 1}
             </VariantItemNumber>
             <VariantItem
               type="button"
-              onClick={() => setAnswer([variant])}
-              isFocused={variant === answer[0]}
+              onClick={() => setAnswer([variant.value])}
+              isFocused={variant.value === answer[0]}
             >
-              {variant}
+              {variant.value}
             </VariantItem>
           </li>
         ))}
