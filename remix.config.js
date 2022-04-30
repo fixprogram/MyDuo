@@ -12,6 +12,7 @@ module.exports = {
   appDirectory: "app",
   browserBuildDirectory: "public/build",
   publicPath: "/build/",
-  serverBuildDirectory: "build",
+  serverBuildPath: "build",
+  serverBuildTarget: "vercel",
   devServerPort: 8888,
 };
