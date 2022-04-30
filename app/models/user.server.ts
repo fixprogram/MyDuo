@@ -5,13 +5,6 @@ import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
 
-// export async function updateUserActivity(id: User["id"], wasToday: boolean) {
-//   return prisma.user.update({
-//     where: { id },
-//     data: { wasToday },
-//   });
-// }
-
 export async function updateUserStreak(
   id: User["id"],
   wasToday: boolean,
