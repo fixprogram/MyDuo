@@ -1,6 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import {
   LabelText,
   Textarea,
@@ -10,29 +8,49 @@ import {
 import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
+type QA = FieldsetType & {
+  question?: string;
+  setQuestion: Function;
+  setKeywords: Function;
+  keywords: string[];
+};
+
 export default function QuestionAnswer({
+  question,
+  setQuestion,
   number,
   answer,
   setAnswer,
+  setReady,
   setKeywords,
   keywords,
-}: FieldsetType) {
+}: QA) {
+  useEffect(() => {
+    if (question && answer) {
+      setReady(true);
+    } else {
+      setReady(false);
+    }
+  }, [question, answer]);
+
   return (
     <Fragment>
-      <VisuallyHiddenInput name={`type${number}`} value={"Question"} readOnly />
+      <input type="hidden" name={`type${number}`} value={"Question"} />
       <div>
         <h2>Ask and Answer</h2>
       </div>
-      <fieldset css={{ padding: "0 25%" }}>
+      <fieldset style={{ padding: "0 25%" }}>
         <input
           type="text"
           name={`question${number}`}
           placeholder="Set question"
-          css={{
+          style={{
             border: "none",
             marginBottom: 10,
             width: "100%",
           }}
+          value={question}
+          onChange={(evt) => setQuestion(evt.target.value)}
           required
         />
 

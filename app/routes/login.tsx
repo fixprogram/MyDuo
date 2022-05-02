@@ -1,138 +1,100 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import type { ActionFunction } from "remix";
-import { useActionData, json, useSearchParams } from "remix";
-import { createUserSession, login, register } from "~/utils/session.server";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { useActionData, useSearchParams } from "@remix-run/react";
+import * as React from "react";
 
-import { db } from "~/utils/db.server";
+import { createUserSession, getUserId } from "~/session.server";
+import { createUser, verifyLogin } from "~/models/user.server";
 import {
-  LoginButton,
   LoginContainer,
   LoginContinerInner,
-  LoginInput,
   LoginToggle,
+  LoginInput,
+  LoginButton,
 } from "~/components/lib";
-import { useEffect, useState } from "react";
-// import stylesUrl from "~/styles/login.css";
 
-// export const links: LinksFunction = () => {
-//   return [{ rel: "stylesheet", href: stylesUrl }];
-// };
-
-function validateUsername(username: unknown) {
-  if (typeof username !== "string" || username.length < 3) {
-    return `Usernames must be at least 3 characters long`;
-  }
-}
-
-function validatePassword(password: unknown) {
-  if (typeof password !== "string" || password.length < 6) {
-    return `Passwords must be at least 6 characters long`;
-  }
-}
-
-type ActionData = {
-  formError?: string;
-  fieldErrors?: {
-    username: string | undefined;
-    password: string | undefined;
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+  if (userId) return redirect("/");
+  return json({});
+};
+interface ActionData {
+  errors?: {
+    username?: string;
+    password?: string;
   };
   fields?: {
     loginType: string;
-    username: string;
-    password: string;
   };
-};
-
-const badRequest = (data: ActionData) => json(data, { status: 400 });
+}
 
 export const action: ActionFunction = async ({ request }) => {
-  const form = await request.formData();
-  const loginType = form.get("loginType");
-  const username = form.get("username");
-  const password = form.get("password");
-  const redirectTo = form.get("redirectTo") || "/";
-  if (
-    typeof loginType !== "string" ||
-    typeof username !== "string" ||
-    typeof password !== "string" ||
-    typeof redirectTo !== "string"
-  ) {
-    return badRequest({
-      formError: `Form not submitted correctly.`,
-    });
+  const formData = await request.formData();
+  const loginType = formData.get("loginType");
+  const username: any = formData.get("username");
+  const password: any = formData.get("password");
+  const redirectTo = formData.get("redirectTo");
+  const remember = formData.get("remember");
+
+  let user = await verifyLogin(username, password);
+
+  if (!user) {
+    if (loginType === "login") {
+      return json<ActionData>(
+        { errors: { username: "Invalid username or password" } },
+        { status: 400 }
+      );
+    }
+    user = await createUser(username, password);
   }
 
-  const fields = { loginType, username, password };
-  const fieldErrors = {
-    username: validateUsername(username),
-    password: validatePassword(password),
-  };
-  if (Object.values(fieldErrors).some(Boolean))
-    return badRequest({ fieldErrors, fields });
-
-  switch (loginType) {
-    case "login": {
-      const user = await login({ username, password });
-
-      if (!user) {
-        return badRequest({
-          fields,
-          formError: `Username/Password combination is incorrect`,
-        });
-      }
-      return createUserSession(user.id, redirectTo);
-    }
-    case "register": {
-      const userExists = await db.user.findFirst({
-        where: { username },
-      });
-      if (userExists) {
-        return badRequest({
-          fields,
-          formError: `User with username ${username} already exists`,
-        });
-      }
-      const user = await register({ username, password, projects: [] });
-      if (!user) {
-        return badRequest({
-          fields,
-          formError: `Something went wrong trying to create a new user.`,
-        });
-      }
-      return createUserSession(user.id, redirectTo);
-
-      // return badRequest({
-      //   fields,
-      //   formError: "Not implemented",
-      // });
-    }
-    default: {
-      return badRequest({
-        fields,
-        formError: `Login type invalid`,
-      });
-    }
-  }
+  return createUserSession({
+    request,
+    userId: user.id,
+    remember: remember === "on" ? true : false,
+    redirectTo: typeof redirectTo === "string" ? redirectTo : "/",
+  });
 };
 
-export default function Login() {
-  const actionData = useActionData<ActionData>();
-  const [isLogin, setIsLogin] = useState(
+export const meta: MetaFunction = () => {
+  return {
+    title: "Login",
+  };
+};
+
+export default function LoginPage() {
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/";
+  const actionData = useActionData() as ActionData;
+  const usernameRef = React.useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
+
+  const [isLogin, setIsLogin] = React.useState(
     actionData && actionData?.fields?.loginType === "login"
       ? true
       : !actionData
       ? true
       : false
   );
-  const [searchParams] = useSearchParams();
+
+  React.useEffect(() => {
+    if (actionData?.errors?.username) {
+      usernameRef.current?.focus();
+    } else if (actionData?.errors?.password) {
+      passwordRef.current?.focus();
+    }
+  }, [actionData]);
+
   return (
     <LoginContainer>
       <LoginContinerInner>
-        <form method="post" css={{ maxWidth: 375 }}>
+        <form method="post" style={{ maxWidth: 375 }}>
           <h1
-            css={{
+            style={{
               fontSize: 26,
               margin: "10px 0 15px",
               fontFamily: "Montserrat",
@@ -142,12 +104,8 @@ export default function Login() {
           >
             {isLogin ? "Login" : "Register"}
           </h1>
-          <input
-            type="hidden"
-            name="redirectTo"
-            value={searchParams.get("redirectTo") ?? undefined}
-          />
-          <LoginToggle htmlFor="register" css={{ zIndex: isLogin ? 1 : -1 }}>
+          <input type="hidden" name="redirectTo" value={redirectTo} />
+          <LoginToggle htmlFor="register" style={{ zIndex: isLogin ? 1 : -1 }}>
             <input
               type="radio"
               name="loginType"
@@ -155,66 +113,53 @@ export default function Login() {
               value="register"
               // defaultChecked={actionData?.fields?.loginType === "register"}
               onChange={() => setIsLogin(!isLogin)}
-              css={{ visibility: "hidden", position: "absolute" }}
+              style={{ visibility: "hidden", position: "absolute" }}
               checked={!isLogin}
             />
             {isLogin ? "Register" : "Login"}
           </LoginToggle>
-          <LoginToggle htmlFor="login" css={{ zIndex: !isLogin ? 1 : -1 }}>
+          <LoginToggle htmlFor="login" style={{ zIndex: !isLogin ? 1 : -1 }}>
             <input
               type="radio"
               name="loginType"
               id="login"
               value="login"
               onChange={() => setIsLogin(!isLogin)}
-              css={{ visibility: "hidden", position: "absolute" }}
+              style={{ visibility: "hidden", position: "absolute" }}
               checked={isLogin}
             />
             {isLogin ? "Register" : "Login"}
           </LoginToggle>
-          <div css={{ marginTop: 8 }}>
+          <div style={{ marginTop: 8 }}>
             <LoginInput
               type="text"
               name="username"
-              defaultValue={actionData?.fields?.username}
-              aria-invalid={Boolean(actionData?.fieldErrors?.username)}
-              aria-errormessage={
-                actionData?.fieldErrors?.username ? "username-error" : undefined
-              }
-              placeholder="Email or username"
+              aria-describedby="username-error"
+              placeholder="Username"
+              ref={usernameRef}
+              id="username"
+              autoFocus={true}
+              required
             />
-            {actionData?.fieldErrors?.username ? (
+            {actionData?.errors?.username && (
               <p role="alert" id="username-error">
-                {actionData.fieldErrors.username}
+                {actionData.errors.username}
               </p>
-            ) : null}
+            )}
             <LoginInput
               name="password"
-              defaultValue={actionData?.fields?.password}
+              id="password"
               type="password"
-              aria-invalid={
-                Boolean(actionData?.fieldErrors?.password) || undefined
-              }
-              aria-errormessage={
-                actionData?.fieldErrors?.password ? "password-error" : undefined
-              }
+              aria-invalid={actionData?.errors?.password ? true : undefined}
               placeholder="Password"
+              ref={passwordRef}
+              required
             />
-            {actionData?.fieldErrors?.password ? (
+            {actionData?.errors?.password && (
               <p role="alert" id="password-error">
-                {actionData.fieldErrors.password}
+                {actionData.errors.password}
               </p>
-            ) : null}
-          </div>
-          <div
-            id="form-error-message"
-            css={{ color: "#ea2b2b", margin: "20px 0 10px", textAlign: "left" }}
-          >
-            {actionData?.formError ? (
-              <p role="alert" css={{ fontFamily: "Roboto" }}>
-                {actionData.formError}
-              </p>
-            ) : null}
+            )}
           </div>
           <LoginButton type="submit">
             {isLogin ? "Login" : "Register"}
