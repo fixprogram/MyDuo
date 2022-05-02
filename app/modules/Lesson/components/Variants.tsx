@@ -12,6 +12,7 @@ export default function VariantsPractice({
   setAnswer: Function;
 }) {
   console.log(answer);
+  console.log(content);
   return (
     <Fragment>
       <LessonTitle>Choose right variant</LessonTitle>
