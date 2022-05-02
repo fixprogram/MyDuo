@@ -40,8 +40,6 @@ export default function Steps({
     setReady(!steps.find((step: Step) => step.ready === false));
   }, [steps, setReady]);
 
-  console.log("STEPS: ", steps);
-
   return (
     <section
       style={{

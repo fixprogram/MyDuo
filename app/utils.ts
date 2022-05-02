@@ -66,7 +66,6 @@ export const findInArrayById = (arr: any, id: { id: string }) => {
 
 export const doesItemContainSign = (item: string) => {
   const newItem = item.split("").slice(0, -1).join("");
-  console.log("newItem: ", newItem);
   switch (item.slice(-1)) {
     case ",": {
       return {

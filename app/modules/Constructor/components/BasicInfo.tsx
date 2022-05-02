@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Legend, LessonProgress, VisuallyHiddenInput } from "~/components/lib";
+import { Legend, LessonProgress } from "~/components/lib";
 
 import { LessonTitleInput } from "./lib";
 
@@ -28,12 +28,7 @@ export default function BasicInfo({
         visibility: screen !== "Basic" ? "hidden" : "visible",
       }}
     >
-      <VisuallyHiddenInput
-        type="text"
-        name="formType"
-        value="repeat"
-        readOnly
-      />
+      <input type="hidden" name="formType" value="repeat" readOnly />
       <Legend>Basic info</Legend>
       <LessonProgress exp={"0"} style={{ margin: "40px auto 0 auto" }} />
       <LessonTitleInput

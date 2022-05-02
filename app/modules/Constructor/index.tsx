@@ -26,12 +26,7 @@ export default function Constructor({ data }: { data?: any }) {
   } = actionCreator(dispatch);
 
   const transition = useTransition();
-  const submitText =
-    transition.state === "submitting"
-      ? "Saving"
-      : transition.state === "loading"
-      ? "Saved!"
-      : "Save";
+  const submitText = transition.state === "submitting" ? "Saving" : "Save";
 
   useEffect(() => {
     if (data) {

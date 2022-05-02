@@ -1,10 +1,5 @@
 import { Fragment, useEffect } from "react";
-import {
-  LabelText,
-  Textarea,
-  TextareaLabel,
-  VisuallyHiddenInput,
-} from "~/components/lib";
+import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
 import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
@@ -66,7 +61,8 @@ export default function QuestionAnswer({
         <LabelText>Choose keywords</LabelText>
         <Keywords answer={answer} onSet={setKeywords} />
 
-        <VisuallyHiddenInput
+        <input
+          type="hidden"
           id={`keywords${number}`}
           name={`keywords${number}`}
           placeholder="Type keywords"

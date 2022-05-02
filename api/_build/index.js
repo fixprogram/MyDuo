@@ -658,6 +658,13 @@ var Textarea = (0, import_styled.default)("textarea")`
   font-weight: 400;
   letter-spacing: 1px;
 `;
+var H1Title = (0, import_styled.default)("h1")`
+  font-size: 26px;
+  margin: 10px 0 15px;
+  font-family: Montserrat;
+  font-weight: 700;
+  text-align: center;
+`;
 var Fieldset = (0, import_styled.default)("fieldset")`
   margin-top: 20px;
 `;
@@ -702,17 +709,6 @@ var FormButton = (0, import_styled.default)("button")`
   font-weight: 700;
   letter-spacing: 0.3px;
   border-radius: 15px;
-`;
-var VisuallyHiddenInput = (0, import_styled.default)("input")`
-  position: absolute;
-  visibility: hidden;
-  top: 0;
-  left: 0;
-  width: 0px;
-  height: 0px;
-  margin: 0;
-  padding: 0;
-  border: none;
 `;
 var KeywordTemplate = (0, import_styled.default)("span")`
   margin-right: 10px;
@@ -1312,7 +1308,6 @@ var isItemInArray = (arr, item) => {
 };
 var doesItemContainSign = (item) => {
   const newItem = item.split("").slice(0, -1).join("");
-  console.log("newItem: ", newItem);
   switch (item.slice(-1)) {
     case ",": {
       return {
@@ -1426,8 +1421,6 @@ function VariantsPractice({
   content,
   setAnswer
 }) {
-  console.log(answer);
-  console.log(content);
   return /* @__PURE__ */ React.createElement(import_react6.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, content.definition)), /* @__PURE__ */ React.createElement("b", null, content.question), /* @__PURE__ */ React.createElement("ul", {
     style: { listStyleType: "none", padding: 0, margin: 0 }
   }, content.variants.map((variant, idx) => /* @__PURE__ */ React.createElement("li", {
@@ -1933,7 +1926,6 @@ async function getUser(request) {
 async function createUserSession({
   request,
   userId,
-  remember,
   redirectTo
 }) {
   const session = await getSession(request);
@@ -1941,7 +1933,7 @@ async function createUserSession({
   return (0, import_node.redirect)(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
-        maxAge: remember ? 60 * 60 * 24 * 7 : void 0
+        maxAge: 60 * 60 * 24 * 7
       })
     }
   });
@@ -2148,8 +2140,8 @@ function Projects({
     }
   }, /* @__PURE__ */ React.createElement(import_react12.Form, {
     method: "post"
-  }, /* @__PURE__ */ React.createElement(VisuallyHiddenInput, {
-    type: "text",
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "hidden",
     name: "id",
     value: item.id,
     readOnly: true
@@ -2207,7 +2199,8 @@ var Menu = ({
     key: title
   }, /* @__PURE__ */ React.createElement(MenuNavLink, {
     to: `${link}`,
-    className: "nav-link"
+    className: "nav-link",
+    end: true
   }, ({ isActive }) => /* @__PURE__ */ React.createElement(import_react13.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
     src: isActive ? activeIcon : icon,
     width: 36,
@@ -2268,7 +2261,6 @@ async function getLastActiveLesson(languageId) {
   return null;
 }
 async function deleteLessonById(id) {
-  console.log("id");
   return await prisma.lesson.delete({ where: { id } });
 }
 
@@ -2303,7 +2295,6 @@ var loader2 = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
   const lastActive = await getLastActiveLesson(activeLanguage.id);
-  console.log(lastActive);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
   }
@@ -2394,8 +2385,8 @@ function BasicInfo({
       textAlign: "center",
       visibility: screen !== "Basic" ? "hidden" : "visible"
     }
-  }, /* @__PURE__ */ React.createElement(VisuallyHiddenInput, {
-    type: "text",
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "hidden",
     name: "formType",
     value: "repeat",
     readOnly: true
@@ -2518,7 +2509,8 @@ function QuestionAnswer({
   }, /* @__PURE__ */ React.createElement(LabelText, null, "Choose keywords"), /* @__PURE__ */ React.createElement(Keywords, {
     answer,
     onSet: setKeywords
-  }), /* @__PURE__ */ React.createElement(VisuallyHiddenInput, {
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "hidden",
     id: `keywords${number}`,
     name: `keywords${number}`,
     placeholder: "Type keywords",
@@ -2918,7 +2910,6 @@ function Steps({
   (0, import_react22.useEffect)(() => {
     setReady(!steps.find((step) => step.ready === false));
   }, [steps, setReady]);
-  console.log("STEPS: ", steps);
   return /* @__PURE__ */ React.createElement("section", {
     style: {
       position: "absolute",
@@ -3141,7 +3132,7 @@ function Constructor({ data }) {
     setQuestion
   } = actions_default2(dispatch);
   const transition = (0, import_remix6.useTransition)();
-  const submitText = transition.state === "submitting" ? "Saving" : transition.state === "loading" ? "Saved!" : "Save";
+  const submitText = transition.state === "submitting" ? "Saving" : "Save";
   (0, import_react23.useEffect)(() => {
     if (data) {
       setData(data.steps);
@@ -3563,8 +3554,77 @@ __export(login_exports, {
 });
 init_react();
 var import_node3 = require("@remix-run/node");
-var import_react25 = require("@remix-run/react");
-var React3 = __toESM(require("react"));
+var import_react26 = require("@remix-run/react");
+
+// app/components/Login.tsx
+init_react();
+var import_react25 = require("react");
+var import_remix13 = __toESM(require_remix());
+function Login({ isLogin, setIsLogin, actionData }) {
+  var _a;
+  const usernameRef = (0, import_react25.useRef)(null);
+  const passwordRef = (0, import_react25.useRef)(null);
+  (0, import_react25.useEffect)(() => {
+    var _a2, _b, _c, _d;
+    if ((_a2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a2.username) {
+      (_b = usernameRef.current) == null ? void 0 : _b.focus();
+    }
+    if ((_c = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _c.password) {
+      (_d = passwordRef.current) == null ? void 0 : _d.focus();
+    }
+  }, [actionData]);
+  return /* @__PURE__ */ React.createElement(import_remix13.Form, {
+    method: "post",
+    style: { width: "100%", maxWidth: 375 }
+  }, /* @__PURE__ */ React.createElement(H1Title, null, isLogin ? "Login" : "Register"), /* @__PURE__ */ React.createElement(LoginToggle, {
+    htmlFor: "register",
+    style: { zIndex: isLogin ? 1 : -1 }
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "radio",
+    name: "loginType",
+    id: "register",
+    value: "register",
+    onChange: () => setIsLogin(!isLogin),
+    style: { visibility: "hidden", position: "absolute" },
+    checked: !isLogin
+  }), isLogin ? "Register" : "Login"), /* @__PURE__ */ React.createElement(LoginToggle, {
+    htmlFor: "login",
+    style: { zIndex: !isLogin ? 1 : -1 }
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "radio",
+    name: "loginType",
+    id: "login",
+    value: "login",
+    onChange: () => setIsLogin(!isLogin),
+    style: { visibility: "hidden", position: "absolute" },
+    checked: isLogin
+  }), isLogin ? "Register" : "Login"), /* @__PURE__ */ React.createElement("div", {
+    style: { marginTop: 8 }
+  }, /* @__PURE__ */ React.createElement(LoginInput, {
+    type: "text",
+    name: "username",
+    placeholder: "Username",
+    ref: usernameRef,
+    id: "username",
+    autoFocus: true,
+    required: true
+  }), /* @__PURE__ */ React.createElement(LoginInput, {
+    name: "password",
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+    ref: passwordRef,
+    required: true
+  }), ((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.username) && /* @__PURE__ */ React.createElement("p", {
+    role: "alert",
+    id: "username-error"
+  }, actionData.errors.username)), /* @__PURE__ */ React.createElement(LoginButton, {
+    type: "submit"
+  }, isLogin ? "Login" : "Register"));
+}
+
+// route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
+var import_react27 = require("react");
 var loader7 = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId)
@@ -3576,20 +3636,25 @@ var action7 = async ({ request }) => {
   const loginType = formData.get("loginType");
   const username = formData.get("username");
   const password = formData.get("password");
-  const redirectTo = formData.get("redirectTo");
-  const remember = formData.get("remember");
-  let user = await verifyLogin(username, password);
-  if (!user) {
-    if (loginType === "login") {
-      return (0, import_node3.json)({ errors: { username: "Invalid username or password" } }, { status: 400 });
-    }
-    user = await createUser(username, password);
+  const user = await verifyLogin(username, password);
+  if (user) {
+    return createUserSession({
+      request,
+      userId: user.id,
+      redirectTo: "/"
+    });
   }
+  if (loginType === "login") {
+    return (0, import_node3.json)({
+      errors: { username: "Invalid username or password" },
+      fields: { loginType: "login", password: "" }
+    }, { status: 400 });
+  }
+  const newUser = await createUser(username, password);
   return createUserSession({
     request,
-    userId: user.id,
-    remember: remember === "on" ? true : false,
-    redirectTo: typeof redirectTo === "string" ? redirectTo : "/"
+    userId: newUser.id,
+    redirectTo: "/"
   });
 };
 var meta = () => {
@@ -3598,91 +3663,21 @@ var meta = () => {
   };
 };
 function LoginPage() {
-  var _a, _b, _c, _d;
-  const [searchParams] = (0, import_react25.useSearchParams)();
-  const redirectTo = searchParams.get("redirectTo") || "/";
-  const actionData = (0, import_react25.useActionData)();
-  const usernameRef = React3.useRef(null);
-  const passwordRef = React3.useRef(null);
-  const [isLogin, setIsLogin] = React3.useState(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
-  React3.useEffect(() => {
-    var _a2, _b2, _c2, _d2;
-    if ((_a2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a2.username) {
-      (_b2 = usernameRef.current) == null ? void 0 : _b2.focus();
-    } else if ((_c2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _c2.password) {
-      (_d2 = passwordRef.current) == null ? void 0 : _d2.focus();
-    }
-  }, [actionData]);
-  return /* @__PURE__ */ React3.createElement(LoginContainer, null, /* @__PURE__ */ React3.createElement(LoginContinerInner, null, /* @__PURE__ */ React3.createElement("form", {
-    method: "post",
-    style: { maxWidth: 375 }
-  }, /* @__PURE__ */ React3.createElement("h1", {
-    style: {
-      fontSize: 26,
-      margin: "10px 0 15px",
-      fontFamily: "Montserrat",
-      fontWeight: 700,
-      textAlign: "center"
-    }
-  }, isLogin ? "Login" : "Register"), /* @__PURE__ */ React3.createElement("input", {
-    type: "hidden",
-    name: "redirectTo",
-    value: redirectTo
-  }), /* @__PURE__ */ React3.createElement(LoginToggle, {
-    htmlFor: "register",
-    style: { zIndex: isLogin ? 1 : -1 }
-  }, /* @__PURE__ */ React3.createElement("input", {
-    type: "radio",
-    name: "loginType",
-    id: "register",
-    value: "register",
-    onChange: () => setIsLogin(!isLogin),
-    style: { visibility: "hidden", position: "absolute" },
-    checked: !isLogin
-  }), isLogin ? "Register" : "Login"), /* @__PURE__ */ React3.createElement(LoginToggle, {
-    htmlFor: "login",
-    style: { zIndex: !isLogin ? 1 : -1 }
-  }, /* @__PURE__ */ React3.createElement("input", {
-    type: "radio",
-    name: "loginType",
-    id: "login",
-    value: "login",
-    onChange: () => setIsLogin(!isLogin),
-    style: { visibility: "hidden", position: "absolute" },
-    checked: isLogin
-  }), isLogin ? "Register" : "Login"), /* @__PURE__ */ React3.createElement("div", {
-    style: { marginTop: 8 }
-  }, /* @__PURE__ */ React3.createElement(LoginInput, {
-    type: "text",
-    name: "username",
-    "aria-describedby": "username-error",
-    placeholder: "Username",
-    ref: usernameRef,
-    id: "username",
-    autoFocus: true,
-    required: true
-  }), ((_b = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _b.username) && /* @__PURE__ */ React3.createElement("p", {
-    role: "alert",
-    id: "username-error"
-  }, actionData.errors.username), /* @__PURE__ */ React3.createElement(LoginInput, {
-    name: "password",
-    id: "password",
-    type: "password",
-    "aria-invalid": ((_c = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _c.password) ? true : void 0,
-    placeholder: "Password",
-    ref: passwordRef,
-    required: true
-  }), ((_d = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _d.password) && /* @__PURE__ */ React3.createElement("p", {
-    role: "alert",
-    id: "password-error"
-  }, actionData.errors.password)), /* @__PURE__ */ React3.createElement(LoginButton, {
-    type: "submit"
-  }, isLogin ? "Login" : "Register"))));
+  var _a;
+  const actionData = (0, import_react26.useActionData)();
+  const transition = (0, import_react26.useTransition)();
+  const [isLogin, setIsLogin] = (0, import_react27.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
+  const buttonText = transition.state === "submitting" ? "loginning" : "login";
+  return /* @__PURE__ */ React.createElement(LoginContainer, null, /* @__PURE__ */ React.createElement(LoginContinerInner, null, /* @__PURE__ */ React.createElement(Login, {
+    isLogin,
+    setIsLogin,
+    actionData
+  })));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "87471141", "entry": { "module": "/build/entry.client-XH6ZT5PS.js", "imports": ["/build/_shared/chunk-G53DOJD5.js", "/build/_shared/chunk-OWEXMW66.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-MDT2SR4L.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-6VPJLQTG.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-KVODTFAX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-YFSA3QGZ.js", "imports": ["/build/_shared/chunk-UDH5PY7T.js", "/build/_shared/chunk-QIVPEQV2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-YKZLJPPL.js", "imports": ["/build/_shared/chunk-UDH5PY7T.js", "/build/_shared/chunk-QIVPEQV2.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-L663HPSA.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/lesson/$lessonId": { "id": "routes/lesson/$lessonId", "parentId": "root", "path": "lesson/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/lesson/$lessonId-5GRWLYIX.js", "imports": ["/build/_shared/chunk-QIVPEQV2.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-KVODTFAX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-FHRO2PTB.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-KVODTFAX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-EKRUOCRY.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-87471141.js" };
+var assets_manifest_default = { "version": "82b92b26", "entry": { "module": "/build/entry.client-MGDXZFYC.js", "imports": ["/build/_shared/chunk-CEP62UEN.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-3PB3UIBT.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-YVIF3CAP.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SIKGB4A4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-PZXS3NEO.js", "imports": ["/build/_shared/chunk-V27EB4DZ.js", "/build/_shared/chunk-QZRMCW22.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-R72EYGHY.js", "imports": ["/build/_shared/chunk-V27EB4DZ.js", "/build/_shared/chunk-QZRMCW22.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-RXVNOKI3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/lesson/$lessonId": { "id": "routes/lesson/$lessonId", "parentId": "root", "path": "lesson/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/lesson/$lessonId-V77LHY3M.js", "imports": ["/build/_shared/chunk-QZRMCW22.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SIKGB4A4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-3IJZECUR.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-SIKGB4A4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-6SZPIX5R.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-82B92B26.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

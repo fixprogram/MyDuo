@@ -4,59 +4,61 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useActionData, useSearchParams } from "@remix-run/react";
-import * as React from "react";
-
+import { useActionData, useTransition } from "@remix-run/react";
 import { createUserSession, getUserId } from "~/session.server";
 import { createUser, verifyLogin } from "~/models/user.server";
-import {
-  LoginContainer,
-  LoginContinerInner,
-  LoginToggle,
-  LoginInput,
-  LoginButton,
-} from "~/components/lib";
+import { LoginContainer, LoginContinerInner } from "~/components/lib";
+import { Login } from "~/components/Login";
+import { useState } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId) return redirect("/");
   return json({});
 };
-interface ActionData {
+
+export type ActionData = {
   errors?: {
     username?: string;
     password?: string;
   };
   fields?: {
     loginType: string;
+    password: string;
   };
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const loginType = formData.get("loginType");
-  const username: any = formData.get("username");
-  const password: any = formData.get("password");
-  const redirectTo = formData.get("redirectTo");
-  const remember = formData.get("remember");
+  const username = formData.get("username") as string;
+  const password = formData.get("password") as string;
+  const user = await verifyLogin(username, password);
 
-  let user = await verifyLogin(username, password);
-
-  if (!user) {
-    if (loginType === "login") {
-      return json<ActionData>(
-        { errors: { username: "Invalid username or password" } },
-        { status: 400 }
-      );
-    }
-    user = await createUser(username, password);
+  if (user) {
+    return createUserSession({
+      request,
+      userId: user.id,
+      redirectTo: "/",
+    });
   }
+
+  if (loginType === "login") {
+    return json<ActionData>(
+      {
+        errors: { username: "Invalid username or password" },
+        fields: { loginType: "login", password: "" },
+      },
+      { status: 400 }
+    );
+  }
+
+  const newUser = await createUser(username, password);
 
   return createUserSession({
     request,
-    userId: user.id,
-    remember: remember === "on" ? true : false,
-    redirectTo: typeof redirectTo === "string" ? redirectTo : "/",
+    userId: newUser.id,
+    redirectTo: "/",
   });
 };
 
@@ -67,13 +69,10 @@ export const meta: MetaFunction = () => {
 };
 
 export default function LoginPage() {
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/";
   const actionData = useActionData() as ActionData;
-  const usernameRef = React.useRef<HTMLInputElement>(null);
-  const passwordRef = React.useRef<HTMLInputElement>(null);
+  const transition = useTransition();
 
-  const [isLogin, setIsLogin] = React.useState(
+  const [isLogin, setIsLogin] = useState(
     actionData && actionData?.fields?.loginType === "login"
       ? true
       : !actionData
@@ -81,90 +80,16 @@ export default function LoginPage() {
       : false
   );
 
-  React.useEffect(() => {
-    if (actionData?.errors?.username) {
-      usernameRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
-    }
-  }, [actionData]);
+  const buttonText = transition.state === "submitting" ? "loginning" : "login";
 
   return (
     <LoginContainer>
       <LoginContinerInner>
-        <form method="post" style={{ maxWidth: 375 }}>
-          <h1
-            style={{
-              fontSize: 26,
-              margin: "10px 0 15px",
-              fontFamily: "Montserrat",
-              fontWeight: 700,
-              textAlign: "center",
-            }}
-          >
-            {isLogin ? "Login" : "Register"}
-          </h1>
-          <input type="hidden" name="redirectTo" value={redirectTo} />
-          <LoginToggle htmlFor="register" style={{ zIndex: isLogin ? 1 : -1 }}>
-            <input
-              type="radio"
-              name="loginType"
-              id="register"
-              value="register"
-              // defaultChecked={actionData?.fields?.loginType === "register"}
-              onChange={() => setIsLogin(!isLogin)}
-              style={{ visibility: "hidden", position: "absolute" }}
-              checked={!isLogin}
-            />
-            {isLogin ? "Register" : "Login"}
-          </LoginToggle>
-          <LoginToggle htmlFor="login" style={{ zIndex: !isLogin ? 1 : -1 }}>
-            <input
-              type="radio"
-              name="loginType"
-              id="login"
-              value="login"
-              onChange={() => setIsLogin(!isLogin)}
-              style={{ visibility: "hidden", position: "absolute" }}
-              checked={isLogin}
-            />
-            {isLogin ? "Register" : "Login"}
-          </LoginToggle>
-          <div style={{ marginTop: 8 }}>
-            <LoginInput
-              type="text"
-              name="username"
-              aria-describedby="username-error"
-              placeholder="Username"
-              ref={usernameRef}
-              id="username"
-              autoFocus={true}
-              required
-            />
-            {actionData?.errors?.username && (
-              <p role="alert" id="username-error">
-                {actionData.errors.username}
-              </p>
-            )}
-            <LoginInput
-              name="password"
-              id="password"
-              type="password"
-              aria-invalid={actionData?.errors?.password ? true : undefined}
-              placeholder="Password"
-              ref={passwordRef}
-              required
-            />
-            {actionData?.errors?.password && (
-              <p role="alert" id="password-error">
-                {actionData.errors.password}
-              </p>
-            )}
-          </div>
-          <LoginButton type="submit">
-            {isLogin ? "Login" : "Register"}
-          </LoginButton>
-        </form>
+        <Login
+          isLogin={isLogin}
+          setIsLogin={setIsLogin}
+          actionData={actionData}
+        />
       </LoginContinerInner>
     </LoginContainer>
   );
