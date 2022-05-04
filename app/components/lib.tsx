@@ -248,6 +248,14 @@ const Textarea = styled("textarea")`
   letter-spacing: 1px;
 `;
 
+const H1Title = styled("h1")`
+  font-size: 26px;
+  margin: 10px 0 15px;
+  font-family: Montserrat;
+  font-weight: 700;
+  text-align: center;
+`;
+
 const Fieldset = styled("fieldset")`
   margin-top: 20px;
 `;
@@ -300,18 +308,6 @@ const FormButton = styled("button")<FormButtonProps>`
   font-weight: 700;
   letter-spacing: 0.3px;
   border-radius: 15px;
-`;
-
-const VisuallyHiddenInput = styled("input")`
-  position: absolute;
-  visibility: hidden;
-  top: 0;
-  left: 0;
-  width: 0px;
-  height: 0px;
-  margin: 0;
-  padding: 0;
-  border: none;
 `;
 
 const KeywordTemplate = styled("span")<KeywordProps>`
@@ -574,7 +570,6 @@ export {
   LabelText,
   Legend,
   FormButton,
-  VisuallyHiddenInput,
   KeywordTemplate,
   LessonProgress,
   LessonProgressInner,
@@ -599,4 +594,5 @@ export {
   LessonBlockMenu,
   LessonBlockMenuTriangle,
   LessonBlockMenuTriangleContent,
+  H1Title,
 };

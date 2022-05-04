@@ -3,7 +3,6 @@ import { Form } from "@remix-run/react";
 import {
   ActiveLanguageButton,
   ActiveLanguageContainer,
-  VisuallyHiddenInput,
   LanguagesItem,
   LanguagesInput,
   LanguagesContainer,
@@ -60,12 +59,7 @@ export default function Projects({
                   }}
                 >
                   <Form method="post">
-                    <VisuallyHiddenInput
-                      type="text"
-                      name="id"
-                      value={item.id}
-                      readOnly
-                    />
+                    <input type="hidden" name="id" value={item.id} readOnly />
                     <LanguagesItem type="submit">{item.title}</LanguagesItem>
                   </Form>
                 </li>
