@@ -1,4 +1,4 @@
-import { useTransition } from "remix";
+import { useTransition } from "@remix-run/react";
 import {
   LessonFooter,
   LessonFooterInner,

@@ -86,6 +86,11 @@ export default function Constructor({ data }: { data?: any }) {
           flexDirection: "column",
           paddingBottom: 71,
           position: "relative",
+          background: "#fff",
+          border: "2px solid #e5e5e5",
+          borderRadius: "16px",
+          margin: "0 24px 24px",
+          padding: "24px",
         }}
       >
         <h2>Sidebar</h2>
