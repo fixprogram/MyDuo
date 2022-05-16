@@ -4,7 +4,7 @@ import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
 type QA = FieldsetType & {
-  question?: string;
+  question?: string | null;
   setQuestion: Function;
   setKeywords: Function;
   keywords: string[];
@@ -31,9 +31,7 @@ export default function QuestionAnswer({
   return (
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Question"} />
-      {/* <div>
-        <h2>Ask and Answer</h2>
-      </div> */}
+
       <fieldset style={{ padding: "0 25%" }}>
         <input
           type="text"
@@ -44,7 +42,7 @@ export default function QuestionAnswer({
             marginBottom: 10,
             width: "100%",
           }}
-          value={question}
+          value={question === null ? "" : question}
           onChange={(evt) => setQuestion(evt.target.value)}
           required
         />

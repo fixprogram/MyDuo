@@ -3,6 +3,7 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import Constructor from "~/modules/Constructor";
 import { nanoid } from "nanoid";
+import { LessonStep } from "@prisma/client";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -14,18 +15,18 @@ export function ErrorBoundary() {
 export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
   const form = await request.formData();
-  const title = form.get("title");
+  const title = form.get("title") as string;
 
   const steps = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
-    let answer: any = form.get(`answer${index}`);
+    let answer: string | string[] = form.get(`answer${index}`) as string;
     answer = answer.trim().split(" ");
     const id = nanoid();
     const returnData = { stepType, number: index, id };
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
-        const keywords: any = form.get(`keywords${index}`);
+        const keywords = form.get(`keywords${index}`) as string;
         return {
           ...returnData,
           question,
@@ -56,16 +57,25 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Pairs": {
-        const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer: answer[0].split(","), variants };
+        const variants = form.getAll(`variant${index}`) as string[];
+        return {
+          ...returnData,
+          answer: answer[0].split(","),
+          variants: variants.map((variant, idx) => ({
+            value: variant,
+            isFocused: false,
+            isConnected: true,
+            idx: idx + 1,
+          })),
+        };
       }
       default: {
         return { ...returnData, answer };
       }
     }
-  });
+  }) as LessonStep[];
 
-  const data: any = {
+  const data = {
     title,
     steps,
     updatedAt: today.getDate().toString(),

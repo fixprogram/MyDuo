@@ -39,6 +39,7 @@ export default function Steps({
 }) {
   useEffect(() => {
     setReady(!steps.find((step: Step) => step.ready === false));
+    console.log("steps: ", steps);
   }, [steps, setReady]);
 
   return (
@@ -69,7 +70,6 @@ export default function Steps({
             key={id}
           >
             <input type="hidden" name="step" value={idx} />
-            {/* <Legend>Step {idx + 1}</Legend> */}
             <Legend>{stepType ? stepType : "Choose type"}</Legend>
             <StepHeader>
               {stepType !== "" && (
@@ -116,8 +116,10 @@ export default function Steps({
                   setQuestion={(question: string) =>
                     setQuestion(question, number)
                   }
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
-                  setKeywords={(keywords: any) => setKeywords(keywords, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
+                  setKeywords={(keywords: string[]) =>
+                    setKeywords(keywords, number)
+                  }
                   keywords={keywords}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
@@ -127,7 +129,7 @@ export default function Steps({
                   answer={
                     typeof answer !== "string" ? answer.join(" ") : answer
                   }
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : stepType === "Variants" ? (
@@ -136,7 +138,7 @@ export default function Steps({
                   initialVariants={variants}
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   variantsCount={3}
                 />
@@ -144,9 +146,10 @@ export default function Steps({
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: any) => setAnswer(answer, number)}
+                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
                   variantsCount={8}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
+                  initialVariants={variants}
                 />
               ) : null}
             </StepContent>
