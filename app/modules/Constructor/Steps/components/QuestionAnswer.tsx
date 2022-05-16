@@ -31,9 +31,9 @@ export default function QuestionAnswer({
   return (
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Question"} />
-      <div>
+      {/* <div>
         <h2>Ask and Answer</h2>
-      </div>
+      </div> */}
       <fieldset style={{ padding: "0 25%" }}>
         <input
           type="text"

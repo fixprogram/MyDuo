@@ -47,7 +47,7 @@ export function validateUsername(username: unknown): username is string {
 }
 
 export const useFocus = () => {
-  const ref = useRef<any>(null);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     ref.current?.focus();
@@ -60,8 +60,8 @@ export const isItemInArray = (arr: string[], item: string) => {
   return arr.find((arrItem) => arrItem === item);
 };
 
-export const findInArrayById = (arr: any, id: { id: string }) => {
-  return arr.find((arrItem: any) => (arrItem.id = id));
+export const findInArrayById = (arr = [{ id: "" }], id: string) => {
+  return arr.find((arrItem) => (arrItem.id = id));
 };
 
 export const doesItemContainSign = (item: string) => {
@@ -97,8 +97,7 @@ export const doesItemContainSign = (item: string) => {
   }
 };
 
-// export const doesArrayContainItems = (arr: any, items: any) => {
-export const doesArrayContainItems = (items: any, arr: any) => {
+export const doesArrayContainItems = (items: [], arr: []) => {
   const filtered = arr.filter((arrItem: string) =>
     items.find(
       (item: string) =>

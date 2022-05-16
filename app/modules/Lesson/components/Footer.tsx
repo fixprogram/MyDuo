@@ -1,4 +1,4 @@
-import { useTransition } from "remix";
+import { useTransition } from "@remix-run/react";
 import {
   LessonFooter,
   LessonFooterInner,
@@ -43,13 +43,9 @@ export default function Footer({
     <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
       <LessonFooterInner>
         <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
-          {stateRight ||
-            (stateWrong && (
-              <LessonFooterIcon
-                stateRight={stateRight}
-                stateWrong={stateWrong}
-              />
-            ))}
+          {(stateRight || stateWrong) && (
+            <LessonFooterIcon stateRight={stateRight} stateWrong={stateWrong} />
+          )}
           <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
             <LessonFooterTitle>
               {stateWrong ? "Right answer: " : "Great!"}

@@ -1,18 +1,22 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "remix.env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/components/Login/Login.test.js",
+    "jest.config.cjs"
+  ],
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
-    "lib": ["DOM", "DOM.Iterable", "ES2019", "esnext"],
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "isolatedModules": true,
     "esModuleInterop": true,
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "ES2019",
+    "types": ["vitest/globals"],
     "strict": true,
     "baseUrl": ".",
-    "sourceMap": true,
-    "outDir": "dist",
     "paths": {
       "~/*": ["./app/*"]
     },

@@ -12,6 +12,7 @@ import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
 import Close from "~/styles/close.svg";
+import ChooseStyleScreen from "./components/ChooseStyleScreen";
 
 export default function Steps({
   activeStep,
@@ -68,7 +69,8 @@ export default function Steps({
             key={id}
           >
             <input type="hidden" name="step" value={idx} />
-            <Legend>Step {idx + 1}</Legend>
+            {/* <Legend>Step {idx + 1}</Legend> */}
+            <Legend>{stepType ? stepType : "Choose type"}</Legend>
             <StepHeader>
               {stepType !== "" && (
                 <button
@@ -81,7 +83,7 @@ export default function Steps({
                     border: "none",
                     backgroundColor: "inherit",
                     padding: 0,
-                    right: 30,
+                    left: 30,
                     bottom: -60,
                   }}
                   onClick={() => removeStepType(id)}
@@ -101,32 +103,7 @@ export default function Steps({
 
             <StepContent>
               {stepType === "" && (
-                <ChooseStyle>
-                  <StyleButton
-                    type="button"
-                    onClick={() => setStepType("Question", id)}
-                  >
-                    Question / Answer
-                  </StyleButton>
-                  <StyleButton
-                    type="button"
-                    onClick={() => setStepType("Insert", id)}
-                  >
-                    Insert words
-                  </StyleButton>
-                  <StyleButton
-                    type="button"
-                    onClick={() => setStepType("Variants", id)}
-                  >
-                    Choose right variant
-                  </StyleButton>
-                  <StyleButton
-                    type="button"
-                    onClick={() => setStepType("Pairs", id)}
-                  >
-                    Matching pairs
-                  </StyleButton>
-                </ChooseStyle>
+                <ChooseStyleScreen setStepType={setStepType} id={id} />
               )}
 
               {stepType === "Question" ? (

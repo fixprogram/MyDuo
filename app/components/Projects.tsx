@@ -7,16 +7,19 @@ import {
   LanguagesInput,
   LanguagesContainer,
 } from "./lib";
+import { Language } from "@prisma/client";
 
 export default function Projects({
   onOverlay,
   languages,
 }: {
   onOverlay: Function;
-  languages: any;
+  languages: Language[];
 }) {
   const [showWindow, setShowWindow] = useState(false);
   const [isNewLanguage, setIsNewLanguage] = useState(false);
+
+  const activeLanguage = languages?.find((item) => item.active);
 
   return (
     <Fragment>
@@ -31,7 +34,7 @@ export default function Projects({
           setShowWindow(false);
         }}
       >
-        {languages?.find((item: any) => item.active).title}
+        {activeLanguage?.title}
       </ActiveLanguageButton>
 
       <ActiveLanguageContainer
@@ -47,7 +50,7 @@ export default function Projects({
         {showWindow && (
           <LanguagesContainer>
             <ul style={{ display: "flex", flexDirection: "column" }}>
-              {languages?.map((item: any, idx: number) => (
+              {languages?.map((item, idx: number) => (
                 <li
                   key={idx}
                   style={{
