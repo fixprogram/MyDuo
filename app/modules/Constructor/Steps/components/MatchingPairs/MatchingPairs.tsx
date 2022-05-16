@@ -2,10 +2,11 @@ import { Fragment, useEffect, useReducer } from "react";
 import { FieldsetType } from "../../types";
 import { VariantItemNumber, VariantItemInput } from "../lib";
 import { pairsChoose, pairsConnect, pairsSetup, pairsType } from "./actions";
-import { reducer, basicState, Variant } from "./reducer";
+import { reducer, basicState, Variant, State } from "./reducer";
 
 type MP = FieldsetType & {
   variantsCount: number;
+  initialVariants: Variant[] | undefined;
 };
 
 export default function MatchingPairs({
@@ -14,12 +15,21 @@ export default function MatchingPairs({
   setAnswer,
   variantsCount = 8,
   setReady,
+  initialVariants = [],
 }: MP) {
-  const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
+  // const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
+  const [{ variants, pairs }, dispatch] = useReducer(reducer, {
+    variants: initialVariants,
+    pairs: [],
+  });
+
+  // useEffect(() => {
+  //   console.log(initialVariants);
+  // }, [initialVariants]);
 
   useEffect(() => {
-    dispatch(pairsSetup(variantsCount));
-  }, [variantsCount]);
+    dispatch(pairsSetup(variantsCount, initialVariants, answer));
+  }, [variantsCount, initialVariants]);
 
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {

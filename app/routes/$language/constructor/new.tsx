@@ -28,7 +28,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
-        const keywords: any = form.get(`keywords${index}`);
+        const keywords = form.get(`keywords${index}`) as string;
         return {
           ...returnData,
           question,
@@ -59,8 +59,17 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Pairs": {
-        const variants = form.getAll(`variant${index}`);
-        return { ...returnData, answer: answer[0].split(","), variants };
+        const variants = form.getAll(`variant${index}`) as string[];
+        return {
+          ...returnData,
+          answer: answer[0].split(","),
+          variants: variants.map((variant, idx) => ({
+            value: variant,
+            isFocused: false,
+            isConnected: true,
+            idx: idx + 1,
+          })),
+        };
       }
       default: {
         return { ...returnData, answer };

@@ -1,15 +1,22 @@
 export type Action =
-  | { type: "SETUP"; payload: { variantsCount: number } }
+  | {
+      type: "SETUP";
+      payload: { variantsCount: number; variants: any; pairs: string[] };
+    }
   | { type: "VARIANTS_SETUP"; payload: { variantsCount: number } }
-  | { type: "VARIANT_SET_VALUE"; payload: { idx: string; value: string } }
-  | { type: "TYPE"; payload: { value: string; idx: string } }
-  | { type: "CHOOSE"; payload: { idx: string } }
-  | { type: "VARIANT_CHOOSE"; payload: { idx: string } }
-  | { type: "CONNECT"; payload: { activeIdx: string; idx: string } };
+  | { type: "VARIANT_SET_VALUE"; payload: { idx: number; value: string } }
+  | { type: "TYPE"; payload: { value: string; idx: number } }
+  | { type: "CHOOSE"; payload: { idx: number } }
+  | { type: "VARIANT_CHOOSE"; payload: { idx: number } }
+  | { type: "CONNECT"; payload: { activeIdx: string; idx: number } };
 
-export const pairsSetup = (variantsCount: number): Action => ({
+export const pairsSetup = (
+  variantsCount: number,
+  variants: any,
+  pairs = []
+): Action => ({
   type: "SETUP",
-  payload: { variantsCount },
+  payload: { variantsCount, variants, pairs },
 });
 
 export const variantsSetup = (variantsCount: number): Action => ({
@@ -17,29 +24,29 @@ export const variantsSetup = (variantsCount: number): Action => ({
   payload: { variantsCount },
 });
 
-export const variantSetValue = (idx: string, value: string): Action => ({
+export const variantSetValue = (idx: number, value: string): Action => ({
   type: "VARIANT_SET_VALUE",
   payload: { idx, value },
 });
 
-export const pairsType = (value: string, idx: string): Action => ({
+export const pairsType = (value: string, idx: number): Action => ({
   type: "TYPE",
   payload: { value, idx },
 });
 
-export const pairsChoose = (idx: string): Action => ({
+export const pairsChoose = (idx: number): Action => ({
   type: "CHOOSE",
   payload: {
     idx,
   },
 });
 
-export const variantChoose = (idx: string): Action => ({
+export const variantChoose = (idx: number): Action => ({
   type: "VARIANT_CHOOSE",
   payload: { idx },
 });
 
-export const pairsConnect = (activeIdx: string, idx: string): Action => ({
+export const pairsConnect = (activeIdx: string, idx: number): Action => ({
   type: "CONNECT",
   payload: { activeIdx, idx },
 });

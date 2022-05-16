@@ -32,7 +32,7 @@ export default function Pairs({
           padding: 0,
         }}
       >
-        {variants.map((item: string, idx: string) => (
+        {variants.map(({ value, isFocused }: any, idx: string) => (
           <li
             key={idx}
             style={{ marginBottom: 5, position: "relative", width: "48%" }}
@@ -68,8 +68,9 @@ export default function Pairs({
                 backgroundColor: active == idx + 1 ? "#ddf4ff" : "#fff",
               }}
               disabled={isDisabled(idx)}
+              isFocused={isFocused}
             >
-              {item}
+              {value}
             </VariantItem>
           </li>
         ))}

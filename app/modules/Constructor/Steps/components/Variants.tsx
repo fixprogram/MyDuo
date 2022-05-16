@@ -10,6 +10,8 @@ import {
 } from "./MatchingPairs/actions";
 
 type VariantsProps = FieldsetType & {
+  initialQuestion: string | null;
+  initialVariants: Variant[] | undefined;
   variantsCount: number;
 };
 
@@ -24,6 +26,7 @@ export default function Variants({
 }: VariantsProps) {
   const [{ variants }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
+    pairs: [],
   });
   const [question, setQuestion] = useState(initialQuestion);
 
@@ -50,7 +53,7 @@ export default function Variants({
       return setReady(false);
     }
 
-    if (question.length) {
+    if (question?.length) {
       setReady(true);
     } else {
       setReady(false);
@@ -70,12 +73,12 @@ export default function Variants({
         name={`question${number}`}
         placeholder="Type question"
         style={{ minHeight: 100 }}
-        value={question}
+        value={question === null ? "" : question}
         onChange={(e) => setQuestion(e.target.value)}
         required
       />
       <ul>
-        {variants.map((variant: Variant, index: string) => (
+        {variants.map((variant: Variant, index) => (
           <li key={variant.idx} style={{ marginBottom: 5 }}>
             <label style={{ position: "relative" }}>
               <VariantItemNumber

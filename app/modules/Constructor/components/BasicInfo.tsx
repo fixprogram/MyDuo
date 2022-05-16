@@ -8,13 +8,16 @@ export default function BasicInfo({
   setReady,
   screen,
 }: {
-  data?: any;
+  data?: { title: "" };
   setReady: Function;
   screen: string;
 }) {
-  const [lessonTitle, setLessonTitle] = useState(() =>
-    data ? data.title : ""
-  );
+  const [lessonTitle, setLessonTitle] = useState("");
+  useEffect(() => {
+    if (data?.title) {
+      setLessonTitle(data.title);
+    }
+  }, [data]);
   useEffect(() => {
     setReady(!!lessonTitle.length);
   }, [lessonTitle, setReady]);

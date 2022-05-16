@@ -359,6 +359,7 @@ const Main = styled("main")`
   display: flex;
   justify-content: space-between;
   height: calc(100vh - 95px); // margin 24px + menu height 71px
+  overflow-x: hidden;
 `;
 
 const LessonTitle = styled("b")`

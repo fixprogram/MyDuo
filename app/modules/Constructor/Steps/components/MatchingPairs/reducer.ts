@@ -9,7 +9,7 @@ export type Variant = {
 };
 
 export type State = {
-  variants: Variant[] | any;
+  variants: Variant[];
   pairs: string[];
 };
 
@@ -18,15 +18,18 @@ export const basicState: State = {
   pairs: [],
 };
 
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
   const { variants, pairs } = state;
   switch (action.type) {
     case "SETUP": {
-      const { variantsCount } = action.payload;
-      const variants = [];
+      const { variantsCount, variants, pairs } = action.payload;
+      const newVariants = [];
       // if(variantsType)
+      if (variants.length) {
+        return { ...state, variants, pairs };
+      }
       for (let i = 1; i <= variantsCount; i++) {
-        variants.push({
+        newVariants.push({
           type: i - 1 < variantsCount / 2 ? "left" : "right", // Dividing on halfs.
           value: "",
           isFocused: false,
@@ -34,7 +37,7 @@ export const reducer = (state: State, action: Action) => {
           isConnected: false,
         });
       }
-      return { ...state, variants };
+      return { ...state, variants: newVariants };
     }
     case "VARIANTS_SETUP": {
       const { variantsCount } = action.payload;
@@ -97,7 +100,7 @@ export const reducer = (state: State, action: Action) => {
       const { activeIdx, idx } = action.payload;
       let newPairs = pairs;
       let exists = newPairs.find(
-        (item) => item.includes(activeIdx) || item.includes(idx)
+        (item) => item.includes(activeIdx) || item.includes(idx.toString())
       );
       if (exists) {
         newPairs[newPairs.indexOf(exists)] = `${activeIdx}${idx}`;
