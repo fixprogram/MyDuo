@@ -14,6 +14,7 @@ import streakActive from "~/styles/streak-active.svg";
 import shopActive from "~/styles/shop-active.svg";
 import { Fragment } from "react";
 import Projects from "./Projects";
+import { Language, User } from "@prisma/client";
 
 const MENU = [
   {
@@ -35,8 +36,8 @@ const Menu = ({
   languages,
   onOverlay,
 }: {
-  user: any;
-  languages: any;
+  user: User;
+  languages: Language[];
   onOverlay: Function;
 }) => {
   return (

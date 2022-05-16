@@ -1,11 +1,11 @@
 import { Action } from "./actions";
 
 export type Variant = {
-  type?: string;
+  type?: string | null;
   value: string;
-  idx: string;
-  isFocused: boolean;
-  isConnected?: boolean;
+  idx: number;
+  isFocused: boolean | null;
+  isConnected?: boolean | null;
 };
 
 export type State = {
@@ -59,7 +59,9 @@ export const reducer = (state: State, action: Action) => {
       const newVariants = variants;
       newVariants[
         newVariants.indexOf(
-          newVariants.find((variant: Variant) => variant.idx === idx) as Variant
+          newVariants.find(
+            (variant: Variant) => variant.idx === Number(idx)
+          ) as Variant
         )
       ].value = value;
       return { ...state, variants: [...newVariants] };
@@ -67,18 +69,18 @@ export const reducer = (state: State, action: Action) => {
     case "CHOOSE": {
       const { idx } = action.payload;
       const variantItem = variants.find(
-        (variant: Variant) => variant.idx === idx
+        (variant: Variant) => variant.idx === Number(idx)
       );
       if (variantItem?.type === "left") {
         const newVariants = variants.map((variant: Variant) => ({
           ...variant,
-          isFocused: variant.idx === idx,
+          isFocused: variant.idx === Number(idx),
         }));
         return { ...state, variants: newVariants };
       }
       const newVariants = variants.map((variant: Variant) => ({
         ...variant,
-        isFocused: variant.idx === idx,
+        isFocused: variant.idx === Number(idx),
       }));
       return { ...state, variants: newVariants };
     }
@@ -107,8 +109,9 @@ export const reducer = (state: State, action: Action) => {
         variants: variants.map((variant: Variant) => ({
           ...variant,
           isFocused: false,
-          isConnected: newPairs.filter((pair) => pair.includes(variant.idx))
-            .length,
+          isConnected: newPairs.filter((pair) =>
+            pair.includes(variant.idx.toString())
+          ).length,
         })),
         pairs: newPairs,
       };

@@ -17,7 +17,7 @@ model User {
   streak       Int
   wasToday     Boolean
 }
-
+ 
 model Language {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   active     Boolean

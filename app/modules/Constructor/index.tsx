@@ -1,12 +1,13 @@
-import { useEffect, useReducer, useState } from "react";
+import { Dispatch, useEffect, useReducer, useState } from "react";
 import { Form, useTransition } from "remix";
 import { FormButton } from "~/components/lib";
 import BasicInfo from "./components/BasicInfo";
 import Steps from "./Steps";
 import { basicState, reducer } from "./Steps/reducer";
 import actionCreator from "./Steps/actions";
+import { Lesson } from "@prisma/client";
 
-export default function Constructor({ data }: { data?: any }) {
+export default function Constructor({ data }: { data?: Lesson }) {
   const [basicInfoReady, setBasicInfoReady] = useState(false);
   const [stepsReady, setStepsReady] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("Basic");

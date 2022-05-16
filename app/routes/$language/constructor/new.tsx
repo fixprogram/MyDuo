@@ -4,6 +4,7 @@ import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
 import { nanoid } from "nanoid";
+import { Language, Lesson, LessonStep } from "@prisma/client";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -14,13 +15,13 @@ export function ErrorBoundary() {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
-  const activeProject = await getActiveLanguage(request);
+  const activeProject = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
-  const title = form.get("title");
+  const title = form.get("title") as string;
 
   const steps = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
-    let answer: any = form.get(`answer${index}`);
+    let answer: string | string[] = form.get(`answer${index}`) as string;
     answer = answer.trim().split(" ");
     const id = nanoid();
     const returnData = { stepType, number: index, id };
@@ -65,9 +66,9 @@ export const action: ActionFunction = async ({ request, params }) => {
         return { ...returnData, answer };
       }
     }
-  });
+  }) as LessonStep[];
 
-  const data: any = {
+  const data = {
     title,
     steps,
     exp: 0,

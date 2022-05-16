@@ -2,23 +2,23 @@ import type { Step, State } from "./types";
 import { Action } from "./actions";
 import { nanoid } from "nanoid";
 
-export const basicState: State = {
+export const basicState = {
   steps: [
     {
       question: "",
+      id: nanoid(),
+      answer: "",
       number: 0,
       keywords: [],
-      answer: "",
       stepType: "",
       ready: false,
-      id: nanoid(),
       text: "",
       variants: [],
     },
   ],
-};
+} as State;
 
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
   const { steps } = state;
   const { type } = action;
   switch (type) {
@@ -62,6 +62,7 @@ export const reducer = (state: State, action: Action) => {
       const newSteps = [
         ...steps,
         {
+          question: "",
           number: steps.length,
           keywords: [],
           answer: "",

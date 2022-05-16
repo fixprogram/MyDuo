@@ -1,20 +1,19 @@
 import { Variant } from "./components/MatchingPairs/reducer";
 
 export type Step = {
-  question: string;
+  question: string | null;
   id: string;
   answer: string | string[];
   number: number;
   keywords: string[];
   stepType: string;
-  ready: boolean;
-  text: string;
-  variants: Variant[];
+  ready?: boolean;
+  text?: string | null;
+  variants?: Variant[];
 };
 
 export type State = {
-  // steps: Step[];
-  steps: any;
+  steps: Step[];
 };
 
 export type FieldsetType = {
