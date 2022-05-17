@@ -4,6 +4,7 @@ import QuestionAnswer from "./QuestionAnswer";
 import InsertWords from "./InsertWords";
 import Variants from "./Variants";
 import Pairs from "./Pairs";
+import { LessonStep } from "@prisma/client";
 
 const Body = ({
   stepNumber,
@@ -16,39 +17,40 @@ const Body = ({
 }: {
   stepNumber: number;
   maxSteps: number;
-  content: any;
+  content: LessonStep;
   setAnswer: Function;
   formDisabled: boolean;
-  answer: any;
+  answer: string[];
   checkAnswer: Function;
 }) => {
+  const { question, text, stepType, variants } = content;
   return (
     <LessonBody>
       {stepNumber === maxSteps + 1 ? (
         <LessonBodyResults>Results Screen</LessonBodyResults>
       ) : (
         <Fragment>
-          {content.stepType === "Question" ? (
+          {stepType === "Question" ? (
             <QuestionAnswer
-              question={content.question}
+              question={question as string}
               answer={answer}
               setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
-          ) : content.stepType === "Insert" ? (
+          ) : stepType === "Insert" ? (
             <InsertWords
               answer={answer}
-              text={content.text}
+              text={text as string}
               contentAnswer={content.answer}
               setAnswer={setAnswer}
               formDisabled={formDisabled}
             />
-          ) : content.stepType === "Variants" ? (
+          ) : stepType === "Variants" ? (
             <Variants content={content} setAnswer={setAnswer} answer={answer} />
-          ) : content.stepType === "Pairs" ? (
+          ) : stepType === "Pairs" ? (
             <Pairs
               contentAnswer={content.answer}
-              variants={content.variants}
+              variants={variants}
               checkAnswer={checkAnswer}
             />
           ) : null}

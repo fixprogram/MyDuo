@@ -1,11 +1,11 @@
 import { Action } from "./actions";
 
 export type Variant = {
-  type?: string | null;
+  type: string | null;
   value: string;
   idx: number;
-  isFocused: boolean | null;
-  isConnected?: boolean | null;
+  isFocused: boolean;
+  isConnected: boolean;
 };
 
 export type State = {
@@ -26,7 +26,7 @@ export const reducer = (state: State, action: Action): State => {
       const newVariants = [];
       // if(variantsType)
       if (variants.length) {
-        return { ...state, variants, pairs };
+        return { ...state, variants: [...variants], pairs };
       }
       for (let i = 1; i <= variantsCount; i++) {
         newVariants.push({
@@ -100,7 +100,7 @@ export const reducer = (state: State, action: Action): State => {
       const { activeIdx, idx } = action.payload;
       let newPairs = pairs;
       let exists = newPairs.find(
-        (item) => item.includes(activeIdx) || item.includes(idx.toString())
+        (item) => item.includes(`${activeIdx}`) || item.includes(`${idx}`)
       );
       if (exists) {
         newPairs[newPairs.indexOf(exists)] = `${activeIdx}${idx}`;
@@ -113,7 +113,7 @@ export const reducer = (state: State, action: Action): State => {
           ...variant,
           isFocused: false,
           isConnected: newPairs.filter((pair) =>
-            pair.includes(variant.idx.toString())
+            pair.includes(`${variant.idx}`)
           ).length,
         })),
         pairs: newPairs,

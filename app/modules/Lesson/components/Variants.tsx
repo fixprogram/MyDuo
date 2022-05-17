@@ -1,3 +1,4 @@
+import { LessonStep } from "@prisma/client";
 import { Fragment } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
 import { LessonTitle, VariantItem } from "./lib";
@@ -7,30 +8,32 @@ export default function VariantsPractice({
   content,
   setAnswer,
 }: {
-  answer: string;
-  content: any;
+  answer: string[];
+  content: LessonStep;
   setAnswer: Function;
 }) {
+  const { definition, question, variants } = content;
+
   return (
     <Fragment>
       <LessonTitle>Choose right variant</LessonTitle>
       <div>
-        <p>{content.definition}</p>
+        <p>{definition}</p>
       </div>
-      <b>{content.question}</b>
+      <b>{question}</b>
 
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-        {content.variants.map((variant: { value: string }, idx: string) => (
+        {variants.map(({ value }, idx: number) => (
           <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
-            <VariantItemNumber isFocused={variant.value === answer[0]}>
+            <VariantItemNumber isFocused={value === answer[0]}>
               {idx + 1}
             </VariantItemNumber>
             <VariantItem
               type="button"
-              onClick={() => setAnswer([variant.value])}
-              isFocused={variant.value === answer[0]}
+              onClick={() => setAnswer([value])}
+              isFocused={value === answer[0]}
             >
-              {variant.value}
+              {value}
             </VariantItem>
           </li>
         ))}

@@ -23,7 +23,7 @@ export function ErrorBoundary() {
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
-  const id: any = data.get("lessonId");
+  const id = data.get("lessonId") as string;
 
   if (!id) {
     throw new Error("Lesson ID wasnt found");

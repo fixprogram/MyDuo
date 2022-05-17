@@ -2,12 +2,7 @@ import { useEffect } from "react";
 import { Legend } from "~/components/lib";
 import type { Step } from "./types";
 import QuestionAnswer from "./components/QuestionAnswer";
-import {
-  ChooseStyle,
-  StepContent,
-  StepHeader,
-  StyleButton,
-} from "./components/lib";
+import { StepContent, StepHeader } from "./components/lib";
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
@@ -32,14 +27,13 @@ export default function Steps({
   setKeywords: Function;
   setStepReady: Function;
   activeStep: number;
-  steps: any;
+  steps: Step[];
   setReady: Function;
   setQuestion: Function;
   screen: string;
 }) {
   useEffect(() => {
     setReady(!steps.find((step: Step) => step.ready === false));
-    console.log("steps: ", steps);
   }, [steps, setReady]);
 
   return (

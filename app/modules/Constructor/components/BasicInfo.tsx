@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Legend, LessonProgress } from "~/components/lib";
 
 import { LessonTitleInput } from "./lib";
 
 export default function BasicInfo({
-  data,
+  title = "",
   setReady,
   screen,
 }: {
-  data?: { title: "" };
+  title: string | undefined;
   setReady: Function;
   screen: string;
 }) {
   const [lessonTitle, setLessonTitle] = useState("");
   useEffect(() => {
-    if (data?.title) {
-      setLessonTitle(data.title);
+    if (title) {
+      setLessonTitle(title);
     }
-  }, [data]);
+  }, []);
   useEffect(() => {
     setReady(!!lessonTitle.length);
   }, [lessonTitle, setReady]);

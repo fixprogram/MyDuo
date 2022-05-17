@@ -6,7 +6,7 @@ import { reducer, basicState, Variant, State } from "./reducer";
 
 type MP = FieldsetType & {
   variantsCount: number;
-  initialVariants: Variant[] | undefined;
+  initialVariants: Variant[];
 };
 
 export default function MatchingPairs({
@@ -17,19 +17,14 @@ export default function MatchingPairs({
   setReady,
   initialVariants = [],
 }: MP) {
-  // const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
   const [{ variants, pairs }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
     pairs: [],
   });
 
-  // useEffect(() => {
-  //   console.log(initialVariants);
-  // }, [initialVariants]);
-
   useEffect(() => {
-    dispatch(pairsSetup(variantsCount, initialVariants, answer));
-  }, [variantsCount, initialVariants]);
+    dispatch(pairsSetup(variantsCount, initialVariants, answer as string[]));
+  }, []);
 
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {

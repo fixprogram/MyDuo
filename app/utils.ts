@@ -97,7 +97,7 @@ export const doesItemContainSign = (item: string) => {
   }
 };
 
-export const doesArrayContainItems = (items: [], arr: []) => {
+export const doesArrayContainItems = (items: string[], arr: string[]) => {
   const filtered = arr.filter((arrItem: string) =>
     items.find(
       (item: string) =>

@@ -3,12 +3,22 @@ import { doesArrayContainItems } from "~/utils";
 import { Action } from "./actions";
 import { LessonState } from "./types";
 
-const basicState = {
+const basicState: LessonState = {
   disabled: false, // Disabled state for preventing actions when the asnwer is checked
   progress: 0, // Current progress
   stepNumber: 0, // Current stepNumber number
-  content: {}, // Current stepNumber. Contains Question, Answer and Keywords
-  lessonSteps: [{}], // Array of all steps
+  content: {
+    id: "",
+    number: 0,
+    answer: [""],
+    stepType: "",
+    question: "",
+    text: "",
+    keywords: [""],
+    definition: "",
+    variants: [],
+  }, // Current stepNumber. Contains Question, Answer and Keywords
+  lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
   stateWrong: false, // Was the answer wrong
   stateRight: false, // Was the answer right
@@ -22,10 +32,10 @@ const continueContent = (
   lessonSteps: LessonStep[] | any
 ) => (lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content);
 
-const reducer = (state: LessonState, action: Action) => {
+const reducer = (state: LessonState, action: Action): LessonState => {
   const { content, stepNumber, maxSteps, lessonSteps } = state;
   switch (action.type) {
-    case "CONTINUE": // Go to next stepNumber
+    case "CONTINUE":
       return {
         ...state,
         stepNumber: stepNumber + 1,
@@ -36,9 +46,8 @@ const reducer = (state: LessonState, action: Action) => {
         stateWrong: false,
         nextStep: false,
       };
-    case "CHECK_ANSWER": // When click the button Check
+    case "CHECK_ANSWER":
       const negativeState = {
-        // This state we return if wrong
         ...state,
         stateWrong: true,
         formDisabled: true,
@@ -48,7 +57,6 @@ const reducer = (state: LessonState, action: Action) => {
         nextStep: true,
       };
       const positiveState = {
-        // This one we return if right
         ...state,
         disabled: false,
         nextStep: true,
@@ -98,7 +106,7 @@ const reducer = (state: LessonState, action: Action) => {
           return negativeState;
         }
         case "Pairs": {
-          let idx: any;
+          let idx = 0;
           if (
             content.answer.find((answerItem, id) => {
               idx = id;
@@ -118,7 +126,6 @@ const reducer = (state: LessonState, action: Action) => {
               content: newContent,
               disabled: true,
             };
-            // return positiveState;
           } else {
             return {
               ...state,
@@ -146,11 +153,11 @@ const reducer = (state: LessonState, action: Action) => {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: steps.shift(0, 1),
+        content: steps.shift() as LessonStep,
         disabled: true,
       };
     default:
-      throw new Error(`We don't know this case: ${action.type}`);
+      throw new Error(`We don't know this type: ${action.type}`);
   }
 };
 

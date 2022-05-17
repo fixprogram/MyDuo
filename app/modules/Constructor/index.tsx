@@ -54,7 +54,7 @@ export default function Constructor({ data }: { data?: Lesson }) {
         }}
       >
         <BasicInfo
-          data={data}
+          title={data?.title}
           setReady={(val: boolean) => setBasicInfoReady(val)}
           screen={currentScreen}
         />

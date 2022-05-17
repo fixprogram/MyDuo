@@ -16,7 +16,7 @@ export default function InsertWords({
   setAnswer: Function;
   formDisabled: boolean;
 }) {
-  const [values, setValues] = useState<any[]>([
+  const [values, setValues] = useState<string[]>([
     ...Array(contentAnswer.length).fill(""),
   ]);
 

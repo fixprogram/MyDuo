@@ -20,7 +20,7 @@ export const links = () => {
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
   const id = form.get("id") as string;
-  const newLanguage: any = form.get("newLanguage");
+  const newLanguage = form.get("newLanguage") as string;
   let project;
   if (newLanguage?.length > 0) {
     project = await createNewLanguage(request, newLanguage);
@@ -35,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const today = new Date();
   let user = await getUser(request);
   const languages = await getLanguages(request);
-  const activeLanguage = languages?.find((item: any) => item.active);
+  const activeLanguage = languages?.find((item) => item.active);
 
   if (!user) {
     return redirect("/login");

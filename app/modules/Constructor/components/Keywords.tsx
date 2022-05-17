@@ -6,7 +6,7 @@ export default function Keywords({
   answer,
   onSet,
 }: {
-  answer: any;
+  answer: string;
   onSet: Function;
 }) {
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -24,7 +24,7 @@ export default function Keywords({
         return (
           <Keyword
             key={idx}
-            onSet={(word: any) =>
+            onSet={(word: string) =>
               setKeywords((prevArr: string[]) => {
                 if (isItemInArray(prevArr, item)) {
                   prevArr.splice(prevArr.indexOf(word), 1);

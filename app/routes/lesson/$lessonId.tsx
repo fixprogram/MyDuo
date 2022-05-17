@@ -18,6 +18,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const expData = Number(form.get("exp"));
   const id = params.lessonId;
 
+  console.log("Test");
   const lesson = await prisma.lesson.findUnique({
     where: { id },
   });
@@ -48,12 +49,11 @@ export const loader: LoaderFunction = async ({ params }) => {
     throw new Error("lesson not found");
   }
 
-  const data = { lesson };
-  return data;
+  return lesson.steps;
 };
 
 export default function LessonScreen() {
-  const { lesson } = useLoaderData();
+  const steps = useLoaderData();
 
-  return <Lesson data={lesson} />;
+  return <Lesson steps={steps} />;
 }
