@@ -1,24 +1,29 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useState } from "react";
 import { Form } from "@remix-run/react";
-import { ProjectContext } from "~/routes/$projectTitle";
 import {
-  ActiveProjectButton,
-  ActiveProjectForm,
-  ProjectsContainer,
-  ProjectsInput,
-  ProjectsItem,
-  VisuallyHiddenInput,
+  ActiveLanguageButton,
+  ActiveLanguageContainer,
+  LanguagesItem,
+  LanguagesInput,
+  LanguagesContainer,
 } from "./lib";
+import { Language } from "@prisma/client";
 
-export default function Projects({ onOverlay }: { onOverlay: Function }) {
+export default function Projects({
+  onOverlay,
+  languages,
+}: {
+  onOverlay: Function;
+  languages: Language[];
+}) {
   const [showWindow, setShowWindow] = useState(false);
-  const [isNewProject, setIsNewProject] = useState(false);
-  const value: any = useContext(ProjectContext);
-  const { projects } = value;
+  const [isNewLanguage, setIsNewLanguage] = useState(false);
+
+  const activeLanguage = languages?.find((item) => item.active);
 
   return (
     <Fragment>
-      <ActiveProjectButton
+      <ActiveLanguageButton
         type="button"
         onMouseEnter={() => {
           onOverlay(true);
@@ -29,11 +34,10 @@ export default function Projects({ onOverlay }: { onOverlay: Function }) {
           setShowWindow(false);
         }}
       >
-        {projects?.find((item: any) => item.active).title}
-      </ActiveProjectButton>
+        {activeLanguage?.title}
+      </ActiveLanguageButton>
 
-      <ActiveProjectForm
-        method="post"
+      <ActiveLanguageContainer
         onMouseEnter={() => {
           onOverlay(true);
           setShowWindow(true);
@@ -43,41 +47,39 @@ export default function Projects({ onOverlay }: { onOverlay: Function }) {
           setShowWindow(false);
         }}
       >
-        {showWindow ? (
-          <ProjectsContainer>
+        {showWindow && (
+          <LanguagesContainer>
             <ul style={{ display: "flex", flexDirection: "column" }}>
-              {projects?.map((item: any, idx: number) => (
+              {languages?.map((item, idx: number) => (
                 <li
                   key={idx}
                   style={{
-                    backgroundColor: item.active ? "#afafaf" : "inherit",
+                    backgroundColor: item.active
+                      ? "rgb(221, 244, 255)"
+                      : "inherit",
                     order: item.active ? 0 : 1,
                     borderRadius: item.active ? "10px 10px 0 0" : 0,
                   }}
                 >
                   <Form method="post">
-                    <VisuallyHiddenInput
-                      type="text"
-                      name="id"
-                      value={item.id}
-                      readOnly
-                    />
-                    <ProjectsItem type="submit">{item.title}</ProjectsItem>
+                    <input type="hidden" name="id" value={item.id} readOnly />
+                    <LanguagesItem type="submit">{item.title}</LanguagesItem>
                   </Form>
                 </li>
               ))}
             </ul>
             <fieldset style={{ position: "relative" }}>
-              {isNewProject ? (
-                <Fragment>
-                  <ProjectsInput
+              {isNewLanguage ? (
+                <Form method="post">
+                  <LanguagesInput
                     type="text"
                     placeholder="Type it's title"
-                    name="newProject"
+                    name="newLanguage"
                     onChange={() => {
                       onOverlay(true);
                       setShowWindow(true);
                     }}
+                    required
                   />
                   <button
                     type="submit"
@@ -91,19 +93,19 @@ export default function Projects({ onOverlay }: { onOverlay: Function }) {
                   >
                     +
                   </button>
-                </Fragment>
+                </Form>
               ) : (
-                <ProjectsItem
+                <LanguagesItem
                   type="button"
-                  onClick={() => setIsNewProject(true)}
+                  onClick={() => setIsNewLanguage(true)}
                 >
-                  Add new project
-                </ProjectsItem>
+                  Add new language
+                </LanguagesItem>
               )}
             </fieldset>
-          </ProjectsContainer>
-        ) : null}
-      </ActiveProjectForm>
+          </LanguagesContainer>
+        )}
+      </ActiveLanguageContainer>
     </Fragment>
   );
 }

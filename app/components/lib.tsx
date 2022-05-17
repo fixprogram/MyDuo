@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Form, NavLink } from "@remix-run/react";
+import { NavLink, Link } from "@remix-run/react";
 
 type FormButtonProps = {
   active?: boolean;
@@ -21,6 +21,10 @@ type LessonProgressProps = {
   exp: string;
 };
 
+type LessonBlockMenuProps = {
+  isOpened: boolean;
+};
+
 const HorizontalList = styled.ul((props) => ({
   display: "flex",
   alignItems: "center",
@@ -36,16 +40,101 @@ const ListItem = styled.li((props) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  position: "relative",
 }));
 
-const PracticeBlock = styled.section((props) => ({
+const LessonBlock = styled.section((props) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
   marginBottom: "52px",
+  position: "relative",
 }));
 
-const PracticeBlockTitle = styled("div")`
+const LessonBlockMenu = styled("div")<LessonBlockMenuProps>`
+  display: ${(props) => (props.isOpened ? "block" : "none")};
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 20px);
+  transform: translate(-50%);
+  z-index: 1;
+`;
+
+const LessonBlockMenuTriangle = styled("div")`
+  left: calc(50% - 15px);
+  transform: translateX(-50%);
+  margin: 0 15px;
+  top: -8px;
+  height: 10px;
+  overflow: hidden;
+  width: 20px;
+  box-sizing: border-box;
+  position: absolute;
+`;
+
+const LessonBlockMenuTriangleContent = styled("span")`
+  background-color: #ce82ff;
+  border: 0;
+  position: absolute;
+  content: "";
+  border-radius: 2px;
+  height: 14.14427px;
+  left: 50%;
+  transform: rotate(45deg);
+  transform-origin: top left;
+  width: 14.14427px;
+`;
+
+const LessonBlockInner = styled("div")`
+  background-color: #ce82ff;
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  width: 300px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const LessonBlockLink = styled(Link)`
+  color: #ce82ff;
+  background-color: #fff;
+  flex-grow: 1;
+  text-transform: uppercase;
+  margin-top: 12px;
+  border-width: 0 0 4px;
+  padding: 13px 16px;
+  font-size: 15px;
+  line-height: 20px;
+  border-color: inherit;
+  border-radius: 18px;
+  text-decoration: none;
+  font-family: "Roboto";
+  font-weight: 500;
+  letter-spacing: 0.8px;
+`;
+
+const LessonBlockButton = styled("button")`
+  color: #ce82ff;
+  background-color: #fff;
+  flex-grow: 1;
+  text-transform: uppercase;
+  margin-top: 12px;
+  margin-left: 10px;
+  border-width: 0 0 4px;
+  padding: 13px 16px;
+  font-size: 15px;
+  line-height: 20px;
+  border-color: inherit;
+  border-radius: 18px;
+  text-decoration: none;
+  font-family: "Roboto";
+  font-weight: 500;
+  letter-spacing: 0.8px;
+`;
+
+const LessonBlockTitle = styled("div")`
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -67,7 +156,7 @@ const PracticeBlockTitle = styled("div")`
   }
 `;
 
-const PracticeBlockItem = styled.a(() => ({
+const LessonBlockItem = styled.a(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -81,6 +170,16 @@ const UserImage = styled.img(
   },
   (props) => ({ width: props.width, height: props.height })
 );
+
+const ProgressBarContainer = styled("div")`
+  width: 100%;
+  margin-top: 1px;
+  border-top: 1px solid #dbdddd;
+  padding-top: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ProgressBar = styled("div")<ProgressProps>`
   width: 61%;
@@ -112,6 +211,12 @@ const ProgressBar = styled("div")<ProgressProps>`
   }
 `;
 
+const ProgressLeaveLesson = styled(Link)`
+  margin-right: 21px;
+  height: 16px;
+  margin-top: -3px;
+`;
+
 const Input = styled("input")`
   background-color: #f7f7f7;
   border: 1px solid #e5e5e5;
@@ -141,6 +246,14 @@ const Textarea = styled("textarea")`
   font-family: "Roboto";
   font-weight: 400;
   letter-spacing: 1px;
+`;
+
+const H1Title = styled("h1")`
+  font-size: 26px;
+  margin: 10px 0 15px;
+  font-family: Montserrat;
+  font-weight: 700;
+  text-align: center;
 `;
 
 const Fieldset = styled("fieldset")`
@@ -179,14 +292,16 @@ const Legend = styled("legend")`
 `;
 
 const FormButton = styled("button")<FormButtonProps>`
-  background-color: ${(props) => (props.active ? "#78C83D" : "#fff")};
-  color: ${(props) => (props.active ? "#fff" : "#1cb0f6")};
+  background-color: ${(props) =>
+    props.active ? "#78C83D" : props.disabled ? "#E5E5E5" : "#fff"};
+  color: ${(props) =>
+    props.active ? "#fff" : props.disabled ? "#AFAFAF" : "#1cb0f6"};
   border: ${(props) => (props.active ? "none" : "2px solid #e5e5e5")};
   height: 50px;
   box-shadow: ${(props) =>
     props.active ? "0px -4px 0px 0px rgba(108, 164, 48, 1) inset" : "none"};
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   width: 150px;
-  cursor: pointer;
   text-transform: uppercase;
   font-family: "Montserrat";
   font-size: 15px;
@@ -195,22 +310,10 @@ const FormButton = styled("button")<FormButtonProps>`
   border-radius: 15px;
 `;
 
-const VisuallyHiddenInput = styled("input")`
-  position: absolute;
-  visibility: hidden;
-  top: 0;
-  left: 0;
-  width: 0px;
-  height: 0px;
-  margin: 0;
-  padding: 0;
-  border: none;
-`;
-
 const KeywordTemplate = styled("span")<KeywordProps>`
   margin-right: 10px;
   cursor: pointer;
-  border: ${(props) => (props.active ? "1px solid blue" : null)};
+  border: ${(props) => props.active && "1px solid blue"};
 `;
 
 const LessonProgress = styled("div")<LessonProgressProps>`
@@ -222,7 +325,7 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   place-items: center;
   background: radial-gradient(
       closest-side,
-      white 80%,
+      white 85%,
       transparent 0 99.9%,
       white 0
     ),
@@ -232,6 +335,22 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   font-weight: 700;
   font-family: "Roboto";
   color: #1cb0f6;
+  position: relative;
+`;
+
+const LessonProgressInner = styled("div")`
+  border-radius: 50%;
+  height: 68%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 68%;
+  background: #ce82ff;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Main = styled("main")`
@@ -239,6 +358,8 @@ const Main = styled("main")`
   margin-top: 24px;
   display: flex;
   justify-content: space-between;
+  height: calc(100vh - 95px); // margin 24px + menu height 71px
+  overflow-x: hidden;
 `;
 
 const LessonTitle = styled("b")`
@@ -347,7 +468,7 @@ const MenuNavLink = styled(NavLink)`
   align-items: center;
 `;
 
-const ActiveProjectButton = styled("button")`
+const ActiveLanguageButton = styled("button")`
   color: #3c3c3c;
   border: none;
   background-color: inherit;
@@ -357,21 +478,27 @@ const ActiveProjectButton = styled("button")`
   cursor: pointer;
 `;
 
-const ActiveProjectForm = styled(Form)`
+const ActiveLanguageContainer = styled("div")`
   position: absolute;
   top: 40px;
-  right: 300px;
+  right: -30px;
   width: 200px;
   padding: 20px 0;
   z-index: 9;
 `;
 
-const ProjectsContainer = styled("div")`
+const LanguagesContainer = styled("div")`
   border: 2px solid #dadcde;
   border-radius: 15px;
   background-color: white;
 `;
-const ProjectsItem = styled("button")`
+
+const LanguagesList = styled("ul")`
+  display: flex;
+  flex-direction: column;
+`;
+
+const LanguagesItem = styled("button")`
   border: none;
   border-bottom: 2px solid #dadcde;
   width: 100%;
@@ -385,7 +512,7 @@ const ProjectsItem = styled("button")`
   text-align: left;
 `;
 
-const ProjectsInput = styled("input")`
+const LanguagesInput = styled("input")`
   border: none;
   border-bottom: 2px solid #dadcde;
   border-radius: 0 0 10px 10px;
@@ -423,13 +550,18 @@ const Logout = styled("button")`
 `;
 
 export {
+  ProgressBarContainer,
   ProgressBar,
+  ProgressLeaveLesson,
   HorizontalList,
   ListItem,
   NavLink,
-  PracticeBlock,
-  PracticeBlockTitle,
-  PracticeBlockItem,
+  LessonBlock,
+  LessonBlockLink,
+  LessonBlockButton,
+  LessonBlockInner,
+  LessonBlockTitle,
+  LessonBlockItem,
   UserImage,
   Input,
   Textarea,
@@ -439,9 +571,9 @@ export {
   LabelText,
   Legend,
   FormButton,
-  VisuallyHiddenInput,
   KeywordTemplate,
   LessonProgress,
+  LessonProgressInner,
   Main,
   LessonTitle,
   NavIcon,
@@ -454,9 +586,14 @@ export {
   MenuNavLink,
   Logout,
   Overlay,
-  ActiveProjectButton,
-  ActiveProjectForm,
-  ProjectsContainer,
-  ProjectsItem,
-  ProjectsInput,
+  ActiveLanguageButton,
+  ActiveLanguageContainer,
+  LanguagesContainer,
+  LanguagesList,
+  LanguagesItem,
+  LanguagesInput,
+  LessonBlockMenu,
+  LessonBlockMenuTriangle,
+  LessonBlockMenuTriangleContent,
+  H1Title,
 };

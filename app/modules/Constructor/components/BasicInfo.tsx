@@ -1,26 +1,46 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
-import { Fragment } from "react";
-import { Legend, LessonProgress, VisuallyHiddenInput } from "~/components/lib";
+import { useEffect, useState } from "react";
+import { Legend, LessonProgress } from "~/components/lib";
 
 import { LessonTitleInput } from "./lib";
 
-export default function BasicInfo() {
+export default function BasicInfo({
+  data,
+  setReady,
+  screen,
+}: {
+  data?: { title: "" };
+  setReady: Function;
+  screen: string;
+}) {
+  const [lessonTitle, setLessonTitle] = useState("");
+  useEffect(() => {
+    if (data?.title) {
+      setLessonTitle(data.title);
+    }
+  }, [data]);
+  useEffect(() => {
+    setReady(!!lessonTitle.length);
+  }, [lessonTitle, setReady]);
   return (
-    <section style={{ textAlign: "center" }}>
-      <VisuallyHiddenInput
-        type="text"
-        name="formType"
-        value="repeat"
-        readOnly
-      />
+    <section
+      style={{
+        position: "absolute",
+        top: 0,
+        width: "100%",
+        textAlign: "center",
+        visibility: screen !== "Basic" ? "hidden" : "visible",
+      }}
+    >
+      <input type="hidden" name="formType" value="repeat" readOnly />
       <Legend>Basic info</Legend>
-      <LessonProgress exp={"0"} css={{ margin: "40px auto 0 auto" }} />
+      <LessonProgress exp={"0"} style={{ margin: "40px auto 0 auto" }} />
       <LessonTitleInput
         type="text"
         name="title"
         placeholder="Enter lesson title"
-        css={{ marginBottom: 40 }}
+        style={{ marginBottom: 40 }}
+        value={lessonTitle}
+        onChange={(e) => setLessonTitle(e.target.value)}
         required
       />
     </section>

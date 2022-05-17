@@ -1,31 +1,24 @@
+import { Variant } from "./components/MatchingPairs/reducer";
+
 export type Step = {
-  id: any;
-  answer: string;
+  question: string | null;
+  id: string;
+  answer: string | string[];
   number: number;
   keywords: string[];
-  style: string;
+  stepType: string;
+  ready?: boolean;
+  text?: string | null;
+  variants?: Variant[];
 };
 
 export type State = {
   steps: Step[];
 };
 
-export type Action = {
-  type: string;
-  payload?: {
-    answer?: string;
-    number?: number;
-    keywords?: string[];
-    style?: string;
-    id?: string;
-  };
-};
-
 export type FieldsetType = {
   number: number;
-  answer: string;
+  answer: string | string[];
   setAnswer: Function;
-  setKeywords?: Function;
-  keywords?: string[];
-  count?: number;
+  setReady: Function;
 };

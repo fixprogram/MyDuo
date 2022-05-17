@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeywordTemplate } from "../../../components/lib";
+import { KeywordTemplate } from "~/components/lib";
 
 export default function Keyword({
   onSet,

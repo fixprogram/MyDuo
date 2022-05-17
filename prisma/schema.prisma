@@ -1,7 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
-  binaryTargets   = ["native", "darwin-arm64"]
+  previewFeatures = ["mongodb"]
 }
 
 datasource db {
@@ -18,77 +17,42 @@ model User {
   streak       Int
   wasToday     Boolean
 }
-
-model Project {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+ 
+model Language {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
   active     Boolean
   userId     String
   title      String
-  repeats    Repeat[]
-  study      Study[]
-  practice   Practice[]
+  lessons    Lesson[]
 }
 
-model Repeat {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+model Lesson {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
   title     String
-  createdAt DateTime     @default(now())
-  steps     RepeatStep[]
+  createdAt DateTime      @default(now())
+  updatedAt String      
+  steps     LessonStep[]
   exp       Int
-  Project   Project?     @relation(fields: [projectId], references: [id])
+  Language  Language?     @relation(fields: [projectId], references: [id])
   projectId String
 }
 
-type RepeatStep {
+type LessonStep {
+  id         String
   number     Int
-  type       String
+  stepType   String
   question   String?
   text       String?
   answer     String[]
   keywords   String[]
   definition  String?
-  variants   String[]
+  variants   Variant[]
 }
 
-type Variants {
-  variants String[]
-}
-
-model Study {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   ContentItem[]
-  Project   Project?      @relation(fields: [projectId], references: [id])
-  projectId String
-}
-
-type ContentItem {
-  tag   String
-  value String
-}
-
-model Practice {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  goals     String[]
-  projectId String
-  days      Day[]
-  Project   Project?      @relation(fields: [projectId], references: [id])
-}
-
-type Day {
-  timestamp String
-  tasks     Task[]
-  habits    Habit[]
-}
-
-type Task {
-  title       String
-  isFulfilled  Boolean
-  priority    Int?
-}
-
-type Habit {
-  title       String
-  isFulfilled  Boolean
-  priority    Int?
+type Variant {
+  idx         Int
+  type        String?
+  value       String
+  isFocused   Boolean
+  isConnected Boolean?
 }
