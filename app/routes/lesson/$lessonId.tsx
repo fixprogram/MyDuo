@@ -18,21 +18,23 @@ export const action: ActionFunction = async ({ request, params }) => {
   const expData = Number(form.get("exp"));
   const id = params.lessonId;
 
-  console.log("Test");
-  const lesson = await prisma.lesson.findUnique({
+  const topic = await prisma.topic.findUnique({
     where: { id },
   });
 
-  if (!lesson) {
-    throw new Error(`Lesson with this id: ${id} is underfined`);
+  if (!topic) {
+    throw new Error(`Topic with this id: ${id} is underfined`);
   }
 
-  await prisma.lesson.update({
+  await prisma.topic.update({
     where: {
       id,
     },
     data: {
-      exp: lesson.exp + expData,
+      currentChapter:
+        topic.chapters !== topic.currentChapter
+          ? topic.currentChapter + 1
+          : topic.currentChapter,
       updatedAt: today.getDate().toString(),
     },
   });
@@ -41,15 +43,19 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const lesson = await prisma.lesson.findUnique({
+  const topic = await prisma.topic.findUnique({
     where: { id: params.lessonId },
   });
 
-  if (!lesson) {
+  if (!topic) {
     throw new Error("lesson not found");
   }
 
-  return lesson.steps;
+  const lessons = await prisma.lesson.findMany({
+    where: { id: { in: topic.lessonIDs } },
+  });
+
+  return lessons;
 };
 
 export default function LessonScreen() {

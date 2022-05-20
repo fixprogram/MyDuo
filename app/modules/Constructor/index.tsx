@@ -1,18 +1,21 @@
-import { Dispatch, useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Form, useTransition } from "remix";
 import { FormButton } from "~/components/lib";
-import BasicInfo from "./components/BasicInfo";
+import TopicInfo from "./components/TopicInfo";
 import Steps from "./Steps";
-import { basicState, reducer } from "./Steps/reducer";
-import actionCreator from "./Steps/actions";
+import { basicState, reducer } from "./Levels/reducer";
+import actionCreator from "./Levels/actions";
 import { Lesson } from "@prisma/client";
+import { ConstructorSidebar } from "./components/lib";
+import Levels from "./Levels";
 
 export default function Constructor({ data }: { data?: Lesson }) {
-  const [basicInfoReady, setBasicInfoReady] = useState(false);
+  const [basicInfoReady, setTopicInfoReady] = useState(false);
   const [stepsReady, setStepsReady] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState("Basic");
+  const [currentScreen, setCurrentScreen] = useState("Topic");
   const [activeStep, setActiveStep] = useState(-1);
   const [{ steps }, dispatch] = useReducer(reducer, basicState);
+  const [chapters, setChapters] = useState([1]);
 
   const {
     addStep,
@@ -53,13 +56,13 @@ export default function Constructor({ data }: { data?: Lesson }) {
           position: "relative",
         }}
       >
-        <BasicInfo
+        <TopicInfo
           title={data?.title}
-          setReady={(val: boolean) => setBasicInfoReady(val)}
+          setReady={(val: boolean) => setTopicInfoReady(val)}
           screen={currentScreen}
         />
 
-        <Steps
+        <Levels
           steps={steps}
           activeStep={activeStep}
           setReady={(val: boolean) => setStepsReady(val)}
@@ -80,27 +83,14 @@ export default function Constructor({ data }: { data?: Lesson }) {
           }}
         />
       </div>
-      <div
-        style={{
-          maxWidth: "25%",
-          display: "flex",
-          flexDirection: "column",
-          paddingBottom: 71,
-          position: "relative",
-          background: "#fff",
-          border: "2px solid #e5e5e5",
-          borderRadius: "16px",
-          margin: "0 24px 24px",
-          padding: "24px",
-        }}
-      >
+      <ConstructorSidebar>
         <h2>Sidebar</h2>
         <ul>
           <li>
             <button
               type="button"
               onClick={() => {
-                setCurrentScreen("Basic");
+                setCurrentScreen("Topic");
               }}
               style={{
                 color: "#3c3c3c",
@@ -113,11 +103,93 @@ export default function Constructor({ data }: { data?: Lesson }) {
                 whiteSpace: "nowrap",
               }}
             >
-              Basic Info
+              Topic Info
             </button>
           </li>
-          <li>
-            <button
+          {chapters.map((chapter) => (
+            <li key={`chapter-${chapter}`}>
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrentScreen("Steps");
+                  setActiveStep(steps[steps.length - 1].number);
+                }}
+                style={{
+                  color: "#3c3c3c",
+                  display: "block",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  overflow: "hidden",
+                  padding: "15px 20px",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Chapter {chapter}
+              </button>
+              <ul>
+                {steps.map(
+                  (stepsItem) =>
+                    stepsItem.chapter === chapter && (
+                      <li key={stepsItem.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCurrentScreen("Steps");
+                            setActiveStep(stepsItem.number);
+                          }}
+                        >
+                          Step {stepsItem.number + 1}
+                        </button>
+                        {stepsItem.number > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              removeStep(stepsItem.id);
+                              setActiveStep(steps.length - 2);
+                            }}
+                          >
+                            Remove step
+                          </button>
+                        ) : null}
+                      </li>
+                    )
+                )}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addStep(chapter);
+                      if (currentScreen !== "Steps") {
+                        setCurrentScreen("Steps");
+                      }
+                      setActiveStep(steps.length);
+                    }}
+                  >
+                    Add step
+                  </button>
+                </li>
+              </ul>
+              <button
+                type="button"
+                onClick={() => {
+                  // addStep();
+                  if (currentScreen !== "Steps") {
+                    setCurrentScreen("Steps");
+                  }
+                  // setActiveStep(steps.length);
+                  setChapters((prevChapters) => [
+                    ...prevChapters,
+                    prevChapters.length + 1,
+                  ]);
+                }}
+              >
+                Add chapter
+              </button>
+            </li>
+          ))}
+          {/* <li> */}
+          {/* <button
               type="button"
               onClick={() => {
                 setCurrentScreen("Steps");
@@ -134,7 +206,7 @@ export default function Constructor({ data }: { data?: Lesson }) {
                 whiteSpace: "nowrap",
               }}
             >
-              Steps
+              Chapter 1
             </button>
             <ul>
               {steps.map((stepsItem) => (
@@ -161,20 +233,34 @@ export default function Constructor({ data }: { data?: Lesson }) {
                   ) : null}
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    addStep();
+                    if (currentScreen !== "Steps") {
+                      setCurrentScreen("Steps");
+                    }
+                    setActiveStep(steps.length);
+                  }}
+                >
+                  Add step
+                </button>
+              </li>
             </ul>
             <button
               type="button"
               onClick={() => {
-                addStep();
+                // addStep();
                 if (currentScreen !== "Steps") {
                   setCurrentScreen("Steps");
                 }
-                setActiveStep(steps.length);
+                // setActiveStep(steps.length);
               }}
             >
-              Add step
+              Add chapter
             </button>
-          </li>
+          </li> */}
         </ul>
         <FormButton
           type="submit"
@@ -188,7 +274,7 @@ export default function Constructor({ data }: { data?: Lesson }) {
         >
           {submitText}
         </FormButton>
-      </div>
+      </ConstructorSidebar>
     </Form>
   );
 }

@@ -13,7 +13,8 @@ import {
   LessonBlockButton,
 } from "~/components/lib";
 import { getActiveLanguage } from "~/models/language.server";
-import { deleteLessonById, getLessons } from "~/models/lesson.server";
+// import { deleteLessonById, getLessons } from "~/models/lesson.server";
+import { deleteLessonById, getTopics } from "~/models/lesson.server";
 import { useEffect, useState } from "react";
 import Bin from "~/styles/bin.svg";
 
@@ -39,7 +40,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error(`We could not find the active language`);
   }
 
-  const data = await getLessons(activeLanguage.id);
+  const data = await getTopics(activeLanguage.id);
   return { data, languageIitle: activeLanguage.title };
 };
 
@@ -59,7 +60,17 @@ export default function Repeats() {
     <section style={{ width: "43%", marginLeft: "10%" }}>
       {data?.map(
         (
-          { title, id, exp }: { title: string; id: string; exp: string },
+          {
+            title,
+            id,
+            chapters,
+            currentChapter,
+          }: {
+            title: string;
+            id: string;
+            chapters: number;
+            currentChapter: number;
+          },
           i: number
         ) => (
           <LessonBlock key={i}>
@@ -80,8 +91,12 @@ export default function Repeats() {
                 return setOpenedLesson(-1);
               }}
             >
-              <LessonProgress exp={exp}>
-                <LessonProgressInner>{`${exp}%`}</LessonProgressInner>
+              <LessonProgress
+                exp={((currentChapter / chapters) * 100).toString()}
+              >
+                <LessonProgressInner>{`${
+                  (currentChapter / chapters) * 100
+                }%`}</LessonProgressInner>
               </LessonProgress>
               <LessonTitle>{title}</LessonTitle>
             </button>

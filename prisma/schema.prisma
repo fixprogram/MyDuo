@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongodb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -17,28 +16,44 @@ model User {
   streak       Int
   wasToday     Boolean
 }
- 
+
 model Language {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  active     Boolean
-  userId     String
-  title      String
-  lessons    Lesson[]
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  active          Boolean
+  userId          String
+  title           String
+  // lessons    Lesson[]
+  topics          Topic[]
+  lessonsToRepeat Lesson[]
+}
+
+model Topic {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  title          String    @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      String
+  // lessons        Lesson[]
+  lessonIDs      String[]
+  chapters       Int
+  currentChapter Int
+  level          Int
+  Language       Language? @relation(fields: [projectId], references: [id])
+  projectId      String
 }
 
 model Lesson {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  createdAt DateTime      @default(now())
-  updatedAt String      
-  steps     LessonStep[]
-  exp       Int
-  Language  Language?     @relation(fields: [projectId], references: [id])
-  projectId String
-}
-
-type LessonStep {
-  id         String
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  // title          String        @unique
+  // createdAt  DateTime  @default(now())
+  // updatedAt  String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  // steps          LessonStep[]
+  // chapters       Int
+  // currentChapter Int
+  // level          Int
+  // Language       Language?     @relation(fields: [projectId], references: [id])
+  // projectId      String
   number     Int
   stepType   String
   question   String?
@@ -47,7 +62,24 @@ type LessonStep {
   keywords   String[]
   definition  String?
   variants   Variant[]
+  // Topic      Topic?    @relation(fields: [topicId], references: [id])
+  // topicId    String?   @db.ObjectId
+  chapter    Int
+  Language   Language? @relation(fields: [languageId], references: [id])
+  languageId String?   @db.ObjectId
 }
+
+// type LessonStep {
+//   id         String
+//   number     Int
+//   stepType   String
+//   question   String?
+//   text       String?
+//   answer     String[]
+//   keywords   String[]
+//   definition  String?
+//   variants   Variant[]
+// }
 
 type Variant {
   idx         Int

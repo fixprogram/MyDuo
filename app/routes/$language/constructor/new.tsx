@@ -3,8 +3,8 @@ import type { ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
-import { nanoid } from "nanoid";
-import { Language, Lesson, LessonStep } from "@prisma/client";
+import { Language, Lesson } from "@prisma/client";
+import { createLessons } from "~/models/lesson.server";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -19,12 +19,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const title = form.get("title") as string;
 
-  const steps = form.getAll("step").map((item, index) => {
+  const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
+    const stepChapter = form.get(`chapter${index}`) as string;
     let answer: string | string[] = form.get(`answer${index}`) as string;
     answer = answer.trim().split(" ");
-    const id = nanoid();
-    const returnData = { stepType, number: index, id };
+    const returnData = {
+      stepType,
+      number: index,
+      chapter: Number(stepChapter),
+      languageId: activeProject.id,
+    };
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
@@ -75,17 +80,20 @@ export const action: ActionFunction = async ({ request, params }) => {
         return { ...returnData, answer };
       }
     }
-  }) as LessonStep[];
+  }) as Lesson[];
 
+  const createdLessonsIDs = await createLessons(lessons);
   const data = {
     title,
-    steps,
-    exp: 0,
+    lessonIDs: createdLessonsIDs,
+    chapters: 1,
+    currentChapter: 0,
+    level: 0,
     projectId: activeProject?.id,
     updatedAt: today.getDate().toString(),
   };
-  const lesson = await prisma.lesson.create({ data });
-  return redirect(`/lesson/${lesson.id}`);
+  const topic = await prisma.topic.create({ data });
+  return redirect(`/lesson/${topic.id}`);
 };
 
 export default function ConstructorNew() {
