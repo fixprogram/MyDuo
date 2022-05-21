@@ -928,6 +928,18 @@ var Logout = (0, import_styled.default)("button")`
   font-weight: 700;
   letter-spacing: 0.8px;
 `;
+var PracticeLastAddedContainer = (0, import_styled.default)("div")`
+  bottom: 24px;
+  margin-left: 0;
+  margin-right: auto;
+  border-width: 2px 2px 4px;
+  height: 72px;
+  width: 72px;
+  border-radius: 50%;
+  border: solid #e5e5e5;
+  position: absolute;
+  left: 12%;
+`;
 
 // app/components/Progress.tsx
 var Progress = ({ progress }) => {
@@ -1545,9 +1557,9 @@ var basicState = {
   nextStep: false
 };
 var continueContent = (content, lessonSteps) => lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
-var reducer = (state, action8) => {
+var reducer = (state, action9) => {
   const { content, stepNumber, maxSteps, lessonSteps } = state;
-  switch (action8.type) {
+  switch (action9.type) {
     case "CONTINUE":
       return __spreadProps(__spreadValues({}, state), {
         stepNumber: stepNumber + 1,
@@ -1574,7 +1586,7 @@ var reducer = (state, action8) => {
         formDisabled: true,
         progress: stepNumber / maxSteps
       });
-      const { answer } = action8.payload;
+      const { answer } = action9.payload;
       switch (content.stepType) {
         case "Insert": {
           const { length } = doesArrayContainItems(content.answer, answer);
@@ -1624,11 +1636,11 @@ var reducer = (state, action8) => {
           }
         }
         default: {
-          throw new Error(`We don't know this type: ${action8.type}`);
+          throw new Error(`We don't know this type: ${action9.type}`);
         }
       }
     case "CHANGE_DISABLED":
-      return __spreadProps(__spreadValues({}, state), { disabled: action8.payload.isDisabled });
+      return __spreadProps(__spreadValues({}, state), { disabled: action9.payload.isDisabled });
     case "RESULTS":
       return __spreadProps(__spreadValues({}, state), {
         stepNumber: stepNumber + 1,
@@ -1636,7 +1648,7 @@ var reducer = (state, action8) => {
         stateWrong: false
       });
     case "SET_CASE":
-      const { steps } = action8.payload;
+      const { steps } = action9.payload;
       return __spreadProps(__spreadValues({}, basicState), {
         stepNumber: 1,
         lessonSteps: steps,
@@ -1645,7 +1657,7 @@ var reducer = (state, action8) => {
         disabled: true
       });
     default:
-      throw new Error(`We don't know this type: ${action8.type}`);
+      throw new Error(`We don't know this type: ${action9.type}`);
   }
 };
 
@@ -2476,17 +2488,17 @@ var basicState2 = {
     }
   ]
 };
-var reducer2 = (state, action8) => {
+var reducer2 = (state, action9) => {
   const { steps } = state;
-  const { type } = action8;
+  const { type } = action9;
   switch (type) {
     case "SET_STEP_TYPE": {
-      const { stepType, id } = action8.payload;
+      const { stepType, id } = action9.payload;
       const newSteps = steps.map((step) => step.id === id ? __spreadProps(__spreadValues({}, step), { stepType }) : __spreadValues({}, step));
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
     case "REMOVE_STEP_TYPE": {
-      const { id } = action8.payload;
+      const { id } = action9.payload;
       const newSteps = steps.map((step) => {
         if (step.id === id) {
           return __spreadProps(__spreadValues({}, step), {
@@ -2502,19 +2514,19 @@ var reducer2 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
     case "SET_ANSWER": {
-      const { answer, number } = action8.payload;
+      const { answer, number } = action9.payload;
       let newSteps = steps;
       newSteps[number].answer = answer;
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
     case "SET_KEYWORDS": {
-      let { keywords, number } = action8.payload;
+      let { keywords, number } = action9.payload;
       let newSteps = steps;
       newSteps[number].keywords = keywords;
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
     case "ADD_STEP": {
-      const { chapter } = action8.payload;
+      const { chapter } = action9.payload;
       const newSteps = [
         ...steps,
         {
@@ -2531,13 +2543,13 @@ var reducer2 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
     case "REMOVE_STEP": {
-      const newSteps = steps.filter((item) => action8.payload.id !== item.id).map((item, i) => __spreadProps(__spreadValues({}, item), { number: i }));
+      const newSteps = steps.filter((item) => action9.payload.id !== item.id).map((item, i) => __spreadProps(__spreadValues({}, item), { number: i }));
       return __spreadProps(__spreadValues({}, state), {
         steps: [...newSteps]
       });
     }
     case "SET_STEP_READY": {
-      const { isReady, number } = action8.payload;
+      const { isReady, number } = action9.payload;
       const newSteps = steps;
       newSteps[number].ready = isReady;
       return __spreadProps(__spreadValues({}, state), {
@@ -2545,13 +2557,13 @@ var reducer2 = (state, action8) => {
       });
     }
     case "SET_DATA": {
-      const { steps: steps2 } = action8.payload;
+      const { steps: steps2 } = action9.payload;
       return __spreadProps(__spreadValues({}, state), {
         steps: steps2
       });
     }
     case "SET_QUESTION": {
-      const { question, number } = action8.payload;
+      const { question, number } = action9.payload;
       let newSteps = steps;
       newSteps[number].question = question;
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
@@ -2777,11 +2789,11 @@ var import_react20 = require("react");
 
 // app/modules/Constructor/Levels/components/MatchingPairs/reducer.ts
 init_react();
-var reducer3 = (state, action8) => {
+var reducer3 = (state, action9) => {
   const { variants, pairs } = state;
-  switch (action8.type) {
+  switch (action9.type) {
     case "SETUP": {
-      const { variantsCount, variants: variants2, pairs: pairs2 } = action8.payload;
+      const { variantsCount, variants: variants2, pairs: pairs2 } = action9.payload;
       const newVariants = [];
       if (variants2.length) {
         return __spreadProps(__spreadValues({}, state), { variants: [...variants2], pairs: pairs2 });
@@ -2798,7 +2810,7 @@ var reducer3 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { variants: newVariants });
     }
     case "VARIANTS_SETUP": {
-      const { variantsCount } = action8.payload;
+      const { variantsCount } = action9.payload;
       const variants2 = [];
       for (let i = 1; i <= variantsCount; i++) {
         variants2.push({
@@ -2810,19 +2822,19 @@ var reducer3 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { variants: variants2 });
     }
     case "VARIANT_SET_VALUE": {
-      const { idx, value } = action8.payload;
+      const { idx, value } = action9.payload;
       const newVariants = variants;
       newVariants[idx].value = value;
       return __spreadProps(__spreadValues({}, state), { variants: [...newVariants] });
     }
     case "TYPE": {
-      const { value, idx } = action8.payload;
+      const { value, idx } = action9.payload;
       const newVariants = variants;
       newVariants[newVariants.indexOf(newVariants.find((variant) => variant.idx === Number(idx)))].value = value;
       return __spreadProps(__spreadValues({}, state), { variants: [...newVariants] });
     }
     case "CHOOSE": {
-      const { idx } = action8.payload;
+      const { idx } = action9.payload;
       const variantItem = variants.find((variant) => variant.idx === Number(idx));
       if ((variantItem == null ? void 0 : variantItem.type) === "left") {
         const newVariants2 = variants.map((variant) => __spreadProps(__spreadValues({}, variant), {
@@ -2836,7 +2848,7 @@ var reducer3 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { variants: newVariants });
     }
     case "VARIANT_CHOOSE": {
-      const { idx } = action8.payload;
+      const { idx } = action9.payload;
       const newVariants = variants.map((variant) => __spreadProps(__spreadValues({}, variant), {
         isFocused: false
       }));
@@ -2844,7 +2856,7 @@ var reducer3 = (state, action8) => {
       return __spreadProps(__spreadValues({}, state), { variants: [...newVariants] });
     }
     case "CONNECT": {
-      const { activeIdx, idx } = action8.payload;
+      const { activeIdx, idx } = action9.payload;
       let newPairs = pairs;
       let exists = newPairs.find((item) => item.includes(`${activeIdx}`) || item.includes(`${idx}`));
       if (exists) {
@@ -3603,6 +3615,32 @@ var import_react25 = require("react");
 // app/styles/bin.svg
 var bin_default = "/build/_assets/bin-RYGYRSXA.svg";
 
+// app/components/PracticeLastAdded.tsx
+init_react();
+var import_react_router_dom = require("react-router-dom");
+
+// app/styles/practice_last_added.svg
+var practice_last_added_default = "/build/_assets/practice_last_added-KMZKRM23.svg";
+
+// app/components/PracticeLastAdded.tsx
+function PracticeLastAdded() {
+  return /* @__PURE__ */ React.createElement(PracticeLastAddedContainer, null, /* @__PURE__ */ React.createElement(import_react_router_dom.Link, {
+    to: `/practice`,
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "100%"
+    }
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: practice_last_added_default,
+    alt: "Practice last added lessons",
+    height: 32,
+    width: 38.7
+  })));
+}
+
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/lessons.tsx
 function ErrorBoundary5() {
   return /* @__PURE__ */ React.createElement("div", {
@@ -3684,22 +3722,69 @@ function Repeats() {
     height: 20
   })))), /* @__PURE__ */ React.createElement(LessonBlockLink, {
     to: `/lesson/${id}`
-  }, "Start +16 XP"))))));
+  }, "Start +16 XP"))))), /* @__PURE__ */ React.createElement(PracticeLastAdded, null));
+}
+
+// route:/Users/newll/Desktop/MyDuo/app/routes/practice.tsx
+var practice_exports = {};
+__export(practice_exports, {
+  ErrorBoundary: () => ErrorBoundary6,
+  action: () => action6,
+  default: () => LessonScreen2,
+  loader: () => loader5
+});
+init_react();
+var import_remix10 = __toESM(require_remix());
+function ErrorBoundary6() {
+  const { lessonId } = (0, import_remix10.useParams)();
+  return /* @__PURE__ */ React.createElement("div", {
+    className: "error-container"
+  }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
+}
+var action6 = async ({ request }) => {
+  const form = await request.formData();
+  const expData = Number(form.get("exp"));
+  const user = await getUser(request);
+  await prisma.user.update({
+    where: {
+      id: user == null ? void 0 : user.id
+    },
+    data: {
+      exp: (user == null ? void 0 : user.exp) + expData
+    }
+  });
+  return (0, import_remix10.redirect)(`/lessons`);
+};
+var loader5 = async () => {
+  const lessons = await prisma.lesson.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 10
+  });
+  if (!lessons) {
+    throw new Error("lesson not found");
+  }
+  return lessons;
+};
+function LessonScreen2() {
+  const steps = (0, import_remix10.useLoaderData)();
+  return /* @__PURE__ */ React.createElement(Lesson, {
+    steps
+  });
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/logout.tsx
 var logout_exports = {};
 __export(logout_exports, {
-  action: () => action6,
-  loader: () => loader5
+  action: () => action7,
+  loader: () => loader6
 });
 init_react();
-var import_remix10 = __toESM(require_remix());
-var action6 = async ({ request }) => {
+var import_remix11 = __toESM(require_remix());
+var action7 = async ({ request }) => {
   return logout(request);
 };
-var loader5 = async () => {
-  return (0, import_remix10.redirect)("/");
+var loader6 = async () => {
+  return (0, import_remix11.redirect)("/");
 };
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/repeat.tsx
@@ -3708,34 +3793,34 @@ __export(repeat_exports, {
   default: () => Repeat
 });
 init_react();
-var import_remix11 = __toESM(require_remix());
+var import_remix12 = __toESM(require_remix());
 function Repeat() {
-  return /* @__PURE__ */ React.createElement(import_remix11.Outlet, null);
+  return /* @__PURE__ */ React.createElement(import_remix12.Outlet, null);
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
-  loader: () => loader6
+  loader: () => loader7
 });
 init_react();
-var import_remix12 = __toESM(require_remix());
-var loader6 = async ({ request }) => {
+var import_remix13 = __toESM(require_remix());
+var loader7 = async ({ request }) => {
   var _a;
   const user = await getUser(request);
   const languages = await getLanguages(request);
   if (!user) {
-    return (0, import_remix12.redirect)("/login");
+    return (0, import_remix13.redirect)("/login");
   }
-  return (0, import_remix12.redirect)(`/${(_a = languages == null ? void 0 : languages.find((it) => it.active)) == null ? void 0 : _a.title}/lessons`);
+  return (0, import_remix13.redirect)(`/${(_a = languages == null ? void 0 : languages.find((it) => it.active)) == null ? void 0 : _a.title}/lessons`);
 };
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
 var login_exports = {};
 __export(login_exports, {
-  action: () => action7,
+  action: () => action8,
   default: () => LoginPage,
-  loader: () => loader7,
+  loader: () => loader8,
   meta: () => meta
 });
 init_react();
@@ -3745,7 +3830,7 @@ var import_react27 = require("@remix-run/react");
 // app/components/Login.tsx
 init_react();
 var import_react26 = require("react");
-var import_remix13 = __toESM(require_remix());
+var import_remix14 = __toESM(require_remix());
 function Login({ isLogin, setIsLogin, actionData }) {
   var _a;
   const usernameRef = (0, import_react26.useRef)(null);
@@ -3759,7 +3844,7 @@ function Login({ isLogin, setIsLogin, actionData }) {
       (_d = passwordRef.current) == null ? void 0 : _d.focus();
     }
   }, [actionData]);
-  return /* @__PURE__ */ React.createElement(import_remix13.Form, {
+  return /* @__PURE__ */ React.createElement(import_remix14.Form, {
     method: "post",
     style: { width: "100%", maxWidth: 375 }
   }, /* @__PURE__ */ React.createElement(H1Title, null, isLogin ? "Login" : "Register"), /* @__PURE__ */ React.createElement(LoginToggle, {
@@ -3811,13 +3896,13 @@ function Login({ isLogin, setIsLogin, actionData }) {
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
 var import_react28 = require("react");
-var loader7 = async ({ request }) => {
+var loader8 = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId)
     return (0, import_node3.redirect)("/");
   return (0, import_node3.json)({});
 };
-var action7 = async ({ request }) => {
+var action8 = async ({ request }) => {
   const formData = await request.formData();
   const loginType = formData.get("loginType");
   const username = formData.get("username");
@@ -3863,7 +3948,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "da879408", "entry": { "module": "/build/entry.client-VZJJF3NU.js", "imports": ["/build/_shared/chunk-6PAOBXQV.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-F7C45RC3.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-NUDFX6AS.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-KJ6I6CZM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-E2ZW22F4.js", "imports": ["/build/_shared/chunk-HRML6YEX.js", "/build/_shared/chunk-DCR75ODW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-LPG4PVRQ.js", "imports": ["/build/_shared/chunk-HRML6YEX.js", "/build/_shared/chunk-DCR75ODW.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-5GIM7BTF.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/lesson/$lessonId": { "id": "routes/lesson/$lessonId", "parentId": "root", "path": "lesson/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/lesson/$lessonId-TZ557U52.js", "imports": ["/build/_shared/chunk-DCR75ODW.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-KJ6I6CZM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-KCTO2NZ7.js", "imports": ["/build/_shared/chunk-Q3S5S6TJ.js", "/build/_shared/chunk-KJ6I6CZM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4B6DZ7OU.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-DA879408.js" };
+var assets_manifest_default = { "version": "230912da", "entry": { "module": "/build/entry.client-BBYR3LVQ.js", "imports": ["/build/_shared/chunk-WCQ2WEJC.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-N6FLH5VZ.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-Q5LLUAPW.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YJPHE3TB.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-ZHQPOLNJ.js", "imports": ["/build/_shared/chunk-XGLGZUPA.js", "/build/_shared/chunk-DCR75ODW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-PMHCIYUL.js", "imports": ["/build/_shared/chunk-XGLGZUPA.js", "/build/_shared/chunk-DCR75ODW.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-URIQWQIG.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/lesson/$lessonId": { "id": "routes/lesson/$lessonId", "parentId": "root", "path": "lesson/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/lesson/$lessonId-S7FGADE4.js", "imports": ["/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-5VCWQP7C.js", "/build/_shared/chunk-DCR75ODW.js", "/build/_shared/chunk-YJPHE3TB.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-4CWKRXRE.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YJPHE3TB.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-UTWEKXNL.js", "imports": ["/build/_shared/chunk-5VCWQP7C.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-DCR75ODW.js", "/build/_shared/chunk-YJPHE3TB.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-G7UO4XXS.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-230912DA.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };
@@ -3915,6 +4000,14 @@ var routes = {
     index: void 0,
     caseSensitive: void 0,
     module: lessons_exports
+  },
+  "routes/practice": {
+    id: "routes/practice",
+    parentId: "root",
+    path: "practice",
+    index: void 0,
+    caseSensitive: void 0,
+    module: practice_exports
   },
   "routes/logout": {
     id: "routes/logout",

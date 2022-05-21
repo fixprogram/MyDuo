@@ -17,6 +17,7 @@ import { getActiveLanguage } from "~/models/language.server";
 import { deleteLessonById, getTopics } from "~/models/lesson.server";
 import { useEffect, useState } from "react";
 import Bin from "~/styles/bin.svg";
+import PracticeLastAdded from "~/components/PracticeLastAdded";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -124,6 +125,8 @@ export default function Repeats() {
           </LessonBlock>
         )
       )}
+
+      <PracticeLastAdded />
     </section>
   );
 }

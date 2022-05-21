@@ -549,6 +549,19 @@ const Logout = styled("button")`
   letter-spacing: 0.8px;
 `;
 
+const PracticeLastAddedContainer = styled("div")`
+  bottom: 24px;
+  margin-left: 0;
+  margin-right: auto;
+  border-width: 2px 2px 4px;
+  height: 72px;
+  width: 72px;
+  border-radius: 50%;
+  border: solid #e5e5e5;
+  position: absolute;
+  left: 12%;
+`;
+
 export {
   ProgressBarContainer,
   ProgressBar,
@@ -596,4 +609,5 @@ export {
   LessonBlockMenuTriangle,
   LessonBlockMenuTriangleContent,
   H1Title,
+  PracticeLastAddedContainer,
 };
