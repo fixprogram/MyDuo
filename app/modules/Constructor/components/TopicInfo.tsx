@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Legend, LessonProgress } from "~/components/lib";
 
 import { LessonTitleInput, ScreenContainer } from "./lib";
@@ -22,15 +22,6 @@ export default function TopicInfo({
     setReady(!!topicTitle.length);
   }, [topicTitle, setReady]);
   return (
-    // <section
-    //   style={{
-    //     position: "absolute",
-    //     top: 0,
-    //     width: "100%",
-    //     textAlign: "center",
-    //     visibility: screen !== "Topic" ? "hidden" : "visible",
-    //   }}
-    // >
     <ScreenContainer screen={screen} target="Topic">
       <input type="hidden" name="formType" value="repeat" readOnly />
       <Legend>Topic info</Legend>

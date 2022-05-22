@@ -24,7 +24,6 @@ export const reducer = (state: State, action: Action): State => {
     case "SETUP": {
       const { variantsCount, variants, pairs } = action.payload;
       const newVariants = [];
-      // if(variantsType)
       if (variants.length) {
         return { ...state, variants: [...variants], pairs };
       }
@@ -46,6 +45,8 @@ export const reducer = (state: State, action: Action): State => {
         variants.push({
           value: "",
           isFocused: false,
+          isConnected: false,
+          type: null,
           idx: i,
         });
       }
@@ -118,6 +119,24 @@ export const reducer = (state: State, action: Action): State => {
         })),
         pairs: newPairs,
       };
+    }
+    case "ADD_PAIR": {
+      const newVariants = variants;
+      newVariants.push({
+        value: "",
+        isFocused: false,
+        idx: newVariants.length + 1,
+        isConnected: false,
+        type: null,
+      });
+      newVariants.push({
+        value: "",
+        isFocused: false,
+        idx: newVariants.length + 1,
+        isConnected: false,
+        type: null,
+      });
+      return { ...state, variants: [...newVariants] };
     }
     default: {
       throw new Error(`Omg we don't know this action type`);

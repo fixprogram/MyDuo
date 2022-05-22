@@ -10,7 +10,8 @@ export type Action =
   | { type: "TYPE"; payload: { value: string; idx: number } }
   | { type: "CHOOSE"; payload: { idx: number } }
   | { type: "VARIANT_CHOOSE"; payload: { idx: number } }
-  | { type: "CONNECT"; payload: { activeIdx: number; idx: number } };
+  | { type: "CONNECT"; payload: { activeIdx: number; idx: number } }
+  | { type: "ADD_PAIR" };
 
 export const pairsSetup = (
   variantsCount: number,
@@ -52,3 +53,5 @@ export const pairsConnect = (activeIdx: number, idx: number): Action => ({
   type: "CONNECT",
   payload: { activeIdx, idx },
 });
+
+export const addPair = (): Action => ({ type: "ADD_PAIR" });

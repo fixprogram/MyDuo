@@ -139,7 +139,7 @@ export default function Levels({
                   number={number}
                   answer={answer}
                   setAnswer={(answer: string[]) => setAnswer(answer, number)}
-                  variantsCount={8}
+                  variantsCount={4}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   initialVariants={variants}
                 />
