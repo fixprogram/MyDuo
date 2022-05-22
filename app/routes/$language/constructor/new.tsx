@@ -18,16 +18,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const activeProject = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
+  const stepChapters = form.getAll("chapter") as string[];
 
   const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
-    const stepChapter = form.get(`chapter${index}`) as string;
+    // const stepChapter = form.get(`chapter${index}`) as string;
     let answer: string | string[] = form.get(`answer${index}`) as string;
     answer = answer.trim().split(" ");
     const returnData = {
       stepType,
       number: index,
-      chapter: Number(stepChapter),
+      chapter: Number(stepChapters[index]),
       languageId: activeProject.id,
     };
     switch (stepType) {
@@ -86,14 +87,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const data = {
     title,
     lessonIDs: createdLessonsIDs,
-    chapters: 1,
+    chapters: stepChapters.length,
     currentChapter: 0,
     level: 0,
     projectId: activeProject?.id,
     updatedAt: today.getDate().toString(),
   };
   const topic = await prisma.topic.create({ data });
-  return redirect(`/lesson/${topic.id}`);
+  return redirect(`/skill/${topic.title}/1`);
 };
 
 export default function ConstructorNew() {

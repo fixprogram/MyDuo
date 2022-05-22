@@ -125,7 +125,15 @@ export default function Repeats() {
                       </LessonBlockButton>
                     </Form>
                   </div>
-                  <LessonBlockLink to={`/lesson/${id}`}>
+                  {/* If the topic is 100% done, then we just repeat all lessons from it */}
+                  {/* Otherwise we study lessons only from next chapter */}
+                  <LessonBlockLink
+                    to={`/skill/${title}/${
+                      currentChapter / chapters === 1
+                        ? "practice"
+                        : currentChapter + 1
+                    }`}
+                  >
                     Start +16 XP
                   </LessonBlockLink>
                 </LessonBlockInner>
@@ -134,7 +142,7 @@ export default function Repeats() {
           )
         )}
 
-        <PracticeLastAdded />
+        {data.length > 0 && <PracticeLastAdded />}
       </section>
       <WeeklyProgress activity={activity} />
     </main>

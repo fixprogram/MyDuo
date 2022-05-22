@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
+import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 import { LessonTitle } from "./lib";
 

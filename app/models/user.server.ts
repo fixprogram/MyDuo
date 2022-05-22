@@ -2,6 +2,8 @@ import type { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
+import { getUser } from "~/session.server";
+import { getWeekDay } from "~/utils";
 import { createInitialLanguage } from "./language.server";
 
 export type { User } from "@prisma/client";
@@ -80,4 +82,18 @@ export async function verifyLogin(
   const { passwordHash: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
+}
+
+export async function increaseTodayExp(request: Request, value: number) {
+  const user = await getUser(request);
+  if (!user) throw new Error("User is undefined");
+  return await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      weeklyActivity: {
+        ...user?.weeklyActivity,
+        [`${getWeekDay()}`]: user?.weeklyActivity[`${getWeekDay()}`] + value,
+      },
+    },
+  });
 }

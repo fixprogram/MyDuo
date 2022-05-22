@@ -38,6 +38,10 @@ export default function Constructor({ data }: { data?: Lesson }) {
     }
   }, [data]);
 
+  useEffect(() => {
+    console.log(chapters);
+  }, [chapters]);
+
   return (
     <Form
       method="post"
@@ -81,6 +85,7 @@ export default function Constructor({ data }: { data?: Lesson }) {
           setStepReady={(isReady: boolean, number: number) => {
             setStepReady(isReady, number);
           }}
+          chapters={chapters}
         />
       </div>
       <ConstructorSidebar>
@@ -188,79 +193,6 @@ export default function Constructor({ data }: { data?: Lesson }) {
               </button>
             </li>
           ))}
-          {/* <li> */}
-          {/* <button
-              type="button"
-              onClick={() => {
-                setCurrentScreen("Steps");
-                setActiveStep(steps[steps.length - 1].number);
-              }}
-              style={{
-                color: "#3c3c3c",
-                display: "block",
-                fontSize: 16,
-                fontWeight: 700,
-                overflow: "hidden",
-                padding: "15px 20px",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Chapter 1
-            </button>
-            <ul>
-              {steps.map((stepsItem) => (
-                <li key={stepsItem.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCurrentScreen("Steps");
-                      setActiveStep(stepsItem.number);
-                    }}
-                  >
-                    Step {stepsItem.number + 1}
-                  </button>
-                  {stepsItem.number > 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        removeStep(stepsItem.id);
-                        setActiveStep(steps.length - 2);
-                      }}
-                    >
-                      Remove step
-                    </button>
-                  ) : null}
-                </li>
-              ))}
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    addStep();
-                    if (currentScreen !== "Steps") {
-                      setCurrentScreen("Steps");
-                    }
-                    setActiveStep(steps.length);
-                  }}
-                >
-                  Add step
-                </button>
-              </li>
-            </ul>
-            <button
-              type="button"
-              onClick={() => {
-                // addStep();
-                if (currentScreen !== "Steps") {
-                  setCurrentScreen("Steps");
-                }
-                // setActiveStep(steps.length);
-              }}
-            >
-              Add chapter
-            </button>
-          </li> */}
         </ul>
         <FormButton
           type="submit"

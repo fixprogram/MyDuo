@@ -1,6 +1,6 @@
 import { LessonStep } from "@prisma/client";
 import { Fragment } from "react";
-import { VariantItemNumber } from "~/modules/Constructor/Steps/components/lib";
+import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
 import { LessonTitle, VariantItem } from "./lib";
 
 export default function VariantsPractice({

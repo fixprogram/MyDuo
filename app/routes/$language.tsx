@@ -8,7 +8,7 @@ import {
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
-import { getLastActiveLesson, getLastActivity } from "~/models/lesson.server";
+import { getLastActivity } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
@@ -45,10 +45,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
 
-  // const lastActive = await getLastActiveLesson(activeLanguage.id);
-  // if (!lastActive) {
-  //   user = await updateUserStreak(user.id, false, 0);
-  // }
   const lastActive = await getLastActivity(user.id);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);

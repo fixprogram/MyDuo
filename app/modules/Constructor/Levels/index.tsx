@@ -21,7 +21,7 @@ export default function Levels({
   setKeywords,
   setStepReady,
   setQuestion,
-  chapter,
+  chapters,
 }: {
   setStepType: Function;
   removeStepType: Function;
@@ -33,7 +33,7 @@ export default function Levels({
   setReady: Function;
   setQuestion: Function;
   screen: string;
-  chapter: number;
+  chapters: number[];
 }) {
   useEffect(() => {
     setReady(!steps.find((step: Step) => step.ready === false));
@@ -60,7 +60,8 @@ export default function Levels({
             key={id}
           >
             <input type="hidden" name="step" value={idx} />
-            <input type="hidden" name={`chapter${number}`} value={chapter} />
+            {/* <input type="hidden" name={`chapter${number}`} value={chapter} /> */}
+            <input type="hidden" name={`chapter`} value={chapters[idx]} />
             <Legend>{stepType ? stepType : "Choose type"}</Legend>
             <StepHeader>
               {stepType !== "" && (

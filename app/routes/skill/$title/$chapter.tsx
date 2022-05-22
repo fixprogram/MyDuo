@@ -16,19 +16,19 @@ export const action: ActionFunction = async ({ request, params }) => {
   const language = await getActiveLanguage(request);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
-  const id = params.lessonId;
+  const title = params.title;
 
   const topic = await prisma.topic.findUnique({
-    where: { id },
+    where: { title },
   });
 
   if (!topic) {
-    throw new Error(`Topic with this id: ${id} is underfined`);
+    throw new Error(`Topic with this title: ${title} is underfined`);
   }
 
   await prisma.topic.update({
     where: {
-      id,
+      title,
     },
     data: {
       currentChapter:
@@ -43,8 +43,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const topic = await prisma.topic.findUnique({
-    where: { id: params.lessonId },
+  const topic = await prisma.topic.findFirst({
+    where: { title: params.title },
   });
 
   if (!topic) {
@@ -52,7 +52,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   }
 
   const lessons = await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs } },
+    where: { id: { in: topic.lessonIDs }, chapter: Number(params.chapter) },
   });
 
   return lessons;
