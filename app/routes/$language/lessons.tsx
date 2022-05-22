@@ -15,9 +15,11 @@ import {
 import { getActiveLanguage } from "~/models/language.server";
 // import { deleteLessonById, getLessons } from "~/models/lesson.server";
 import { deleteLessonById, getTopics } from "~/models/lesson.server";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Bin from "~/styles/bin.svg";
 import PracticeLastAdded from "~/components/PracticeLastAdded";
+import WeeklyProgress from "~/components/WeeklyProgress";
+import { getUser } from "~/session.server";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -36,17 +38,22 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
+  const user = await getUser(request);
 
   if (!activeLanguage) {
     throw new Error(`We could not find the active language`);
   }
 
   const data = await getTopics(activeLanguage.id);
-  return { data, languageIitle: activeLanguage.title };
+  return {
+    data,
+    activity: user?.weeklyActivity,
+    languageIitle: activeLanguage.title,
+  };
 };
 
 export default function Repeats() {
-  const { data, languageIitle } = useLoaderData();
+  const { data, activity, languageIitle } = useLoaderData();
   const [openedLesson, setOpenedLesson] = useState(-1);
   const transition = useTransition();
   const isDisabled = transition.state !== "idle";
@@ -58,75 +65,78 @@ export default function Repeats() {
   }, [transition.state]);
 
   return (
-    <section style={{ width: "43%", marginLeft: "10%" }}>
-      {data?.map(
-        (
-          {
-            title,
-            id,
-            chapters,
-            currentChapter,
-          }: {
-            title: string;
-            id: string;
-            chapters: number;
-            currentChapter: number;
-          },
-          i: number
-        ) => (
-          <LessonBlock key={i}>
-            <button
-              key={id}
-              aria-labelledby={title}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "33.33%",
-                textDecoration: "none",
-              }}
-              onClick={() => {
-                if (openedLesson !== i) {
-                  return setOpenedLesson(i);
-                }
-                return setOpenedLesson(-1);
-              }}
-            >
-              <LessonProgress
-                exp={((currentChapter / chapters) * 100).toString()}
+    <main style={{ display: "flex", width: "100%" }}>
+      <section style={{ width: "43%", marginLeft: "10%" }}>
+        {data?.map(
+          (
+            {
+              title,
+              id,
+              chapters,
+              currentChapter,
+            }: {
+              title: string;
+              id: string;
+              chapters: number;
+              currentChapter: number;
+            },
+            i: number
+          ) => (
+            <LessonBlock key={i}>
+              <button
+                key={id}
+                aria-labelledby={title}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "33.33%",
+                  textDecoration: "none",
+                }}
+                onClick={() => {
+                  if (openedLesson !== i) {
+                    return setOpenedLesson(i);
+                  }
+                  return setOpenedLesson(-1);
+                }}
               >
-                <LessonProgressInner>{`${
-                  (currentChapter / chapters) * 100
-                }%`}</LessonProgressInner>
-              </LessonProgress>
-              <LessonTitle>{title}</LessonTitle>
-            </button>
-            <LessonBlockMenu isOpened={openedLesson === i}>
-              <LessonBlockMenuTriangle>
-                <LessonBlockMenuTriangleContent />
-              </LessonBlockMenuTriangle>
-              <LessonBlockInner>
-                <div style={{ display: "flex" }}>
-                  <LessonBlockLink to={`/${languageIitle}/constructor/${id}`}>
-                    Edit
+                <LessonProgress
+                  exp={((currentChapter / chapters) * 100).toString()}
+                >
+                  <LessonProgressInner>{`${
+                    (currentChapter / chapters) * 100
+                  }%`}</LessonProgressInner>
+                </LessonProgress>
+                <LessonTitle>{title}</LessonTitle>
+              </button>
+              <LessonBlockMenu isOpened={openedLesson === i}>
+                <LessonBlockMenuTriangle>
+                  <LessonBlockMenuTriangleContent />
+                </LessonBlockMenuTriangle>
+                <LessonBlockInner>
+                  <div style={{ display: "flex" }}>
+                    <LessonBlockLink to={`/${languageIitle}/constructor/${id}`}>
+                      Edit
+                    </LessonBlockLink>
+                    <Form method="post">
+                      <input type="hidden" name="lessonId" value={id} />
+                      <LessonBlockButton type="submit" disabled={isDisabled}>
+                        <img src={Bin} alt="delete" width={20} height={20} />
+                      </LessonBlockButton>
+                    </Form>
+                  </div>
+                  <LessonBlockLink to={`/lesson/${id}`}>
+                    Start +16 XP
                   </LessonBlockLink>
-                  <Form method="post">
-                    <input type="hidden" name="lessonId" value={id} />
-                    <LessonBlockButton type="submit" disabled={isDisabled}>
-                      <img src={Bin} alt="delete" width={20} height={20} />
-                    </LessonBlockButton>
-                  </Form>
-                </div>
-                <LessonBlockLink to={`/lesson/${id}`}>
-                  Start +16 XP
-                </LessonBlockLink>
-              </LessonBlockInner>
-            </LessonBlockMenu>
-          </LessonBlock>
-        )
-      )}
+                </LessonBlockInner>
+              </LessonBlockMenu>
+            </LessonBlock>
+          )
+        )}
 
-      <PracticeLastAdded />
-    </section>
+        <PracticeLastAdded />
+      </section>
+      <WeeklyProgress activity={activity} />
+    </main>
   );
 }

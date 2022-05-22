@@ -106,3 +106,20 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
   );
   return { state: !!filtered.length, length: filtered.length, items: filtered };
 };
+
+export const getWeekDay = (): String => {
+  const today = new Date();
+
+  return today.toLocaleDateString("en-US", {
+    weekday: "short",
+  }) as String;
+};
+
+export const getYesterdayDay = (): String => {
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
+
+  return today.toLocaleDateString("en-US", {
+    weekday: "short",
+  }) as String;
+};

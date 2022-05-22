@@ -8,10 +8,11 @@ import {
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
-import { getLastActiveLesson } from "~/models/lesson.server";
+import { getLastActiveLesson, getLastActivity } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
+import { getWeekDay, getYesterdayDay } from "~/utils";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -32,7 +33,6 @@ export async function action({ request }: { request: Request }) {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const today = new Date();
   let user = await getUser(request);
   const languages = await getLanguages(request);
   const activeLanguage = languages?.find((item) => item.active);
@@ -45,17 +45,22 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
 
-  const lastActive = await getLastActiveLesson(activeLanguage.id);
+  // const lastActive = await getLastActiveLesson(activeLanguage.id);
+  // if (!lastActive) {
+  //   user = await updateUserStreak(user.id, false, 0);
+  // }
+  const lastActive = await getLastActivity(user.id);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
+    return { user, languages };
   }
 
-  if (Number(lastActive?.updatedAt) === today.getDate() - 1) {
+  if (lastActive.day === getYesterdayDay()) {
     user = await updateUserStreak(user.id, false, user.streak);
     return { user, languages };
   }
 
-  if (!user?.wasToday && Number(lastActive?.updatedAt) === today.getDate()) {
+  if (!user?.wasToday && lastActive.day === getWeekDay()) {
     user = await updateUserStreak(user.id, true, user.streak + 1);
     return { user, languages };
   }

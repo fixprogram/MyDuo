@@ -15,6 +15,15 @@ export async function createUser(username: User["username"], password: string) {
       passwordHash,
       streak: 0,
       wasToday: false,
+      weeklyActivity: {
+        Sun: 0,
+        Mon: 0,
+        Tue: 0,
+        Wed: 0,
+        Thu: 0,
+        Fri: 0,
+        Sat: 0,
+      },
     },
   });
 

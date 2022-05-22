@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  username     String   @unique
-  passwordHash String
-  streak       Int
-  wasToday     Boolean
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  username        String   @unique
+  passwordHash    String
+  streak          Int
+  wasToday        Boolean
+  weeklyActivity  WeeklyActivity
 }
 
 model Language {
@@ -87,4 +88,14 @@ type Variant {
   value       String
   isFocused   Boolean
   isConnected Boolean?
+}
+
+type WeeklyActivity {
+  Sun   Int
+  Mon   Int
+  Tue   Int
+  Wed   Int
+  Thu   Int
+  Fri   Int
+  Sat   Int
 }
