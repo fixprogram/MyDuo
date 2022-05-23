@@ -2,7 +2,6 @@ import { useEffect, useReducer, useState } from "react";
 import { Form, useTransition } from "remix";
 import { FormButton } from "~/components/lib";
 import TopicInfo from "./components/TopicInfo";
-import Steps from "./Steps";
 import { basicState, reducer } from "./Levels/reducer";
 import actionCreator from "./Levels/actions";
 import { Lesson } from "@prisma/client";
@@ -31,6 +30,10 @@ export default function Constructor({ data }: { data?: Lesson }) {
 
   const transition = useTransition();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
+
+  const isSubmitActive = stepsReady === true && basicInfoReady === true;
+  const isSubmitDisabled =
+    stepsReady === false || basicInfoReady === false || submitText !== "Save";
 
   useEffect(() => {
     if (data) {
@@ -90,7 +93,7 @@ export default function Constructor({ data }: { data?: Lesson }) {
       </div>
       <ConstructorSidebar>
         <h2>Sidebar</h2>
-        <ul>
+        <ul style={{ marginBottom: "auto" }}>
           <li>
             <button
               type="button"
@@ -196,13 +199,8 @@ export default function Constructor({ data }: { data?: Lesson }) {
         </ul>
         <FormButton
           type="submit"
-          active={stepsReady === true && basicInfoReady === true}
-          disabled={
-            stepsReady === false ||
-            basicInfoReady === false ||
-            submitText !== "Save"
-          }
-          style={{ marginTop: "auto" }}
+          active={isSubmitActive}
+          disabled={isSubmitDisabled}
         >
           {submitText}
         </FormButton>

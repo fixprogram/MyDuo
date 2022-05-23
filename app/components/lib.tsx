@@ -43,13 +43,21 @@ const ListItem = styled.li((props) => ({
   position: "relative",
 }));
 
-const LessonBlock = styled.section((props) => ({
+const LessonsContainer = styled.section((props) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
   marginBottom: "52px",
   position: "relative",
 }));
+
+const LessonBlock = styled("div")`
+  width: 33%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const LessonBlockMenu = styled("div")<LessonBlockMenuProps>`
   display: ${(props) => (props.isOpened ? "block" : "none")};
@@ -368,6 +376,7 @@ const LessonTitle = styled("b")`
   color: #3c3c3c;
   text-align: center;
   margin-top: 8px;
+  display: block;
 `;
 
 const NavIcon = styled("img")`
@@ -570,6 +579,7 @@ export {
   ListItem,
   NavLink,
   LessonBlock,
+  LessonsContainer,
   LessonBlockLink,
   LessonBlockButton,
   LessonBlockInner,
