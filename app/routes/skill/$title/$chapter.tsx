@@ -3,16 +3,17 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import Lesson from "~/modules/Lesson";
 import { getActiveLanguage } from "~/models/language.server";
+import { updateCurrentChapter } from "~/models/topic.server";
+import { increaseTodayExp } from "~/models/user.server";
 
 export function ErrorBoundary() {
-  const { lessonId } = useParams();
+  const { title, chapter } = useParams();
   return (
-    <div className="error-container">{`There was an error loading lesson by the id ${lessonId}. Sorry.`}</div>
+    <div className="error-container">{`There was an error loading lesson with the title ${title} and chapter ${chapter}. Sorry.`}</div>
   );
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const today = new Date();
   const language = await getActiveLanguage(request);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
@@ -26,18 +27,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw new Error(`Topic with this title: ${title} is underfined`);
   }
 
-  await prisma.topic.update({
-    where: {
-      title,
-    },
-    data: {
-      currentChapter:
-        topic.chapters !== topic.currentChapter
-          ? topic.currentChapter + 1
-          : topic.currentChapter,
-      updatedAt: today.getDate().toString(),
-    },
-  });
+  await updateCurrentChapter(topic);
+
+  await increaseTodayExp(request, expData);
 
   return redirect(`/${language?.title}/lessons`);
 };
@@ -48,7 +40,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 
   if (!topic) {
-    throw new Error("lesson not found");
+    throw new Error("Topic is not found");
   }
 
   const lessons = await prisma.lesson.findMany({

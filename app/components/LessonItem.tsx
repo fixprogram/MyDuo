@@ -61,7 +61,6 @@ export default function LessonItem({
           </LessonProgress>
           <LessonTitle>{title}</LessonTitle>
         </button>
-        {/* <LessonBlockMenu isOpened={openedLesson === i} ref={refs[i]}> */}
         <LessonBlockMenu isOpened={isOpened}>
           <LessonBlockMenuTriangle>
             <LessonBlockMenuTriangleContent />

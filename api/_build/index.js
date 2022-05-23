@@ -2087,15 +2087,29 @@ async function getLanguages(request) {
   }
 }
 
+// app/models/topic.server.ts
+init_react();
+async function updateCurrentChapter(topic) {
+  const today = new Date();
+  return await prisma.topic.update({
+    where: {
+      title: topic.title
+    },
+    data: {
+      currentChapter: topic.chapters !== topic.currentChapter ? topic.currentChapter + 1 : topic.currentChapter,
+      updatedAt: today.getDate().toString()
+    }
+  });
+}
+
 // route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
 function ErrorBoundary2() {
-  const { lessonId } = (0, import_remix4.useParams)();
+  const { title, chapter } = (0, import_remix4.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
-  }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
+  }, `There was an error loading lesson with the title ${title} and chapter ${chapter}. Sorry.`);
 }
 var action = async ({ request, params }) => {
-  const today = new Date();
   const language = await getActiveLanguage(request);
   const form = await request.formData();
   const expData = Number(form.get("exp"));
@@ -2106,15 +2120,8 @@ var action = async ({ request, params }) => {
   if (!topic) {
     throw new Error(`Topic with this title: ${title} is underfined`);
   }
-  await prisma.topic.update({
-    where: {
-      title
-    },
-    data: {
-      currentChapter: topic.chapters !== topic.currentChapter ? topic.currentChapter + 1 : topic.currentChapter,
-      updatedAt: today.getDate().toString()
-    }
-  });
+  await updateCurrentChapter(topic);
+  await increaseTodayExp(request, expData);
   return (0, import_remix4.redirect)(`/${language == null ? void 0 : language.title}/lessons`);
 };
 var loader = async ({ params }) => {
@@ -2122,7 +2129,7 @@ var loader = async ({ params }) => {
     where: { title: params.title }
   });
   if (!topic) {
-    throw new Error("lesson not found");
+    throw new Error("Topic is not found");
   }
   const lessons = await prisma.lesson.findMany({
     where: { id: { in: topic.lessonIDs }, chapter: Number(params.chapter) }
@@ -2146,23 +2153,6 @@ __export(practice_exports, {
 });
 init_react();
 var import_remix5 = __toESM(require_remix());
-
-// app/models/topic.server.ts
-init_react();
-async function updateCurrentChapter(topic) {
-  const today = new Date();
-  return await prisma.topic.update({
-    where: {
-      title: topic.title
-    },
-    data: {
-      currentChapter: topic.chapters !== topic.currentChapter ? topic.currentChapter + 1 : topic.currentChapter,
-      updatedAt: today.getDate().toString()
-    }
-  });
-}
-
-// route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/practice.tsx
 function ErrorBoundary3() {
   const { title } = (0, import_remix5.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
@@ -2489,7 +2479,7 @@ var import_remix8 = __toESM(require_remix());
 
 // app/modules/Constructor/index.tsx
 init_react();
-var import_react24 = require("react");
+var import_react25 = require("react");
 var import_remix7 = __toESM(require_remix());
 
 // app/modules/Constructor/components/TopicInfo.tsx
@@ -2579,26 +2569,36 @@ function TopicInfo({
 // app/modules/Constructor/Levels/reducer.ts
 init_react();
 var import_nanoid = require("nanoid");
+var createStep = ({ number = 0, chapter = 1 }) => {
+  return {
+    active: true,
+    question: "",
+    id: (0, import_nanoid.nanoid)(),
+    answer: "",
+    number,
+    keywords: [],
+    stepType: "",
+    ready: false,
+    text: "",
+    variants: [],
+    chapter
+  };
+};
 var basicState2 = {
-  steps: [
-    {
-      question: "",
-      id: (0, import_nanoid.nanoid)(),
-      answer: "",
-      number: 0,
-      keywords: [],
-      stepType: "",
-      ready: false,
-      text: "",
-      variants: [],
-      chapter: 1
-    }
-  ]
+  chapters: [1],
+  currentScreen: "Topic",
+  steps: [createStep({})]
 };
 var reducer2 = (state, action10) => {
-  const { steps } = state;
+  const { steps, chapters } = state;
   const { type } = action10;
   switch (type) {
+    case "SET_DATA": {
+      const { steps: steps2 } = action10.payload;
+      return __spreadProps(__spreadValues({}, state), {
+        steps: steps2
+      });
+    }
     case "SET_STEP_TYPE": {
       const { stepType, id } = action10.payload;
       const newSteps = steps.map((step) => step.id === id ? __spreadProps(__spreadValues({}, step), { stepType }) : __spreadValues({}, step));
@@ -2620,6 +2620,30 @@ var reducer2 = (state, action10) => {
       });
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
+    case "SET_STEP_READY": {
+      const { isReady, number } = action10.payload;
+      const newSteps = steps;
+      newSteps[number].ready = isReady;
+      return __spreadProps(__spreadValues({}, state), {
+        steps: [...newSteps]
+      });
+    }
+    case "SET_STEP_ACTIVE": {
+      const { id } = action10.payload;
+      const newSteps = steps.map((step) => {
+        if (step.id === id) {
+          return __spreadProps(__spreadValues({}, step), { active: true });
+        }
+        return __spreadProps(__spreadValues({}, step), { active: false });
+      });
+      return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
+    }
+    case "SET_QUESTION": {
+      const { question, number } = action10.payload;
+      let newSteps = steps;
+      newSteps[number].question = question;
+      return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
+    }
     case "SET_ANSWER": {
       const { answer, number } = action10.payload;
       let newSteps = steps;
@@ -2634,20 +2658,10 @@ var reducer2 = (state, action10) => {
     }
     case "ADD_STEP": {
       const { chapter } = action10.payload;
-      const newSteps = [
-        ...steps,
-        {
-          question: "",
-          number: steps.length,
-          keywords: [],
-          answer: "",
-          ready: false,
-          id: (0, import_nanoid.nanoid)(),
-          stepType: "",
-          chapter
-        }
-      ];
-      return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
+      const newSteps = steps.map((step) => __spreadProps(__spreadValues({}, step), { active: false }));
+      return __spreadProps(__spreadValues({}, state), {
+        steps: [...newSteps, createStep({ number: steps.length, chapter })]
+      });
     }
     case "REMOVE_STEP": {
       const newSteps = steps.filter((item) => action10.payload.id !== item.id).map((item, i) => __spreadProps(__spreadValues({}, item), { number: i }));
@@ -2655,25 +2669,20 @@ var reducer2 = (state, action10) => {
         steps: [...newSteps]
       });
     }
-    case "SET_STEP_READY": {
-      const { isReady, number } = action10.payload;
-      const newSteps = steps;
-      newSteps[number].ready = isReady;
+    case "ADD_CHAPTER": {
+      const newChapter = chapters.length + 1;
+      const newSteps = steps.map((step) => __spreadProps(__spreadValues({}, step), { active: false }));
       return __spreadProps(__spreadValues({}, state), {
-        steps: [...newSteps]
+        chapters: [...chapters, newChapter],
+        steps: [
+          ...newSteps,
+          createStep({ number: steps.length, chapter: newChapter })
+        ]
       });
     }
-    case "SET_DATA": {
-      const { steps: steps2 } = action10.payload;
-      return __spreadProps(__spreadValues({}, state), {
-        steps: steps2
-      });
-    }
-    case "SET_QUESTION": {
-      const { question, number } = action10.payload;
-      let newSteps = steps;
-      newSteps[number].question = question;
-      return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
+    case "CHANGE_CURRENT_SCREEN": {
+      const { currentScreen } = action10.payload;
+      return __spreadProps(__spreadValues({}, state), { currentScreen });
     }
     default:
       throw new Error(`We don't know this action type: ${type}`);
@@ -2691,7 +2700,10 @@ var actionCreator2 = (dispatch) => ({
   removeStep: (id) => dispatch({ type: "REMOVE_STEP", payload: { id } }),
   setStepReady: (isReady, number) => dispatch({ type: "SET_STEP_READY", payload: { isReady, number } }),
   setData: (steps) => dispatch({ type: "SET_DATA", payload: { steps } }),
-  setQuestion: (question, number) => dispatch({ type: "SET_QUESTION", payload: { question, number } })
+  setQuestion: (question, number) => dispatch({ type: "SET_QUESTION", payload: { question, number } }),
+  addChapter: () => dispatch({ type: "ADD_CHAPTER" }),
+  setStepActive: (id) => dispatch({ type: "SET_STEP_ACTIVE", payload: { id } }),
+  changeCurrentScreen: (currentScreen) => dispatch({ type: "CHANGE_CURRENT_SCREEN", payload: { currentScreen } })
 });
 var actions_default2 = actionCreator2;
 
@@ -3235,25 +3247,28 @@ function ChooseStyleScreen({ setStepType, id }) {
 
 // app/modules/Constructor/Levels/index.tsx
 function Levels({
-  activeStep,
   steps,
   setReady,
   screen,
-  setStepType,
-  removeStepType,
-  setAnswer,
-  setKeywords,
-  setStepReady,
-  setQuestion,
-  chapters
+  chapters,
+  dispatch
 }) {
   (0, import_react23.useEffect)(() => {
     setReady(!steps.find((step) => step.ready === false));
   }, [steps, setReady]);
+  const {
+    setAnswer,
+    setKeywords,
+    setStepType,
+    setStepReady,
+    removeStepType,
+    setQuestion
+  } = actions_default2(dispatch);
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
     screen,
     target: "Steps"
   }, steps.map(({
+    active,
     question,
     number,
     keywords,
@@ -3261,9 +3276,10 @@ function Levels({
     stepType,
     id,
     variants,
-    ready
+    ready,
+    chapter
   }, idx) => /* @__PURE__ */ React.createElement("section", {
-    className: `${activeStep !== idx && "visuallyHidden"}`,
+    className: `${!active && "visuallyHidden"}`,
     key: id
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
@@ -3272,7 +3288,7 @@ function Levels({
   }), /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `chapter`,
-    value: chapters[idx]
+    value: chapter
   }), /* @__PURE__ */ React.createElement(Legend, null, stepType ? stepType : "Choose type"), /* @__PURE__ */ React.createElement(StepHeader, null, stepType !== "" && /* @__PURE__ */ React.createElement("button", {
     type: "button",
     style: {
@@ -3330,37 +3346,100 @@ function Levels({
   }) : null))));
 }
 
-// app/modules/Constructor/index.tsx
-function Constructor({ data }) {
-  const [basicInfoReady, setTopicInfoReady] = (0, import_react24.useState)(false);
-  const [stepsReady, setStepsReady] = (0, import_react24.useState)(false);
-  const [currentScreen, setCurrentScreen] = (0, import_react24.useState)("Topic");
-  const [activeStep, setActiveStep] = (0, import_react24.useState)(-1);
-  const [{ steps }, dispatch] = (0, import_react24.useReducer)(reducer2, basicState2);
-  const [chapters, setChapters] = (0, import_react24.useState)([1]);
+// app/modules/Constructor/Levels/components/Sidebar.tsx
+init_react();
+var import_react24 = __toESM(require("react"));
+var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
   const {
+    addChapter,
     addStep,
     removeStep,
-    setAnswer,
-    setKeywords,
-    setStepType,
-    setStepReady,
-    removeStepType,
-    setData,
-    setQuestion
+    setStepActive,
+    changeCurrentScreen
   } = actions_default2(dispatch);
+  return /* @__PURE__ */ import_react24.default.createElement(import_react24.Fragment, null, /* @__PURE__ */ import_react24.default.createElement("h2", null, "Sidebar"), /* @__PURE__ */ import_react24.default.createElement("ul", {
+    style: { marginBottom: "auto" }
+  }, /* @__PURE__ */ import_react24.default.createElement("li", null, /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      changeCurrentScreen("Topic");
+    },
+    style: {
+      color: "#3c3c3c",
+      display: "block",
+      fontSize: 16,
+      fontWeight: 700,
+      overflow: "hidden",
+      padding: "15px 20px",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
+    }
+  }, "Topic Info")), chapters.map((chapter) => /* @__PURE__ */ import_react24.default.createElement("li", {
+    key: `chapter-${chapter}`
+  }, /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      changeCurrentScreen("Steps");
+      setStepActive(steps[steps.length - 1].id);
+    },
+    style: {
+      color: "#3c3c3c",
+      display: "block",
+      fontSize: 16,
+      fontWeight: 700,
+      overflow: "hidden",
+      padding: "15px 20px",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
+    }
+  }, "Chapter ", chapter), /* @__PURE__ */ import_react24.default.createElement("ul", null, steps.map((stepsItem) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react24.default.createElement("li", {
+    key: stepsItem.id
+  }, /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      changeCurrentScreen("Steps");
+      setStepActive(stepsItem.id);
+    }
+  }, "Step ", stepsItem.number + 1), stepsItem.number > 0 ? /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      removeStep(stepsItem.id);
+    }
+  }, "Remove step") : null)), /* @__PURE__ */ import_react24.default.createElement("li", null, /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      addStep(chapter);
+      if (currentScreen !== "Steps") {
+        changeCurrentScreen("Steps");
+      }
+    }
+  }, "Add step"))), /* @__PURE__ */ import_react24.default.createElement("button", {
+    type: "button",
+    onClick: () => {
+      if (currentScreen !== "Steps") {
+        changeCurrentScreen("Steps");
+      }
+      addChapter();
+    }
+  }, "Add chapter")))), children);
+};
+var Sidebar_default = Sidebar;
+
+// app/modules/Constructor/index.tsx
+function Constructor({ data }) {
+  const [basicInfoReady, setTopicInfoReady] = (0, import_react25.useState)(false);
+  const [stepsReady, setStepsReady] = (0, import_react25.useState)(false);
+  const [{ steps, chapters, currentScreen }, dispatch] = (0, import_react25.useReducer)(reducer2, basicState2);
+  const { setData } = actions_default2(dispatch);
   const transition = (0, import_remix7.useTransition)();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled = stepsReady === false || basicInfoReady === false || submitText !== "Save";
-  (0, import_react24.useEffect)(() => {
+  (0, import_react25.useEffect)(() => {
     if (data) {
       setData(data.steps);
     }
   }, [data]);
-  (0, import_react24.useEffect)(() => {
-    console.log(chapters);
-  }, [chapters]);
   return /* @__PURE__ */ React.createElement(import_remix7.Form, {
     method: "post",
     style: {
@@ -3382,94 +3461,20 @@ function Constructor({ data }) {
     screen: currentScreen
   }), /* @__PURE__ */ React.createElement(Levels, {
     steps,
-    activeStep,
     setReady: (val) => setStepsReady(val),
     screen: currentScreen,
-    setStepType: (type, id) => setStepType(type, id),
-    removeStepType: (id) => removeStepType(id),
-    setAnswer: (answer, number) => setAnswer(answer, number),
-    setQuestion: (question, number) => setQuestion(question, number),
-    setKeywords: (keywords, number) => {
-      setKeywords(keywords, number);
-    },
-    setStepReady: (isReady, number) => {
-      setStepReady(isReady, number);
-    },
+    dispatch,
     chapters
-  })), /* @__PURE__ */ React.createElement(ConstructorSidebar, null, /* @__PURE__ */ React.createElement("h2", null, "Sidebar"), /* @__PURE__ */ React.createElement("ul", {
-    style: { marginBottom: "auto" }
-  }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      setCurrentScreen("Topic");
-    },
-    style: {
-      color: "#3c3c3c",
-      display: "block",
-      fontSize: 16,
-      fontWeight: 700,
-      overflow: "hidden",
-      padding: "15px 20px",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
-    }
-  }, "Topic Info")), chapters.map((chapter) => /* @__PURE__ */ React.createElement("li", {
-    key: `chapter-${chapter}`
-  }, /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      setCurrentScreen("Steps");
-      setActiveStep(steps[steps.length - 1].number);
-    },
-    style: {
-      color: "#3c3c3c",
-      display: "block",
-      fontSize: 16,
-      fontWeight: 700,
-      overflow: "hidden",
-      padding: "15px 20px",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
-    }
-  }, "Chapter ", chapter), /* @__PURE__ */ React.createElement("ul", null, steps.map((stepsItem) => stepsItem.chapter === chapter && /* @__PURE__ */ React.createElement("li", {
-    key: stepsItem.id
-  }, /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      setCurrentScreen("Steps");
-      setActiveStep(stepsItem.number);
-    }
-  }, "Step ", stepsItem.number + 1), stepsItem.number > 0 ? /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      removeStep(stepsItem.id);
-      setActiveStep(steps.length - 2);
-    }
-  }, "Remove step") : null)), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      addStep(chapter);
-      if (currentScreen !== "Steps") {
-        setCurrentScreen("Steps");
-      }
-      setActiveStep(steps.length);
-    }
-  }, "Add step"))), /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: () => {
-      if (currentScreen !== "Steps") {
-        setCurrentScreen("Steps");
-      }
-      setChapters((prevChapters) => [
-        ...prevChapters,
-        prevChapters.length + 1
-      ]);
-    }
-  }, "Add chapter")))), /* @__PURE__ */ React.createElement(FormButton, {
+  })), /* @__PURE__ */ React.createElement(ConstructorSidebar, null, /* @__PURE__ */ React.createElement(Sidebar_default, {
+    chapters,
+    steps,
+    currentScreen,
+    dispatch
+  }, /* @__PURE__ */ React.createElement(FormButton, {
     type: "submit",
     active: isSubmitActive,
     disabled: isSubmitDisabled
-  }, submitText)));
+  }, submitText))));
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$lessonId.tsx
@@ -3709,7 +3714,7 @@ function WeeklyProgress({ activity }) {
 
 // app/components/LessonItem.tsx
 init_react();
-var import_react26 = require("react");
+var import_react27 = require("react");
 var import_remix10 = __toESM(require_remix());
 
 // app/styles/bin.svg
@@ -3717,9 +3722,9 @@ var bin_default = "/build/_assets/bin-RYGYRSXA.svg";
 
 // app/hooks/useOnClickOutside.ts
 init_react();
-var import_react25 = require("react");
+var import_react26 = require("react");
 function useOnClickOutside(ref, handler) {
-  (0, import_react25.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     const listener = (event) => {
       if (!ref.current || ref.current.contains(event.target)) {
         return;
@@ -3743,12 +3748,12 @@ function LessonItem({
   chapters,
   link
 }) {
-  const [isOpened, setIsOpened] = (0, import_react26.useState)(false);
+  const [isOpened, setIsOpened] = (0, import_react27.useState)(false);
   const transition = (0, import_remix10.useTransition)();
   const isDisabled = transition.state !== "idle";
-  const ref = (0, import_react26.useRef)(null);
+  const ref = (0, import_react27.useRef)(null);
   useOnClickOutside(ref, () => setIsOpened(false));
-  (0, import_react26.useEffect)(() => {
+  (0, import_react27.useEffect)(() => {
     if (transition.state === "loading") {
       setIsOpened(false);
     }
@@ -3934,17 +3939,17 @@ __export(login_exports, {
 });
 init_react();
 var import_node3 = require("@remix-run/node");
-var import_react28 = require("@remix-run/react");
+var import_react29 = require("@remix-run/react");
 
 // app/components/Login.tsx
 init_react();
-var import_react27 = require("react");
+var import_react28 = require("react");
 var import_remix16 = __toESM(require_remix());
 function Login({ isLogin, setIsLogin, actionData }) {
   var _a;
-  const usernameRef = (0, import_react27.useRef)(null);
-  const passwordRef = (0, import_react27.useRef)(null);
-  (0, import_react27.useEffect)(() => {
+  const usernameRef = (0, import_react28.useRef)(null);
+  const passwordRef = (0, import_react28.useRef)(null);
+  (0, import_react28.useEffect)(() => {
     var _a2, _b, _c, _d;
     if ((_a2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a2.username) {
       (_b = usernameRef.current) == null ? void 0 : _b.focus();
@@ -4004,7 +4009,7 @@ function Login({ isLogin, setIsLogin, actionData }) {
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
-var import_react29 = require("react");
+var import_react30 = require("react");
 var loader9 = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId)
@@ -4044,9 +4049,9 @@ var meta = () => {
 };
 function LoginPage() {
   var _a;
-  const actionData = (0, import_react28.useActionData)();
-  const transition = (0, import_react28.useTransition)();
-  const [isLogin, setIsLogin] = (0, import_react29.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
+  const actionData = (0, import_react29.useActionData)();
+  const transition = (0, import_react29.useTransition)();
+  const [isLogin, setIsLogin] = (0, import_react30.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
   const buttonText = transition.state === "submitting" ? "loginning" : "login";
   return /* @__PURE__ */ React.createElement(LoginContainer, null, /* @__PURE__ */ React.createElement(LoginContinerInner, null, /* @__PURE__ */ React.createElement(Login, {
     isLogin,
@@ -4057,7 +4062,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "34376915", "entry": { "module": "/build/entry.client-44XZO3LH.js", "imports": ["/build/_shared/chunk-RGQH6UF4.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-53ZTZE4N.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-3ZCAX5A4.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-ODKLZMOE.js", "imports": ["/build/_shared/chunk-RSK7MWAW.js", "/build/_shared/chunk-CRJFBNJF.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-W4NZT3RX.js", "imports": ["/build/_shared/chunk-RSK7MWAW.js", "/build/_shared/chunk-CRJFBNJF.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-DPNQK55T.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-J6LXZLIM.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-EUA4QZML.js", "imports": ["/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4BVE7P42.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-XDVZU32G.js", "imports": ["/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-BZO5YKN4.js", "imports": ["/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-34376915.js" };
+var assets_manifest_default = { "version": "5a4c320b", "entry": { "module": "/build/entry.client-44XZO3LH.js", "imports": ["/build/_shared/chunk-RGQH6UF4.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-53ZTZE4N.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-3ZCAX5A4.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$lessonId": { "id": "routes/$language/constructor/$lessonId", "parentId": "routes/$language", "path": "constructor/:lessonId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$lessonId-FWIALVNB.js", "imports": ["/build/_shared/chunk-7YHYWOYH.js", "/build/_shared/chunk-CRJFBNJF.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-SRGJPI76.js", "imports": ["/build/_shared/chunk-7YHYWOYH.js", "/build/_shared/chunk-CRJFBNJF.js"], "hasAction": true, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-K3A742ND.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-J6LXZLIM.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-EUA4QZML.js", "imports": ["/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4BVE7P42.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-KYCH25D7.js", "imports": ["/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-4I6E5YGJ.js", "imports": ["/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-66KEYAV7.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-CRJFBNJF.js", "/build/_shared/chunk-YGCTM4OD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-44UFHHIJ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-5A4C320B.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

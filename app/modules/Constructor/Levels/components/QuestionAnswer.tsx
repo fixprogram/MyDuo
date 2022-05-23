@@ -57,7 +57,7 @@ export default function QuestionAnswer({
       </fieldset>
       <TextareaLabel htmlFor={`keywords${number}`}>
         <LabelText>Choose keywords</LabelText>
-        <Keywords answer={answer} onSet={setKeywords} />
+        <Keywords answer={answer as string} onSet={setKeywords} />
 
         <input
           type="hidden"

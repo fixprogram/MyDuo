@@ -4,12 +4,16 @@ import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
 
+type InsertWords = FieldsetType & {
+  answer: string;
+};
+
 export default function InsertWords({
   number,
   answer,
   setAnswer,
   setReady,
-}: FieldsetType) {
+}: InsertWords) {
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const ref = useFocus();

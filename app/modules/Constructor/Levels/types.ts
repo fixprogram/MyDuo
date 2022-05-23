@@ -9,11 +9,14 @@ export type Step = {
   stepType: string;
   ready?: boolean;
   text?: string | null;
-  variants?: Variant[];
+  variants: Variant[] | [];
   chapter: number;
+  active: boolean;
 };
 
 export type State = {
+  chapters: number[];
+  currentScreen: string;
   steps: Step[];
 };
 

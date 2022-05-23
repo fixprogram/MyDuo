@@ -4,29 +4,20 @@ import { FormButton } from "~/components/lib";
 import TopicInfo from "./components/TopicInfo";
 import { basicState, reducer } from "./Levels/reducer";
 import actionCreator from "./Levels/actions";
-import { Lesson } from "@prisma/client";
+import { Topic } from "@prisma/client";
 import { ConstructorSidebar } from "./components/lib";
 import Levels from "./Levels";
+import Sidebar from "./Levels/components/Sidebar";
 
-export default function Constructor({ data }: { data?: Lesson }) {
+export default function Constructor({ data }: { data: Topic }) {
   const [basicInfoReady, setTopicInfoReady] = useState(false);
   const [stepsReady, setStepsReady] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState("Topic");
-  const [activeStep, setActiveStep] = useState(-1);
-  const [{ steps }, dispatch] = useReducer(reducer, basicState);
-  const [chapters, setChapters] = useState([1]);
+  const [{ steps, chapters, currentScreen }, dispatch] = useReducer(
+    reducer,
+    basicState
+  );
 
-  const {
-    addStep,
-    removeStep,
-    setAnswer,
-    setKeywords,
-    setStepType,
-    setStepReady,
-    removeStepType,
-    setData,
-    setQuestion,
-  } = actionCreator(dispatch);
+  const { setData } = actionCreator(dispatch);
 
   const transition = useTransition();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
@@ -40,10 +31,6 @@ export default function Constructor({ data }: { data?: Lesson }) {
       setData(data.steps);
     }
   }, [data]);
-
-  useEffect(() => {
-    console.log(chapters);
-  }, [chapters]);
 
   return (
     <Form
@@ -71,139 +58,27 @@ export default function Constructor({ data }: { data?: Lesson }) {
 
         <Levels
           steps={steps}
-          activeStep={activeStep}
           setReady={(val: boolean) => setStepsReady(val)}
           screen={currentScreen}
-          setStepType={(type: string, id: string) => setStepType(type, id)}
-          removeStepType={(id: string) => removeStepType(id)}
-          setAnswer={(answer: string, number: number) =>
-            setAnswer(answer, number)
-          }
-          setQuestion={(question: string, number: number) =>
-            setQuestion(question, number)
-          }
-          setKeywords={(keywords: string[], number: number) => {
-            setKeywords(keywords, number);
-          }}
-          setStepReady={(isReady: boolean, number: number) => {
-            setStepReady(isReady, number);
-          }}
+          dispatch={dispatch}
           chapters={chapters}
         />
       </div>
       <ConstructorSidebar>
-        <h2>Sidebar</h2>
-        <ul style={{ marginBottom: "auto" }}>
-          <li>
-            <button
-              type="button"
-              onClick={() => {
-                setCurrentScreen("Topic");
-              }}
-              style={{
-                color: "#3c3c3c",
-                display: "block",
-                fontSize: 16,
-                fontWeight: 700,
-                overflow: "hidden",
-                padding: "15px 20px",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Topic Info
-            </button>
-          </li>
-          {chapters.map((chapter) => (
-            <li key={`chapter-${chapter}`}>
-              <button
-                type="button"
-                onClick={() => {
-                  setCurrentScreen("Steps");
-                  setActiveStep(steps[steps.length - 1].number);
-                }}
-                style={{
-                  color: "#3c3c3c",
-                  display: "block",
-                  fontSize: 16,
-                  fontWeight: 700,
-                  overflow: "hidden",
-                  padding: "15px 20px",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Chapter {chapter}
-              </button>
-              <ul>
-                {steps.map(
-                  (stepsItem) =>
-                    stepsItem.chapter === chapter && (
-                      <li key={stepsItem.id}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setCurrentScreen("Steps");
-                            setActiveStep(stepsItem.number);
-                          }}
-                        >
-                          Step {stepsItem.number + 1}
-                        </button>
-                        {stepsItem.number > 0 ? (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              removeStep(stepsItem.id);
-                              setActiveStep(steps.length - 2);
-                            }}
-                          >
-                            Remove step
-                          </button>
-                        ) : null}
-                      </li>
-                    )
-                )}
-                <li>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addStep(chapter);
-                      if (currentScreen !== "Steps") {
-                        setCurrentScreen("Steps");
-                      }
-                      setActiveStep(steps.length);
-                    }}
-                  >
-                    Add step
-                  </button>
-                </li>
-              </ul>
-              <button
-                type="button"
-                onClick={() => {
-                  // addStep();
-                  if (currentScreen !== "Steps") {
-                    setCurrentScreen("Steps");
-                  }
-                  // setActiveStep(steps.length);
-                  setChapters((prevChapters) => [
-                    ...prevChapters,
-                    prevChapters.length + 1,
-                  ]);
-                }}
-              >
-                Add chapter
-              </button>
-            </li>
-          ))}
-        </ul>
-        <FormButton
-          type="submit"
-          active={isSubmitActive}
-          disabled={isSubmitDisabled}
+        <Sidebar
+          chapters={chapters}
+          steps={steps}
+          currentScreen={currentScreen}
+          dispatch={dispatch}
         >
-          {submitText}
-        </FormButton>
+          <FormButton
+            type="submit"
+            active={isSubmitActive}
+            disabled={isSubmitDisabled}
+          >
+            {submitText}
+          </FormButton>
+        </Sidebar>
       </ConstructorSidebar>
     </Form>
   );

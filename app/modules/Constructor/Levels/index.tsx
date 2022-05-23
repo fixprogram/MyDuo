@@ -9,41 +9,40 @@ import InsertWords from "./components/InsertWords";
 import Close from "~/styles/close.svg";
 import ChooseStyleScreen from "./components/ChooseStyleScreen";
 import { ScreenContainer } from "../components/lib";
+import actionCreator, { Action } from "./actions";
 
 export default function Levels({
-  activeStep,
   steps,
   setReady,
   screen,
-  setStepType,
-  removeStepType,
-  setAnswer,
-  setKeywords,
-  setStepReady,
-  setQuestion,
   chapters,
+  dispatch,
 }: {
-  setStepType: Function;
-  removeStepType: Function;
-  setAnswer: Function;
-  setKeywords: Function;
-  setStepReady: Function;
-  activeStep: number;
   steps: Step[];
   setReady: Function;
-  setQuestion: Function;
   screen: string;
   chapters: number[];
+  dispatch: React.Dispatch<Action>;
 }) {
   useEffect(() => {
     setReady(!steps.find((step: Step) => step.ready === false));
   }, [steps, setReady]);
+
+  const {
+    setAnswer,
+    setKeywords,
+    setStepType,
+    setStepReady,
+    removeStepType,
+    setQuestion,
+  } = actionCreator(dispatch);
 
   return (
     <ScreenContainer screen={screen} target="Steps">
       {steps.map(
         (
           {
+            active,
             question,
             number,
             keywords,
@@ -52,16 +51,13 @@ export default function Levels({
             id,
             variants,
             ready,
+            chapter,
           }: Step,
           idx: number
         ) => (
-          <section
-            className={`${activeStep !== idx && "visuallyHidden"}`}
-            key={id}
-          >
+          <section className={`${!active && "visuallyHidden"}`} key={id}>
             <input type="hidden" name="step" value={idx} />
-            {/* <input type="hidden" name={`chapter${number}`} value={chapter} /> */}
-            <input type="hidden" name={`chapter`} value={chapters[idx]} />
+            <input type="hidden" name={`chapter`} value={chapter} />
             <Legend>{stepType ? stepType : "Choose type"}</Legend>
             <StepHeader>
               {stepType !== "" && (
@@ -121,7 +117,7 @@ export default function Levels({
                   answer={
                     typeof answer !== "string" ? answer.join(" ") : answer
                   }
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : stepType === "Variants" ? (
@@ -130,7 +126,7 @@ export default function Levels({
                   initialVariants={variants}
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   variantsCount={3}
                 />
@@ -138,7 +134,7 @@ export default function Levels({
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
                   variantsCount={4}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   initialVariants={variants}
