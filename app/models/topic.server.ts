@@ -17,3 +17,8 @@ export async function updateCurrentChapter(topic: Topic) {
     },
   });
 }
+
+export async function checkTitleUnique(projectId: string, title: string) {
+  const topics = await prisma.topic.findMany({ where: { projectId } });
+  return !!topics.find((topic) => topic.title === title);
+}

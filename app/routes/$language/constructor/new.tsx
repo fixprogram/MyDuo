@@ -1,10 +1,17 @@
-import { redirect, useParams } from "remix";
+import { json, redirect, useActionData, useParams } from "remix";
 import type { ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
 import { Language, Lesson } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
+import { checkTitleUnique } from "~/models/topic.server";
+
+export type ActionData = {
+  errors?: {
+    title?: string;
+  };
+};
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -15,10 +22,21 @@ export function ErrorBoundary() {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
-  const activeProject = (await getActiveLanguage(request)) as Language;
+  const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
   const stepChapters = form.getAll("chapter") as string[];
+
+  const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
+
+  if (isTitleUnique) {
+    return json<ActionData>(
+      {
+        errors: { title: "Title isn't unique" },
+      },
+      { status: 400 }
+    );
+  }
 
   const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
@@ -29,7 +47,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       stepType,
       number: index,
       chapter: Number(stepChapters[index]),
-      languageId: activeProject.id,
+      languageId: activeLanguage.id,
     };
     switch (stepType) {
       case "Question": {
@@ -90,7 +108,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     chapters: stepChapters.length,
     currentChapter: 0,
     level: 0,
-    projectId: activeProject?.id,
+    projectId: activeLanguage?.id,
     updatedAt: today.getDate().toString(),
   };
   const topic = await prisma.topic.create({ data });
@@ -98,5 +116,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function ConstructorNew() {
-  return <Constructor />;
+  const actionData = useActionData() as ActionData;
+
+  return <Constructor actionData={actionData} />;
 }

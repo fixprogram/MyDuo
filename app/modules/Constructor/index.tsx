@@ -8,8 +8,15 @@ import { Topic } from "@prisma/client";
 import { ConstructorSidebar } from "./components/lib";
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
+import { ActionData } from "~/routes/$language/constructor/new";
 
-export default function Constructor({ data }: { data: Topic }) {
+export default function Constructor({
+  data,
+  actionData,
+}: {
+  data: Topic;
+  actionData: ActionData;
+}) {
   const [basicInfoReady, setTopicInfoReady] = useState(false);
   const [stepsReady, setStepsReady] = useState(false);
   const [{ steps, chapters, currentScreen }, dispatch] = useReducer(
@@ -17,7 +24,7 @@ export default function Constructor({ data }: { data: Topic }) {
     basicState
   );
 
-  const { setData } = actionCreator(dispatch);
+  const { setData, changeCurrentScreen } = actionCreator(dispatch);
 
   const transition = useTransition();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
@@ -31,6 +38,12 @@ export default function Constructor({ data }: { data: Topic }) {
       setData(data.steps);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (actionData?.errors?.title && currentScreen !== "Topic") {
+      changeCurrentScreen("Topic");
+    }
+  }, [actionData]);
 
   return (
     <Form
@@ -54,6 +67,7 @@ export default function Constructor({ data }: { data: Topic }) {
           title={data?.title}
           setReady={(val: boolean) => setTopicInfoReady(val)}
           screen={currentScreen}
+          actionData={actionData}
         />
 
         <Levels

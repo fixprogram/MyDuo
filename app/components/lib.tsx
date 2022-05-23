@@ -571,6 +571,15 @@ const PracticeLastAddedContainer = styled("div")`
   left: 12%;
 `;
 
+const ErrorMessage = styled("p")`
+  line-height: 20px;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: #ea2b2b;
+`;
+
 export {
   ProgressBarContainer,
   ProgressBar,
@@ -620,4 +629,5 @@ export {
   LessonBlockMenuTriangleContent,
   H1Title,
   PracticeLastAddedContainer,
+  ErrorMessage,
 };

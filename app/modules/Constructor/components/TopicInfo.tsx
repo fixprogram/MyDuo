@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Legend, LessonProgress } from "~/components/lib";
+import { ErrorMessage, Legend, LessonProgress } from "~/components/lib";
+import { ActionData } from "~/routes/$language/constructor/new";
 
 import { LessonTitleInput, ScreenContainer } from "./lib";
 
@@ -7,10 +8,12 @@ export default function TopicInfo({
   title = "",
   setReady,
   screen,
+  actionData,
 }: {
   title: string | undefined;
   setReady: Function;
   screen: string;
+  actionData: ActionData;
 }) {
   const [topicTitle, setLessonTitle] = useState("");
   useEffect(() => {
@@ -30,11 +33,16 @@ export default function TopicInfo({
         type="text"
         name="title"
         placeholder="Enter topic title"
-        style={{ marginBottom: 40 }}
         value={topicTitle}
         onChange={(e) => setLessonTitle(e.target.value)}
         required
+        autoFocus={true}
       />
+      {actionData?.errors?.title && (
+        <ErrorMessage role="alert" id="title-error">
+          {actionData.errors.title}
+        </ErrorMessage>
+      )}
     </ScreenContainer>
   );
 }
