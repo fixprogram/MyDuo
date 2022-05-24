@@ -55,3 +55,17 @@ export async function getLastActivity(userId: string) {
 export async function deleteLessonById(id: string) {
   return await prisma.topic.delete({ where: { id } });
 }
+
+export async function deleteLessonsFromTopic(topicId: string) {
+  const topic = await prisma.topic.findUnique({ where: { id: topicId } });
+  return await prisma.lesson.deleteMany({
+    where: { id: { in: topic?.lessonIDs } },
+  });
+}
+
+export async function getLessonsByTopicId(id: string) {
+  const topic = (await prisma.topic.findUnique({ where: { id } })) as Topic;
+  return await prisma.lesson.findMany({
+    where: { id: { in: topic.lessonIDs } },
+  });
+}

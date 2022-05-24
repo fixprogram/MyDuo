@@ -1,3 +1,4 @@
+import { Lesson } from "@prisma/client";
 import { Step } from "./types";
 
 export type Action =

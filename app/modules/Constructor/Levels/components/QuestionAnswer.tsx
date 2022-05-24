@@ -44,6 +44,7 @@ export default function QuestionAnswer({
           }}
           value={question === null ? "" : question}
           onChange={(evt) => setQuestion(evt.target.value)}
+          autoFocus={true}
           required
         />
 

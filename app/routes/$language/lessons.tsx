@@ -1,12 +1,12 @@
-import { useLoaderData, ActionFunction } from "remix";
-import type { LoaderFunction } from "remix";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { getActiveLanguage } from "~/models/language.server";
 import { deleteLessonById, getTopics } from "~/models/lesson.server";
 import PracticeLastAdded from "~/components/PracticeLastAdded";
 import WeeklyProgress from "~/components/WeeklyProgress";
 import { getUser } from "~/session.server";
-import { Topic, WeeklyActivity } from "@prisma/client";
 import LessonItem from "~/components/LessonItem";
+import { useLoaderData } from "@remix-run/react";
+import { Topic, WeeklyActivity } from "@prisma/client";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -35,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return {
     data,
     activity: user?.weeklyActivity,
-    languageIitle: activeLanguage.title,
+    languageTitle: activeLanguage.title,
   };
 };
 
@@ -51,7 +51,7 @@ export default function Repeats() {
         {data.map((dataItem, i: number) => (
           <LessonItem
             {...dataItem}
-            link={`/${languageTitle}/constructor/${dataItem.id}`}
+            editLink={`/${languageTitle}/constructor/${dataItem.id}`}
             key={dataItem.id}
           />
         ))}

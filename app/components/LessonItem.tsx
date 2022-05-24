@@ -18,7 +18,7 @@ import useOnClickOutside from "~/hooks/useOnClickOutside";
 import { Topic } from "@prisma/client";
 
 type LessonItem = Topic & {
-  link: string;
+  editLink: string;
 };
 
 export default function LessonItem({
@@ -26,7 +26,7 @@ export default function LessonItem({
   title,
   currentChapter,
   chapters,
-  link,
+  editLink,
 }: LessonItem) {
   const [isOpened, setIsOpened] = useState(false);
   const transition = useTransition();
@@ -55,9 +55,10 @@ export default function LessonItem({
           }}
         >
           <LessonProgress exp={((currentChapter / chapters) * 100).toString()}>
-            <LessonProgressInner>{`${
+            {/* <LessonProgressInner>{`${
               (currentChapter / chapters) * 100
-            }%`}</LessonProgressInner>
+            }%`}</LessonProgressInner> */}
+            <LessonProgressInner />
           </LessonProgress>
           <LessonTitle>{title}</LessonTitle>
         </button>
@@ -67,7 +68,7 @@ export default function LessonItem({
           </LessonBlockMenuTriangle>
           <LessonBlockInner>
             <div style={{ display: "flex" }}>
-              <LessonBlockLink to={link}>Edit</LessonBlockLink>
+              <LessonBlockLink to={editLink}>Edit</LessonBlockLink>
               <Form method="post">
                 <input type="hidden" name="lessonId" value={id} />
                 <LessonBlockButton type="submit" disabled={isDisabled}>

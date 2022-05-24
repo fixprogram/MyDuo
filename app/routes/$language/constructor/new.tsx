@@ -2,10 +2,11 @@ import { json, redirect, useActionData, useParams } from "remix";
 import type { ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
-import Constructor from "~/modules/Constructor";
+import Constructor, { ConstructorData } from "~/modules/Constructor";
 import { Language, Lesson } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
 import { checkTitleUnique } from "~/models/topic.server";
+import { basicState } from "~/modules/Constructor/Levels/reducer";
 
 export type ActionData = {
   errors?: {
@@ -105,7 +106,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const data = {
     title,
     lessonIDs: createdLessonsIDs,
-    chapters: stepChapters.length,
+    chapters: Number(stepChapters[stepChapters.length - 1]),
     currentChapter: 0,
     level: 0,
     projectId: activeLanguage?.id,
@@ -117,6 +118,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
+  const basicData = { title: "", steps: basicState.steps } as ConstructorData;
 
-  return <Constructor actionData={actionData} />;
+  return <Constructor actionData={actionData} data={basicData} />;
 }

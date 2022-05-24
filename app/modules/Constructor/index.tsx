@@ -4,17 +4,22 @@ import { FormButton } from "~/components/lib";
 import TopicInfo from "./components/TopicInfo";
 import { basicState, reducer } from "./Levels/reducer";
 import actionCreator from "./Levels/actions";
-import { Topic } from "@prisma/client";
 import { ConstructorSidebar } from "./components/lib";
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
+import { Step } from "./Levels/types";
+
+export type ConstructorData = {
+  title: string;
+  steps: Step[];
+};
 
 export default function Constructor({
   data,
   actionData,
 }: {
-  data: Topic;
+  data: ConstructorData;
   actionData: ActionData;
 }) {
   const [basicInfoReady, setTopicInfoReady] = useState(false);
