@@ -1,4 +1,4 @@
-import { Lesson, Topic } from "@prisma/client";
+import { Lesson, Topic, User, WeeklyActivity } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getWeekDay, getYesterdayDay } from "~/utils";
 
@@ -33,19 +33,23 @@ export async function getTopics(languageId: string) {
 }
 
 export async function getLastActivity(userId: string) {
-  const { weeklyActivity } = await prisma.user.findUnique({
+  const today = getWeekDay() as string;
+  const yesterday = getYesterdayDay() as string;
+  const user = (await prisma.user.findUnique({
     where: { id: userId },
     select: { weeklyActivity: true },
-  });
+  })) as User;
 
-  if (weeklyActivity[`${getWeekDay()}`]) {
-    return { day: getWeekDay(), exp: weeklyActivity[`${getWeekDay()}`] };
+  const { weeklyActivity } = user;
+
+  if (weeklyActivity[today]) {
+    return { day: getWeekDay(), exp: weeklyActivity[today] };
   }
 
-  if (weeklyActivity[`${getYesterdayDay()}`]) {
+  if (weeklyActivity[yesterday]) {
     return {
       day: getYesterdayDay(),
-      exp: weeklyActivity[`${getYesterdayDay()}`],
+      exp: weeklyActivity[yesterday],
     };
   }
 
