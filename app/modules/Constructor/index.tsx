@@ -19,7 +19,7 @@ export default function Constructor({
   data,
   actionData,
 }: {
-  data: ConstructorData;
+  data?: ConstructorData;
   actionData: ActionData;
 }) {
   const [basicInfoReady, setTopicInfoReady] = useState(false);

@@ -28,7 +28,6 @@ export default function QuestionAnswer({
     }
   }, [question, answer]);
 
-  // console.log(keywords);
   useEffect(() => {
     setKeywords(keywords);
   }, []);

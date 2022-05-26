@@ -118,7 +118,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
-  const basicData = { title: "", steps: basicState.steps } as ConstructorData;
 
-  return <Constructor actionData={actionData} data={basicData} />;
+  return <Constructor actionData={actionData} />;
 }
