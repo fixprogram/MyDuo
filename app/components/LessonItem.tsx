@@ -32,6 +32,7 @@ export default function LessonItem({
   const transition = useTransition();
   const isDisabled = transition.state !== "idle";
   const ref = useRef(null);
+  // const scrollRef = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => setIsOpened(false));
 
@@ -40,6 +41,12 @@ export default function LessonItem({
       setIsOpened(false);
     }
   }, [transition.state]);
+
+  // useEffect(() => {
+  //   if (isOpened) {
+  //     scrollRef.current?.scrollIntoView();
+  //   }
+  // }, [isOpened]);
 
   return (
     <LessonsContainer>
@@ -89,6 +96,7 @@ export default function LessonItem({
             </LessonBlockLink>
           </LessonBlockInner>
         </LessonBlockMenu>
+        {/* <div ref={scrollRef}></div> */}
       </LessonBlock>
     </LessonsContainer>
   );

@@ -28,6 +28,11 @@ export default function QuestionAnswer({
     }
   }, [question, answer]);
 
+  // console.log(keywords);
+  useEffect(() => {
+    setKeywords(keywords);
+  }, []);
+
   return (
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Question"} />
@@ -58,7 +63,11 @@ export default function QuestionAnswer({
       </fieldset>
       <TextareaLabel htmlFor={`keywords${number}`}>
         <LabelText>Choose keywords</LabelText>
-        <Keywords answer={answer as string} onSet={setKeywords} />
+        <Keywords
+          answer={answer as string}
+          initialKeywords={keywords}
+          onSet={setKeywords}
+        />
 
         <input
           type="hidden"

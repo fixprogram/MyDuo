@@ -5,11 +5,13 @@ import Keyword from "./Keyword";
 export default function Keywords({
   answer,
   onSet,
+  initialKeywords = [],
 }: {
+  initialKeywords: string[];
   answer: string;
   onSet: Function;
 }) {
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState<string[]>(initialKeywords);
 
   useEffect(() => {
     onSet(keywords);
@@ -34,6 +36,7 @@ export default function Keywords({
                 }
               })
             }
+            initiallyActive={!!keywords.find((keyword) => keyword === item)}
           >
             {item}
           </Keyword>

@@ -30,6 +30,7 @@ export const reducer = (state: State, action: Action): State => {
   switch (type) {
     case "SET_DATA": {
       const { steps } = action.payload;
+      console.log("Steps: ", steps[0].keywords);
       return {
         ...state,
         steps,

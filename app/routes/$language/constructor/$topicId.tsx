@@ -2,7 +2,7 @@ import { useActionData, useLoaderData, useParams } from "@remix-run/react";
 import { redirect } from "@remix-run/node";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { prisma } from "~/db.server";
-import Constructor from "~/modules/Constructor";
+import Constructor, { ConstructorData } from "~/modules/Constructor";
 import { Language, Lesson, Topic } from "@prisma/client";
 import {
   createLessons,
