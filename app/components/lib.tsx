@@ -362,8 +362,7 @@ const LessonProgressInner = styled("div")`
 `;
 
 const Main = styled("main")`
-  padding: 0 10%;
-  margin-top: 24px;
+  padding: 24px 10% 0;
   display: flex;
   justify-content: space-between;
   height: calc(100vh - 95px); // margin 24px + menu height 71px
@@ -560,15 +559,14 @@ const Logout = styled("button")`
 
 const PracticeLastAddedContainer = styled("div")`
   bottom: 24px;
-  margin-left: 0;
-  margin-right: auto;
   border-width: 2px 2px 4px;
   height: 72px;
   width: 72px;
   border-radius: 50%;
   border: solid #e5e5e5;
-  position: absolute;
-  left: 12%;
+  position: sticky;
+  margin-top: -124px;
+  margin-bottom: 52px;
 `;
 
 const ErrorMessage = styled("p")`
@@ -595,6 +593,19 @@ const ExpProgressTitle = styled("h2")`
   margin: 0 0 25px;
   font-family: Montserrat;
   font-weight: 700;
+`;
+
+const FooterLine = styled("hr")`
+  border: 0;
+  border-top: 2px solid #e5e5e5;
+  margin: 0 0 48px;
+`;
+
+const FooterText = styled("p")`
+  text-align: center;
+  color: #afafaf;
+  font-family: Roboto;
+  margin: 0;
 `;
 
 export {
@@ -649,4 +660,6 @@ export {
   ErrorMessage,
   ExpProgressBlock,
   ExpProgressTitle,
+  FooterLine,
+  FooterText,
 };

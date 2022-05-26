@@ -7,6 +7,7 @@ import { getUser } from "~/session.server";
 import LessonItem from "~/components/LessonItem";
 import { useLoaderData } from "@remix-run/react";
 import { Topic, WeeklyActivity } from "@prisma/client";
+import Footer from "~/components/Footer";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -46,19 +47,22 @@ export default function Repeats() {
     languageTitle: string;
   };
   return (
-    <main style={{ display: "flex", width: "100%" }}>
-      <section style={{ width: "43%", marginLeft: "10%" }}>
-        {data.map((dataItem, i: number) => (
-          <LessonItem
-            {...dataItem}
-            editLink={`/${languageTitle}/constructor/${dataItem.id}`}
-            key={dataItem.id}
-          />
-        ))}
+    <section style={{ display: "flex", width: "100%", height: "fit-content" }}>
+      <section style={{ width: "65%", padding: "0 30px" }}>
+        <div>
+          {data.map((dataItem, i: number) => (
+            <LessonItem
+              {...dataItem}
+              editLink={`/${languageTitle}/constructor/${dataItem.id}`}
+              key={dataItem.id}
+            />
+          ))}
 
-        {data.length > 0 && <PracticeLastAdded />}
+          {data.length > 0 && <PracticeLastAdded />}
+        </div>
+        <Footer />
       </section>
       <WeeklyProgress activity={activity} />
-    </main>
+    </section>
   );
 }

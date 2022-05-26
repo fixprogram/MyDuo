@@ -43,12 +43,12 @@ export async function getLastActivity(userId: string) {
   const { weeklyActivity } = user;
 
   if (weeklyActivity[today]) {
-    return { day: getWeekDay(), exp: weeklyActivity[today] };
+    return { day: today, exp: weeklyActivity[today] };
   }
 
   if (weeklyActivity[yesterday]) {
     return {
-      day: getYesterdayDay(),
+      day: yesterday,
       exp: weeklyActivity[yesterday],
     };
   }
