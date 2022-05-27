@@ -38,6 +38,7 @@ model Topic {
   level          Int
   Language       Language? @relation(fields: [projectId], references: [id])
   projectId      String
+  lineNumber     Int
 }
 
 model Lesson {

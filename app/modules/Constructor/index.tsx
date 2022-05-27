@@ -18,7 +18,9 @@ export type ConstructorData = {
 export default function Constructor({
   data,
   actionData,
+  lastAddedTopic,
 }: {
+  lastAddedTopic?: any;
   data?: ConstructorData;
   actionData: ActionData;
 }) {
@@ -74,6 +76,7 @@ export default function Constructor({
           setReady={(val: boolean) => setTopicInfoReady(val)}
           screen={currentScreen}
           actionData={actionData}
+          lastAddedTopic={lastAddedTopic}
         />
 
         <Levels

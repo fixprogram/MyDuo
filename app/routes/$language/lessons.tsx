@@ -8,6 +8,7 @@ import LessonItem from "~/components/LessonItem";
 import { useLoaderData } from "@remix-run/react";
 import { Topic, WeeklyActivity } from "@prisma/client";
 import Footer from "~/components/Footer";
+import { LessonsBlock } from "~/components/lib";
 
 export function ErrorBoundary() {
   return <div className="error-container">I did a whoopsies.</div>;
@@ -46,19 +47,38 @@ export default function Repeats() {
     activity: WeeklyActivity;
     languageTitle: string;
   };
+  const lineNumbers = [...new Set(data.map((dataItem) => dataItem.lineNumber))];
+
   return (
     <section style={{ display: "flex", width: "100%", height: "fit-content" }}>
       <section style={{ width: "65%", padding: "0 30px" }}>
-        <div>
-          {data.map((dataItem, i: number) => (
-            <LessonItem
-              {...dataItem}
-              editLink={`/${languageTitle}/constructor/${dataItem.id}`}
-              key={dataItem.id}
-            />
-          ))}
-
-          {data.length > 0 && <PracticeLastAdded />}
+        <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            {data.length > 0 && <PracticeLastAdded />}
+          </div>
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "440px",
+              margin: "0 auto 38px auto",
+            }}
+          >
+            {lineNumbers.map((lineNum) => (
+              <LessonsBlock key={Math.random() * 100}>
+                {data.map((dataItem) => {
+                  if (dataItem.lineNumber === lineNum) {
+                    return (
+                      <LessonItem
+                        key={dataItem.id}
+                        {...dataItem}
+                        editLink={`/${languageTitle}/constructor/${dataItem.id}`}
+                      />
+                    );
+                  }
+                })}
+              </LessonsBlock>
+            ))}
+          </div>
         </div>
         <Footer />
       </section>

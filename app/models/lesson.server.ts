@@ -27,6 +27,7 @@ export async function getTopics(languageId: string) {
       createdAt: true,
       chapters: true,
       currentChapter: true,
+      lineNumber: true,
     },
     orderBy: { createdAt: "desc" },
   });

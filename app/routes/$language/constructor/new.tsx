@@ -1,11 +1,11 @@
-import { json, redirect, useActionData, useParams } from "remix";
-import type { ActionFunction } from "remix";
+import { json, redirect, useActionData, useLoaderData, useParams } from "remix";
+import type { ActionFunction, LoaderFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor, { ConstructorData } from "~/modules/Constructor";
 import { Language, Lesson } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
-import { checkTitleUnique } from "~/models/topic.server";
+import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
 import { basicState } from "~/modules/Constructor/Levels/reducer";
 
 export type ActionData = {
@@ -26,6 +26,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
+  const lineNumber = form.get("lineNumber");
+  const lastAddedTopic = await getLastAddedTopic(activeLanguage.id);
   const stepChapters = form.getAll("chapter") as string[];
 
   const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
@@ -111,13 +113,27 @@ export const action: ActionFunction = async ({ request, params }) => {
     level: 0,
     projectId: activeLanguage?.id,
     updatedAt: today.getDate().toString(),
+    lineNumber:
+      Number(lineNumber) === 0
+        ? lastAddedTopic?.lineNumber + 1
+        : Number(lineNumber),
   };
   const topic = await prisma.topic.create({ data });
   return redirect(`/skill/${topic.title}/1`);
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const activeLanguage = (await getActiveLanguage(request)) as Language;
+  const lastAddedTopic = await getLastAddedTopic(activeLanguage.id, true);
+
+  return { lastAddedTopic };
+};
+
 export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
+  const { lastAddedTopic } = useLoaderData();
 
-  return <Constructor actionData={actionData} />;
+  return (
+    <Constructor actionData={actionData} lastAddedTopic={lastAddedTopic} />
+  );
 }

@@ -47,9 +47,18 @@ const LessonsContainer = styled.section((props) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
-  marginBottom: "52px",
+  // marginBottom: "52px",
   position: "relative",
 }));
+
+const LessonsBlock = styled("div")`
+  grid-column-gap: 12px;
+  display: grid;
+  grid-auto-columns: calc(33.33333% - 8px);
+  grid-auto-flow: column;
+  justify-content: center;
+  padding: 16px 12px;
+`;
 
 const LessonBlock = styled("div")`
   width: 33%;
@@ -559,15 +568,14 @@ const Logout = styled("button")`
 `;
 
 const PracticeLastAddedContainer = styled("div")`
-  bottom: 24px;
   border-width: 2px 2px 4px;
   height: 72px;
   width: 72px;
   border-radius: 50%;
   border: solid #e5e5e5;
   position: sticky;
-  margin-top: -124px;
-  margin-bottom: 52px;
+  margin-bottom: 54px;
+  bottom: 0;
 `;
 
 const ErrorMessage = styled("p")`
@@ -616,6 +624,7 @@ export {
   HorizontalList,
   ListItem,
   NavLink,
+  LessonsBlock,
   LessonBlock,
   LessonsContainer,
   LessonBlockLink,
