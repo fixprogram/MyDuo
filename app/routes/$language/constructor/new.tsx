@@ -62,11 +62,11 @@ export const action: ActionFunction = async ({ request, params }) => {
         };
       }
       case "Insert": {
-        const text = form.get(`text${index}`);
+        const text = form.get(`text${index}`) as string;
         return {
           ...returnData,
           answer,
-          text,
+          text: text.trim(),
         };
       }
       case "Variants": {

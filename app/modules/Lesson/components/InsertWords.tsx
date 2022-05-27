@@ -45,6 +45,7 @@ export default function InsertWords({
           backgroundColor: "white",
           padding: 0,
           border: "none",
+          fontFamily: "Roboto",
         }}
       >
         {text.split(" ").map((item: string, idx: number) => {

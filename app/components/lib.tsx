@@ -31,12 +31,12 @@ const HorizontalList = styled.ul((props) => ({
   justifyContent: "space-between",
   margin: 0,
   height: "100%",
-  padding: 0,
+  padding: "0 9px",
 }));
 
 const ListItem = styled.li((props) => ({
   height: "100%",
-  paddingLeft: "30px",
+  margin: "0 15px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -555,6 +555,7 @@ const Logout = styled("button")`
   font-family: "Montserrat";
   font-weight: 700;
   letter-spacing: 0.8px;
+  padding: 0;
 `;
 
 const PracticeLastAddedContainer = styled("div")`

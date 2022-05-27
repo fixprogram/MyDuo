@@ -66,6 +66,7 @@ export default function Constructor({
           flexDirection: "column",
           flexGrow: 1,
           position: "relative",
+          paddingLeft: 30,
         }}
       >
         <TopicInfo
