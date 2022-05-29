@@ -1,9 +1,18 @@
-import { redirect, useLoaderData, useParams } from "remix";
-import type { LoaderFunction, ActionFunction } from "remix";
+import { useActionData, useLoaderData, useParams } from "@remix-run/react";
+import { redirect } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { prisma } from "~/db.server";
-import Constructor from "~/modules/Constructor";
-import { nanoid } from "nanoid";
-import { LessonStep } from "@prisma/client";
+import Constructor, { ConstructorData } from "~/modules/Constructor";
+import { Language, Lesson, Topic } from "@prisma/client";
+import {
+  createLessons,
+  deleteLessonsFromTopic,
+  getLessonsByTopicId,
+} from "~/models/lesson.server";
+import { ActionData } from "./new";
+import { json } from "remix";
+import { checkTitleUnique } from "~/models/topic.server";
+import { getActiveLanguage } from "~/models/language.server";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -16,13 +25,35 @@ export const action: ActionFunction = async ({ request, params }) => {
   const today = new Date();
   const form = await request.formData();
   const title = form.get("title") as string;
+  const activeLanguage = (await getActiveLanguage(request)) as Language;
+  const stepChapters = form.getAll("chapter") as string[];
+  const topic = (await prisma.topic.findUnique({
+    where: { id: params.topicId },
+  })) as Topic;
 
-  const steps = form.getAll("step").map((item, index) => {
+  if (title !== topic.title) {
+    const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
+
+    if (isTitleUnique) {
+      return json<ActionData>(
+        {
+          errors: { title: "Title isn't unique" },
+        },
+        { status: 400 }
+      );
+    }
+  }
+
+  const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
     let answer: string | string[] = form.get(`answer${index}`) as string;
     answer = answer.trim().split(" ");
-    const id = nanoid();
-    const returnData = { stepType, number: index, id };
+    const returnData = {
+      stepType,
+      number: index,
+      chapter: Number(stepChapters[index]),
+      languageId: activeLanguage.id,
+    };
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
@@ -73,36 +104,46 @@ export const action: ActionFunction = async ({ request, params }) => {
         return { ...returnData, answer };
       }
     }
-  }) as LessonStep[];
+  }) as Lesson[];
 
+  await deleteLessonsFromTopic(params.topicId as string);
+
+  const createdLessonsIDs = await createLessons(lessons);
   const data = {
     title,
-    steps,
+    lessonIDs: createdLessonsIDs,
+    chapters: Number(stepChapters[stepChapters.length - 1]),
+    currentChapter: 0,
+    level: 0,
+    projectId: activeLanguage?.id,
     updatedAt: today.getDate().toString(),
   };
 
-  const updatedLesson = await prisma.lesson.update({
-    where: { id: params.lessonId },
+  await prisma.topic.update({
+    where: { id: params.topicId },
     data: { ...data },
   });
-  return redirect(`/lesson/${updatedLesson.id}`);
+
+  return redirect(`/`);
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const lesson = await prisma.lesson.findUnique({
-    where: { id: params.lessonId },
+  const topic = await prisma.topic.findUnique({
+    where: { id: params.topicId },
   });
 
-  if (!lesson) {
+  if (!topic) {
     throw new Error("lesson not found");
   }
 
-  const data = { lesson };
+  const lessons = await getLessonsByTopicId(topic.id);
+  const data = { title: topic.title, steps: lessons };
   return data;
 };
 
 export default function ConstructorEdit() {
-  const { lesson } = useLoaderData();
+  const actionData = useActionData() as ActionData;
+  const data = useLoaderData();
 
-  return <Constructor data={lesson} />;
+  return <Constructor data={data} actionData={actionData} />;
 }

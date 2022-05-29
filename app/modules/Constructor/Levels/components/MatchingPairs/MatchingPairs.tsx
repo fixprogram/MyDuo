@@ -2,34 +2,29 @@ import { Fragment, useEffect, useReducer } from "react";
 import { FieldsetType } from "../../types";
 import { VariantItemNumber, VariantItemInput } from "../lib";
 import { pairsChoose, pairsConnect, pairsSetup, pairsType } from "./actions";
-import { reducer, basicState, Variant, State } from "./reducer";
+import { reducer, Variant } from "./reducer";
 
 type MP = FieldsetType & {
   variantsCount: number;
-  initialVariants: Variant[] | undefined;
+  initialVariants: Variant[];
 };
 
 export default function MatchingPairs({
   number,
   answer,
   setAnswer,
-  variantsCount = 8,
+  variantsCount = 4,
   setReady,
   initialVariants = [],
 }: MP) {
-  // const [{ variants, pairs }, dispatch] = useReducer(reducer, basicState);
   const [{ variants, pairs }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
     pairs: [],
   });
 
-  // useEffect(() => {
-  //   console.log(initialVariants);
-  // }, [initialVariants]);
-
   useEffect(() => {
-    dispatch(pairsSetup(variantsCount, initialVariants, answer));
-  }, [variantsCount, initialVariants]);
+    dispatch(pairsSetup(variantsCount, initialVariants, answer as string[]));
+  }, []);
 
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {
@@ -45,7 +40,7 @@ export default function MatchingPairs({
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Pairs"} />
       <input type="hidden" name={`answer${number}`} value={answer} />
-      <div>
+      <div style={{ marginBottom: "20px" }}>
         <h2>Create and Connect pairs</h2>
       </div>
 
@@ -54,7 +49,8 @@ export default function MatchingPairs({
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-evenly",
-          // margin: "0 10%",
+          maxWidth: 600,
+          margin: "0 auto",
         }}
       >
         {variants.map((variant: Variant) => (
@@ -96,6 +92,13 @@ export default function MatchingPairs({
             </label>
           </li>
         ))}
+        <button
+          type="button"
+          onClick={() => dispatch({ type: "ADD_PAIR" })}
+          style={{ display: "block", width: "100%" }}
+        >
+          Add pair
+        </button>
       </ul>
     </Fragment>
   );

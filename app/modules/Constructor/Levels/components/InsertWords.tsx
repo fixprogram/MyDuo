@@ -1,15 +1,20 @@
 import { Fragment, useEffect, useState } from "react";
 import { Textarea } from "~/components/lib";
+import { LessonTitle } from "~/modules/Lesson/components/lib";
 import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
 import { InsertWordsTextBlock } from "./lib";
+
+type InsertWords = FieldsetType & {
+  answer: string;
+};
 
 export default function InsertWords({
   number,
   answer,
   setAnswer,
   setReady,
-}: FieldsetType) {
+}: InsertWords) {
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const ref = useFocus();
@@ -34,9 +39,10 @@ export default function InsertWords({
 
       <input type="hidden" name={`type${number}`} value={"Insert"} />
 
-      <div>
+      {/* <div>
         <h2>Type and choose to insert</h2>
-      </div>
+      </div> */}
+      <LessonTitle>Add missing words</LessonTitle>
 
       <Textarea
         name={`text${number}`}
@@ -46,10 +52,20 @@ export default function InsertWords({
           setAnswer(evt.target.value);
         }}
         ref={ref}
+        // style={{ padding: "10px 0" }}
         required
       />
 
-      <InsertWordsTextBlock showText={showText}>
+      <InsertWordsTextBlock
+        showText={showText}
+        style={{
+          fontSize: 19,
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Roboto",
+          padding: "10px 0",
+        }}
+      >
         {answer.split(" ").map((item, idx) => {
           const { newItem, sign } = doesItemContainSign(item);
 
@@ -68,9 +84,10 @@ export default function InsertWords({
                   type="text"
                   style={{
                     width: `${newItem.length * 13}px`,
-                    margin: "0 7px",
+                    margin: "0 7px -2px",
                     border: "none",
-                    borderBottom: "1px solid #e5e5e5",
+                    borderBottom: "2px solid #afafaf",
+                    fontSize: 19,
                   }}
                 />
                 <span>{sign}</span>

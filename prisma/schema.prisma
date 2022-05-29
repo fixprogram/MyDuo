@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongodb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,44 +8,54 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  username     String   @unique
-  passwordHash String
-  streak       Int
-  wasToday     Boolean
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  username        String   @unique
+  passwordHash    String
+  streak          Int
+  wasToday        Boolean
+  weeklyActivity  WeeklyActivity
 }
- 
+
 model Language {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  active     Boolean
-  userId     String
-  title      String
-  lessons    Lesson[]
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  active          Boolean
+  userId          String
+  title           String
+  topics          Topic[]
+  lessonsToRepeat Lesson[]
+}
+
+model Topic {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  title          String    @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      String
+  lessonIDs      String[]
+  chapters       Int
+  currentChapter Int
+  level          Int
+  Language       Language? @relation(fields: [projectId], references: [id])
+  projectId      String
+  lineNumber     Int
 }
 
 model Lesson {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  createdAt DateTime      @default(now())
-  updatedAt String      
-  steps     LessonStep[]
-  exp       Int
-  Language  Language?     @relation(fields: [projectId], references: [id])
-  projectId String
-}
-
-type LessonStep {
-  id         String
-  number     Int
-  stepType   String
-  question   String?
-  text       String?
-  answer     String[]
-  keywords   String[]
-  definition  String?
-  variants   Variant[]
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  number            Int
+  stepType          String
+  question          String?
+  text              String?
+  answer            String[]
+  keywords          String[]
+  definition         String?
+  variants          Variant[]
+  chapter           Int
+  Language          Language? @relation(fields: [languageId], references: [id])
+  languageId        String?   @db.ObjectId
 }
 
 type Variant {
@@ -55,4 +64,14 @@ type Variant {
   value       String
   isFocused   Boolean
   isConnected Boolean?
+}
+
+type WeeklyActivity {
+  Sun   Int
+  Mon   Int
+  Tue   Int
+  Wed   Int
+  Thu   Int
+  Fri   Int
+  Sat   Int
 }

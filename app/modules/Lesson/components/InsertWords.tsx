@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Steps/components/lib";
+import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 import { LessonTitle } from "./lib";
 
@@ -16,7 +16,7 @@ export default function InsertWords({
   setAnswer: Function;
   formDisabled: boolean;
 }) {
-  const [values, setValues] = useState<any[]>([
+  const [values, setValues] = useState<string[]>([
     ...Array(contentAnswer.length).fill(""),
   ]);
 
@@ -45,6 +45,7 @@ export default function InsertWords({
           backgroundColor: "white",
           padding: 0,
           border: "none",
+          fontFamily: "Roboto",
         }}
       >
         {text.split(" ").map((item: string, idx: number) => {

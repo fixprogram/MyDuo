@@ -4,6 +4,30 @@ import { getUserId, logout } from "~/session.server";
 
 export type { Language } from "@prisma/client";
 
+export async function createInitialLanguage(userId: string) {
+  return await prisma.language.create({
+    data: { userId, active: true, title: "MyFirstLanguage" },
+  });
+}
+
+export async function createNewLanguage(
+  request: Request,
+  title: Language["title"]
+) {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  await deactiveAllUserLanguages(userId);
+
+  const language = await prisma.language.create({
+    data: { userId, title, active: true },
+  });
+
+  return language;
+}
+
 async function deactiveAllUserLanguages(userId: Language["userId"]) {
   const languages = await prisma.language.updateMany({
     where: {
@@ -68,22 +92,4 @@ export async function getLanguages(request: Request) {
   } catch {
     throw logout(request);
   }
-}
-
-export async function createNewLanguage(
-  request: Request,
-  title: Language["title"]
-) {
-  const userId = await getUserId(request);
-  if (typeof userId !== "string") {
-    return null;
-  }
-
-  await deactiveAllUserLanguages(userId);
-
-  const language = await prisma.language.create({
-    data: { userId, title, active: true },
-  });
-
-  return language;
 }

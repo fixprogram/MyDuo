@@ -97,7 +97,7 @@ export const doesItemContainSign = (item: string) => {
   }
 };
 
-export const doesArrayContainItems = (items: [], arr: []) => {
+export const doesArrayContainItems = (items: string[], arr: string[]) => {
   const filtered = arr.filter((arrItem: string) =>
     items.find(
       (item: string) =>
@@ -105,4 +105,21 @@ export const doesArrayContainItems = (items: [], arr: []) => {
     )
   );
   return { state: !!filtered.length, length: filtered.length, items: filtered };
+};
+
+export const getWeekDay = (): string => {
+  const today = new Date();
+
+  return today.toLocaleDateString("en-US", {
+    weekday: "short",
+  }) as string;
+};
+
+export const getYesterdayDay = (): string => {
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
+
+  return today.toLocaleDateString("en-US", {
+    weekday: "short",
+  }) as string;
 };

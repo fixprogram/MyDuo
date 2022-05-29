@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { KeywordTemplate } from "~/components/lib";
 
-export default function Keyword({
+const Keyword: React.FC<{ onSet: Function; initiallyActive: boolean }> = ({
   onSet,
   children,
-}: {
-  onSet: Function;
-  children: any;
-}) {
-  const [isActive, setIsActive] = useState(false);
+  initiallyActive,
+}) => {
+  const [isActive, setIsActive] = useState(initiallyActive);
 
   return (
     <KeywordTemplate
@@ -21,4 +19,6 @@ export default function Keyword({
       {children}
     </KeywordTemplate>
   );
-}
+};
+
+export default Keyword;

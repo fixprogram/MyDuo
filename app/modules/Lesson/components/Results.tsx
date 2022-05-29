@@ -1,3 +1,4 @@
+import { Form } from "remix";
 import {
   ResultsContainer,
   ResultsLeftBlock,
@@ -5,7 +6,8 @@ import {
   ResultsTitle,
 } from "./lib";
 
-export default function Results({ refName }: { refName: any }) {
+export default function Results({ refName }: { refName: HTMLFormElement }) {
+  // export default function Results() {
   return (
     <ResultsContainer>
       <ResultsLeftBlock>
@@ -15,8 +17,8 @@ export default function Results({ refName }: { refName: any }) {
       <ResultsSeparateLine />
 
       <ResultsLeftBlock />
-      <form
-        method="POST"
+      <Form
+        method="post"
         ref={refName}
         style={{
           position: "absolute",
@@ -27,7 +29,7 @@ export default function Results({ refName }: { refName: any }) {
         }}
       >
         <input type="text" name="exp" value="16" readOnly />
-      </form>
+      </Form>
     </ResultsContainer>
   );
 }
