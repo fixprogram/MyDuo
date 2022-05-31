@@ -50,9 +50,17 @@ export default function Repeats() {
   const lineNumbers = [...new Set(data.map((dataItem) => dataItem.lineNumber))];
 
   return (
-    <section style={{ display: "flex", width: "100%", height: "fit-content" }}>
-      <section style={{ width: "65%", padding: "0 30px" }}>
-        <div style={{ display: "flex" }}>
+    <section style={{ display: "flex", width: "100%" }}>
+      <section
+        style={{
+          width: "65%",
+          padding: "0 30px",
+          display: "flex",
+          flexDirection: "column",
+          height: "calc(100vh - 95px)",
+        }}
+      >
+        <div style={{ display: "flex", flexGrow: 1 }}>
           <div style={{ display: "flex", alignItems: "flex-end" }}>
             {data.length > 0 && <PracticeLastAdded />}
           </div>

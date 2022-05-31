@@ -335,8 +335,8 @@ const KeywordTemplate = styled("span")<KeywordProps>`
 
 const LessonProgress = styled("div")<LessonProgressProps>`
   animation: growProgressBar 3s 1 forwards;
-  width: 117px;
-  height: 117px;
+  width: 106px;
+  height: 106px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -374,7 +374,6 @@ const Main = styled("main")`
   padding: 24px 10% 0;
   display: flex;
   justify-content: space-between;
-  height: calc(100vh - 95px); // margin 24px + menu height 71px
   overflow-x: hidden;
 `;
 
@@ -575,7 +574,7 @@ const PracticeLastAddedContainer = styled("div")`
   border: solid #e5e5e5;
   position: sticky;
   margin-bottom: 54px;
-  bottom: 0;
+  bottom: 24px;
 `;
 
 const ErrorMessage = styled("p")`

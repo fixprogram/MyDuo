@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { Textarea } from "~/components/lib";
-import { LessonTitle } from "~/modules/Lesson/components/lib";
+import { LessonTitle, VariantItem } from "~/modules/Lesson/components/lib";
 import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
-import { InsertWordsTextBlock } from "./lib";
+import { InsertWordsTextBlock, VariantItemNumber } from "./lib";
 
 type InsertWords = FieldsetType & {
   answer: string;
@@ -17,6 +17,7 @@ export default function InsertWords({
 }: InsertWords) {
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
+  const [isChooseVariants, setChooseVariants] = useState(false);
   const ref = useFocus();
 
   useEffect(() => {
@@ -38,10 +39,12 @@ export default function InsertWords({
       />
 
       <input type="hidden" name={`type${number}`} value={"Insert"} />
+      <input
+        type="hidden"
+        name={`isToChoose${number}`}
+        value={isChooseVariants ? "1" : undefined}
+      />
 
-      {/* <div>
-        <h2>Type and choose to insert</h2>
-      </div> */}
       <LessonTitle>Add missing words</LessonTitle>
 
       <Textarea
@@ -108,6 +111,23 @@ export default function InsertWords({
             />
           );
         })}
+
+        {isChooseVariants && (
+          <div style={{ width: "100%" }}>
+            <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
+              {words.map((word, idx: number) => (
+                <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
+                  <VariantItemNumber isFocused={false}>
+                    {idx + 1}
+                  </VariantItemNumber>
+                  <VariantItem type="button" isFocused={false}>
+                    {word}
+                  </VariantItem>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </InsertWordsTextBlock>
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -118,6 +138,12 @@ export default function InsertWords({
           onClick={() => setShowText(false)}
         >
           Edit text
+        </button>
+        <button
+          type="button"
+          onClick={() => setChooseVariants(!isChooseVariants)}
+        >
+          Set variants
         </button>
         {answer.split(" ").map((item, idx) => {
           return (

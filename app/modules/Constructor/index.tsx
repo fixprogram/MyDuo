@@ -59,6 +59,7 @@ export default function Constructor({
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
+        height: "calc(100vh - 95px)",
       }}
     >
       <div
