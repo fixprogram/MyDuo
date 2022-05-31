@@ -1,6 +1,6 @@
 import { useActionData, useLoaderData, useParams } from "@remix-run/react";
 import { redirect } from "@remix-run/node";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { ActionFunction, LoaderFunction, json } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Constructor, { ConstructorData } from "~/modules/Constructor";
 import { Language, Lesson, Topic } from "@prisma/client";
@@ -10,7 +10,6 @@ import {
   getLessonsByTopicId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
-import { json } from "remix";
 import { checkTitleUnique } from "~/models/topic.server";
 import { getActiveLanguage } from "~/models/language.server";
 

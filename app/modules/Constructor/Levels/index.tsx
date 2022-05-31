@@ -15,13 +15,11 @@ export default function Levels({
   steps,
   setReady,
   screen,
-  chapters,
   dispatch,
 }: {
   steps: Step[];
   setReady: Function;
   screen: string;
-  chapters: number[];
   dispatch: React.Dispatch<Action>;
 }) {
   useEffect(() => {

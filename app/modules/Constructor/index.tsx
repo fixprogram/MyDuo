@@ -84,7 +84,6 @@ export default function Constructor({
           setReady={(val: boolean) => setStepsReady(val)}
           screen={currentScreen}
           dispatch={dispatch}
-          chapters={chapters}
         />
       </div>
       <ConstructorSidebar>

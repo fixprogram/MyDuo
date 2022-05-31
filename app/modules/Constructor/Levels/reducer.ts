@@ -99,10 +99,6 @@ export const reducer = (state: State, action: Action): State => {
     case "ADD_STEP": {
       const { chapter } = action.payload;
       const newSteps = steps.map((step) => ({ ...step, active: false }));
-      // const newSteps = [
-      //   ...steps,
-      //   createStep({ number: steps.length, chapter }),
-      // ];
       return {
         ...state,
         steps: [...newSteps, createStep({ number: steps.length, chapter })],

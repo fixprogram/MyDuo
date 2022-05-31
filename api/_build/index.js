@@ -425,7 +425,8 @@ __export(chapter_exports, {
   loader: () => loader
 });
 init_react();
-var import_remix4 = __toESM(require_remix());
+var import_react12 = require("@remix-run/react");
+var import_node2 = require("@remix-run/node");
 
 // app/db.server.ts
 init_react();
@@ -444,18 +445,454 @@ if (false) {
 // app/modules/Lesson/index.tsx
 init_react();
 var import_react10 = require("react");
+var import_react11 = require("@remix-run/react");
 
-// app/components/Progress.tsx
+// app/modules/Lesson/reducer.ts
 init_react();
 
-// app/styles/close.svg
-var close_default = "/build/_assets/close-D2E3HOMK.svg";
+// app/utils.ts
+init_react();
+var import_react = require("@remix-run/react");
+var import_react2 = require("react");
+var useFocus = () => {
+  const ref = (0, import_react2.useRef)(null);
+  (0, import_react2.useEffect)(() => {
+    var _a;
+    (_a = ref.current) == null ? void 0 : _a.focus();
+  }, []);
+  return ref;
+};
+var isItemInArray = (arr, item) => {
+  return arr.find((arrItem) => arrItem === item);
+};
+var doesItemContainSign = (item) => {
+  const newItem = item.split("").slice(0, -1).join("");
+  switch (item.slice(-1)) {
+    case ",": {
+      return {
+        newItem,
+        sign: ","
+      };
+    }
+    case ".": {
+      return {
+        newItem,
+        sign: "."
+      };
+    }
+    case "?": {
+      return {
+        newItem,
+        sign: "?"
+      };
+    }
+    case "!": {
+      return {
+        newItem,
+        sign: "!"
+      };
+    }
+    default: {
+      return { newItem: item, sign: "" };
+    }
+  }
+};
+var doesArrayContainItems = (items, arr) => {
+  const filtered = arr.filter((arrItem) => items.find((item) => item.trim().toLocaleLowerCase() === arrItem.trim().toLowerCase()));
+  return { state: !!filtered.length, length: filtered.length, items: filtered };
+};
+var getWeekDay = () => {
+  const today = new Date();
+  return today.toLocaleDateString("en-US", {
+    weekday: "short"
+  });
+};
+var getYesterdayDay = () => {
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
+  return today.toLocaleDateString("en-US", {
+    weekday: "short"
+  });
+};
+
+// app/modules/Lesson/reducer.ts
+var basicState = {
+  disabled: false,
+  progress: 0,
+  stepNumber: 0,
+  content: {
+    id: "",
+    number: 0,
+    answer: [""],
+    stepType: "",
+    question: "",
+    text: "",
+    keywords: [""],
+    definition: "",
+    variants: []
+  },
+  lessonSteps: [],
+  maxSteps: 0,
+  stateWrong: false,
+  stateRight: false,
+  formDisabled: false,
+  nextStep: false
+};
+var continueContent = (content, lessonSteps) => lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
+var reducer = (state, action10) => {
+  const { content, stepNumber, maxSteps, lessonSteps } = state;
+  switch (action10.type) {
+    case "CONTINUE":
+      return __spreadProps(__spreadValues({}, state), {
+        stepNumber: stepNumber + 1,
+        disabled: stepNumber === maxSteps ? false : true,
+        content: continueContent(content, lessonSteps),
+        formDisabled: false,
+        stateRight: false,
+        stateWrong: false,
+        nextStep: false
+      });
+    case "CHECK_ANSWER":
+      const negativeState = __spreadProps(__spreadValues({}, state), {
+        stateWrong: true,
+        formDisabled: true,
+        disabled: false,
+        lessonSteps: [...lessonSteps, content],
+        stepNumber: stepNumber - 1,
+        nextStep: true
+      });
+      const positiveState = __spreadProps(__spreadValues({}, state), {
+        disabled: false,
+        nextStep: true,
+        stateRight: true,
+        formDisabled: true,
+        progress: stepNumber / maxSteps
+      });
+      const { answer } = action10.payload;
+      switch (content.stepType) {
+        case "Insert": {
+          const { length } = doesArrayContainItems(content.answer, answer);
+          if (length === content.answer.length) {
+            return positiveState;
+          }
+          return negativeState;
+        }
+        case "Question": {
+          console.log(answer[0]);
+          console.log(content.keywords);
+          const { state: state2, length } = doesArrayContainItems(content.answer, answer[0].split(" "));
+          if (!state2) {
+            return negativeState;
+          }
+          if (doesArrayContainItems(content.keywords, answer[0].split(" ")).length === content.keywords.length) {
+            if (length < content.answer.length) {
+              return positiveState;
+            }
+            return __spreadProps(__spreadValues({}, positiveState), { content: __spreadProps(__spreadValues({}, content), { answer: [""] }) });
+          }
+          if (length < content.answer.length * 0.8) {
+            return negativeState;
+          }
+        }
+        case "Variants": {
+          if (content.answer[0] === answer[0]) {
+            return positiveState;
+          }
+          return negativeState;
+        }
+        case "Pairs": {
+          let idx = 0;
+          if (content.answer.find((answerItem, id) => {
+            idx = id;
+            return answerItem === answer[0] || answerItem.split("").reverse().join("") === answer[0];
+          })) {
+            const newContent = content;
+            newContent.answer.splice(idx, 1);
+            if (newContent.answer.length === 0) {
+              return positiveState;
+            }
+            return __spreadProps(__spreadValues({}, state), {
+              content: newContent,
+              disabled: true
+            });
+          } else {
+            return __spreadProps(__spreadValues({}, state), {
+              disabled: true
+            });
+          }
+        }
+        default: {
+          throw new Error(`We don't know this type: ${action10.type}`);
+        }
+      }
+    case "CHANGE_DISABLED":
+      return __spreadProps(__spreadValues({}, state), { disabled: action10.payload.isDisabled });
+    case "RESULTS":
+      return __spreadProps(__spreadValues({}, state), {
+        stepNumber: stepNumber + 1,
+        stateRight: false,
+        stateWrong: false
+      });
+    case "SET_CASE":
+      const { steps } = action10.payload;
+      return __spreadProps(__spreadValues({}, basicState), {
+        stepNumber: 1,
+        lessonSteps: steps,
+        maxSteps: steps.length,
+        content: steps.shift(),
+        disabled: true
+      });
+    default:
+      throw new Error(`We don't know this type: ${action10.type}`);
+  }
+};
+
+// app/modules/Lesson/actions.ts
+init_react();
+var actionCreator = (dispatch) => ({
+  startPractice: () => dispatch({ type: "START" }),
+  checkAnswer: (answer) => dispatch({ type: "CHECK_ANSWER", payload: { answer } }),
+  continuePractice: () => dispatch({ type: "CONTINUE" }),
+  finishPractice: () => dispatch({ type: "FINISH" }),
+  showResultsPractice: () => dispatch({ type: "RESULTS" }),
+  changeDisabled: (isDisabled) => dispatch({ type: "CHANGE_DISABLED", payload: { isDisabled } }),
+  setCase: (steps) => dispatch({ type: "SET_CASE", payload: { steps } })
+});
+var actions_default = actionCreator;
+
+// app/modules/Lesson/components/lib.ts
+init_react();
+var import_styled = __toESM(require("@emotion/styled"));
+
+// app/styles/right.svg
+var right_default = "/build/_assets/right-SZKSLJM7.svg";
+
+// app/styles/wrong.svg
+var wrong_default = "/build/_assets/wrong-N2O2S4W4.svg";
+
+// app/modules/Lesson/components/lib.ts
+var LessonContainer = (0, import_styled.default)("section")`
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+var LessonFooter = (0, import_styled.default)("section")`
+  padding: 0 40px;
+  width: 100%;
+  height: 140px;
+  border-top: 2px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background-color: ${(props) => props.stateRight ? "#d7ffb8" : props.stateWrong ? "#ffdfe0" : "#fff"};
+  color: ${(props) => props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
+`;
+var LessonFooterInner = (0, import_styled.default)("div")`
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+`;
+var LessonFooterMessage = (0, import_styled.default)("div")`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  visibility: ${(props) => props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
+`;
+var LessonFooterTitle = (0, import_styled.default)("h2")`
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  line-height: 30px;
+  font-size: 24px;
+  letter-spacing: 0.2px;
+`;
+var LessonFooterText = (0, import_styled.default)("p")`
+  margin: 5px 0 0 0;
+  font-size: 17px;
+  font-family: "Roboto";
+  overflow-y: scroll;
+  max-height: 60px;
+`;
+var LessonButton = (0, import_styled.default)("button")`
+  border: 0 solid transparent;
+  background-color: ${(props) => props.stateWrong ? "#ff4b4b" : props.stateRight ? "#58cc02" : props.active ? "#78C83D" : "#E5E5E5"};
+  color: ${(props) => props.active ? "#fff" : "#AFAFAF"};
+  border-color: ${(props) => props.stateWrong ? "#ea2b2b" : props.stateRight ? "#58a700" : "white"};
+  height: 50px;
+  width: 150px;
+  cursor: ${(props) => props.active ? "pointer" : "default"};
+  text-transform: uppercase;
+  font-family: "Montserrat";
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  border-radius: 15px;
+  padding: 0 20px;
+`;
+var LessonBody = (0, import_styled.default)("div")`
+  margin: 72px 29% 4% 32%; // 4% instead of 240px
+  flex-grow: 1;
+  position: relative;
+  max-height: calc(100% - 240px);
+`;
+var LessonBodyTitle = (0, import_styled.default)("h3")`
+  font-family: "Montserrat";
+  font-size: 23px;
+  font-weight: 700;
+  color: #4b4b4b;
+  text-align: center;
+  margin-bottom: 13px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
+`;
+var LessonBodyMessage = (0, import_styled.default)("div")`
+  padding: 12px 15px 12px 21px;
+  border: 2px solid #dedede;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 18px;
+  color: #4c4c4c;
+  margin: 0 21px;
+  position: relative;
+  z-index: 1;
+`;
+var LessonBodyVariants = (0, import_styled.default)("div")`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+`;
+var LessonBodyVariant = (0, import_styled.default)("div")`
+  position: relative;
+  border-radius: 15px;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  cursor: pointer;
+  padding: 18px 0;
+  text-align: center;
+  margin-top: 14px;
+  border-color: ${(props) => props.active ? "#98D6FC" : props.stateRight ? "#B6EB7E" : props.stateWrong ? "#E9A8A6" : null};
+  background-color: ${(props) => props.active ? "#E1F3FE" : "inherit"};
+  color: ${(props) => props.active ? "#4897D1" : "inherit"};
+`;
+var LessonBodyWelcome = (0, import_styled.default)("div")``;
+var LessonBodyResults = (0, import_styled.default)("div")``;
+var VariantItem = (0, import_styled.default)("button")`
+  background-color: ${(props) => props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
+  height: 60px;
+  border: 1px solid;
+  border-color: ${(props) => props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
+  border-radius: 12px;
+  border-width: 2px 2px 4px;
+  outline: 0;
+  cursor: pointer;
+  position: relative;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  user-select: none;
+  text-align: center;
+  color: ${(props) => props.isFocused ? "rgb(24, 153, 214)" : "#4b4b4b"};
+  font-size: 19px;
+  line-height: 1.4;
+  padding: 12px 16px;
+  width: 100%;
+`;
+var LessonTitle = (0, import_styled.default)("h1")`
+  font-size: 32px;
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.25;
+  color: #3c3c3c;
+  text-align: left;
+  font-weight: 700;
+`;
+var LessonQuestion = (0, import_styled.default)("p")`
+  font-size: 19px;
+  line-height: 39px;
+  font-family: "Montserrat", sans-serif;
+  color: #3c3c3c;
+  padding: 12px 24px;
+  margin-left: 8px;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 15px;
+  box-sizing: border-box;
+`;
+var LessonQuestionTriangleContainer = (0, import_styled.default)("div")`
+  height: 10px;
+  overflow: hidden;
+  width: 20px;
+  position: absolute;
+  left: -5px;
+  margin: 15px 0;
+  top: calc(50% - 15px);
+  transform: translateY(-50%) rotate(-90deg);
+`;
+var LessonQuestionTriangle = (0, import_styled.default)("span")`
+  box-sizing: border-box;
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 2px;
+  content: "";
+  height: 14.14427px;
+  left: 50%;
+  transform: rotate(45deg);
+  transform-origin: top left;
+  width: 14.14427px;
+`;
+var LessonFooterIcon = (0, import_styled.default)("div")`
+  border-radius: 98px;
+  display: block;
+  float: left;
+  height: 80px;
+  width: 80px;
+  background: url(${(props) => props.stateRight ? right_default : wrong_default});
+  background-position: ${(props) => props.stateRight ? "-145px -64px" : "-183px -65px"};
+  background-color: #fff;
+  display: block;
+`;
+var ResultsContainer = (0, import_styled.default)("section")`
+  display: flex;
+  height: calc(100vh - 140px);
+  justify-content: center;
+`;
+var ResultsTitle = (0, import_styled.default)("h2")`
+  margin: 0;
+  font-family: "Montserrat";
+`;
+var ResultsLeftBlock = (0, import_styled.default)("div")`
+  padding: 50px 100px;
+  width: calc(50% - 1px);
+`;
+var ResultsSeparateLine = (0, import_styled.default)("div")`
+  width: 4px;
+  background-color: #e5e5e5;
+`;
+
+// app/modules/Lesson/components/index.tsx
+init_react();
+
+// app/modules/Lesson/components/Body.tsx
+init_react();
+var import_react8 = require("react");
+
+// app/modules/Lesson/components/QuestionAnswer.tsx
+init_react();
+var import_react4 = require("react");
 
 // app/components/lib.tsx
 init_react();
-var import_styled = __toESM(require("@emotion/styled"));
-var import_react = require("@remix-run/react");
-var HorizontalList = import_styled.default.ul((props) => ({
+var import_styled2 = __toESM(require("@emotion/styled"));
+var import_react3 = require("@remix-run/react");
+var HorizontalList = import_styled2.default.ul((props) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -463,7 +900,7 @@ var HorizontalList = import_styled.default.ul((props) => ({
   height: "100%",
   padding: "0 9px"
 }));
-var ListItem = import_styled.default.li((props) => ({
+var ListItem = import_styled2.default.li((props) => ({
   height: "100%",
   margin: "0 15px",
   display: "flex",
@@ -471,13 +908,13 @@ var ListItem = import_styled.default.li((props) => ({
   justifyContent: "center",
   position: "relative"
 }));
-var LessonsContainer = import_styled.default.section((props) => ({
+var LessonsContainer = import_styled2.default.section((props) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
   position: "relative"
 }));
-var LessonsBlock = (0, import_styled.default)("div")`
+var LessonsBlock = (0, import_styled2.default)("div")`
   grid-column-gap: 12px;
   display: grid;
   grid-auto-columns: calc(33.33333% - 8px);
@@ -485,14 +922,14 @@ var LessonsBlock = (0, import_styled.default)("div")`
   justify-content: center;
   padding: 16px 12px;
 `;
-var LessonBlock = (0, import_styled.default)("div")`
+var LessonBlock = (0, import_styled2.default)("div")`
   width: 33%;
   margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-var LessonBlockMenu = (0, import_styled.default)("div")`
+var LessonBlockMenu = (0, import_styled2.default)("div")`
   display: ${(props) => props.isOpened ? "block" : "none"};
   position: absolute;
   left: 50%;
@@ -500,7 +937,7 @@ var LessonBlockMenu = (0, import_styled.default)("div")`
   transform: translate(-50%);
   z-index: 1;
 `;
-var LessonBlockMenuTriangle = (0, import_styled.default)("div")`
+var LessonBlockMenuTriangle = (0, import_styled2.default)("div")`
   left: calc(50% - 15px);
   transform: translateX(-50%);
   margin: 0 15px;
@@ -511,7 +948,7 @@ var LessonBlockMenuTriangle = (0, import_styled.default)("div")`
   box-sizing: border-box;
   position: absolute;
 `;
-var LessonBlockMenuTriangleContent = (0, import_styled.default)("span")`
+var LessonBlockMenuTriangleContent = (0, import_styled2.default)("span")`
   background-color: #ce82ff;
   border: 0;
   position: absolute;
@@ -523,7 +960,7 @@ var LessonBlockMenuTriangleContent = (0, import_styled.default)("span")`
   transform-origin: top left;
   width: 14.14427px;
 `;
-var LessonBlockInner = (0, import_styled.default)("div")`
+var LessonBlockInner = (0, import_styled2.default)("div")`
   background-color: #ce82ff;
   color: #fff;
   padding: 16px;
@@ -534,7 +971,7 @@ var LessonBlockInner = (0, import_styled.default)("div")`
   display: flex;
   flex-direction: column;
 `;
-var LessonBlockLink = (0, import_styled.default)(import_react.Link)`
+var LessonBlockLink = (0, import_styled2.default)(import_react3.Link)`
   color: #ce82ff;
   background-color: #fff;
   flex-grow: 1;
@@ -551,7 +988,7 @@ var LessonBlockLink = (0, import_styled.default)(import_react.Link)`
   font-weight: 500;
   letter-spacing: 0.8px;
 `;
-var LessonBlockButton = (0, import_styled.default)("button")`
+var LessonBlockButton = (0, import_styled2.default)("button")`
   color: #ce82ff;
   background-color: #fff;
   flex-grow: 1;
@@ -569,7 +1006,7 @@ var LessonBlockButton = (0, import_styled.default)("button")`
   font-weight: 500;
   letter-spacing: 0.8px;
 `;
-var LessonBlockTitle = (0, import_styled.default)("div")`
+var LessonBlockTitle = (0, import_styled2.default)("div")`
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -590,17 +1027,17 @@ var LessonBlockTitle = (0, import_styled.default)("div")`
     flex-grow: 0.3;
   }
 `;
-var LessonBlockItem = import_styled.default.a(() => ({
+var LessonBlockItem = import_styled2.default.a(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "33.33%",
   textDecoration: "none"
 }));
-var UserImage = import_styled.default.img({
+var UserImage = import_styled2.default.img({
   borderRadius: "100%"
 }, (props) => ({ width: props.width, height: props.height }));
-var ProgressBarContainer = (0, import_styled.default)("div")`
+var ProgressBarContainer = (0, import_styled2.default)("div")`
   width: 100%;
   margin-top: 1px;
   border-top: 1px solid #dbdddd;
@@ -609,7 +1046,7 @@ var ProgressBarContainer = (0, import_styled.default)("div")`
   justify-content: center;
   align-items: center;
 `;
-var ProgressBar = (0, import_styled.default)("div")`
+var ProgressBar = (0, import_styled2.default)("div")`
   width: 61%;
   height: 16px;
   position: relative;
@@ -638,19 +1075,19 @@ var ProgressBar = (0, import_styled.default)("div")`
     opacity: 0.2;
   }
 `;
-var ProgressLeaveLesson = (0, import_styled.default)(import_react.Link)`
+var ProgressLeaveLesson = (0, import_styled2.default)(import_react3.Link)`
   margin-right: 21px;
   height: 16px;
   margin-top: -3px;
 `;
-var Input = (0, import_styled.default)("input")`
+var Input = (0, import_styled2.default)("input")`
   background-color: #f7f7f7;
   border: 1px solid #e5e5e5;
   border-radius: 10px;
   padding: 10px 12px;
   width: 100%;
 `;
-var Textarea = (0, import_styled.default)("textarea")`
+var Textarea = (0, import_styled2.default)("textarea")`
   background-color: rgb(247, 247, 247);
   border: 2px solid rgb(229, 229, 229);
   border-color: rgb(229, 229, 229);
@@ -672,24 +1109,24 @@ var Textarea = (0, import_styled.default)("textarea")`
   font-weight: 400;
   letter-spacing: 1px;
 `;
-var H1Title = (0, import_styled.default)("h1")`
+var H1Title = (0, import_styled2.default)("h1")`
   font-size: 26px;
   margin: 10px 0 15px;
   font-family: Montserrat;
   font-weight: 700;
   text-align: center;
 `;
-var Fieldset = (0, import_styled.default)("fieldset")`
+var Fieldset = (0, import_styled2.default)("fieldset")`
   margin-top: 20px;
 `;
-var InputTextLabel = (0, import_styled.default)("label")`
+var InputTextLabel = (0, import_styled2.default)("label")`
   width: 49%;
   margin-right: 1%;
 `;
-var TextareaLabel = (0, import_styled.default)("label")`
+var TextareaLabel = (0, import_styled2.default)("label")`
   width: 100%;
 `;
-var LabelText = (0, import_styled.default)("span")`
+var LabelText = (0, import_styled2.default)("span")`
   margin-bottom: 10px;
   display: block;
   cursor: pointer;
@@ -699,7 +1136,7 @@ var LabelText = (0, import_styled.default)("span")`
   font-weight: 700;
   letter-spacing: 0.6px;
 `;
-var Legend = (0, import_styled.default)("legend")`
+var Legend = (0, import_styled2.default)("legend")`
   color: #4b4b4b;
   font-size: 34px;
   font-weight: 700;
@@ -709,7 +1146,7 @@ var Legend = (0, import_styled.default)("legend")`
   text-align: center;
   font-family: "Montserrat", sans-serif;
 `;
-var FormButton = (0, import_styled.default)("button")`
+var FormButton = (0, import_styled2.default)("button")`
   background-color: ${(props) => props.active ? "#78C83D" : props.disabled ? "#E5E5E5" : "#fff"};
   color: ${(props) => props.active ? "#fff" : props.disabled ? "#AFAFAF" : "#1cb0f6"};
   border: ${(props) => props.active ? "none" : "2px solid #e5e5e5"};
@@ -724,12 +1161,12 @@ var FormButton = (0, import_styled.default)("button")`
   letter-spacing: 0.3px;
   border-radius: 15px;
 `;
-var KeywordTemplate = (0, import_styled.default)("span")`
+var KeywordTemplate = (0, import_styled2.default)("span")`
   margin-right: 10px;
   cursor: pointer;
   border: ${(props) => props.active && "1px solid blue"};
 `;
-var LessonProgress = (0, import_styled.default)("div")`
+var LessonProgress = (0, import_styled2.default)("div")`
   animation: growProgressBar 3s 1 forwards;
   width: 117px;
   height: 117px;
@@ -750,7 +1187,7 @@ var LessonProgress = (0, import_styled.default)("div")`
   color: #1cb0f6;
   position: relative;
 `;
-var LessonProgressInner = (0, import_styled.default)("div")`
+var LessonProgressInner = (0, import_styled2.default)("div")`
   border-radius: 50%;
   height: 68%;
   left: 50%;
@@ -764,14 +1201,14 @@ var LessonProgressInner = (0, import_styled.default)("div")`
   justify-content: center;
   align-items: center;
 `;
-var Main = (0, import_styled.default)("main")`
+var Main = (0, import_styled2.default)("main")`
   padding: 24px 10% 0;
   display: flex;
   justify-content: space-between;
   height: calc(100vh - 95px); // margin 24px + menu height 71px
   overflow-x: hidden;
 `;
-var LessonTitle = (0, import_styled.default)("b")`
+var LessonTitle2 = (0, import_styled2.default)("b")`
   font-size: 17px;
   font-weight: 700;
   color: #3c3c3c;
@@ -779,10 +1216,10 @@ var LessonTitle = (0, import_styled.default)("b")`
   margin-top: 8px;
   display: block;
 `;
-var NavIcon = (0, import_styled.default)("img")`
+var NavIcon = (0, import_styled2.default)("img")`
   margin-right: 10px;
 `;
-var LoginContainer = (0, import_styled.default)("section")`
+var LoginContainer = (0, import_styled2.default)("section")`
   padding: 30px;
   height: 100vh;
   left: 0;
@@ -791,7 +1228,7 @@ var LoginContainer = (0, import_styled.default)("section")`
   width: 100vw;
   box-sizing: border-box;
 `;
-var LoginContinerInner = (0, import_styled.default)(`div`)`
+var LoginContinerInner = (0, import_styled2.default)(`div`)`
   align-items: center;
   display: flex;
   height: 100%;
@@ -799,7 +1236,7 @@ var LoginContinerInner = (0, import_styled.default)(`div`)`
   position: relative;
   width: 100%;
 `;
-var LoginInput = (0, import_styled.default)("input")`
+var LoginInput = (0, import_styled2.default)("input")`
   background: transparent;
   flex-grow: 1;
   line-height: 27px;
@@ -815,7 +1252,7 @@ var LoginInput = (0, import_styled.default)("input")`
   display: inline-flex;
   margin-top: 8px;
 `;
-var LoginButton = (0, import_styled.default)("button")`
+var LoginButton = (0, import_styled2.default)("button")`
   margin-top: 20px;
   width: 100%;
   letter-spacing: 0.8px;
@@ -830,7 +1267,7 @@ var LoginButton = (0, import_styled.default)("button")`
   text-transform: uppercase;
   background-color: #1cb0f6;
 `;
-var LoginToggle = (0, import_styled.default)("label")`
+var LoginToggle = (0, import_styled2.default)("label")`
   position: absolute;
   top: 0;
   right: 0;
@@ -850,7 +1287,7 @@ var LoginToggle = (0, import_styled.default)("label")`
   align-items: center;
   justify-content: center;
 `;
-var MenuContainer = (0, import_styled.default)("div")`
+var MenuContainer = (0, import_styled2.default)("div")`
   height: 71px;
   width: 100vw;
   border-top: 1px solid #dadcde;
@@ -859,7 +1296,7 @@ var MenuContainer = (0, import_styled.default)("div")`
   display: flex;
   justify-content: space-between;
 `;
-var MenuNavLink = (0, import_styled.default)(import_react.NavLink)`
+var MenuNavLink = (0, import_styled2.default)(import_react3.NavLink)`
   text-decoration: none;
   text-transform: uppercase;
   font-family: "Montserrat";
@@ -869,7 +1306,7 @@ var MenuNavLink = (0, import_styled.default)(import_react.NavLink)`
   display: flex;
   align-items: center;
 `;
-var ActiveLanguageButton = (0, import_styled.default)("button")`
+var ActiveLanguageButton = (0, import_styled2.default)("button")`
   color: #3c3c3c;
   border: none;
   background-color: inherit;
@@ -878,7 +1315,7 @@ var ActiveLanguageButton = (0, import_styled.default)("button")`
   letter-spacing: 0.8px;
   cursor: pointer;
 `;
-var ActiveLanguageContainer = (0, import_styled.default)("div")`
+var ActiveLanguageContainer = (0, import_styled2.default)("div")`
   position: absolute;
   top: 40px;
   right: -30px;
@@ -886,16 +1323,16 @@ var ActiveLanguageContainer = (0, import_styled.default)("div")`
   padding: 20px 0;
   z-index: 9;
 `;
-var LanguagesContainer = (0, import_styled.default)("div")`
+var LanguagesContainer = (0, import_styled2.default)("div")`
   border: 2px solid #dadcde;
   border-radius: 15px;
   background-color: white;
 `;
-var LanguagesList = (0, import_styled.default)("ul")`
+var LanguagesList = (0, import_styled2.default)("ul")`
   display: flex;
   flex-direction: column;
 `;
-var LanguagesItem = (0, import_styled.default)("button")`
+var LanguagesItem = (0, import_styled2.default)("button")`
   border: none;
   border-bottom: 2px solid #dadcde;
   width: 100%;
@@ -908,7 +1345,7 @@ var LanguagesItem = (0, import_styled.default)("button")`
   letter-spacing: 0.8px;
   text-align: left;
 `;
-var LanguagesInput = (0, import_styled.default)("input")`
+var LanguagesInput = (0, import_styled2.default)("input")`
   border: none;
   border-bottom: 2px solid #dadcde;
   border-radius: 0 0 10px 10px;
@@ -922,7 +1359,7 @@ var LanguagesInput = (0, import_styled.default)("input")`
   letter-spacing: 0.8px;
   text-align: left;
 `;
-var Overlay = (0, import_styled.default)("div")`
+var Overlay = (0, import_styled2.default)("div")`
   background: rgba(28, 97, 130, 0.1);
   bottom: 0;
   left: 0;
@@ -933,7 +1370,7 @@ var Overlay = (0, import_styled.default)("div")`
   top: 71px;
   transition: opacity 0.3s;
 `;
-var Logout = (0, import_styled.default)("button")`
+var Logout = (0, import_styled2.default)("button")`
   border: none;
   cursor: pointer;
   background-color: inherit;
@@ -943,7 +1380,7 @@ var Logout = (0, import_styled.default)("button")`
   letter-spacing: 0.8px;
   padding: 0;
 `;
-var PracticeLastAddedContainer = (0, import_styled.default)("div")`
+var PracticeLastAddedContainer = (0, import_styled2.default)("div")`
   border-width: 2px 2px 4px;
   height: 72px;
   width: 72px;
@@ -953,7 +1390,7 @@ var PracticeLastAddedContainer = (0, import_styled.default)("div")`
   margin-bottom: 54px;
   bottom: 0;
 `;
-var ErrorMessage = (0, import_styled.default)("p")`
+var ErrorMessage = (0, import_styled2.default)("p")`
   line-height: 20px;
   font-family: "Roboto", sans-serif;
   font-size: 16px;
@@ -961,14 +1398,14 @@ var ErrorMessage = (0, import_styled.default)("p")`
   letter-spacing: 0.3px;
   color: #ea2b2b;
 `;
-var ExpProgressBlock = (0, import_styled.default)("section")`
+var ExpProgressBlock = (0, import_styled2.default)("section")`
   background: #fff;
   border: 2px solid #e5e5e5;
   border-radius: 16px;
   margin: 0 24px 24px;
   padding: 24px;
 `;
-var ExpProgressTitle = (0, import_styled.default)("h2")`
+var ExpProgressTitle = (0, import_styled2.default)("h2")`
   color: #3c3c3c;
   font-size: 24px;
   line-height: 26px;
@@ -976,256 +1413,17 @@ var ExpProgressTitle = (0, import_styled.default)("h2")`
   font-family: Montserrat;
   font-weight: 700;
 `;
-var FooterLine = (0, import_styled.default)("hr")`
+var FooterLine = (0, import_styled2.default)("hr")`
   border: 0;
   border-top: 2px solid #e5e5e5;
   margin: 0 0 48px;
 `;
-var FooterText = (0, import_styled.default)("p")`
+var FooterText = (0, import_styled2.default)("p")`
   text-align: center;
   color: #afafaf;
   font-family: Roboto;
   margin: 0;
 `;
-
-// app/components/Progress.tsx
-var Progress = ({ progress }) => {
-  return /* @__PURE__ */ React.createElement(ProgressBarContainer, null, /* @__PURE__ */ React.createElement(ProgressLeaveLesson, {
-    to: "/"
-  }, /* @__PURE__ */ React.createElement("img", {
-    src: close_default,
-    alt: "close",
-    style: { width: "16px", height: "16px", verticalAlign: "initial" }
-  })), /* @__PURE__ */ React.createElement(ProgressBar, {
-    progress
-  }));
-};
-var Progress_default = Progress;
-
-// app/modules/Lesson/components/Body.tsx
-init_react();
-var import_react8 = require("react");
-
-// app/modules/Lesson/components/lib.ts
-init_react();
-var import_styled2 = __toESM(require("@emotion/styled"));
-
-// app/styles/right.svg
-var right_default = "/build/_assets/right-SZKSLJM7.svg";
-
-// app/styles/wrong.svg
-var wrong_default = "/build/_assets/wrong-N2O2S4W4.svg";
-
-// app/modules/Lesson/components/lib.ts
-var LessonContainer = (0, import_styled2.default)("section")`
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
-var LessonFooter = (0, import_styled2.default)("section")`
-  padding: 0 40px;
-  width: 100%;
-  height: 140px;
-  border-top: 2px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  background-color: ${(props) => props.stateRight ? "#d7ffb8" : props.stateWrong ? "#ffdfe0" : "#fff"};
-  color: ${(props) => props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
-`;
-var LessonFooterInner = (0, import_styled2.default)("div")`
-  max-width: 1000px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 auto;
-`;
-var LessonFooterMessage = (0, import_styled2.default)("div")`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  visibility: ${(props) => props.stateRight ? "visible" : props.stateWrong ? "visible" : "hidden"};
-`;
-var LessonFooterTitle = (0, import_styled2.default)("h2")`
-  margin: 0;
-  font-family: "Montserrat", sans-serif;
-  line-height: 30px;
-  font-size: 24px;
-  letter-spacing: 0.2px;
-`;
-var LessonFooterText = (0, import_styled2.default)("p")`
-  margin: 5px 0 0 0;
-  font-size: 17px;
-  font-family: "Roboto";
-  overflow-y: scroll;
-  max-height: 60px;
-`;
-var LessonButton = (0, import_styled2.default)("button")`
-  border: 0 solid transparent;
-  background-color: ${(props) => props.stateWrong ? "#ff4b4b" : props.stateRight ? "#58cc02" : props.active ? "#78C83D" : "#E5E5E5"};
-  color: ${(props) => props.active ? "#fff" : "#AFAFAF"};
-  border-color: ${(props) => props.stateWrong ? "#ea2b2b" : props.stateRight ? "#58a700" : "white"};
-  height: 50px;
-  width: 150px;
-  cursor: ${(props) => props.active ? "pointer" : "default"};
-  text-transform: uppercase;
-  font-family: "Montserrat";
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  border-radius: 15px;
-  padding: 0 20px;
-`;
-var LessonBody = (0, import_styled2.default)("div")`
-  margin: 72px 29% 4% 32%; // 4% instead of 240px
-  flex-grow: 1;
-  position: relative;
-  max-height: calc(100% - 240px);
-`;
-var LessonBodyTitle = (0, import_styled2.default)("h3")`
-  font-family: "Montserrat";
-  font-size: 23px;
-  font-weight: 700;
-  color: #4b4b4b;
-  text-align: center;
-  margin-bottom: 13px;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  background-color: #fff;
-`;
-var LessonBodyMessage = (0, import_styled2.default)("div")`
-  padding: 12px 15px 12px 21px;
-  border: 2px solid #dedede;
-  font-family: "Roboto";
-  font-weight: 400;
-  font-size: 18px;
-  color: #4c4c4c;
-  margin: 0 21px;
-  position: relative;
-  z-index: 1;
-`;
-var LessonBodyVariants = (0, import_styled2.default)("div")`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-`;
-var LessonBodyVariant = (0, import_styled2.default)("div")`
-  position: relative;
-  border-radius: 15px;
-  border: 2px solid #e5e5e5;
-  border-bottom: 4px solid #e5e5e5;
-  cursor: pointer;
-  padding: 18px 0;
-  text-align: center;
-  margin-top: 14px;
-  border-color: ${(props) => props.active ? "#98D6FC" : props.stateRight ? "#B6EB7E" : props.stateWrong ? "#E9A8A6" : null};
-  background-color: ${(props) => props.active ? "#E1F3FE" : "inherit"};
-  color: ${(props) => props.active ? "#4897D1" : "inherit"};
-`;
-var LessonBodyWelcome = (0, import_styled2.default)("div")``;
-var LessonBodyResults = (0, import_styled2.default)("div")``;
-var VariantItem = (0, import_styled2.default)("button")`
-  background-color: ${(props) => props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
-  height: 60px;
-  border: 1px solid;
-  border-color: ${(props) => props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
-  border-radius: 12px;
-  border-width: 2px 2px 4px;
-  outline: 0;
-  cursor: pointer;
-  position: relative;
-  touch-action: manipulation;
-  transform: translateZ(0);
-  user-select: none;
-  text-align: center;
-  color: ${(props) => props.isFocused ? "rgb(24, 153, 214)" : "#4b4b4b"};
-  font-size: 19px;
-  line-height: 1.4;
-  padding: 12px 16px;
-  width: 100%;
-`;
-var LessonTitle2 = (0, import_styled2.default)("h1")`
-  font-size: 32px;
-  font-family: "Montserrat", sans-serif;
-  line-height: 1.25;
-  color: #3c3c3c;
-  text-align: left;
-  font-weight: 700;
-`;
-var LessonQuestion = (0, import_styled2.default)("p")`
-  font-size: 19px;
-  line-height: 39px;
-  font-family: "Montserrat", sans-serif;
-  color: #3c3c3c;
-  padding: 12px 24px;
-  margin-left: 8px;
-  background-color: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 15px;
-  box-sizing: border-box;
-`;
-var LessonQuestionTriangleContainer = (0, import_styled2.default)("div")`
-  height: 10px;
-  overflow: hidden;
-  width: 20px;
-  position: absolute;
-  left: -5px;
-  margin: 15px 0;
-  top: calc(50% - 15px);
-  transform: translateY(-50%) rotate(-90deg);
-`;
-var LessonQuestionTriangle = (0, import_styled2.default)("span")`
-  box-sizing: border-box;
-  position: absolute;
-  background-color: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 2px;
-  content: "";
-  height: 14.14427px;
-  left: 50%;
-  transform: rotate(45deg);
-  transform-origin: top left;
-  width: 14.14427px;
-`;
-var LessonFooterIcon = (0, import_styled2.default)("div")`
-  border-radius: 98px;
-  display: block;
-  float: left;
-  height: 80px;
-  width: 80px;
-  background: url(${(props) => props.stateRight ? right_default : wrong_default});
-  background-position: ${(props) => props.stateRight ? "-145px -64px" : "-183px -65px"};
-  background-color: #fff;
-  display: block;
-`;
-var ResultsContainer = (0, import_styled2.default)("section")`
-  display: flex;
-  height: calc(100vh - 140px);
-  justify-content: center;
-`;
-var ResultsTitle = (0, import_styled2.default)("h2")`
-  margin: 0;
-  font-family: "Montserrat";
-`;
-var ResultsLeftBlock = (0, import_styled2.default)("div")`
-  padding: 50px 100px;
-  width: calc(50% - 1px);
-`;
-var ResultsSeparateLine = (0, import_styled2.default)("div")`
-  width: 4px;
-  background-color: #e5e5e5;
-`;
-
-// app/modules/Lesson/components/QuestionAnswer.tsx
-init_react();
-var import_react2 = require("react");
 
 // app/styles/duo.svg
 var duo_default = "/build/_assets/duo-4STWGEJ4.svg";
@@ -1237,12 +1435,12 @@ function QuestionAnswerPractice({
   setAnswer,
   formDisabled
 }) {
-  const ref = (0, import_react2.useRef)(null);
-  (0, import_react2.useEffect)(() => {
+  const ref = (0, import_react4.useRef)(null);
+  (0, import_react4.useEffect)(() => {
     var _a;
     (_a = ref.current) == null ? void 0 : _a.focus();
   }, [formDisabled]);
-  return /* @__PURE__ */ React.createElement(import_react2.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
+  return /* @__PURE__ */ React.createElement(import_react4.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center" }
   }, /* @__PURE__ */ React.createElement("img", {
     src: duo_default,
@@ -1353,71 +1551,6 @@ var VariantItemNumber = (0, import_styled3.default)("span")`
   font-family: "Roboto";
 `;
 
-// app/utils.ts
-init_react();
-var import_react3 = require("@remix-run/react");
-var import_react4 = require("react");
-var useFocus = () => {
-  const ref = (0, import_react4.useRef)(null);
-  (0, import_react4.useEffect)(() => {
-    var _a;
-    (_a = ref.current) == null ? void 0 : _a.focus();
-  }, []);
-  return ref;
-};
-var isItemInArray = (arr, item) => {
-  return arr.find((arrItem) => arrItem === item);
-};
-var doesItemContainSign = (item) => {
-  const newItem = item.split("").slice(0, -1).join("");
-  switch (item.slice(-1)) {
-    case ",": {
-      return {
-        newItem,
-        sign: ","
-      };
-    }
-    case ".": {
-      return {
-        newItem,
-        sign: "."
-      };
-    }
-    case "?": {
-      return {
-        newItem,
-        sign: "?"
-      };
-    }
-    case "!": {
-      return {
-        newItem,
-        sign: "!"
-      };
-    }
-    default: {
-      return { newItem: item, sign: "" };
-    }
-  }
-};
-var doesArrayContainItems = (items, arr) => {
-  const filtered = arr.filter((arrItem) => items.find((item) => item.trim().toLocaleLowerCase() === arrItem.trim().toLowerCase()));
-  return { state: !!filtered.length, length: filtered.length, items: filtered };
-};
-var getWeekDay = () => {
-  const today = new Date();
-  return today.toLocaleDateString("en-US", {
-    weekday: "short"
-  });
-};
-var getYesterdayDay = () => {
-  const today = new Date();
-  today.setDate(today.getDate() - 1);
-  return today.toLocaleDateString("en-US", {
-    weekday: "short"
-  });
-};
-
 // app/modules/Lesson/components/InsertWords.tsx
 function InsertWords({
   answer,
@@ -1441,7 +1574,7 @@ function InsertWords({
     }
     setAnswer(values);
   }, [values]);
-  return /* @__PURE__ */ React.createElement(import_react5.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, {
+  return /* @__PURE__ */ React.createElement(import_react5.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, {
     style: {
       marginTop: 0,
       fontSize: 19,
@@ -1498,7 +1631,7 @@ function VariantsPractice({
   setAnswer
 }) {
   const { definition, question, variants } = content;
-  return /* @__PURE__ */ React.createElement(import_react6.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, definition)), /* @__PURE__ */ React.createElement("b", null, question), /* @__PURE__ */ React.createElement("ul", {
+  return /* @__PURE__ */ React.createElement(import_react6.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle, null, "Choose right variant"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, definition)), /* @__PURE__ */ React.createElement("b", null, question), /* @__PURE__ */ React.createElement("ul", {
     style: { listStyleType: "none", padding: 0, margin: 0 }
   }, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement("li", {
     key: idx,
@@ -1524,7 +1657,7 @@ function Pairs({
   const isDisabled = (idx) => {
     return !contentAnswer.find((answerItem) => answerItem.includes((idx + 1).toString()));
   };
-  return /* @__PURE__ */ React.createElement(import_react7.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement("ul", {
+  return /* @__PURE__ */ React.createElement(import_react7.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle, null, "Connect pairs"), /* @__PURE__ */ React.createElement("ul", {
     style: {
       display: "flex",
       flexWrap: "wrap",
@@ -1595,173 +1728,6 @@ var Body = ({
 };
 var Body_default = Body;
 
-// app/modules/Lesson/reducer.ts
-init_react();
-var basicState = {
-  disabled: false,
-  progress: 0,
-  stepNumber: 0,
-  content: {
-    id: "",
-    number: 0,
-    answer: [""],
-    stepType: "",
-    question: "",
-    text: "",
-    keywords: [""],
-    definition: "",
-    variants: []
-  },
-  lessonSteps: [],
-  maxSteps: 0,
-  stateWrong: false,
-  stateRight: false,
-  formDisabled: false,
-  nextStep: false
-};
-var continueContent = (content, lessonSteps) => lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
-var reducer = (state, action10) => {
-  const { content, stepNumber, maxSteps, lessonSteps } = state;
-  switch (action10.type) {
-    case "CONTINUE":
-      return __spreadProps(__spreadValues({}, state), {
-        stepNumber: stepNumber + 1,
-        disabled: stepNumber === maxSteps ? false : true,
-        content: continueContent(content, lessonSteps),
-        formDisabled: false,
-        stateRight: false,
-        stateWrong: false,
-        nextStep: false
-      });
-    case "CHECK_ANSWER":
-      const negativeState = __spreadProps(__spreadValues({}, state), {
-        stateWrong: true,
-        formDisabled: true,
-        disabled: false,
-        lessonSteps: [...lessonSteps, content],
-        stepNumber: stepNumber - 1,
-        nextStep: true
-      });
-      const positiveState = __spreadProps(__spreadValues({}, state), {
-        disabled: false,
-        nextStep: true,
-        stateRight: true,
-        formDisabled: true,
-        progress: stepNumber / maxSteps
-      });
-      const { answer } = action10.payload;
-      switch (content.stepType) {
-        case "Insert": {
-          const { length } = doesArrayContainItems(content.answer, answer);
-          if (length === content.answer.length) {
-            return positiveState;
-          }
-          return negativeState;
-        }
-        case "Question": {
-          if (doesArrayContainItems(content.keywords, answer[0].split(" ")).state) {
-            return positiveState;
-          }
-          const { state: state2, length } = doesArrayContainItems(content.answer, answer[0].split(" "));
-          if (!state2) {
-            return negativeState;
-          }
-          if (length < content.answer.length * 0.8) {
-            return negativeState;
-          }
-          return positiveState;
-        }
-        case "Variants": {
-          if (content.answer[0] === answer[0]) {
-            return positiveState;
-          }
-          return negativeState;
-        }
-        case "Pairs": {
-          let idx = 0;
-          if (content.answer.find((answerItem, id) => {
-            idx = id;
-            return answerItem === answer[0] || answerItem.split("").reverse().join("") === answer[0];
-          })) {
-            const newContent = content;
-            newContent.answer.splice(idx, 1);
-            if (newContent.answer.length === 0) {
-              return positiveState;
-            }
-            return __spreadProps(__spreadValues({}, state), {
-              content: newContent,
-              disabled: true
-            });
-          } else {
-            return __spreadProps(__spreadValues({}, state), {
-              disabled: true
-            });
-          }
-        }
-        default: {
-          throw new Error(`We don't know this type: ${action10.type}`);
-        }
-      }
-    case "CHANGE_DISABLED":
-      return __spreadProps(__spreadValues({}, state), { disabled: action10.payload.isDisabled });
-    case "RESULTS":
-      return __spreadProps(__spreadValues({}, state), {
-        stepNumber: stepNumber + 1,
-        stateRight: false,
-        stateWrong: false
-      });
-    case "SET_CASE":
-      const { steps } = action10.payload;
-      return __spreadProps(__spreadValues({}, basicState), {
-        stepNumber: 1,
-        lessonSteps: steps,
-        maxSteps: steps.length,
-        content: steps.shift(),
-        disabled: true
-      });
-    default:
-      throw new Error(`We don't know this type: ${action10.type}`);
-  }
-};
-
-// app/modules/Lesson/actions.ts
-init_react();
-var actionCreator = (dispatch) => ({
-  startPractice: () => dispatch({ type: "START" }),
-  checkAnswer: (answer) => dispatch({ type: "CHECK_ANSWER", payload: { answer } }),
-  continuePractice: () => dispatch({ type: "CONTINUE" }),
-  finishPractice: () => dispatch({ type: "FINISH" }),
-  showResultsPractice: () => dispatch({ type: "RESULTS" }),
-  changeDisabled: (isDisabled) => dispatch({ type: "CHANGE_DISABLED", payload: { isDisabled } }),
-  setCase: (steps) => dispatch({ type: "SET_CASE", payload: { steps } })
-});
-var actions_default = actionCreator;
-
-// app/modules/Lesson/index.tsx
-var import_react11 = require("@remix-run/react");
-
-// app/modules/Lesson/components/Results.tsx
-init_react();
-var import_remix3 = __toESM(require_remix());
-function Results({ refName }) {
-  return /* @__PURE__ */ React.createElement(ResultsContainer, null, /* @__PURE__ */ React.createElement(ResultsLeftBlock, null, /* @__PURE__ */ React.createElement(ResultsTitle, null, "Right answers and mistakes")), /* @__PURE__ */ React.createElement(ResultsSeparateLine, null), /* @__PURE__ */ React.createElement(ResultsLeftBlock, null), /* @__PURE__ */ React.createElement(import_remix3.Form, {
-    method: "post",
-    ref: refName,
-    style: {
-      position: "absolute",
-      width: 1,
-      height: 1,
-      top: -1e3,
-      left: -1e3
-    }
-  }, /* @__PURE__ */ React.createElement("input", {
-    type: "text",
-    name: "exp",
-    value: "16",
-    readOnly: true
-  })));
-}
-
 // app/modules/Lesson/components/Footer.tsx
 init_react();
 var import_react9 = require("@remix-run/react");
@@ -1788,7 +1754,7 @@ function Footer({
     stateWrong
   }), /* @__PURE__ */ React.createElement("div", {
     style: { marginLeft: 16, width: "calc(100% - 209px)" }
-  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, stateWrong ? "Right answer: " : "Great!"), stateWrong && /* @__PURE__ */ React.createElement(LessonFooterText, null, " ", answer.join(" ")))), /* @__PURE__ */ React.createElement(LessonButton, {
+  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, stateWrong ? "Right answer: " : "Great!"), /* @__PURE__ */ React.createElement(LessonFooterText, null, " ", answer.join(" ")))), /* @__PURE__ */ React.createElement(LessonButton, {
     active: buttonDisabled,
     stateRight,
     stateWrong,
@@ -1804,6 +1770,48 @@ function Footer({
     disabled: buttonText === "Saving..." || buttonText === "Saved!"
   }, buttonText)));
 }
+
+// app/modules/Lesson/components/Results.tsx
+init_react();
+var import_remix3 = __toESM(require_remix());
+function Results({ refName }) {
+  return /* @__PURE__ */ React.createElement(ResultsContainer, null, /* @__PURE__ */ React.createElement(ResultsLeftBlock, null, /* @__PURE__ */ React.createElement(ResultsTitle, null, "Right answers and mistakes")), /* @__PURE__ */ React.createElement(ResultsSeparateLine, null), /* @__PURE__ */ React.createElement(ResultsLeftBlock, null), /* @__PURE__ */ React.createElement(import_remix3.Form, {
+    method: "post",
+    ref: refName,
+    style: {
+      position: "absolute",
+      width: 1,
+      height: 1,
+      top: -1e3,
+      left: -1e3
+    }
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "text",
+    name: "exp",
+    value: "16",
+    readOnly: true
+  })));
+}
+
+// app/components/Progress.tsx
+init_react();
+
+// app/styles/close.svg
+var close_default = "/build/_assets/close-D2E3HOMK.svg";
+
+// app/components/Progress.tsx
+var Progress = ({ progress }) => {
+  return /* @__PURE__ */ React.createElement(ProgressBarContainer, null, /* @__PURE__ */ React.createElement(ProgressLeaveLesson, {
+    to: "/"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: close_default,
+    alt: "close",
+    style: { width: "16px", height: "16px", verticalAlign: "initial" }
+  })), /* @__PURE__ */ React.createElement(ProgressBar, {
+    progress
+  }));
+};
+var Progress_default = Progress;
 
 // app/modules/Lesson/index.tsx
 function Lesson({ steps }) {
@@ -1863,11 +1871,7 @@ function Lesson({ steps }) {
     }
   };
   const setAnswer = (val) => {
-    if (val[0] !== "") {
-      changeDisabled(false);
-    } else {
-      changeDisabled(true);
-    }
+    changeDisabled(val[0] === "");
     setValue(val);
   };
   return /* @__PURE__ */ React.createElement(LessonContainer, {
@@ -2162,7 +2166,7 @@ async function getLastAddedTopic(projectId, neighbors = false) {
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
 function ErrorBoundary2() {
-  const { title, chapter } = (0, import_remix4.useParams)();
+  const { title, chapter } = (0, import_react12.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading lesson with the title ${title} and chapter ${chapter}. Sorry.`);
@@ -2180,7 +2184,7 @@ var action = async ({ request, params }) => {
   }
   await updateCurrentChapter(topic);
   await increaseTodayExp(request, expData);
-  return (0, import_remix4.redirect)(`/${language == null ? void 0 : language.title}/lessons`);
+  return (0, import_node2.redirect)(`/${language == null ? void 0 : language.title}/lessons`);
 };
 var loader = async ({ params }) => {
   const topic = await prisma.topic.findFirst({
@@ -2195,7 +2199,7 @@ var loader = async ({ params }) => {
   return lessons;
 };
 function LessonScreen() {
-  const steps = (0, import_remix4.useLoaderData)();
+  const steps = (0, import_react12.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Lesson, {
     steps
   });
@@ -2210,9 +2214,10 @@ __export(practice_exports, {
   loader: () => loader2
 });
 init_react();
-var import_remix5 = __toESM(require_remix());
+var import_react13 = require("@remix-run/react");
+var import_node3 = require("@remix-run/node");
 function ErrorBoundary3() {
-  const { title } = (0, import_remix5.useParams)();
+  const { title } = (0, import_react13.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading topic by the title ${title}. Sorry.`);
@@ -2230,7 +2235,7 @@ var action2 = async ({ request, params }) => {
   }
   await updateCurrentChapter(topic);
   await increaseTodayExp(request, expData);
-  return (0, import_remix5.redirect)(`/${language == null ? void 0 : language.title}/lessons`);
+  return (0, import_node3.redirect)(`/${language == null ? void 0 : language.title}/lessons`);
 };
 var loader2 = async ({ params }) => {
   const topic = await prisma.topic.findUnique({
@@ -2245,7 +2250,7 @@ var loader2 = async ({ params }) => {
   return lessons;
 };
 function LessonScreen2() {
-  const steps = (0, import_remix5.useLoaderData)();
+  const steps = (0, import_react13.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Lesson, {
     steps
   });
@@ -2260,9 +2265,9 @@ __export(language_exports, {
   loader: () => loader3
 });
 init_react();
-var import_node2 = require("@remix-run/node");
-var import_react15 = __toESM(require("react"));
-var import_remix6 = __toESM(require_remix());
+var import_node4 = require("@remix-run/node");
+var import_react17 = __toESM(require("react"));
+var import_react18 = require("@remix-run/react");
 
 // app/components/Menu.tsx
 init_react();
@@ -2286,20 +2291,20 @@ var streak_active_default = "/build/_assets/streak-active-KWRZ6YVX.svg";
 var shop_active_default = "/build/_assets/shop-active-TP5GEMDP.svg";
 
 // app/components/Menu.tsx
-var import_react14 = require("react");
+var import_react16 = require("react");
 
 // app/components/Projects.tsx
 init_react();
-var import_react12 = require("react");
-var import_react13 = require("@remix-run/react");
+var import_react14 = require("react");
+var import_react15 = require("@remix-run/react");
 function Projects({
   onOverlay,
   languages
 }) {
-  const [showWindow, setShowWindow] = (0, import_react12.useState)(false);
-  const [isNewLanguage, setIsNewLanguage] = (0, import_react12.useState)(false);
+  const [showWindow, setShowWindow] = (0, import_react14.useState)(false);
+  const [isNewLanguage, setIsNewLanguage] = (0, import_react14.useState)(false);
   const activeLanguage = languages == null ? void 0 : languages.find((item) => item.active);
-  return /* @__PURE__ */ React.createElement(import_react12.Fragment, null, /* @__PURE__ */ React.createElement(ActiveLanguageButton, {
+  return /* @__PURE__ */ React.createElement(import_react14.Fragment, null, /* @__PURE__ */ React.createElement(ActiveLanguageButton, {
     type: "button",
     onMouseEnter: () => {
       onOverlay(true);
@@ -2327,7 +2332,7 @@ function Projects({
       order: item.active ? 0 : 1,
       borderRadius: item.active ? "10px 10px 0 0" : 0
     }
-  }, /* @__PURE__ */ React.createElement(import_react13.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react15.Form, {
     method: "post"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
@@ -2338,7 +2343,7 @@ function Projects({
     type: "submit"
   }, item.title))))), /* @__PURE__ */ React.createElement("fieldset", {
     style: { position: "relative" }
-  }, isNewLanguage ? /* @__PURE__ */ React.createElement(import_react13.Form, {
+  }, isNewLanguage ? /* @__PURE__ */ React.createElement(import_react15.Form, {
     method: "post"
   }, /* @__PURE__ */ React.createElement(LanguagesInput, {
     type: "text",
@@ -2390,7 +2395,7 @@ var Menu = ({
     to: `${link}`,
     className: "nav-link",
     end: true
-  }, ({ isActive }) => /* @__PURE__ */ React.createElement(import_react14.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
+  }, ({ isActive }) => /* @__PURE__ */ React.createElement(import_react16.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
     src: isActive ? activeIcon : icon,
     width: 36,
     height: 36,
@@ -2488,7 +2493,9 @@ var styles_default = "/build/_assets/index-6SQCXJVG.css";
 var links = () => {
   return [{ rel: "stylesheet", href: styles_default }];
 };
-async function action3({ request }) {
+var action3 = async ({
+  request
+}) => {
   const form = await request.formData();
   const id = form.get("id");
   const newLanguage = form.get("newLanguage");
@@ -2498,14 +2505,14 @@ async function action3({ request }) {
   } else {
     project = await setActiveLanguage(id);
   }
-  return (0, import_node2.redirect)(`/${project == null ? void 0 : project.title}/lessons`);
-}
+  return (0, import_node4.redirect)(`/${project == null ? void 0 : project.title}/lessons`);
+};
 var loader3 = async ({ request }) => {
   let user = await getUser(request);
   const languages = await getLanguages(request);
   const activeLanguage = languages == null ? void 0 : languages.find((item) => item.active);
   if (!user) {
-    return (0, import_node2.redirect)("/login");
+    return (0, import_node4.redirect)("/login");
   }
   if (!activeLanguage) {
     throw new Error("Active language wasnt found");
@@ -2529,13 +2536,13 @@ var loader3 = async ({ request }) => {
   return { user, languages };
 };
 function ProjectPage() {
-  const { user, languages } = (0, import_remix6.useLoaderData)();
-  const [isOverlay, setIsOverlay] = (0, import_react15.useState)(false);
-  return /* @__PURE__ */ import_react15.default.createElement(import_react15.default.Fragment, null, /* @__PURE__ */ import_react15.default.createElement(Menu_default, {
+  const { user, languages } = (0, import_react18.useLoaderData)();
+  const [isOverlay, setIsOverlay] = (0, import_react17.useState)(false);
+  return /* @__PURE__ */ import_react17.default.createElement(import_react17.default.Fragment, null, /* @__PURE__ */ import_react17.default.createElement(Menu_default, {
     user,
     languages,
     onOverlay: setIsOverlay
-  }), /* @__PURE__ */ import_react15.default.createElement(Main, null, /* @__PURE__ */ import_react15.default.createElement(import_remix6.Outlet, null)), /* @__PURE__ */ import_react15.default.createElement(Overlay, {
+  }), /* @__PURE__ */ import_react17.default.createElement(Main, null, /* @__PURE__ */ import_react17.default.createElement(import_react18.Outlet, null)), /* @__PURE__ */ import_react17.default.createElement(Overlay, {
     active: isOverlay
   }));
 }
@@ -2549,17 +2556,18 @@ __export(topicId_exports, {
   loader: () => loader4
 });
 init_react();
-var import_react26 = require("@remix-run/react");
-var import_node3 = require("@remix-run/node");
+var import_react29 = require("@remix-run/react");
+var import_node5 = require("@remix-run/node");
+var import_node6 = require("@remix-run/node");
 
 // app/modules/Constructor/index.tsx
 init_react();
-var import_react25 = require("react");
-var import_remix7 = __toESM(require_remix());
+var import_react28 = require("react");
+var import_remix4 = __toESM(require_remix());
 
 // app/modules/Constructor/components/TopicInfo.tsx
 init_react();
-var import_react16 = require("react");
+var import_react19 = require("react");
 
 // app/modules/Constructor/components/lib.ts
 init_react();
@@ -2613,14 +2621,14 @@ function TopicInfo({
   lastAddedTopic
 }) {
   var _a;
-  const [topicTitle, setLessonTitle] = (0, import_react16.useState)("");
-  const [lineNumber, setLineNumber] = (0, import_react16.useState)(0);
-  (0, import_react16.useEffect)(() => {
+  const [topicTitle, setLessonTitle] = (0, import_react19.useState)("");
+  const [lineNumber, setLineNumber] = (0, import_react19.useState)(0);
+  (0, import_react19.useEffect)(() => {
     if (title) {
       setLessonTitle(title);
     }
   }, []);
-  (0, import_react16.useEffect)(() => {
+  (0, import_react19.useEffect)(() => {
     setReady(!!topicTitle.length);
   }, [topicTitle, setReady]);
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
@@ -2659,7 +2667,7 @@ function TopicInfo({
     "aria-labelledby": lastAdded.title
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: (lastAdded.currentChapter / lastAdded.chapters * 100).toString()
-  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle, null, lastAdded.title))))), lastAddedTopic.length < 3 && /* @__PURE__ */ React.createElement(LessonsContainer, {
+  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle2, null, lastAdded.title))))), lastAddedTopic.length < 3 && /* @__PURE__ */ React.createElement(LessonsContainer, {
     key: "312dsdf"
   }, /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
@@ -2668,14 +2676,14 @@ function TopicInfo({
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: "0",
     style: { fontSize: "39px" }
-  }, lastAddedTopic[0].lineNumber === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, topicTitle.length ? topicTitle : "Topic title"))))), /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
+  }, lastAddedTopic[0].lineNumber === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle2, null, topicTitle.length ? topicTitle : "Topic title"))))), /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
     "aria-labelledby": "121",
     onClick: () => setLineNumber(lastAddedTopic[0].lineNumber + 1)
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: "0",
     style: { fontSize: "39px" }
-  }, lastAddedTopic[0].lineNumber + 1 === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, topicTitle.length ? topicTitle : "Topic title")))));
+  }, lastAddedTopic[0].lineNumber + 1 === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle2, null, topicTitle.length ? topicTitle : "Topic title")))));
 }
 
 // app/modules/Constructor/Levels/reducer.ts
@@ -2821,25 +2829,25 @@ var actions_default2 = actionCreator2;
 
 // app/modules/Constructor/Levels/index.tsx
 init_react();
-var import_react23 = require("react");
+var import_react26 = require("react");
 
 // app/modules/Constructor/Levels/components/QuestionAnswer.tsx
 init_react();
-var import_react19 = require("react");
+var import_react22 = require("react");
 
 // app/modules/Constructor/components/Keywords.tsx
 init_react();
-var import_react18 = require("react");
+var import_react21 = require("react");
 
 // app/modules/Constructor/components/Keyword.tsx
 init_react();
-var import_react17 = require("react");
+var import_react20 = require("react");
 var Keyword = ({
   onSet,
   children,
   initiallyActive
 }) => {
-  const [isActive, setIsActive] = (0, import_react17.useState)(initiallyActive);
+  const [isActive, setIsActive] = (0, import_react20.useState)(initiallyActive);
   return /* @__PURE__ */ React.createElement(KeywordTemplate, {
     active: isActive,
     onClick: () => {
@@ -2856,8 +2864,8 @@ function Keywords({
   onSet,
   initialKeywords = []
 }) {
-  const [keywords, setKeywords] = (0, import_react18.useState)(initialKeywords);
-  (0, import_react18.useEffect)(() => {
+  const [keywords, setKeywords] = (0, import_react21.useState)(initialKeywords);
+  (0, import_react21.useEffect)(() => {
     onSet(keywords);
   }, [keywords]);
   return /* @__PURE__ */ React.createElement("div", {
@@ -2892,17 +2900,17 @@ function QuestionAnswer({
   setKeywords,
   keywords
 }) {
-  (0, import_react19.useEffect)(() => {
+  (0, import_react22.useEffect)(() => {
     if (question && answer) {
       setReady(true);
     } else {
       setReady(false);
     }
   }, [question, answer]);
-  (0, import_react19.useEffect)(() => {
+  (0, import_react22.useEffect)(() => {
     setKeywords(keywords);
   }, []);
-  return /* @__PURE__ */ React.createElement(import_react19.Fragment, null, /* @__PURE__ */ React.createElement("input", {
+  return /* @__PURE__ */ React.createElement(import_react22.Fragment, null, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `type${number}`,
     value: "Question"
@@ -2938,14 +2946,14 @@ function QuestionAnswer({
     id: `keywords${number}`,
     name: `keywords${number}`,
     placeholder: "Type keywords",
-    value: keywords,
+    value: keywords.map((keyword) => doesItemContainSign(keyword).newItem),
     readOnly: true
   })));
 }
 
 // app/modules/Constructor/Levels/components/Variants.tsx
 init_react();
-var import_react20 = require("react");
+var import_react23 = require("react");
 
 // app/modules/Constructor/Levels/components/MatchingPairs/reducer.ts
 init_react();
@@ -3101,17 +3109,17 @@ function Variants({
   setReady,
   variantsCount
 }) {
-  const [{ variants }, dispatch] = (0, import_react20.useReducer)(reducer3, {
+  const [{ variants }, dispatch] = (0, import_react23.useReducer)(reducer3, {
     variants: initialVariants,
     pairs: []
   });
-  const [question, setQuestion] = (0, import_react20.useState)(initialQuestion);
-  (0, import_react20.useEffect)(() => {
+  const [question, setQuestion] = (0, import_react23.useState)(initialQuestion);
+  (0, import_react23.useEffect)(() => {
     if (variants.length === 0) {
       dispatch(variantsSetup(variantsCount));
     }
   }, [variantsCount]);
-  (0, import_react20.useEffect)(() => {
+  (0, import_react23.useEffect)(() => {
     if (variants.filter((variant) => variant.value.length === 0).length) {
       return setReady(false);
     }
@@ -3126,7 +3134,7 @@ function Variants({
       setReady(false);
     }
   }, [variants, question]);
-  return /* @__PURE__ */ React.createElement(import_react20.Fragment, null, /* @__PURE__ */ React.createElement("input", {
+  return /* @__PURE__ */ React.createElement(import_react23.Fragment, null, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `answer${number}`,
     value: answer
@@ -3174,7 +3182,7 @@ init_react();
 
 // app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx
 init_react();
-var import_react21 = require("react");
+var import_react24 = require("react");
 function MatchingPairs({
   number,
   answer,
@@ -3183,14 +3191,14 @@ function MatchingPairs({
   setReady,
   initialVariants = []
 }) {
-  const [{ variants, pairs }, dispatch] = (0, import_react21.useReducer)(reducer3, {
+  const [{ variants, pairs }, dispatch] = (0, import_react24.useReducer)(reducer3, {
     variants: initialVariants,
     pairs: []
   });
-  (0, import_react21.useEffect)(() => {
+  (0, import_react24.useEffect)(() => {
     dispatch(pairsSetup(variantsCount, initialVariants, answer));
   }, []);
-  (0, import_react21.useEffect)(() => {
+  (0, import_react24.useEffect)(() => {
     if (pairs.length === variantsCount / 2) {
       setAnswer(pairs);
       setReady(true);
@@ -3199,7 +3207,7 @@ function MatchingPairs({
       setReady(false);
     }
   }, [pairs.length, pairs]);
-  return /* @__PURE__ */ React.createElement(import_react21.Fragment, null, /* @__PURE__ */ React.createElement("input", {
+  return /* @__PURE__ */ React.createElement(import_react24.Fragment, null, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `type${number}`,
     value: "Pairs"
@@ -3255,17 +3263,17 @@ var MatchingPairs_default = MatchingPairs;
 
 // app/modules/Constructor/Levels/components/InsertWords.tsx
 init_react();
-var import_react22 = require("react");
+var import_react25 = require("react");
 function InsertWords2({
   number,
   answer,
   setAnswer,
   setReady
 }) {
-  const [words, setWords] = (0, import_react22.useState)([]);
-  const [showText, setShowText] = (0, import_react22.useState)(false);
+  const [words, setWords] = (0, import_react25.useState)([]);
+  const [showText, setShowText] = (0, import_react25.useState)(false);
   const ref = useFocus();
-  (0, import_react22.useEffect)(() => {
+  (0, import_react25.useEffect)(() => {
     setReady(!!words.length);
   }, [words.length]);
   return /* @__PURE__ */ React.createElement("fieldset", {
@@ -3281,7 +3289,7 @@ function InsertWords2({
     type: "hidden",
     name: `type${number}`,
     value: "Insert"
-  }), /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(Textarea, {
+  }), /* @__PURE__ */ React.createElement(LessonTitle, null, "Add missing words"), /* @__PURE__ */ React.createElement(Textarea, {
     name: `text${number}`,
     placeholder: "Type text",
     value: answer,
@@ -3308,7 +3316,7 @@ function InsertWords2({
       }, item);
     }
     if (sign) {
-      return /* @__PURE__ */ React.createElement(import_react22.Fragment, {
+      return /* @__PURE__ */ React.createElement(import_react25.Fragment, {
         key: idx
       }, /* @__PURE__ */ React.createElement("input", {
         type: "text",
@@ -3381,10 +3389,9 @@ function Levels({
   steps,
   setReady,
   screen,
-  chapters,
   dispatch
 }) {
-  (0, import_react23.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     setReady(!steps.find((step) => step.ready === false));
   }, [steps, setReady]);
   const {
@@ -3479,7 +3486,7 @@ function Levels({
 
 // app/modules/Constructor/Levels/components/Sidebar.tsx
 init_react();
-var import_react24 = __toESM(require("react"));
+var import_react27 = __toESM(require("react"));
 var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
   const {
     addChapter,
@@ -3488,9 +3495,9 @@ var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
     setStepActive,
     changeCurrentScreen
   } = actions_default2(dispatch);
-  return /* @__PURE__ */ import_react24.default.createElement(import_react24.Fragment, null, /* @__PURE__ */ import_react24.default.createElement("h2", null, "Sidebar"), /* @__PURE__ */ import_react24.default.createElement("ul", {
+  return /* @__PURE__ */ import_react27.default.createElement(import_react27.Fragment, null, /* @__PURE__ */ import_react27.default.createElement("h2", null, "Sidebar"), /* @__PURE__ */ import_react27.default.createElement("ul", {
     style: { marginBottom: "auto" }
-  }, /* @__PURE__ */ import_react24.default.createElement("li", null, /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, /* @__PURE__ */ import_react27.default.createElement("li", null, /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Topic");
@@ -3505,9 +3512,9 @@ var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap"
     }
-  }, "Topic Info")), chapters.map((chapter) => /* @__PURE__ */ import_react24.default.createElement("li", {
+  }, "Topic Info")), chapters.map((chapter) => /* @__PURE__ */ import_react27.default.createElement("li", {
     key: `chapter-${chapter}`
-  }, /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Steps");
@@ -3523,20 +3530,20 @@ var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap"
     }
-  }, "Chapter ", chapter), /* @__PURE__ */ import_react24.default.createElement("ul", null, steps.map((stepsItem) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react24.default.createElement("li", {
+  }, "Chapter ", chapter), /* @__PURE__ */ import_react27.default.createElement("ul", null, steps.map((stepsItem) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react27.default.createElement("li", {
     key: stepsItem.id
-  }, /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Steps");
       setStepActive(stepsItem.id);
     }
-  }, "Step ", stepsItem.number + 1), stepsItem.number > 0 ? /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, "Step ", stepsItem.number + 1), stepsItem.number > 0 ? /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       removeStep(stepsItem.id);
     }
-  }, "Remove step") : null)), /* @__PURE__ */ import_react24.default.createElement("li", null, /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, "Remove step") : null)), /* @__PURE__ */ import_react27.default.createElement("li", null, /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       addStep(chapter);
@@ -3544,7 +3551,7 @@ var Sidebar = ({ children, chapters, steps, currentScreen, dispatch }) => {
         changeCurrentScreen("Steps");
       }
     }
-  }, "Add step"))), /* @__PURE__ */ import_react24.default.createElement("button", {
+  }, "Add step"))), /* @__PURE__ */ import_react27.default.createElement("button", {
     type: "button",
     onClick: () => {
       if (currentScreen !== "Steps") {
@@ -3562,26 +3569,26 @@ function Constructor({
   actionData,
   lastAddedTopic
 }) {
-  const [basicInfoReady, setTopicInfoReady] = (0, import_react25.useState)(false);
-  const [stepsReady, setStepsReady] = (0, import_react25.useState)(false);
-  const [{ steps, chapters, currentScreen }, dispatch] = (0, import_react25.useReducer)(reducer2, basicState2);
+  const [basicInfoReady, setTopicInfoReady] = (0, import_react28.useState)(false);
+  const [stepsReady, setStepsReady] = (0, import_react28.useState)(false);
+  const [{ steps, chapters, currentScreen }, dispatch] = (0, import_react28.useReducer)(reducer2, basicState2);
   const { setData, changeCurrentScreen } = actions_default2(dispatch);
-  const transition = (0, import_remix7.useTransition)();
+  const transition = (0, import_remix4.useTransition)();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled = stepsReady === false || basicInfoReady === false || submitText !== "Save";
-  (0, import_react25.useEffect)(() => {
+  (0, import_react28.useEffect)(() => {
     if (data) {
       setData(data.steps);
     }
   }, [data]);
-  (0, import_react25.useEffect)(() => {
+  (0, import_react28.useEffect)(() => {
     var _a;
     if (((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && currentScreen !== "Topic") {
       changeCurrentScreen("Topic");
     }
   }, [actionData]);
-  return /* @__PURE__ */ React.createElement(import_remix7.Form, {
+  return /* @__PURE__ */ React.createElement(import_remix4.Form, {
     method: "post",
     style: {
       width: "100%",
@@ -3607,8 +3614,7 @@ function Constructor({
     steps,
     setReady: (val) => setStepsReady(val),
     screen: currentScreen,
-    dispatch,
-    chapters
+    dispatch
   })), /* @__PURE__ */ React.createElement(ConstructorSidebar, null, /* @__PURE__ */ React.createElement(Sidebar_default, {
     chapters,
     steps,
@@ -3622,9 +3628,8 @@ function Constructor({
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$topicId.tsx
-var import_remix8 = __toESM(require_remix());
 function ErrorBoundary4() {
-  const { lessonId } = (0, import_react26.useParams)();
+  const { lessonId } = (0, import_react29.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
@@ -3641,7 +3646,7 @@ var action4 = async ({ request, params }) => {
   if (title !== topic.title) {
     const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
     if (isTitleUnique) {
-      return (0, import_remix8.json)({
+      return (0, import_node6.json)({
         errors: { title: "Title isn't unique" }
       }, { status: 400 });
     }
@@ -3718,7 +3723,7 @@ var action4 = async ({ request, params }) => {
     where: { id: params.topicId },
     data: __spreadValues({}, data)
   });
-  return (0, import_node3.redirect)(`/`);
+  return (0, import_node5.redirect)(`/`);
 };
 var loader4 = async ({ params }) => {
   const topic = await prisma.topic.findUnique({
@@ -3732,8 +3737,8 @@ var loader4 = async ({ params }) => {
   return data;
 };
 function ConstructorEdit() {
-  const actionData = (0, import_react26.useActionData)();
-  const data = (0, import_react26.useLoaderData)();
+  const actionData = (0, import_react29.useActionData)();
+  const data = (0, import_react29.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Constructor, {
     data,
     actionData
@@ -3749,9 +3754,11 @@ __export(new_exports, {
   loader: () => loader5
 });
 init_react();
-var import_remix9 = __toESM(require_remix());
+var import_node7 = require("@remix-run/node");
+var import_components2 = require("@remix-run/react/components");
+var import_react30 = require("@remix-run/react");
 function ErrorBoundary5() {
-  const { lessonId } = (0, import_remix9.useParams)();
+  const { lessonId } = (0, import_react30.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
@@ -3766,7 +3773,7 @@ var action5 = async ({ request, params }) => {
   const stepChapters = form.getAll("chapter");
   const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
   if (isTitleUnique) {
-    return (0, import_remix9.json)({
+    return (0, import_node7.json)({
       errors: { title: "Title isn't unique" }
     }, { status: 400 });
   }
@@ -3839,7 +3846,7 @@ var action5 = async ({ request, params }) => {
     lineNumber: Number(lineNumber) === 0 ? (lastAddedTopic == null ? void 0 : lastAddedTopic.lineNumber) + 1 : Number(lineNumber)
   };
   const topic = await prisma.topic.create({ data });
-  return (0, import_remix9.redirect)(`/skill/${topic.title}/1`);
+  return (0, import_node7.redirect)(`/skill/${topic.title}/1`);
 };
 var loader5 = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
@@ -3847,8 +3854,8 @@ var loader5 = async ({ request }) => {
   return { lastAddedTopic };
 };
 function ConstructorNew() {
-  const actionData = (0, import_remix9.useActionData)();
-  const { lastAddedTopic } = (0, import_remix9.useLoaderData)();
+  const actionData = (0, import_components2.useActionData)();
+  const { lastAddedTopic } = (0, import_components2.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Constructor, {
     actionData,
     lastAddedTopic
@@ -4020,17 +4027,17 @@ function WeeklyProgress({
 
 // app/components/LessonItem.tsx
 init_react();
-var import_react28 = require("react");
-var import_remix10 = __toESM(require_remix());
+var import_react32 = require("react");
+var import_remix5 = __toESM(require_remix());
 
 // app/styles/bin.svg
 var bin_default = "/build/_assets/bin-RYGYRSXA.svg";
 
 // app/hooks/useOnClickOutside.ts
 init_react();
-var import_react27 = require("react");
+var import_react31 = require("react");
 function useOnClickOutside(ref, handler) {
-  (0, import_react27.useEffect)(() => {
+  (0, import_react31.useEffect)(() => {
     const listener = (event) => {
       if (!ref.current || ref.current.contains(event.target)) {
         return;
@@ -4054,12 +4061,12 @@ function LessonItem({
   chapters,
   editLink
 }) {
-  const [isOpened, setIsOpened] = (0, import_react28.useState)(false);
-  const transition = (0, import_remix10.useTransition)();
+  const [isOpened, setIsOpened] = (0, import_react32.useState)(false);
+  const transition = (0, import_remix5.useTransition)();
   const isDisabled = transition.state !== "idle";
-  const ref = (0, import_react28.useRef)(null);
+  const ref = (0, import_react32.useRef)(null);
   useOnClickOutside(ref, () => setIsOpened(false));
-  (0, import_react28.useEffect)(() => {
+  (0, import_react32.useEffect)(() => {
     if (transition.state === "loading") {
       setIsOpened(false);
     }
@@ -4077,13 +4084,13 @@ function LessonItem({
     }
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: (currentChapter / chapters * 100).toString()
-  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle, null, title)), /* @__PURE__ */ React.createElement(LessonBlockMenu, {
+  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle2, null, title)), /* @__PURE__ */ React.createElement(LessonBlockMenu, {
     isOpened
   }, /* @__PURE__ */ React.createElement(LessonBlockMenuTriangle, null, /* @__PURE__ */ React.createElement(LessonBlockMenuTriangleContent, null)), /* @__PURE__ */ React.createElement(LessonBlockInner, null, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex" }
   }, /* @__PURE__ */ React.createElement(LessonBlockLink, {
     to: editLink
-  }, "Edit"), /* @__PURE__ */ React.createElement(import_remix10.Form, {
+  }, "Edit"), /* @__PURE__ */ React.createElement(import_remix5.Form, {
     method: "post"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
@@ -4103,7 +4110,7 @@ function LessonItem({
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/lessons.tsx
-var import_react29 = require("@remix-run/react");
+var import_react33 = require("@remix-run/react");
 
 // app/components/Footer.tsx
 init_react();
@@ -4144,7 +4151,7 @@ var loader6 = async ({ request }) => {
   };
 };
 function Repeats() {
-  const { data, activity, languageTitle } = (0, import_react29.useLoaderData)();
+  const { data, activity, languageTitle } = (0, import_react33.useLoaderData)();
   const lineNumbers = [...new Set(data.map((dataItem) => dataItem.lineNumber))];
   return /* @__PURE__ */ React.createElement("section", {
     style: { display: "flex", width: "100%", height: "fit-content" }
@@ -4184,9 +4191,10 @@ __export(practice_exports2, {
   loader: () => loader7
 });
 init_react();
-var import_remix11 = __toESM(require_remix());
+var import_react34 = require("@remix-run/react");
+var import_node8 = require("@remix-run/node");
 function ErrorBoundary7() {
-  const { lessonId } = (0, import_remix11.useParams)();
+  const { lessonId } = (0, import_react34.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
@@ -4205,7 +4213,7 @@ var action7 = async ({ request }) => {
       weeklyActivity: __spreadValues({}, newUserActivity)
     }
   });
-  return (0, import_remix11.redirect)(`/`);
+  return (0, import_node8.redirect)(`/`);
 };
 var loader7 = async () => {
   const lessons = await prisma.lesson.findMany({
@@ -4218,7 +4226,7 @@ var loader7 = async () => {
   return lessons;
 };
 function LessonScreen3() {
-  const steps = (0, import_remix11.useLoaderData)();
+  const steps = (0, import_react34.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Lesson, {
     steps
   });
@@ -4231,12 +4239,12 @@ __export(logout_exports, {
   loader: () => loader8
 });
 init_react();
-var import_remix12 = __toESM(require_remix());
+var import_remix6 = __toESM(require_remix());
 var action8 = async ({ request }) => {
   return logout(request);
 };
 var loader8 = async () => {
-  return (0, import_remix12.redirect)("/");
+  return (0, import_remix6.redirect)("/");
 };
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/repeat.tsx
@@ -4245,9 +4253,9 @@ __export(repeat_exports, {
   default: () => Repeat
 });
 init_react();
-var import_remix13 = __toESM(require_remix());
+var import_remix7 = __toESM(require_remix());
 function Repeat() {
-  return /* @__PURE__ */ React.createElement(import_remix13.Outlet, null);
+  return /* @__PURE__ */ React.createElement(import_remix7.Outlet, null);
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/index.tsx
@@ -4256,15 +4264,15 @@ __export(routes_exports, {
   loader: () => loader9
 });
 init_react();
-var import_remix14 = __toESM(require_remix());
+var import_remix8 = __toESM(require_remix());
 var loader9 = async ({ request }) => {
   var _a;
   const user = await getUser(request);
   const languages = await getLanguages(request);
   if (!user) {
-    return (0, import_remix14.redirect)("/login");
+    return (0, import_remix8.redirect)("/login");
   }
-  return (0, import_remix14.redirect)(`/${(_a = languages == null ? void 0 : languages.find((it) => it.active)) == null ? void 0 : _a.title}/lessons`);
+  return (0, import_remix8.redirect)(`/${(_a = languages == null ? void 0 : languages.find((it) => it.active)) == null ? void 0 : _a.title}/lessons`);
 };
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
@@ -4276,18 +4284,18 @@ __export(login_exports, {
   meta: () => meta
 });
 init_react();
-var import_node4 = require("@remix-run/node");
-var import_react31 = require("@remix-run/react");
+var import_node9 = require("@remix-run/node");
+var import_react36 = require("@remix-run/react");
 
 // app/components/Login.tsx
 init_react();
-var import_react30 = require("react");
-var import_remix15 = __toESM(require_remix());
+var import_react35 = require("react");
+var import_remix9 = __toESM(require_remix());
 function Login({ isLogin, setIsLogin, actionData }) {
   var _a;
-  const usernameRef = (0, import_react30.useRef)(null);
-  const passwordRef = (0, import_react30.useRef)(null);
-  (0, import_react30.useEffect)(() => {
+  const usernameRef = (0, import_react35.useRef)(null);
+  const passwordRef = (0, import_react35.useRef)(null);
+  (0, import_react35.useEffect)(() => {
     var _a2, _b, _c, _d;
     if ((_a2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a2.username) {
       (_b = usernameRef.current) == null ? void 0 : _b.focus();
@@ -4296,7 +4304,7 @@ function Login({ isLogin, setIsLogin, actionData }) {
       (_d = passwordRef.current) == null ? void 0 : _d.focus();
     }
   }, [actionData]);
-  return /* @__PURE__ */ React.createElement(import_remix15.Form, {
+  return /* @__PURE__ */ React.createElement(import_remix9.Form, {
     method: "post",
     style: { width: "100%", maxWidth: 375 }
   }, /* @__PURE__ */ React.createElement(H1Title, null, isLogin ? "Login" : "Register"), /* @__PURE__ */ React.createElement(LoginToggle, {
@@ -4347,12 +4355,12 @@ function Login({ isLogin, setIsLogin, actionData }) {
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
-var import_react32 = require("react");
+var import_react37 = require("react");
 var loader10 = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId)
-    return (0, import_node4.redirect)("/");
-  return (0, import_node4.json)({});
+    return (0, import_node9.redirect)("/");
+  return (0, import_node9.json)({});
 };
 var action9 = async ({ request }) => {
   const formData = await request.formData();
@@ -4368,7 +4376,7 @@ var action9 = async ({ request }) => {
     });
   }
   if (loginType === "login") {
-    return (0, import_node4.json)({
+    return (0, import_node9.json)({
       errors: { username: "Invalid username or password" },
       fields: { loginType: "login", password: "" }
     }, { status: 400 });
@@ -4387,9 +4395,9 @@ var meta = () => {
 };
 function LoginPage() {
   var _a;
-  const actionData = (0, import_react31.useActionData)();
-  const transition = (0, import_react31.useTransition)();
-  const [isLogin, setIsLogin] = (0, import_react32.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
+  const actionData = (0, import_react36.useActionData)();
+  const transition = (0, import_react36.useTransition)();
+  const [isLogin, setIsLogin] = (0, import_react37.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
   const buttonText = transition.state === "submitting" ? "loginning" : "login";
   return /* @__PURE__ */ React.createElement(LoginContainer, null, /* @__PURE__ */ React.createElement(LoginContinerInner, null, /* @__PURE__ */ React.createElement(Login, {
     isLogin,
@@ -4400,7 +4408,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "e8d9c6cf", "entry": { "module": "/build/entry.client-I7VE5YZB.js", "imports": ["/build/_shared/chunk-VT6HPVIL.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-A7EIJWJT.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-E3WJT5XL.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-S6LHF2BQ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-Q6JW6EVP.js", "imports": ["/build/_shared/chunk-OWKQ2IKW.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-BH7DN7T7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-ZU3PCHCU.js", "imports": ["/build/_shared/chunk-OWKQ2IKW.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-BH7DN7T7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-AGS2KB5P.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-6ZZDEURH.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-S6LHF2BQ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-IY6J3IJV.js", "imports": ["/build/_shared/chunk-5D7NCGDN.js", "/build/_shared/chunk-BH7DN7T7.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-S6LHF2BQ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4IAX3YBR.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-W7KTRIHN.js", "imports": ["/build/_shared/chunk-5D7NCGDN.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-BH7DN7T7.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-S6LHF2BQ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-2ZENR23W.js", "imports": ["/build/_shared/chunk-5D7NCGDN.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-BH7DN7T7.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-S6LHF2BQ.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-E8D9C6CF.js" };
+var assets_manifest_default = { "version": "014ed1be", "entry": { "module": "/build/entry.client-LJRT7HR3.js", "imports": ["/build/_shared/chunk-R2PB5NSR.js", "/build/_shared/chunk-Z5GWDZYP.js", "/build/_shared/chunk-QO3FLZQJ.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-JA2ZEI3P.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-FEL74HF6.js", "imports": ["/build/_shared/chunk-2S76FJRD.js", "/build/_shared/chunk-X7G5IRYQ.js", "/build/_shared/chunk-U3XWTCH5.js", "/build/_shared/chunk-VUUZHFZJ.js", "/build/_shared/chunk-IXDUSCJ6.js", "/build/_shared/chunk-RT274YUP.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-34DABG5C.js", "imports": ["/build/_shared/chunk-USACH2V5.js", "/build/_shared/chunk-TGZGKIC3.js", "/build/_shared/chunk-T6R7BGEC.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-ZJLRUA25.js", "imports": ["/build/_shared/chunk-USACH2V5.js", "/build/_shared/chunk-TGZGKIC3.js", "/build/_shared/chunk-T6R7BGEC.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-BRIKATXJ.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-KRK2F7EV.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-SZXUGNGR.js", "imports": ["/build/_shared/chunk-2S76FJRD.js", "/build/_shared/chunk-U3XWTCH5.js", "/build/_shared/chunk-RT274YUP.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-KITULGAE.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-PMCEORAV.js", "imports": ["/build/_shared/chunk-XFGOVJBJ.js", "/build/_shared/chunk-T6R7BGEC.js", "/build/_shared/chunk-X7G5IRYQ.js", "/build/_shared/chunk-U3XWTCH5.js", "/build/_shared/chunk-RT274YUP.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-IOSAWTD7.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-HJQYTXPN.js", "imports": ["/build/_shared/chunk-XFGOVJBJ.js", "/build/_shared/chunk-2S76FJRD.js", "/build/_shared/chunk-TGZGKIC3.js", "/build/_shared/chunk-T6R7BGEC.js", "/build/_shared/chunk-X7G5IRYQ.js", "/build/_shared/chunk-IXDUSCJ6.js", "/build/_shared/chunk-RT274YUP.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-7ZA2URMM.js", "imports": ["/build/_shared/chunk-XFGOVJBJ.js", "/build/_shared/chunk-2S76FJRD.js", "/build/_shared/chunk-TGZGKIC3.js", "/build/_shared/chunk-T6R7BGEC.js", "/build/_shared/chunk-X7G5IRYQ.js", "/build/_shared/chunk-IXDUSCJ6.js", "/build/_shared/chunk-RT274YUP.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-014ED1BE.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

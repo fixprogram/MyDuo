@@ -1,5 +1,5 @@
-import { redirect, useLoaderData, useParams } from "remix";
-import type { LoaderFunction, ActionFunction } from "remix";
+import { useLoaderData, useParams } from "@remix-run/react";
+import { LoaderFunction, ActionFunction, redirect } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Lesson from "~/modules/Lesson";
 import { getActiveLanguage } from "~/models/language.server";

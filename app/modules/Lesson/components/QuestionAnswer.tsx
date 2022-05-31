@@ -7,6 +7,7 @@ import {
   LessonTitle,
 } from "./lib";
 import Duo from "~/styles/duo.svg";
+import { doesItemContainSign } from "~/utils";
 
 export default function QuestionAnswerPractice({
   answer,

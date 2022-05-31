@@ -1,5 +1,6 @@
 import { Fragment, useEffect } from "react";
 import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
+import { doesItemContainSign } from "~/utils";
 import Keywords from "../../components/Keywords";
 import type { FieldsetType } from "../types";
 
@@ -73,7 +74,10 @@ export default function QuestionAnswer({
           id={`keywords${number}`}
           name={`keywords${number}`}
           placeholder="Type keywords"
-          value={keywords}
+          // value={keywords}
+          value={keywords.map(
+            (keyword) => doesItemContainSign(keyword).newItem
+          )}
           readOnly
         />
       </TextareaLabel>

@@ -1,8 +1,8 @@
-import { redirect, useLoaderData, useParams } from "remix";
-import type { LoaderFunction, ActionFunction } from "remix";
+import { useLoaderData, useParams } from "@remix-run/react";
+import { redirect } from "@remix-run/node";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Lesson from "~/modules/Lesson";
-import { getActiveLanguage } from "~/models/language.server";
 import { getUser } from "~/session.server";
 import { User, WeeklyActivity } from "@prisma/client";
 import { getWeekDay } from "~/utils";

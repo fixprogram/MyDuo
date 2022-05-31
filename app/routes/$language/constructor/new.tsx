@@ -1,12 +1,17 @@
-import { json, redirect, useActionData, useLoaderData, useParams } from "remix";
-import type { ActionFunction, LoaderFunction } from "remix";
+import {
+  json,
+  redirect,
+  ActionFunction,
+  LoaderFunction,
+} from "@remix-run/node";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
-import Constructor, { ConstructorData } from "~/modules/Constructor";
-import { Language, Lesson } from "@prisma/client";
+import Constructor from "~/modules/Constructor";
+import { Language, Lesson, Topic } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
 import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
-import { basicState } from "~/modules/Constructor/Levels/reducer";
+import { useActionData, useLoaderData } from "@remix-run/react/components";
+import { useParams } from "@remix-run/react";
 
 export type ActionData = {
   errors?: {
@@ -26,8 +31,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
-  const lineNumber = form.get("lineNumber");
-  const lastAddedTopic = await getLastAddedTopic(activeLanguage.id);
+  const lineNumber = form.get("lineNumber") as string;
+  const lastAddedTopic = (await getLastAddedTopic(activeLanguage.id)) as Topic;
   const stepChapters = form.getAll("chapter") as string[];
 
   const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);

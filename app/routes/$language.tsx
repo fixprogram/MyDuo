@@ -1,6 +1,6 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
+import { LoaderFunction, ActionFunction, redirect } from "@remix-run/node";
 import React, { useState } from "react";
-import { Outlet, useLoaderData } from "remix";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { Main, Overlay } from "~/components/lib";
 import Menu from "~/components/Menu";
 import {
@@ -18,7 +18,11 @@ export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export async function action({ request }: { request: Request }) {
+export const action: ActionFunction = async ({
+  request,
+}: {
+  request: Request;
+}) => {
   const form = await request.formData();
   const id = form.get("id") as string;
   const newLanguage = form.get("newLanguage") as string;
@@ -30,7 +34,7 @@ export async function action({ request }: { request: Request }) {
   }
 
   return redirect(`/${project?.title}/lessons`);
-}
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   let user = await getUser(request);

@@ -1,16 +1,13 @@
 import { useReducer, useEffect, useRef, useState, Fragment } from "react";
-
-import Progress from "~/components/Progress";
-import Body from "./components/Body";
+import { useSubmit, useTransition } from "@remix-run/react";
+import { Lesson as LessonType } from "@prisma/client";
 import { reducer, basicState } from "./reducer";
 import actionCreator from "./actions";
-import { useSubmit, useTransition } from "@remix-run/react";
-import Results from "./components/Results";
-import { LessonStep } from "@prisma/client";
-import Footer from "./components/Footer";
-import { LessonContainer } from "./components/lib";
 
-export default function Lesson({ steps }: { steps: LessonStep[] }) {
+import { LessonContainer } from "./components/lib";
+import { Body, Progress, Footer, Results } from "./components";
+
+export default function Lesson({ steps }: { steps: LessonType[] }) {
   const ref = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLFormElement>(null);
   const [
@@ -76,11 +73,12 @@ export default function Lesson({ steps }: { steps: LessonStep[] }) {
 
   const setAnswer = (val: string[]) => {
     // Insert words will return an array of objects and it won't work with the disabling button
-    if (val[0] !== "") {
-      changeDisabled(false);
-    } else {
-      changeDisabled(true);
-    }
+    // if (val[0] !== "") {
+    //   changeDisabled(false);
+    // } else {
+    //   changeDisabled(true);
+    // }
+    changeDisabled(val[0] === "");
     setValue(val);
   };
 

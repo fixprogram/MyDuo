@@ -76,27 +76,35 @@ const reducer = (state: LessonState, action: Action): LessonState => {
         }
         case "Question": {
           // split the answer because the whole user input is in answer[0]
-          if (
-            doesArrayContainItems(content.keywords, answer[0].split(" ")).state
-          ) {
-            return positiveState;
-          }
+
+          console.log(answer[0]);
+          console.log(content.keywords);
 
           const { state, length } = doesArrayContainItems(
             content.answer,
             answer[0].split(" ")
           );
+          // const keywordsState = doesArrayContainItems(content.keywords, answer[0].split(" "))
 
           if (!state) {
             return negativeState;
+          }
+
+          if (
+            doesArrayContainItems(content.keywords, answer[0].split(" "))
+              .length === content.keywords.length
+          ) {
+            if (length < content.answer.length) {
+              return positiveState;
+            }
+
+            return { ...positiveState, content: { ...content, answer: [""] } };
           }
 
           if (length < content.answer.length * 0.8) {
             // if user's response is less than 80% right, then return negative
             return negativeState;
           }
-
-          return positiveState;
         }
 
         case "Variants": {
