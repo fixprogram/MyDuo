@@ -31,25 +31,42 @@ const HorizontalList = styled.ul((props) => ({
   justifyContent: "space-between",
   margin: 0,
   height: "100%",
-  padding: 0,
+  padding: "0 9px",
 }));
 
 const ListItem = styled.li((props) => ({
   height: "100%",
-  paddingLeft: "30px",
+  margin: "0 15px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   position: "relative",
 }));
 
-const LessonBlock = styled.section((props) => ({
+const LessonsContainer = styled.section((props) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
-  marginBottom: "52px",
+  // marginBottom: "52px",
   position: "relative",
 }));
+
+const LessonsBlock = styled("div")`
+  grid-column-gap: 12px;
+  display: grid;
+  grid-auto-columns: calc(33.33333% - 8px);
+  grid-auto-flow: column;
+  justify-content: center;
+  padding: 16px 12px;
+`;
+
+const LessonBlock = styled("div")`
+  width: 33%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const LessonBlockMenu = styled("div")<LessonBlockMenuProps>`
   display: ${(props) => (props.isOpened ? "block" : "none")};
@@ -354,8 +371,7 @@ const LessonProgressInner = styled("div")`
 `;
 
 const Main = styled("main")`
-  padding: 0 10%;
-  margin-top: 24px;
+  padding: 24px 10% 0;
   display: flex;
   justify-content: space-between;
   height: calc(100vh - 95px); // margin 24px + menu height 71px
@@ -368,6 +384,7 @@ const LessonTitle = styled("b")`
   color: #3c3c3c;
   text-align: center;
   margin-top: 8px;
+  display: block;
 `;
 
 const NavIcon = styled("img")`
@@ -547,6 +564,57 @@ const Logout = styled("button")`
   font-family: "Montserrat";
   font-weight: 700;
   letter-spacing: 0.8px;
+  padding: 0;
+`;
+
+const PracticeLastAddedContainer = styled("div")`
+  border-width: 2px 2px 4px;
+  height: 72px;
+  width: 72px;
+  border-radius: 50%;
+  border: solid #e5e5e5;
+  position: sticky;
+  margin-bottom: 54px;
+  bottom: 0;
+`;
+
+const ErrorMessage = styled("p")`
+  line-height: 20px;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: #ea2b2b;
+`;
+
+const ExpProgressBlock = styled("section")`
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  margin: 0 24px 24px;
+  padding: 24px;
+`;
+
+const ExpProgressTitle = styled("h2")`
+  color: #3c3c3c;
+  font-size: 24px;
+  line-height: 26px;
+  margin: 0 0 25px;
+  font-family: Montserrat;
+  font-weight: 700;
+`;
+
+const FooterLine = styled("hr")`
+  border: 0;
+  border-top: 2px solid #e5e5e5;
+  margin: 0 0 48px;
+`;
+
+const FooterText = styled("p")`
+  text-align: center;
+  color: #afafaf;
+  font-family: Roboto;
+  margin: 0;
 `;
 
 export {
@@ -556,7 +624,9 @@ export {
   HorizontalList,
   ListItem,
   NavLink,
+  LessonsBlock,
   LessonBlock,
+  LessonsContainer,
   LessonBlockLink,
   LessonBlockButton,
   LessonBlockInner,
@@ -596,4 +666,10 @@ export {
   LessonBlockMenuTriangle,
   LessonBlockMenuTriangleContent,
   H1Title,
+  PracticeLastAddedContainer,
+  ErrorMessage,
+  ExpProgressBlock,
+  ExpProgressTitle,
+  FooterLine,
+  FooterText,
 };

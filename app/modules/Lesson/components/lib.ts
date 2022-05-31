@@ -191,6 +191,8 @@ const LessonTitle = styled("h1")`
   font-family: "Montserrat", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
+  text-align: left;
+  font-weight: 700;
 `;
 
 const LessonQuestion = styled("p")`

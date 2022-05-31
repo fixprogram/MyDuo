@@ -5,11 +5,13 @@ import Keyword from "./Keyword";
 export default function Keywords({
   answer,
   onSet,
+  initialKeywords = [],
 }: {
-  answer: any;
+  initialKeywords: string[];
+  answer: string;
   onSet: Function;
 }) {
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState<string[]>(initialKeywords);
 
   useEffect(() => {
     onSet(keywords);
@@ -24,7 +26,7 @@ export default function Keywords({
         return (
           <Keyword
             key={idx}
-            onSet={(word: any) =>
+            onSet={(word: string) =>
               setKeywords((prevArr: string[]) => {
                 if (isItemInArray(prevArr, item)) {
                   prevArr.splice(prevArr.indexOf(word), 1);
@@ -34,6 +36,7 @@ export default function Keywords({
                 }
               })
             }
+            initiallyActive={!!keywords.find((keyword) => keyword === item)}
           >
             {item}
           </Keyword>

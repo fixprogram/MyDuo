@@ -4,7 +4,7 @@ export type LessonState = {
   disabled: boolean;
   progress: number;
   stepNumber: number;
-  content: LessonContent;
+  content: LessonStep;
   lessonSteps: LessonStep[];
   maxSteps: number;
   stateWrong: boolean;
@@ -14,7 +14,3 @@ export type LessonState = {
 };
 
 export type LessonData = {};
-
-export type LessonContent = LessonStep & {
-  answer: string[];
-};

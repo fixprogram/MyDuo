@@ -2,58 +2,45 @@ import { useEffect } from "react";
 import { Legend } from "~/components/lib";
 import type { Step } from "./types";
 import QuestionAnswer from "./components/QuestionAnswer";
-import {
-  ChooseStyle,
-  StepContent,
-  StepHeader,
-  StyleButton,
-} from "./components/lib";
+import { StepContent, StepHeader } from "./components/lib";
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
 import Close from "~/styles/close.svg";
 import ChooseStyleScreen from "./components/ChooseStyleScreen";
+import { ScreenContainer } from "../components/lib";
+import actionCreator, { Action } from "./actions";
 
-export default function Steps({
-  activeStep,
+export default function Levels({
   steps,
   setReady,
   screen,
-  setStepType,
-  removeStepType,
-  setAnswer,
-  setKeywords,
-  setStepReady,
-  setQuestion,
+  dispatch,
 }: {
-  setStepType: Function;
-  removeStepType: Function;
-  setAnswer: Function;
-  setKeywords: Function;
-  setStepReady: Function;
-  activeStep: number;
-  steps: any;
+  steps: Step[];
   setReady: Function;
-  setQuestion: Function;
   screen: string;
+  dispatch: React.Dispatch<Action>;
 }) {
   useEffect(() => {
     setReady(!steps.find((step: Step) => step.ready === false));
-    console.log("steps: ", steps);
   }, [steps, setReady]);
 
+  const {
+    setAnswer,
+    setKeywords,
+    setStepType,
+    setStepReady,
+    removeStepType,
+    setQuestion,
+  } = actionCreator(dispatch);
+
   return (
-    <section
-      style={{
-        position: "absolute",
-        width: "100%",
-        top: 0,
-        visibility: screen !== "Steps" ? "hidden" : "visible",
-      }}
-    >
+    <ScreenContainer screen={screen} target="Steps">
       {steps.map(
         (
           {
+            active,
             question,
             number,
             keywords,
@@ -62,14 +49,13 @@ export default function Steps({
             id,
             variants,
             ready,
+            chapter,
           }: Step,
           idx: number
         ) => (
-          <section
-            className={`${activeStep !== idx && "visuallyHidden"}`}
-            key={id}
-          >
+          <section className={`${!active && "visuallyHidden"}`} key={id}>
             <input type="hidden" name="step" value={idx} />
+            <input type="hidden" name={`chapter`} value={chapter} />
             <Legend>{stepType ? stepType : "Choose type"}</Legend>
             <StepHeader>
               {stepType !== "" && (
@@ -129,7 +115,7 @@ export default function Steps({
                   answer={
                     typeof answer !== "string" ? answer.join(" ") : answer
                   }
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                 />
               ) : stepType === "Variants" ? (
@@ -138,7 +124,7 @@ export default function Steps({
                   initialVariants={variants}
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   variantsCount={3}
                 />
@@ -146,8 +132,8 @@ export default function Steps({
                 <MatchingPairs
                   number={number}
                   answer={answer}
-                  setAnswer={(answer: string[]) => setAnswer(answer, number)}
-                  variantsCount={8}
+                  setAnswer={(answer: string) => setAnswer(answer, number)}
+                  variantsCount={4}
                   setReady={(isReady: boolean) => setStepReady(isReady, number)}
                   initialVariants={variants}
                 />
@@ -156,6 +142,6 @@ export default function Steps({
           </section>
         )
       )}
-    </section>
+    </ScreenContainer>
   );
 }

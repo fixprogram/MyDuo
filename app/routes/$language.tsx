@@ -8,10 +8,11 @@ import {
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
-import { getLastActiveLesson } from "~/models/lesson.server";
+import { getLastActivity } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
+import { getWeekDay, getYesterdayDay } from "~/utils";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -20,7 +21,7 @@ export const links = () => {
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
   const id = form.get("id") as string;
-  const newLanguage: any = form.get("newLanguage");
+  const newLanguage = form.get("newLanguage") as string;
   let project;
   if (newLanguage?.length > 0) {
     project = await createNewLanguage(request, newLanguage);
@@ -32,10 +33,9 @@ export async function action({ request }: { request: Request }) {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const today = new Date();
   let user = await getUser(request);
   const languages = await getLanguages(request);
-  const activeLanguage = languages?.find((item: any) => item.active);
+  const activeLanguage = languages?.find((item) => item.active);
 
   if (!user) {
     return redirect("/login");
@@ -45,17 +45,18 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
 
-  const lastActive = await getLastActiveLesson(activeLanguage.id);
+  const lastActive = await getLastActivity(user.id);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
+    return { user, languages };
   }
 
-  if (Number(lastActive?.updatedAt) === today.getDate() - 1) {
+  if (lastActive.day === getYesterdayDay()) {
     user = await updateUserStreak(user.id, false, user.streak);
     return { user, languages };
   }
 
-  if (!user?.wasToday && Number(lastActive?.updatedAt) === today.getDate()) {
+  if (!user?.wasToday && lastActive.day === getWeekDay()) {
     user = await updateUserStreak(user.id, true, user.streak + 1);
     return { user, languages };
   }

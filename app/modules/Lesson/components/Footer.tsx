@@ -50,9 +50,7 @@ export default function Footer({
             <LessonFooterTitle>
               {stateWrong ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
-            {stateWrong && (
-              <LessonFooterText> {answer.join(" ")}</LessonFooterText>
-            )}
+            <LessonFooterText> {answer.join(" ")}</LessonFooterText>
           </div>
         </LessonFooterMessage>
         <LessonButton

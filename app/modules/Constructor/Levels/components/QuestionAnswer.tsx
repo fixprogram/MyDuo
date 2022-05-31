@@ -1,6 +1,7 @@
 import { Fragment, useEffect } from "react";
 import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
 import Keywords from "../../components/Keywords";
+import { doesItemContainSign } from "~/utils";
 import type { FieldsetType } from "../types";
 
 type QA = FieldsetType & {
@@ -28,6 +29,10 @@ export default function QuestionAnswer({
     }
   }, [question, answer]);
 
+  useEffect(() => {
+    setKeywords(keywords);
+  }, []);
+
   return (
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Question"} />
@@ -44,6 +49,7 @@ export default function QuestionAnswer({
           }}
           value={question === null ? "" : question}
           onChange={(evt) => setQuestion(evt.target.value)}
+          autoFocus={true}
           required
         />
 
@@ -57,14 +63,20 @@ export default function QuestionAnswer({
       </fieldset>
       <TextareaLabel htmlFor={`keywords${number}`}>
         <LabelText>Choose keywords</LabelText>
-        <Keywords answer={answer} onSet={setKeywords} />
+        <Keywords
+          answer={answer as string}
+          initialKeywords={keywords}
+          onSet={setKeywords}
+        />
 
         <input
           type="hidden"
           id={`keywords${number}`}
           name={`keywords${number}`}
           placeholder="Type keywords"
-          value={keywords}
+          value={keywords.map(
+            (keyword) => doesItemContainSign(keyword).newItem
+          )}
           readOnly
         />
       </TextareaLabel>

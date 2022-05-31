@@ -1,7 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Form } from "remix";
 import { ActionData } from "~/routes/login";
-import { H1Title, LoginToggle, LoginInput, LoginButton } from "./lib";
+import {
+  H1Title,
+  LoginToggle,
+  LoginInput,
+  LoginButton,
+  ErrorMessage,
+} from "./lib";
 
 type LoginProps = {
   isLogin: boolean;
@@ -70,9 +76,9 @@ export function Login({ isLogin, setIsLogin, actionData }: LoginProps) {
         />
 
         {actionData?.errors?.username && (
-          <p role="alert" id="username-error">
+          <ErrorMessage role="alert" id="username-error">
             {actionData.errors.username}
-          </p>
+          </ErrorMessage>
         )}
       </div>
       <LoginButton type="submit">

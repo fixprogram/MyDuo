@@ -1,19 +1,22 @@
+import { Variant } from "@prisma/client";
+
 export type Action =
   | {
       type: "SETUP";
-      payload: { variantsCount: number; variants: any; pairs: string[] };
+      payload: { variantsCount: number; variants: Variant[]; pairs: string[] };
     }
   | { type: "VARIANTS_SETUP"; payload: { variantsCount: number } }
   | { type: "VARIANT_SET_VALUE"; payload: { idx: number; value: string } }
   | { type: "TYPE"; payload: { value: string; idx: number } }
   | { type: "CHOOSE"; payload: { idx: number } }
   | { type: "VARIANT_CHOOSE"; payload: { idx: number } }
-  | { type: "CONNECT"; payload: { activeIdx: string; idx: number } };
+  | { type: "CONNECT"; payload: { activeIdx: number; idx: number } }
+  | { type: "ADD_PAIR" };
 
 export const pairsSetup = (
   variantsCount: number,
-  variants: any,
-  pairs = []
+  variants: Variant[],
+  pairs: string[]
 ): Action => ({
   type: "SETUP",
   payload: { variantsCount, variants, pairs },
@@ -46,7 +49,9 @@ export const variantChoose = (idx: number): Action => ({
   payload: { idx },
 });
 
-export const pairsConnect = (activeIdx: string, idx: number): Action => ({
+export const pairsConnect = (activeIdx: number, idx: number): Action => ({
   type: "CONNECT",
   payload: { activeIdx, idx },
 });
+
+export const addPair = (): Action => ({ type: "ADD_PAIR" });

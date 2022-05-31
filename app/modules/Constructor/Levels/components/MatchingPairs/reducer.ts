@@ -1,11 +1,11 @@
 import { Action } from "./actions";
 
 export type Variant = {
-  type?: string | null;
+  type: string | null;
   value: string;
   idx: number;
-  isFocused: boolean | null;
-  isConnected?: boolean | null;
+  isFocused: boolean;
+  isConnected: boolean;
 };
 
 export type State = {
@@ -24,9 +24,8 @@ export const reducer = (state: State, action: Action): State => {
     case "SETUP": {
       const { variantsCount, variants, pairs } = action.payload;
       const newVariants = [];
-      // if(variantsType)
       if (variants.length) {
-        return { ...state, variants, pairs };
+        return { ...state, variants: [...variants], pairs };
       }
       for (let i = 1; i <= variantsCount; i++) {
         newVariants.push({
@@ -46,6 +45,8 @@ export const reducer = (state: State, action: Action): State => {
         variants.push({
           value: "",
           isFocused: false,
+          isConnected: false,
+          type: null,
           idx: i,
         });
       }
@@ -100,7 +101,7 @@ export const reducer = (state: State, action: Action): State => {
       const { activeIdx, idx } = action.payload;
       let newPairs = pairs;
       let exists = newPairs.find(
-        (item) => item.includes(activeIdx) || item.includes(idx.toString())
+        (item) => item.includes(`${activeIdx}`) || item.includes(`${idx}`)
       );
       if (exists) {
         newPairs[newPairs.indexOf(exists)] = `${activeIdx}${idx}`;
@@ -113,11 +114,29 @@ export const reducer = (state: State, action: Action): State => {
           ...variant,
           isFocused: false,
           isConnected: newPairs.filter((pair) =>
-            pair.includes(variant.idx.toString())
+            pair.includes(`${variant.idx}`)
           ).length,
         })),
         pairs: newPairs,
       };
+    }
+    case "ADD_PAIR": {
+      const newVariants = variants;
+      newVariants.push({
+        value: "",
+        isFocused: false,
+        idx: newVariants.length + 1,
+        isConnected: false,
+        type: null,
+      });
+      newVariants.push({
+        value: "",
+        isFocused: false,
+        idx: newVariants.length + 1,
+        isConnected: false,
+        type: null,
+      });
+      return { ...state, variants: [...newVariants] };
     }
     default: {
       throw new Error(`Omg we don't know this action type`);

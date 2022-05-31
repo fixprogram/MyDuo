@@ -10,11 +10,7 @@ import { LessonStep } from "@prisma/client";
 import Footer from "./components/Footer";
 import { LessonContainer } from "./components/lib";
 
-export default function Lesson({
-  data = { steps: [] },
-}: {
-  data: { steps: LessonStep[] };
-}) {
+export default function Lesson({ steps }: { steps: LessonStep[] }) {
   const ref = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLFormElement>(null);
   const [
@@ -45,8 +41,7 @@ export default function Lesson({
   let currentStep = stepNumber;
 
   useEffect(() => {
-    setCase(data.steps); // Ones the data is loaded, we set the it in reducer
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCase(steps); // Ones the data is loaded, we set the it in reducer
   }, []);
 
   useEffect(() => {
@@ -81,11 +76,7 @@ export default function Lesson({
 
   const setAnswer = (val: string[]) => {
     // Insert words will return an array of objects and it won't work with the disabling button
-    if (val[0] !== "") {
-      changeDisabled(false);
-    } else {
-      changeDisabled(true);
-    }
+    changeDisabled(val[0] === "");
     setValue(val);
   };
 
@@ -131,6 +122,7 @@ export default function Lesson({
       {currentStep === maxSteps + 1 ? (
         <Results refName={ref} />
       ) : (
+        // <Results />
         <Fragment>
           <Progress progress={progress} />
           <Body

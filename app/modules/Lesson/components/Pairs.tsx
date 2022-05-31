@@ -1,3 +1,4 @@
+import { Variant } from "@prisma/client";
 import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
@@ -7,14 +8,14 @@ export default function Pairs({
   checkAnswer,
 }: {
   contentAnswer: string[];
-  variants: any;
+  variants: Variant[];
   checkAnswer: Function;
 }) {
-  const [active, setActive] = useState<string>("");
+  const [activeIdx, setActiveIdx] = useState<number>(-1);
 
-  const isDisabled = (idx: string) => {
-    return !contentAnswer.find((answerItem: any) =>
-      answerItem.includes(idx + 1)
+  const isDisabled = (idx: number) => {
+    return !contentAnswer.find((answerItem) =>
+      answerItem.includes((idx + 1).toString())
     );
   };
 
@@ -32,7 +33,7 @@ export default function Pairs({
           padding: 0,
         }}
       >
-        {variants.map(({ value, isFocused }: any, idx: string) => (
+        {variants.map(({ value, isFocused }, idx: number) => (
           <li
             key={idx}
             style={{ marginBottom: 5, position: "relative", width: "48%" }}
@@ -41,11 +42,11 @@ export default function Pairs({
               if (isDisabled(idx)) {
                 return;
               }
-              if (!active) {
-                return setActive(target.id);
+              if (activeIdx === -1) {
+                return setActiveIdx(Number(target.id));
               }
-              checkAnswer([`${active}${target.id}`]);
-              setActive("");
+              checkAnswer([`${activeIdx}${target.id}`]);
+              setActiveIdx(-1);
             }}
           >
             <VariantItem
@@ -54,18 +55,18 @@ export default function Pairs({
               style={{
                 cursor: isDisabled(idx) ? "default" : "pointer",
                 color:
-                  active == idx + 1
+                  activeIdx === idx + 1
                     ? "#1899d6"
                     : isDisabled(idx)
                     ? "#e5e5e5"
                     : "#4b4b4b",
                 borderColor:
-                  active == idx + 1
+                  activeIdx === idx + 1
                     ? "#84d8ff"
                     : isDisabled(idx)
                     ? "#e5e5e5"
                     : "#e5e5e5",
-                backgroundColor: active == idx + 1 ? "#ddf4ff" : "#fff",
+                backgroundColor: activeIdx === idx + 1 ? "#ddf4ff" : "#fff",
               }}
               disabled={isDisabled(idx)}
               isFocused={isFocused}
