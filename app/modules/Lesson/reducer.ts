@@ -68,8 +68,17 @@ const reducer = (state: LessonState, action: Action): LessonState => {
 
       switch (content.stepType) {
         case "Insert": {
-          const { length } = doesArrayContainItems(content.answer, answer);
-          if (length === content.answer.length) {
+          const { length, items } = doesArrayContainItems(
+            content.answer,
+            answer
+          );
+          // console.log(items);
+          // console.log(content.answer);
+          // if (items === content.answer) {
+          if (
+            content.answer.filter((ans, idx) => ans === items[idx]).length ===
+            content.answer.length
+          ) {
             return positiveState;
           }
           return negativeState;

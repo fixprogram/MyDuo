@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
-import { LessonTitle } from "./lib";
+import { LessonTitle, VariantItem } from "./lib";
 
 export default function InsertWords({
   answer,
@@ -9,30 +9,35 @@ export default function InsertWords({
   contentAnswer,
   setAnswer,
   formDisabled,
+  isToChoose,
 }: {
   answer: string[];
   text: string;
   contentAnswer: string[];
   setAnswer: Function;
   formDisabled: boolean;
+  isToChoose: boolean;
 }) {
-  const [values, setValues] = useState<string[]>([
-    ...Array(contentAnswer.length).fill(""),
-  ]);
+  // const [values, setValues] = useState<string[]>([
+  //   ...Array(contentAnswer.length).fill(""),
+  // ]);
+  const [values, setValues] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (formDisabled === true) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (formDisabled === true) {
+  //     return;
+  //   }
 
-    setValues([...Array(contentAnswer.length).fill("")]);
-  }, [formDisabled]);
+  // setValues([...Array(contentAnswer.length).fill("")]);
+  // }, [formDisabled]);
 
   useEffect(() => {
     if (values.find((val) => val === "")) {
       return;
     }
-    setAnswer(values);
+    if (values.length === contentAnswer.length) {
+      setAnswer(values);
+    }
   }, [values]);
 
   return (
@@ -67,6 +72,8 @@ export default function InsertWords({
                       border: "none",
                       borderBottom: "2px solid #afafaf",
                       fontSize: 19,
+                      outline: "none",
+                      cursor: isToChoose ? "pointer" : "text",
                     }}
                     value={values[index]}
                     onChange={(e) => {
@@ -74,6 +81,14 @@ export default function InsertWords({
                         prevArray[index] = e.target.value;
                         return [...prevArray];
                       });
+                    }}
+                    onClick={() => {
+                      if (isToChoose) {
+                        setValues((prevArray) => {
+                          prevArray[idx] = "";
+                          return [...prevArray];
+                        });
+                      }
                     }}
                     disabled={formDisabled}
                   />
@@ -88,6 +103,31 @@ export default function InsertWords({
             </span>
           );
         })}
+        {isToChoose && (
+          <div style={{ width: "100%" }}>
+            <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
+              {contentAnswer.map((answer, idx: number) => (
+                <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
+                  <VariantItem
+                    type="button"
+                    isFocused={false}
+                    onClick={() =>
+                      setValues((prevArray) => {
+                        // prevArray[idx] = answer;
+                        return [...prevArray, answer];
+                      })
+                    }
+                    disabled={
+                      !!values.find((value) => value === answer)?.length
+                    }
+                  >
+                    {answer}
+                  </VariantItem>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </InsertWordsTextBlock>
     </Fragment>
   );

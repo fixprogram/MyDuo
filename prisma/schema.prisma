@@ -56,6 +56,7 @@ model Lesson {
   chapter           Int
   Language          Language? @relation(fields: [languageId], references: [id])
   languageId        String?   @db.ObjectId
+  isToChoose        Boolean?
 }
 
 type Variant {

@@ -117,9 +117,6 @@ export default function InsertWords({
             <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
               {words.map((word, idx: number) => (
                 <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
-                  <VariantItemNumber isFocused={false}>
-                    {idx + 1}
-                  </VariantItemNumber>
                   <VariantItem type="button" isFocused={false}>
                     {word}
                   </VariantItem>

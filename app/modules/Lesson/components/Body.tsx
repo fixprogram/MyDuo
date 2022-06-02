@@ -4,7 +4,7 @@ import QuestionAnswer from "./QuestionAnswer";
 import InsertWords from "./InsertWords";
 import Variants from "./Variants";
 import Pairs from "./Pairs";
-import { LessonStep } from "@prisma/client";
+import { Lesson } from "@prisma/client";
 
 const Body = ({
   stepNumber,
@@ -17,7 +17,7 @@ const Body = ({
 }: {
   stepNumber: number;
   maxSteps: number;
-  content: LessonStep;
+  content: Lesson;
   setAnswer: Function;
   formDisabled: boolean;
   answer: string[];
@@ -44,6 +44,7 @@ const Body = ({
               contentAnswer={content.answer}
               setAnswer={setAnswer}
               formDisabled={formDisabled}
+              isToChoose={content.isToChoose as boolean}
             />
           ) : stepType === "Variants" ? (
             <Variants content={content} setAnswer={setAnswer} answer={answer} />

@@ -65,10 +65,12 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       case "Insert": {
         const text = form.get(`text${index}`) as string;
+        const isToChoose = !!form.get(`isToChoose${index}`);
         return {
           ...returnData,
           answer,
           text: text.trim(),
+          isToChoose,
         };
       }
       case "Variants": {
