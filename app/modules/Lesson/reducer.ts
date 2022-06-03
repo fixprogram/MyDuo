@@ -1,4 +1,4 @@
-import { LessonStep } from "@prisma/client";
+import { Lesson } from "@prisma/client";
 import { doesArrayContainItems } from "~/utils";
 import { Action } from "./actions";
 import { LessonState } from "./types";
@@ -27,10 +27,8 @@ const basicState: LessonState = {
 };
 
 // The function returns next stepNumber if there is any
-const continueContent = (
-  content: LessonStep,
-  lessonSteps: LessonStep[] | any
-) => (lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content);
+const continueContent = (content: Lesson, lessonSteps: Lesson[] | any) =>
+  lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
 
 const reducer = (state: LessonState, action: Action): LessonState => {
   const { content, stepNumber, maxSteps, lessonSteps } = state;
@@ -72,12 +70,10 @@ const reducer = (state: LessonState, action: Action): LessonState => {
             content.answer,
             answer
           );
-          // console.log(items);
-          // console.log(content.answer);
-          // if (items === content.answer) {
           if (
-            content.answer.filter((ans, idx) => ans === items[idx]).length ===
-            content.answer.length
+            content.answer.filter(
+              (ans: string, idx: number) => ans === items[idx]
+            ).length === content.answer.length
           ) {
             return positiveState;
           }
@@ -121,7 +117,7 @@ const reducer = (state: LessonState, action: Action): LessonState => {
         case "Pairs": {
           let idx = 0;
           if (
-            content.answer.find((answerItem, id) => {
+            content.answer.find((answerItem: string, id: number) => {
               idx = id;
               return (
                 answerItem === answer[0] ||
@@ -166,7 +162,7 @@ const reducer = (state: LessonState, action: Action): LessonState => {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: steps.shift() as LessonStep,
+        content: steps.shift() as Lesson,
         disabled: true,
       };
     default:

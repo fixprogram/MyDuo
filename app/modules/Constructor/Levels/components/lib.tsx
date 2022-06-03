@@ -9,6 +9,10 @@ type VariantItemNumberProps = {
   isFocused: boolean;
 };
 
+type InsertWordsInputProps = {
+  length: number;
+};
+
 const StepContent = styled("div")`
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
@@ -43,17 +47,25 @@ const StyleButton = styled("button")`
 const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   min-height: 200px;
   width: 100%;
-  margin-top: -206px;
-  padding: 10px 12px;
-  border: 1px solid #e5e5e5;
-  background-color: #f7f7f7;
-  border-radius: 10px;
+  padding: 10px 0;
+  background-color: #fff;
   position: relative;
   z-index: ${(props) => (props.showText ? "2" : "0")};
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   box-sizing: border-box;
+  font-size: 19px;
+  font-family: "Roboto";
+`;
+
+const InsertWordsInput = styled("input")<InsertWordsInputProps>`
+  outline: none;
+  border: none;
+  font-size: 19px;
+  margin: 0 7px -2px;
+  width: ${(props) => props.length * 13}px;
+  border-bottom: 2px solid #afafaf;
 `;
 
 const VariantItemInput = styled("input")`
@@ -110,6 +122,7 @@ export {
   ChooseStyle,
   StyleButton,
   InsertWordsTextBlock,
+  InsertWordsInput,
   VariantItemInput,
   VariantItemNumber,
 };

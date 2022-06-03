@@ -14,6 +14,8 @@ const Body = ({
   formDisabled,
   answer,
   checkAnswer,
+  setValue,
+  changeDisabled,
 }: {
   stepNumber: number;
   maxSteps: number;
@@ -22,6 +24,8 @@ const Body = ({
   formDisabled: boolean;
   answer: string[];
   checkAnswer: Function;
+  setValue: Function;
+  changeDisabled: Function;
 }) => {
   const { question, text, stepType, variants } = content;
   return (
@@ -39,7 +43,8 @@ const Body = ({
             />
           ) : stepType === "Insert" ? (
             <InsertWords
-              answer={answer}
+              setValue={setValue}
+              changeDisabled={changeDisabled}
               text={text as string}
               contentAnswer={content.answer}
               setAnswer={setAnswer}

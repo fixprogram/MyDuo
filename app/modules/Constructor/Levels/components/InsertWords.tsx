@@ -3,7 +3,7 @@ import { Textarea } from "~/components/lib";
 import { LessonTitle, VariantItem } from "~/modules/Lesson/components/lib";
 import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
-import { InsertWordsTextBlock, VariantItemNumber } from "./lib";
+import { InsertWordsInput, InsertWordsTextBlock } from "./lib";
 
 type InsertWords = FieldsetType & {
   answer: string;
@@ -55,20 +55,10 @@ export default function InsertWords({
           setAnswer(evt.target.value);
         }}
         ref={ref}
-        // style={{ padding: "10px 0" }}
         required
       />
 
-      <InsertWordsTextBlock
-        showText={showText}
-        style={{
-          fontSize: 19,
-          backgroundColor: "white",
-          border: "none",
-          fontFamily: "Roboto",
-          padding: "10px 0",
-        }}
-      >
+      <InsertWordsTextBlock showText={showText} style={{ marginTop: -206 }}>
         {answer.split(" ").map((item, idx) => {
           const { newItem, sign } = doesItemContainSign(item);
 
@@ -83,32 +73,14 @@ export default function InsertWords({
           if (sign) {
             return (
               <Fragment key={idx}>
-                <input
-                  type="text"
-                  style={{
-                    width: `${newItem.length * 13}px`,
-                    margin: "0 7px -2px",
-                    border: "none",
-                    borderBottom: "2px solid #afafaf",
-                    fontSize: 19,
-                  }}
-                />
+                <InsertWordsInput type="text" length={newItem.length} />
                 <span>{sign}</span>
               </Fragment>
             );
           }
 
           return (
-            <input
-              type="text"
-              key={idx}
-              style={{
-                width: `${newItem.length * 10}px`,
-                margin: "0 7px",
-                border: "none",
-                borderBottom: "1px solid #e5e5e5",
-              }}
-            />
+            <InsertWordsInput type="text" key={idx} length={newItem.length} />
           );
         })}
 

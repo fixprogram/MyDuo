@@ -1021,6 +1021,7 @@ var LessonContainer = (0, import_styled2.default)("section")`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  outline: none;
 `;
 var LessonFooter = (0, import_styled2.default)("section")`
   padding: 0 40px;
@@ -1303,17 +1304,24 @@ var StyleButton = (0, import_styled3.default)("button")`
 var InsertWordsTextBlock = (0, import_styled3.default)("div")`
   min-height: 200px;
   width: 100%;
-  margin-top: -206px;
-  padding: 10px 12px;
-  border: 1px solid #e5e5e5;
-  background-color: #f7f7f7;
-  border-radius: 10px;
+  padding: 10px 0;
+  background-color: #fff;
   position: relative;
   z-index: ${(props) => props.showText ? "2" : "0"};
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   box-sizing: border-box;
+  font-size: 19px;
+  font-family: "Roboto";
+`;
+var InsertWordsInput = (0, import_styled3.default)("input")`
+  outline: none;
+  border: none;
+  font-size: 19px;
+  margin: 0 7px -2px;
+  width: ${(props) => props.length * 13}px;
+  border-bottom: 2px solid #afafaf;
 `;
 var VariantItemInput = (0, import_styled3.default)("input")`
   border: 1px solid #e5e5e5;
@@ -1419,32 +1427,28 @@ var getYesterdayDay = () => {
 
 // app/modules/Lesson/components/InsertWords.tsx
 function InsertWords({
-  answer,
+  setValue,
+  changeDisabled,
   text,
   contentAnswer,
-  setAnswer,
   formDisabled,
   isToChoose
 }) {
   const [values, setValues] = (0, import_react5.useState)([]);
   (0, import_react5.useEffect)(() => {
-    if (values.find((val) => val === "")) {
+    console.log(values);
+    if (values.length !== contentAnswer.length) {
       return;
     }
-    if (values.length === contentAnswer.length) {
-      setAnswer(values);
-    }
+    const isFieldEmpty = values.filter((val) => {
+      if (val === "" || val === " ") {
+        return true;
+      }
+    });
+    changeDisabled(!!isFieldEmpty.length);
+    setValue(values);
   }, [values]);
-  return /* @__PURE__ */ React.createElement(import_react5.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, {
-    style: {
-      marginTop: 0,
-      fontSize: 19,
-      backgroundColor: "white",
-      padding: 0,
-      border: "none",
-      fontFamily: "Roboto"
-    }
-  }, text.split(" ").map((item, idx) => {
+  return /* @__PURE__ */ React.createElement(import_react5.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, text.split(" ").map((item, idx) => {
     const { newItem, sign } = doesItemContainSign(item);
     if (contentAnswer.includes(newItem)) {
       return contentAnswer.map((it, index) => {
@@ -1453,18 +1457,13 @@ function InsertWords({
         }
         return /* @__PURE__ */ React.createElement(import_react5.Fragment, {
           key: idx
-        }, /* @__PURE__ */ React.createElement("input", {
+        }, /* @__PURE__ */ React.createElement(InsertWordsInput, {
           type: "text",
           id: `input${0}`,
           style: {
-            width: `${newItem.length * 13}px`,
-            margin: "0 7px -2px",
-            border: "none",
-            borderBottom: "2px solid #afafaf",
-            fontSize: 19,
-            outline: "none",
             cursor: isToChoose ? "pointer" : "text"
           },
+          length: newItem.length,
           value: values[index],
           onChange: (e) => {
             setValues((prevArray) => {
@@ -1472,10 +1471,15 @@ function InsertWords({
               return [...prevArray];
             });
           },
-          onClick: () => {
+          onClick: (evt) => {
+            const target = evt.currentTarget;
+            if (target.value === "" || target.value === " ") {
+              return;
+            }
             if (isToChoose) {
+              target.blur();
               setValues((prevArray) => {
-                prevArray[idx] = "";
+                prevArray[index] = " ";
                 return [...prevArray];
               });
             }
@@ -1493,20 +1497,37 @@ function InsertWords({
   }), isToChoose && /* @__PURE__ */ React.createElement("div", {
     style: { width: "100%" }
   }, /* @__PURE__ */ React.createElement("ul", {
-    style: { listStyleType: "none", padding: 0, margin: 0 }
-  }, contentAnswer.map((answer2, idx) => {
+    style: {
+      listStyleType: "none",
+      padding: 0,
+      margin: "30px 0 0",
+      display: "flex",
+      flexWrap: "wrap"
+    }
+  }, contentAnswer.map((answer, idx) => {
     var _a;
     return /* @__PURE__ */ React.createElement("li", {
       key: idx,
-      style: { position: "relative", marginBottom: 8 }
+      style: {
+        position: !!values.find((value) => value === answer) ? "absolute" : "relative",
+        margin: "0 16px 8px 0",
+        left: !!values.find((value) => value === answer) ? "-10000px" : 0
+      }
     }, /* @__PURE__ */ React.createElement(VariantItem, {
       type: "button",
       isFocused: false,
       onClick: () => setValues((prevArray) => {
-        return [...prevArray, answer2];
+        const empty = prevArray.find((item) => item === " " || !!item === false);
+        const inx = prevArray.indexOf(empty);
+        if (inx.toString() && inx !== -1) {
+          const newArr = prevArray;
+          newArr[inx] = answer;
+          return [...newArr];
+        }
+        return [...prevArray, answer];
       }),
-      disabled: !!((_a = values.find((value) => value === answer2)) == null ? void 0 : _a.length)
-    }, answer2));
+      disabled: !!((_a = values.find((value) => value === answer)) == null ? void 0 : _a.length)
+    }, answer));
   })))));
 }
 
@@ -1590,7 +1611,9 @@ var Body = ({
   setAnswer,
   formDisabled,
   answer,
-  checkAnswer
+  checkAnswer,
+  setValue,
+  changeDisabled
 }) => {
   const { question, text, stepType, variants } = content;
   return /* @__PURE__ */ React.createElement(LessonBody, null, stepNumber === maxSteps + 1 ? /* @__PURE__ */ React.createElement(LessonBodyResults, null, "Results Screen") : /* @__PURE__ */ React.createElement(import_react8.Fragment, null, stepType === "Question" ? /* @__PURE__ */ React.createElement(QuestionAnswerPractice, {
@@ -1599,7 +1622,8 @@ var Body = ({
     setAnswer,
     formDisabled
   }) : stepType === "Insert" ? /* @__PURE__ */ React.createElement(InsertWords, {
-    answer,
+    setValue,
+    changeDisabled,
     text,
     contentAnswer: content.answer,
     setAnswer,
@@ -1937,7 +1961,9 @@ function Lesson({ steps }) {
     answer: value,
     setAnswer,
     formDisabled,
-    checkAnswer
+    checkAnswer,
+    setValue,
+    changeDisabled
   })), /* @__PURE__ */ React.createElement(Footer, {
     stateRight,
     stateWrong,
@@ -3317,13 +3343,7 @@ function InsertWords2({
     required: true
   }), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, {
     showText,
-    style: {
-      fontSize: 19,
-      backgroundColor: "white",
-      border: "none",
-      fontFamily: "Roboto",
-      padding: "10px 0"
-    }
+    style: { marginTop: -206 }
   }, answer.split(" ").map((item, idx) => {
     const { newItem, sign } = doesItemContainSign(item);
     if (!isItemInArray(words, item)) {
@@ -3335,26 +3355,15 @@ function InsertWords2({
     if (sign) {
       return /* @__PURE__ */ React.createElement(import_react22.Fragment, {
         key: idx
-      }, /* @__PURE__ */ React.createElement("input", {
+      }, /* @__PURE__ */ React.createElement(InsertWordsInput, {
         type: "text",
-        style: {
-          width: `${newItem.length * 13}px`,
-          margin: "0 7px -2px",
-          border: "none",
-          borderBottom: "2px solid #afafaf",
-          fontSize: 19
-        }
+        length: newItem.length
       }), /* @__PURE__ */ React.createElement("span", null, sign));
     }
-    return /* @__PURE__ */ React.createElement("input", {
+    return /* @__PURE__ */ React.createElement(InsertWordsInput, {
       type: "text",
       key: idx,
-      style: {
-        width: `${newItem.length * 10}px`,
-        margin: "0 7px",
-        border: "none",
-        borderBottom: "1px solid #e5e5e5"
-      }
+      length: newItem.length
     });
   }), isChooseVariants && /* @__PURE__ */ React.createElement("div", {
     style: { width: "100%" }
@@ -4445,7 +4454,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "1b275aef", "entry": { "module": "/build/entry.client-3OCUL5GZ.js", "imports": ["/build/_shared/chunk-LUDCQB5P.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-QFDJY5S4.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-HUZDT4RT.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-BMWHROR4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-223JD6UM.js", "imports": ["/build/_shared/chunk-K5TOSCS6.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-2W6J2T4E.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-APY26RYQ.js", "imports": ["/build/_shared/chunk-K5TOSCS6.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-2W6J2T4E.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-AOUFZ2PB.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-W4VMAWJ2.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-BMWHROR4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-2FOOHWIQ.js", "imports": ["/build/_shared/chunk-MZZZTYXV.js", "/build/_shared/chunk-2W6J2T4E.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-BMWHROR4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-SSVZJ6O3.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-BBOU4QRB.js", "imports": ["/build/_shared/chunk-MZZZTYXV.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-2W6J2T4E.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-BMWHROR4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-UTTGQGJJ.js", "imports": ["/build/_shared/chunk-MZZZTYXV.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-2W6J2T4E.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-BMWHROR4.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-1B275AEF.js" };
+var assets_manifest_default = { "version": "cf18e1b3", "entry": { "module": "/build/entry.client-ZNWLIGAI.js", "imports": ["/build/_shared/chunk-SGCFGCKF.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-AIL4UD5R.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-PMQ2E2UJ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-EDYW7IVT.js", "imports": ["/build/_shared/chunk-RLHUJ7XC.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-7FGEO7JM.js", "imports": ["/build/_shared/chunk-RLHUJ7XC.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-75RGCPWO.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-7KZTQR24.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-BRX62A26.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4D3WACDZ.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-DDVCCTQ6.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-CWGVRFDR.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-CF18E1B3.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

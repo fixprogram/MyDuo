@@ -22,6 +22,7 @@ const LessonContainer = styled("section")`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  outline: none;
 `;
 
 const LessonFooter = styled("section")<LessonFooterProps>`

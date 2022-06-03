@@ -1,58 +1,48 @@
 import { Fragment, useEffect, useState } from "react";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
+import {
+  InsertWordsInput,
+  InsertWordsTextBlock,
+} from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 import { LessonTitle, VariantItem } from "./lib";
 
-export default function InsertWords({
-  answer,
-  text,
-  contentAnswer,
-  setAnswer,
-  formDisabled,
-  isToChoose,
-}: {
-  answer: string[];
+export type InsertWordsType = {
+  setValue: Function;
+  changeDisabled: Function;
   text: string;
   contentAnswer: string[];
-  setAnswer: Function;
   formDisabled: boolean;
   isToChoose: boolean;
-}) {
-  // const [values, setValues] = useState<string[]>([
-  //   ...Array(contentAnswer.length).fill(""),
-  // ]);
+};
+
+export default function InsertWords({
+  setValue,
+  changeDisabled,
+  text,
+  contentAnswer,
+  formDisabled,
+  isToChoose,
+}: InsertWordsType) {
   const [values, setValues] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   if (formDisabled === true) {
-  //     return;
-  //   }
-
-  // setValues([...Array(contentAnswer.length).fill("")]);
-  // }, [formDisabled]);
-
   useEffect(() => {
-    if (values.find((val) => val === "")) {
+    console.log(values);
+    if (values.length !== contentAnswer.length) {
       return;
     }
-    if (values.length === contentAnswer.length) {
-      setAnswer(values);
-    }
+    const isFieldEmpty = values.filter((val) => {
+      if (val === "" || val === " ") {
+        return true;
+      }
+    });
+    changeDisabled(!!isFieldEmpty.length);
+    setValue(values);
   }, [values]);
 
   return (
     <Fragment>
       <LessonTitle>Add missing words</LessonTitle>
-      <InsertWordsTextBlock
-        style={{
-          marginTop: 0,
-          fontSize: 19,
-          backgroundColor: "white",
-          padding: 0,
-          border: "none",
-          fontFamily: "Roboto",
-        }}
-      >
+      <InsertWordsTextBlock>
         {text.split(" ").map((item: string, idx: number) => {
           const { newItem, sign } = doesItemContainSign(item);
 
@@ -63,18 +53,13 @@ export default function InsertWords({
               }
               return (
                 <Fragment key={idx}>
-                  <input
+                  <InsertWordsInput
                     type="text"
                     id={`input${0}`}
                     style={{
-                      width: `${newItem.length * 13}px`,
-                      margin: "0 7px -2px",
-                      border: "none",
-                      borderBottom: "2px solid #afafaf",
-                      fontSize: 19,
-                      outline: "none",
                       cursor: isToChoose ? "pointer" : "text",
                     }}
+                    length={newItem.length}
                     value={values[index]}
                     onChange={(e) => {
                       setValues((prevArray) => {
@@ -82,10 +67,15 @@ export default function InsertWords({
                         return [...prevArray];
                       });
                     }}
-                    onClick={() => {
+                    onClick={(evt) => {
+                      const target = evt.currentTarget;
+                      if (target.value === "" || target.value === " ") {
+                        return;
+                      }
                       if (isToChoose) {
+                        target.blur();
                         setValues((prevArray) => {
-                          prevArray[idx] = "";
+                          prevArray[index] = " ";
                           return [...prevArray];
                         });
                       }
@@ -105,15 +95,42 @@ export default function InsertWords({
         })}
         {isToChoose && (
           <div style={{ width: "100%" }}>
-            <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
+            <ul
+              style={{
+                listStyleType: "none",
+                padding: 0,
+                margin: "30px 0 0",
+                display: "flex",
+                flexWrap: "wrap",
+              }}
+            >
               {contentAnswer.map((answer, idx: number) => (
-                <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
+                <li
+                  key={idx}
+                  style={{
+                    position: !!values.find((value) => value === answer)
+                      ? "absolute"
+                      : "relative",
+                    margin: "0 16px 8px 0",
+                    left: !!values.find((value) => value === answer)
+                      ? "-10000px"
+                      : 0,
+                  }}
+                >
                   <VariantItem
                     type="button"
                     isFocused={false}
                     onClick={() =>
                       setValues((prevArray) => {
-                        // prevArray[idx] = answer;
+                        const empty = prevArray.find(
+                          (item) => item === " " || !!item === false
+                        );
+                        const inx = prevArray.indexOf(empty);
+                        if (inx.toString() && inx !== -1) {
+                          const newArr = prevArray;
+                          newArr[inx] = answer;
+                          return [...newArr];
+                        }
                         return [...prevArray, answer];
                       })
                     }
