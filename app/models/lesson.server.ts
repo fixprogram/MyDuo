@@ -1,6 +1,9 @@
 import { Lesson, Topic, User, WeeklyActivity } from "@prisma/client";
 import { prisma } from "~/db.server";
+import { getUser } from "~/session.server";
 import { getWeekDay, getYesterdayDay } from "~/utils";
+import { whenLastPractice } from "./language.server";
+import { resetTodayActivity } from "./user.server";
 
 export async function createLessons(data: Lesson[]) {
   const batch = await prisma.lesson.createMany({ data });
@@ -33,28 +36,26 @@ export async function getTopics(languageId: string) {
   });
 }
 
-export async function getLastActivity(userId: string) {
+export async function getLastActivity(request: Request) {
   const today = getWeekDay() as string;
   const yesterday = getYesterdayDay() as string;
-  const user = (await prisma.user.findUnique({
-    where: { id: userId },
-    select: { weeklyActivity: true },
-  })) as User;
+  const lastPracticed = (await whenLastPractice(request)) as string;
 
-  const { weeklyActivity } = user;
+  let user = (await getUser(request)) as User;
+  if (!lastPracticed) {
+    user = (await resetTodayActivity(request)) as User;
 
-  if (weeklyActivity[today]) {
-    return { day: today, exp: weeklyActivity[today] };
-  }
-
-  if (weeklyActivity[yesterday]) {
     return {
       day: yesterday,
-      exp: weeklyActivity[yesterday],
+      exp: user.weeklyActivity[yesterday],
     };
   }
 
-  return null;
+  // if (lastPracticed === today) {
+  return { day: today, exp: user.weeklyActivity[today] };
+  // }
+
+  // return null;
 }
 
 export async function deleteLessonById(id: string) {

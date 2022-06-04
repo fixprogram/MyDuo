@@ -1,6 +1,7 @@
 import type { Language } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getUserId, logout } from "~/session.server";
+import { getWeekDay } from "~/utils";
 
 export type { Language } from "@prisma/client";
 
@@ -92,4 +93,13 @@ export async function getLanguages(request: Request) {
   } catch {
     throw logout(request);
   }
+}
+
+export async function whenLastPractice(request: Request) {
+  const languages = await getLanguages(request);
+  const lastUpdatedTopic = await prisma.topic.findFirst({
+    where: { projectId: { in: [...languages].id }, updatedAt: getWeekDay() },
+    select: { updatedAt: true },
+  });
+  return lastUpdatedTopic?.updatedAt;
 }

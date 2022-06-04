@@ -9,7 +9,7 @@ import {
   setActiveLanguage,
 } from "~/models/language.server";
 import { getLastActivity } from "~/models/lesson.server";
-import { updateUserStreak } from "~/models/user.server";
+import { resetTodayActivity, updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
 import { getWeekDay, getYesterdayDay } from "~/utils";
@@ -45,19 +45,22 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
 
-  const lastActive = await getLastActivity(user.id);
+  // const lastActive = await getLastActivity(user.id);
+  const lastActive = await getLastActivity(request);
   if (!lastActive) {
     user = await updateUserStreak(user.id, false, 0);
     return { user, languages };
   }
 
-  if (lastActive.day === getYesterdayDay()) {
-    user = await updateUserStreak(user.id, false, user.streak);
+  // if (!user?.wasToday && lastActive.day === getWeekDay()) {
+  if (!user?.wasToday && user.weeklyActivity[getWeekDay()]) {
+    user = await updateUserStreak(user.id, true, user.streak + 1);
     return { user, languages };
   }
 
-  if (!user?.wasToday && lastActive.day === getWeekDay()) {
-    user = await updateUserStreak(user.id, true, user.streak + 1);
+  // if (lastActive.day === getYesterdayDay()) {
+  if (user.weeklyActivity[getYesterdayDay()]) {
+    user = await updateUserStreak(user.id, false, user.streak);
     return { user, languages };
   }
 

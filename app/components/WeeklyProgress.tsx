@@ -43,7 +43,7 @@ export default function WeeklyProgress({
   const dotsData = Object.values(activity).map((exp, index) => ({
     x: DOTS_X_COORDS[index],
     // y: (exp / maxActivity) * 120,
-    y: (exp / EXP_VALUES[4].val) * 150,
+    y: maxActivity && (exp / EXP_VALUES[4].val) * 150,
     exp,
   }));
 
