@@ -1,32 +1,41 @@
+import { Variant } from "@prisma/client";
 import { Fragment, useEffect, useState } from "react";
 import {
   InsertWordsInput,
   InsertWordsTextBlock,
+  VariantItemNumber,
 } from "~/modules/Constructor/Levels/components/lib";
-import { doesItemContainSign } from "~/utils";
+import { areArraysEqual, doesItemContainSign } from "~/utils";
 import { LessonTitle, VariantItem } from "./lib";
 
 export type InsertWordsType = {
+  answer: string[];
   setValue: Function;
   changeDisabled: Function;
   text: string;
   contentAnswer: string[];
   formDisabled: boolean;
   isToChoose: boolean;
+  variants: Variant[];
 };
 
 export default function InsertWords({
+  answer,
   setValue,
   changeDisabled,
   text,
   contentAnswer,
   formDisabled,
   isToChoose,
+  variants,
 }: InsertWordsType) {
-  const [values, setValues] = useState<string[]>([]);
+  // const [values, setValues] = useState<string[]>([""]);
+  const [values, setValues] = useState([""]);
 
   useEffect(() => {
-    console.log(values);
+    if (areArraysEqual(answer, values) && !isToChoose) {
+      return;
+    }
     if (values.length !== contentAnswer.length) {
       return;
     }
@@ -38,6 +47,22 @@ export default function InsertWords({
     changeDisabled(!!isFieldEmpty.length);
     setValue(values);
   }, [values]);
+
+  useEffect(() => {
+    // gets rid of focus if our lesson is only one and we solve it wrong
+    if (!formDisabled) {
+      setValues([""]);
+    }
+  }, [formDisabled]);
+
+  useEffect(() => {
+    if (isToChoose) {
+      return;
+    }
+    if (answer[0].length) {
+      setValues([...answer]);
+    }
+  }, [answer]);
 
   return (
     <Fragment>
@@ -93,6 +118,42 @@ export default function InsertWords({
             </span>
           );
         })}
+        {variants && (
+          <div style={{ width: "100%", marginTop: "20px" }}>
+            <ul
+              style={{
+                listStyleType: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              {variants.map(({ value }, idx: number) => (
+                <li
+                  key={idx}
+                  style={{
+                    position: "relative",
+                    marginBottom: 8,
+                    width: "49%",
+                  }}
+                >
+                  <VariantItemNumber isFocused={value === values[0]}>
+                    {idx + 1}
+                  </VariantItemNumber>
+                  <VariantItem
+                    type="button"
+                    onClick={() => setValues([value])}
+                    isFocused={value === values[0]}
+                  >
+                    {value}
+                  </VariantItem>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {isToChoose && (
           <div style={{ width: "100%" }}>
             <ul

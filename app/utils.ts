@@ -123,3 +123,11 @@ export const getYesterdayDay = (): string => {
     weekday: "short",
   }) as string;
 };
+
+export const areArraysEqual = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) {
+    false;
+  }
+  const filtered = arr1.filter((arr1Item, idx) => arr1Item === arr2[idx]);
+  return filtered.length === arr1.length;
+};

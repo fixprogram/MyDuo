@@ -66,11 +66,18 @@ export const action: ActionFunction = async ({ request, params }) => {
       case "Insert": {
         const text = form.get(`text${index}`) as string;
         const isToChoose = !!form.get(`isToChoose${index}`);
+        const variantValues = form.getAll(`variant${index}`);
+        const variants = variantValues.map((value, idx) => ({
+          idx,
+          value,
+          isFocused: false,
+        }));
         return {
           ...returnData,
           answer,
           text: text.trim(),
-          isToChoose,
+          isToChoose: variants.length === 0 ? isToChoose : false,
+          variants,
         };
       }
       case "Variants": {

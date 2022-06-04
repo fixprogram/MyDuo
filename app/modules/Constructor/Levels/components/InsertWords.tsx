@@ -3,7 +3,11 @@ import { Textarea } from "~/components/lib";
 import { LessonTitle, VariantItem } from "~/modules/Lesson/components/lib";
 import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../types";
-import { InsertWordsInput, InsertWordsTextBlock } from "./lib";
+import {
+  InsertWordsInput,
+  InsertWordsTextBlock,
+  VariantItemInput,
+} from "./lib";
 
 type InsertWords = FieldsetType & {
   answer: string;
@@ -18,9 +22,13 @@ export default function InsertWords({
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const [isChooseVariants, setChooseVariants] = useState(false);
+  const [variants, setVariants] = useState([""]);
   const ref = useFocus();
 
   useEffect(() => {
+    if (words.length === 1) {
+      setVariants([...words]);
+    }
     setReady(!!words.length);
   }, [words.length]);
 
@@ -29,7 +37,7 @@ export default function InsertWords({
       <input
         type="hidden"
         name={`answer${number}`}
-        value={words
+        defaultValue={words
           .map((word) => {
             const { newItem } = doesItemContainSign(word);
 
@@ -42,7 +50,7 @@ export default function InsertWords({
       <input
         type="hidden"
         name={`isToChoose${number}`}
-        value={isChooseVariants ? "1" : undefined}
+        defaultValue={isChooseVariants ? "1" : undefined}
       />
 
       <LessonTitle>Add missing words</LessonTitle>
@@ -87,13 +95,50 @@ export default function InsertWords({
         {isChooseVariants && (
           <div style={{ width: "100%" }}>
             <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-              {words.map((word, idx: number) => (
+              {/* {words.map((word, idx: number) => (
                 <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
                   <VariantItem type="button" isFocused={false}>
                     {word}
                   </VariantItem>
                 </li>
-              ))}
+              ))} */}
+              {words.length === 1 ? (
+                <Fragment>
+                  <li>
+                    <VariantItem
+                      type="button"
+                      isFocused={false}
+                      onClick={() =>
+                        setVariants((prevVars) => [...prevVars, ""])
+                      }
+                    >
+                      Add variant
+                    </VariantItem>
+                  </li>
+                  {variants.map((variant, idx) => (
+                    <VariantItemInput
+                      key={`insertwordvariant${idx}`}
+                      type="text"
+                      name={`variant${number}`}
+                      placeholder="type variant"
+                      autoComplete="off"
+                      defaultValue={variant}
+                      required
+                    />
+                  ))}
+                </Fragment>
+              ) : (
+                words.map((word, idx: number) => (
+                  <li
+                    key={idx}
+                    style={{ position: "relative", marginBottom: 8 }}
+                  >
+                    <VariantItem type="button" isFocused={false}>
+                      {word}
+                    </VariantItem>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
         )}

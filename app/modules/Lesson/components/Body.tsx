@@ -43,13 +43,14 @@ const Body = ({
             />
           ) : stepType === "Insert" ? (
             <InsertWords
+              answer={answer}
               setValue={setValue}
               changeDisabled={changeDisabled}
               text={text as string}
               contentAnswer={content.answer}
-              setAnswer={setAnswer}
               formDisabled={formDisabled}
               isToChoose={content.isToChoose as boolean}
+              variants={content.variants}
             />
           ) : stepType === "Variants" ? (
             <Variants content={content} setAnswer={setAnswer} answer={answer} />

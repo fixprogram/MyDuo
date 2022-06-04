@@ -1424,19 +1424,30 @@ var getYesterdayDay = () => {
     weekday: "short"
   });
 };
+var areArraysEqual = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) {
+    false;
+  }
+  const filtered = arr1.filter((arr1Item, idx) => arr1Item === arr2[idx]);
+  return filtered.length === arr1.length;
+};
 
 // app/modules/Lesson/components/InsertWords.tsx
 function InsertWords({
+  answer,
   setValue,
   changeDisabled,
   text,
   contentAnswer,
   formDisabled,
-  isToChoose
+  isToChoose,
+  variants
 }) {
-  const [values, setValues] = (0, import_react5.useState)([]);
+  const [values, setValues] = (0, import_react5.useState)([""]);
   (0, import_react5.useEffect)(() => {
-    console.log(values);
+    if (areArraysEqual(answer, values) && !isToChoose) {
+      return;
+    }
     if (values.length !== contentAnswer.length) {
       return;
     }
@@ -1448,6 +1459,19 @@ function InsertWords({
     changeDisabled(!!isFieldEmpty.length);
     setValue(values);
   }, [values]);
+  (0, import_react5.useEffect)(() => {
+    if (!formDisabled) {
+      setValues([""]);
+    }
+  }, [formDisabled]);
+  (0, import_react5.useEffect)(() => {
+    if (isToChoose) {
+      return;
+    }
+    if (answer[0].length) {
+      setValues([...answer]);
+    }
+  }, [answer]);
   return /* @__PURE__ */ React.createElement(import_react5.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, text.split(" ").map((item, idx) => {
     const { newItem, sign } = doesItemContainSign(item);
     if (contentAnswer.includes(newItem)) {
@@ -1494,7 +1518,31 @@ function InsertWords({
       style: { marginRight: 4 },
       key: idx
     }, item);
-  }), isToChoose && /* @__PURE__ */ React.createElement("div", {
+  }), variants && /* @__PURE__ */ React.createElement("div", {
+    style: { width: "100%", marginTop: "20px" }
+  }, /* @__PURE__ */ React.createElement("ul", {
+    style: {
+      listStyleType: "none",
+      padding: 0,
+      margin: 0,
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-between"
+    }
+  }, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement("li", {
+    key: idx,
+    style: {
+      position: "relative",
+      marginBottom: 8,
+      width: "49%"
+    }
+  }, /* @__PURE__ */ React.createElement(VariantItemNumber, {
+    isFocused: value === values[0]
+  }, idx + 1), /* @__PURE__ */ React.createElement(VariantItem, {
+    type: "button",
+    onClick: () => setValues([value]),
+    isFocused: value === values[0]
+  }, value))))), isToChoose && /* @__PURE__ */ React.createElement("div", {
     style: { width: "100%" }
   }, /* @__PURE__ */ React.createElement("ul", {
     style: {
@@ -1504,14 +1552,14 @@ function InsertWords({
       display: "flex",
       flexWrap: "wrap"
     }
-  }, contentAnswer.map((answer, idx) => {
+  }, contentAnswer.map((answer2, idx) => {
     var _a;
     return /* @__PURE__ */ React.createElement("li", {
       key: idx,
       style: {
-        position: !!values.find((value) => value === answer) ? "absolute" : "relative",
+        position: !!values.find((value) => value === answer2) ? "absolute" : "relative",
         margin: "0 16px 8px 0",
-        left: !!values.find((value) => value === answer) ? "-10000px" : 0
+        left: !!values.find((value) => value === answer2) ? "-10000px" : 0
       }
     }, /* @__PURE__ */ React.createElement(VariantItem, {
       type: "button",
@@ -1521,13 +1569,13 @@ function InsertWords({
         const inx = prevArray.indexOf(empty);
         if (inx.toString() && inx !== -1) {
           const newArr = prevArray;
-          newArr[inx] = answer;
+          newArr[inx] = answer2;
           return [...newArr];
         }
-        return [...prevArray, answer];
+        return [...prevArray, answer2];
       }),
-      disabled: !!((_a = values.find((value) => value === answer)) == null ? void 0 : _a.length)
-    }, answer));
+      disabled: !!((_a = values.find((value) => value === answer2)) == null ? void 0 : _a.length)
+    }, answer2));
   })))));
 }
 
@@ -1622,13 +1670,14 @@ var Body = ({
     setAnswer,
     formDisabled
   }) : stepType === "Insert" ? /* @__PURE__ */ React.createElement(InsertWords, {
+    answer,
     setValue,
     changeDisabled,
     text,
     contentAnswer: content.answer,
-    setAnswer,
     formDisabled,
-    isToChoose: content.isToChoose
+    isToChoose: content.isToChoose,
+    variants: content.variants
   }) : stepType === "Variants" ? /* @__PURE__ */ React.createElement(VariantsPractice, {
     content,
     setAnswer,
@@ -1911,12 +1960,13 @@ function Lesson({ steps }) {
     }
   };
   const setAnswer = (val) => {
+    console.log("val: ", val);
     changeDisabled(val[0] === "");
     setValue(val);
   };
   return /* @__PURE__ */ React.createElement(LessonContainer, {
     onKeyDown: (e) => {
-      if (content.stepType === "Variants") {
+      if (content.stepType === "Variants" || content.stepType === "Insert" && content.variants.length) {
         if (e.key === "1") {
           setAnswer([content.variants[0].value]);
         }
@@ -3311,8 +3361,12 @@ function InsertWords2({
   const [words, setWords] = (0, import_react22.useState)([]);
   const [showText, setShowText] = (0, import_react22.useState)(false);
   const [isChooseVariants, setChooseVariants] = (0, import_react22.useState)(false);
+  const [variants, setVariants] = (0, import_react22.useState)([""]);
   const ref = useFocus();
   (0, import_react22.useEffect)(() => {
+    if (words.length === 1) {
+      setVariants([...words]);
+    }
     setReady(!!words.length);
   }, [words.length]);
   return /* @__PURE__ */ React.createElement("fieldset", {
@@ -3320,7 +3374,7 @@ function InsertWords2({
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `answer${number}`,
-    value: words.map((word) => {
+    defaultValue: words.map((word) => {
       const { newItem } = doesItemContainSign(word);
       return newItem + " ";
     }).join("")
@@ -3331,7 +3385,7 @@ function InsertWords2({
   }), /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `isToChoose${number}`,
-    value: isChooseVariants ? "1" : void 0
+    defaultValue: isChooseVariants ? "1" : void 0
   }), /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(Textarea, {
     name: `text${number}`,
     placeholder: "Type text",
@@ -3369,7 +3423,19 @@ function InsertWords2({
     style: { width: "100%" }
   }, /* @__PURE__ */ React.createElement("ul", {
     style: { listStyleType: "none", padding: 0, margin: 0 }
-  }, words.map((word, idx) => /* @__PURE__ */ React.createElement("li", {
+  }, words.length === 1 ? /* @__PURE__ */ React.createElement(import_react22.Fragment, null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(VariantItem, {
+    type: "button",
+    isFocused: false,
+    onClick: () => setVariants((prevVars) => [...prevVars, ""])
+  }, "Add variant")), variants.map((variant, idx) => /* @__PURE__ */ React.createElement(VariantItemInput, {
+    key: `insertwordvariant${idx}`,
+    type: "text",
+    name: `variant${number}`,
+    placeholder: "type variant",
+    autoComplete: "off",
+    defaultValue: variant,
+    required: true
+  }))) : words.map((word, idx) => /* @__PURE__ */ React.createElement("li", {
     key: idx,
     style: { position: "relative", marginBottom: 8 }
   }, /* @__PURE__ */ React.createElement(VariantItem, {
@@ -3839,10 +3905,17 @@ var action5 = async ({ request, params }) => {
       case "Insert": {
         const text = form.get(`text${index}`);
         const isToChoose = !!form.get(`isToChoose${index}`);
+        const variantValues = form.getAll(`variant${index}`);
+        const variants = variantValues.map((value, idx) => ({
+          idx,
+          value,
+          isFocused: false
+        }));
         return __spreadProps(__spreadValues({}, returnData), {
           answer,
           text: text.trim(),
-          isToChoose
+          isToChoose: variants.length === 0 ? isToChoose : false,
+          variants
         });
       }
       case "Variants": {
@@ -4454,7 +4527,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "cf18e1b3", "entry": { "module": "/build/entry.client-ZNWLIGAI.js", "imports": ["/build/_shared/chunk-SGCFGCKF.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-AIL4UD5R.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-PMQ2E2UJ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-EDYW7IVT.js", "imports": ["/build/_shared/chunk-RLHUJ7XC.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-7FGEO7JM.js", "imports": ["/build/_shared/chunk-RLHUJ7XC.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-75RGCPWO.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-7KZTQR24.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-BRX62A26.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-4D3WACDZ.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-DDVCCTQ6.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-CWGVRFDR.js", "imports": ["/build/_shared/chunk-LYOXIGUT.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ABHDZLDM.js", "/build/_shared/chunk-GCPLBWDM.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-YAGL4DI2.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-CF18E1B3.js" };
+var assets_manifest_default = { "version": "cdf85544", "entry": { "module": "/build/entry.client-QOZNLL6L.js", "imports": ["/build/_shared/chunk-AQK5PU7I.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-E4TLM44Q.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-7HEBH3BE.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-KR75DK3Z.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-X42XILIK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-V33DPQTS.js", "imports": ["/build/_shared/chunk-ED3WTTUJ.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-A5CHJD5K.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-TIWDO7SE.js", "imports": ["/build/_shared/chunk-ED3WTTUJ.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-A5CHJD5K.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/lessons": { "id": "routes/$language/lessons", "parentId": "routes/$language", "path": "lessons", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/lessons-DY6MJZGY.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-QXMD3IMO.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-X42XILIK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-QW5P2RCN.js", "imports": ["/build/_shared/chunk-A6N5SXCS.js", "/build/_shared/chunk-A5CHJD5K.js", "/build/_shared/chunk-KR75DK3Z.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-X42XILIK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-3PXNW7GV.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-5NXOEEZR.js", "imports": ["/build/_shared/chunk-A6N5SXCS.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-A5CHJD5K.js", "/build/_shared/chunk-KR75DK3Z.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-X42XILIK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-MWVR7ELR.js", "imports": ["/build/_shared/chunk-A6N5SXCS.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-A5CHJD5K.js", "/build/_shared/chunk-KR75DK3Z.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-X42XILIK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-CDF85544.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };
