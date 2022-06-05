@@ -5,6 +5,7 @@ import InsertWords from "./InsertWords";
 import Variants from "./Variants";
 import Pairs from "./Pairs";
 import { Lesson } from "@prisma/client";
+import { shuffleArray } from "~/utils";
 
 const Body = ({
   stepNumber,

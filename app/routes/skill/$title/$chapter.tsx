@@ -9,7 +9,7 @@ import { increaseTodayExp } from "~/models/user.server";
 export function ErrorBoundary() {
   const { title, chapter } = useParams();
   return (
-    <div className="error-container">{`There was an error loading lesson with the title ${title} and chapter ${chapter}. Sorry.`}</div>
+    <div className="error-container">{`There was an error loading skill with the title ${title} and chapter ${chapter}. Sorry.`}</div>
   );
 }
 
@@ -24,14 +24,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 
   if (!topic) {
-    throw new Error(`Topic with this title: ${title} is underfined`);
+    throw new Error(`Skill with this title: ${title} is underfined`);
   }
 
   await updateCurrentChapter(topic);
 
   await increaseTodayExp(request, expData);
 
-  return redirect(`/${language?.title}/lessons`);
+  return redirect(`/${language?.title}/skills`);
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -40,7 +40,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 
   if (!topic) {
-    throw new Error("Topic is not found");
+    throw new Error("Skill is not found");
   }
 
   const lessons = await prisma.lesson.findMany({

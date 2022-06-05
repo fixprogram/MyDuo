@@ -95,13 +95,6 @@ export default function InsertWords({
         {isChooseVariants && (
           <div style={{ width: "100%" }}>
             <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-              {/* {words.map((word, idx: number) => (
-                <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
-                  <VariantItem type="button" isFocused={false}>
-                    {word}
-                  </VariantItem>
-                </li>
-              ))} */}
               {words.length === 1 ? (
                 <Fragment>
                   <li>

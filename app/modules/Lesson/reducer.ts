@@ -1,5 +1,5 @@
 import { Lesson } from "@prisma/client";
-import { doesArrayContainItems } from "~/utils";
+import { areArraysEqual, doesArrayContainItems, shuffleArray } from "~/utils";
 import { Action } from "./actions";
 import { LessonState } from "./types";
 
@@ -66,15 +66,8 @@ const reducer = (state: LessonState, action: Action): LessonState => {
 
       switch (content.stepType) {
         case "Insert": {
-          const { length, items } = doesArrayContainItems(
-            content.answer,
-            answer
-          );
-          if (
-            content.answer.filter(
-              (ans: string, idx: number) => ans === items[idx]
-            ).length === content.answer.length
-          ) {
+          const { formatted } = doesArrayContainItems(content.answer, answer);
+          if (areArraysEqual(content.answer, formatted)) {
             return positiveState;
           }
           return negativeState;

@@ -6,6 +6,8 @@ import {
   LanguagesItem,
   LanguagesInput,
   LanguagesContainer,
+  LanguagesList,
+  LanguagesAddBtn,
 } from "./lib";
 import { Language } from "@prisma/client";
 
@@ -21,35 +23,33 @@ export default function Projects({
 
   const activeLanguage = languages?.find((item) => item.active);
 
+  function showModal() {
+    onOverlay(true);
+    setShowWindow(true);
+  }
+
+  function hideModal() {
+    onOverlay(false);
+    setShowWindow(false);
+  }
+
   return (
     <Fragment>
       <ActiveLanguageButton
         type="button"
-        onMouseEnter={() => {
-          onOverlay(true);
-          setShowWindow(true);
-        }}
-        onMouseLeave={() => {
-          onOverlay(false);
-          setShowWindow(false);
-        }}
+        onMouseEnter={showModal}
+        onMouseLeave={hideModal}
       >
         {activeLanguage?.title}
       </ActiveLanguageButton>
 
       <ActiveLanguageContainer
-        onMouseEnter={() => {
-          onOverlay(true);
-          setShowWindow(true);
-        }}
-        onMouseLeave={() => {
-          onOverlay(false);
-          setShowWindow(false);
-        }}
+        onMouseEnter={showModal}
+        onMouseLeave={hideModal}
       >
         {showWindow && (
           <LanguagesContainer>
-            <ul style={{ display: "flex", flexDirection: "column" }}>
+            <LanguagesList>
               {languages?.map((item, idx: number) => (
                 <li
                   key={idx}
@@ -67,32 +67,18 @@ export default function Projects({
                   </Form>
                 </li>
               ))}
-            </ul>
+            </LanguagesList>
             <fieldset style={{ position: "relative" }}>
               {isNewLanguage ? (
                 <Form method="post">
                   <LanguagesInput
                     type="text"
-                    placeholder="Type it's title"
+                    placeholder="Enter title"
                     name="newLanguage"
-                    onChange={() => {
-                      onOverlay(true);
-                      setShowWindow(true);
-                    }}
+                    onChange={showModal}
                     required
                   />
-                  <button
-                    type="submit"
-                    style={{
-                      position: "absolute",
-                      fontSize: 30,
-                      top: 7,
-                      right: 15,
-                      color: "#afafaf",
-                    }}
-                  >
-                    +
-                  </button>
+                  <LanguagesAddBtn>+</LanguagesAddBtn>
                 </Form>
               ) : (
                 <LanguagesItem

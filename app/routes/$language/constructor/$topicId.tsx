@@ -2,7 +2,7 @@ import { useActionData, useLoaderData, useParams } from "@remix-run/react";
 import { redirect } from "@remix-run/node";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { prisma } from "~/db.server";
-import Constructor, { ConstructorData } from "~/modules/Constructor";
+import Constructor from "~/modules/Constructor";
 import { Language, Lesson, Topic } from "@prisma/client";
 import {
   createLessons,
@@ -11,7 +11,7 @@ import {
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
 import { json } from "remix";
-import { checkTitleUnique } from "~/models/topic.server";
+import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
 import { getActiveLanguage } from "~/models/language.server";
 
 export function ErrorBoundary() {
@@ -127,23 +127,38 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/`);
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const topic = await prisma.topic.findUnique({
     where: { id: params.topicId },
   });
-
   if (!topic) {
     throw new Error("lesson not found");
   }
 
+  const activeLanguage = (await getActiveLanguage(request)) as Language;
+  const lastAddedTopics = (await getLastAddedTopic(
+    activeLanguage.id,
+    true
+  )) as Topic[];
+
   const lessons = await getLessonsByTopicId(topic.id);
-  const data = { title: topic.title, steps: lessons };
-  return data;
+  const data = {
+    title: topic.title,
+    steps: lessons,
+    lineNumber: topic.lineNumber,
+  };
+  return { data, lastAddedTopics };
 };
 
 export default function ConstructorEdit() {
   const actionData = useActionData() as ActionData;
-  const data = useLoaderData();
+  const { data, lastAddedTopics } = useLoaderData();
 
-  return <Constructor data={data} actionData={actionData} />;
+  return (
+    <Constructor
+      data={data}
+      lastAddedTopics={lastAddedTopics}
+      actionData={actionData}
+    />
+  );
 }

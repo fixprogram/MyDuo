@@ -265,7 +265,7 @@ const Textarea = styled("textarea")`
   letter-spacing: 1px;
 `;
 
-const H1Title = styled("h1")`
+const LoginTitle = styled("h1")`
   font-size: 26px;
   margin: 10px 0 15px;
   font-family: Montserrat;
@@ -388,6 +388,8 @@ const LessonTitle = styled("b")`
 
 const NavIcon = styled("img")`
   margin-right: 10px;
+  width: 36px;
+  height: 36px;
 `;
 
 const LoginContainer = styled("section")`
@@ -543,6 +545,14 @@ const LanguagesInput = styled("input")`
   text-align: left;
 `;
 
+const LanguagesAddBtn = styled("button")`
+  position: absolute;
+  font-size: 30px;
+  top: 7px;
+  right: 15px;
+  color: #afafaf;
+`;
+
 const Overlay = styled("div")<OverlayProps>`
   background: rgba(28, 97, 130, 0.1);
   bottom: 0;
@@ -575,6 +585,14 @@ const PracticeLastAddedContainer = styled("div")`
   position: sticky;
   margin-bottom: 54px;
   bottom: 24px;
+`;
+
+const PracticeLastAddedLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const ErrorMessage = styled("p")`
@@ -614,6 +632,20 @@ const FooterText = styled("p")`
   color: #afafaf;
   font-family: Roboto;
   margin: 0;
+`;
+
+const SkillsListContainer = styled("section")`
+  width: 65%;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 95px);
+`;
+
+const TopicsLineBlock = styled("div")`
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 38px auto;
 `;
 
 export {
@@ -661,14 +693,18 @@ export {
   LanguagesList,
   LanguagesItem,
   LanguagesInput,
+  LanguagesAddBtn,
   LessonBlockMenu,
   LessonBlockMenuTriangle,
   LessonBlockMenuTriangleContent,
-  H1Title,
+  LoginTitle,
   PracticeLastAddedContainer,
+  PracticeLastAddedLink,
   ErrorMessage,
   ExpProgressBlock,
   ExpProgressTitle,
   FooterLine,
   FooterText,
+  SkillsListContainer,
+  TopicsLineBlock,
 };

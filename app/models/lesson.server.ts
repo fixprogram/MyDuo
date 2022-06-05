@@ -1,4 +1,4 @@
-import { Lesson, Topic, User, WeeklyActivity } from "@prisma/client";
+import { Lesson, Topic, User } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getUser } from "~/session.server";
 import { getWeekDay, getYesterdayDay } from "~/utils";
@@ -51,11 +51,7 @@ export async function getLastActivity(request: Request) {
     };
   }
 
-  // if (lastPracticed === today) {
   return { day: today, exp: user.weeklyActivity[today] };
-  // }
-
-  // return null;
 }
 
 export async function deleteLessonById(id: string) {

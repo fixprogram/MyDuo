@@ -19,7 +19,7 @@ import { Language, User } from "@prisma/client";
 const MENU = [
   {
     title: "Study",
-    link: "lessons",
+    link: "skills",
     icon: study,
     activeIcon: studyActive,
   },
@@ -46,15 +46,10 @@ const Menu = ({
         <HorizontalList>
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
-              <MenuNavLink to={`${link}`} className="nav-link" end>
+              <MenuNavLink to={`${link}`} className="nav-link">
                 {({ isActive }) => (
                   <Fragment>
-                    <NavIcon
-                      src={isActive ? activeIcon : icon}
-                      width={36}
-                      height={36}
-                      alt={title}
-                    />
+                    <NavIcon src={isActive ? activeIcon : icon} alt={title} />
                     {title}
                   </Fragment>
                 )}
@@ -71,7 +66,9 @@ const Menu = ({
           <img
             src={user?.wasToday ? streakActive : streak}
             alt="streak"
-            style={{ width: 25, height: 30, marginRight: 6 }}
+            width={25}
+            height={30}
+            style={{ marginRight: 6 }}
           />
           <b
             style={{

@@ -1,4 +1,5 @@
 import { WeeklyActivity } from "@prisma/client";
+import { getWeekDay } from "~/utils";
 import { ExpProgressBlock, ExpProgressTitle } from "./lib";
 
 const DAY_COORDS = [
@@ -107,13 +108,6 @@ export default function WeeklyProgress({
 
               <path
                 className="QZq6Z"
-                // d={`M0,${dotsData[0].y}L${
-                //   dotsData[1].x + "," + dotsData[1].y
-                // }L${dotsData[2].x + "," + dotsData[2].y}L${
-                //   dotsData[3].x + "," + dotsData[3].y
-                // }L${dotsData[4].x + "," + dotsData[4].y}L${
-                //   dotsData[5].x + "," + dotsData[5].y
-                // }L${dotsData[6].x + "," + dotsData[6].y}`}
                 d={`${dotsData.map(({ x, y }, idx) => {
                   if (idx === 0) return "M" + x + "," + y;
                   return "L" + x + "," + y;
@@ -144,7 +138,6 @@ export default function WeeklyProgress({
                     color="#cccac9"
                     fontFamily="din-round, sans-serif"
                     fontSize="17px"
-                    // lineHeight="20px"
                   >
                     {val}
                   </text>

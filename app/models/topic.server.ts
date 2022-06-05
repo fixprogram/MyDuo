@@ -3,7 +3,6 @@ import { prisma } from "~/db.server";
 import { getWeekDay } from "~/utils";
 
 export async function updateCurrentChapter(topic: Topic) {
-  // const today = new Date();
   const today = getWeekDay() as string;
 
   return await prisma.topic.update({
@@ -15,7 +14,6 @@ export async function updateCurrentChapter(topic: Topic) {
         topic.chapters !== topic.currentChapter
           ? topic.currentChapter + 1
           : topic.currentChapter,
-      // updatedAt: today.getDate().toString(),
       updatedAt: today,
     },
   });

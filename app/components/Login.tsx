@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Form } from "remix";
 import { ActionData } from "~/routes/login";
 import {
-  H1Title,
+  LoginTitle,
   LoginToggle,
   LoginInput,
   LoginButton,
@@ -30,7 +30,7 @@ export function Login({ isLogin, setIsLogin, actionData }: LoginProps) {
 
   return (
     <Form method="post" style={{ width: "100%", maxWidth: 375 }}>
-      <H1Title>{isLogin ? "Login" : "Register"}</H1Title>
+      <LoginTitle>{isLogin ? "Login" : "Register"}</LoginTitle>
       <LoginToggle htmlFor="register" style={{ zIndex: isLogin ? 1 : -1 }}>
         <input
           type="radio"
@@ -81,10 +81,7 @@ export function Login({ isLogin, setIsLogin, actionData }: LoginProps) {
           </ErrorMessage>
         )}
       </div>
-      <LoginButton type="submit">
-        {isLogin ? "Login" : "Register"}
-        {/* {buttonText} */}
-      </LoginButton>
+      <LoginButton type="submit">{isLogin ? "Login" : "Register"}</LoginButton>
     </Form>
   );
 }

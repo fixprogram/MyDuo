@@ -76,7 +76,6 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
 
   const setAnswer = (val: string[]) => {
     // Insert words will return an array of objects and it won't work with the disabling button
-    console.log("val: ", val);
     changeDisabled(val[0] === "");
     setValue(val);
   };

@@ -1,4 +1,4 @@
-import Close from "~/styles/close.svg";
+import CloseIcon from "~/styles/close.svg";
 import {
   ProgressBar,
   ProgressBarContainer,
@@ -10,9 +10,11 @@ const Progress = ({ progress }: { progress: number }) => {
     <ProgressBarContainer>
       <ProgressLeaveLesson to="/">
         <img
-          src={Close}
-          alt="close"
-          style={{ width: "16px", height: "16px", verticalAlign: "initial" }}
+          src={CloseIcon}
+          alt="Close the topic"
+          width={16}
+          height={16}
+          style={{ verticalAlign: "initial" }}
         />
       </ProgressLeaveLesson>
       <ProgressBar progress={progress} />

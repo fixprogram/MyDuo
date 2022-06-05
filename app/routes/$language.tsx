@@ -9,7 +9,7 @@ import {
   setActiveLanguage,
 } from "~/models/language.server";
 import { getLastActivity } from "~/models/lesson.server";
-import { resetTodayActivity, updateUserStreak } from "~/models/user.server";
+import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
 import { getWeekDay, getYesterdayDay } from "~/utils";
@@ -29,7 +29,7 @@ export async function action({ request }: { request: Request }) {
     project = await setActiveLanguage(id);
   }
 
-  return redirect(`/${project?.title}/lessons`);
+  return redirect(`/${project?.title}/skills`);
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

@@ -29,10 +29,6 @@ export async function createUser(username: User["username"], password: string) {
     },
   });
 
-  // await prisma.language.create({
-  //   data: { userId: user.id, active: true, title: "MyFirstLanguage" },
-  // });
-
   await createInitialLanguage(user.id);
 
   return user;
@@ -101,11 +97,12 @@ export async function increaseTodayExp(request: Request, value: number) {
 export async function resetTodayActivity(request: Request) {
   const user = await getUser(request);
   if (!user) throw new Error("User is undefined");
+
   return await prisma.user.update({
     where: { id: user.id },
     data: {
       weeklyActivity: {
-        ...user?.weeklyActivity,
+        ...user.weeklyActivity,
         [`${getWeekDay()}`]: 0,
       },
     },

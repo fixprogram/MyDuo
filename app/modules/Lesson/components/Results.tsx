@@ -7,7 +7,6 @@ import {
 } from "./lib";
 
 export default function Results({ refName }: { refName: HTMLFormElement }) {
-  // export default function Results() {
   return (
     <ResultsContainer>
       <ResultsLeftBlock>

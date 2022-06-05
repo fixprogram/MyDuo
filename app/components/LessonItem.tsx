@@ -30,41 +30,30 @@ export default function LessonItem({
 }: LessonItem) {
   const [isOpened, setIsOpened] = useState(false);
   const transition = useTransition();
-  const isDisabled = transition.state !== "idle";
   const ref = useRef(null);
-  // const scrollRef = useRef<HTMLDivElement>(null);
-
-  useOnClickOutside(ref, () => setIsOpened(false));
 
   useEffect(() => {
     if (transition.state === "loading") {
       setIsOpened(false);
     }
   }, [transition.state]);
+  useOnClickOutside(ref, () => setIsOpened(false));
 
-  // useEffect(() => {
-  //   if (isOpened) {
-  //     scrollRef.current?.scrollIntoView();
-  //   }
-  // }, [isOpened]);
+  const isDisabled = transition.state !== "idle";
+  const exp = ((currentChapter / chapters) * 100).toString();
+  const topicLink = `/skill/${title}/${
+    currentChapter / chapters === 1 ? "practice" : currentChapter + 1
+  }`;
+
+  function toggleMenu() {
+    setIsOpened(!isOpened);
+  }
 
   return (
     <LessonsContainer>
       <LessonBlock ref={ref}>
-        <button
-          key={id}
-          aria-labelledby={title}
-          onClick={() => {
-            if (isOpened) {
-              return setIsOpened(false);
-            }
-            return setIsOpened(true);
-          }}
-        >
-          <LessonProgress exp={((currentChapter / chapters) * 100).toString()}>
-            {/* <LessonProgressInner>{`${
-              (currentChapter / chapters) * 100
-            }%`}</LessonProgressInner> */}
+        <button key={id} aria-labelledby={title} onClick={toggleMenu}>
+          <LessonProgress exp={exp}>
             <LessonProgressInner />
           </LessonProgress>
           <LessonTitle>{title}</LessonTitle>
@@ -85,18 +74,9 @@ export default function LessonItem({
             </div>
             {/* If the topic is 100% done, then we just repeat all lessons from it */}
             {/* Otherwise we study lessons only from next chapter */}
-            <LessonBlockLink
-              to={`/skill/${title}/${
-                currentChapter / chapters === 1
-                  ? "practice"
-                  : currentChapter + 1
-              }`}
-            >
-              Start +16 XP
-            </LessonBlockLink>
+            <LessonBlockLink to={topicLink}>Start +16 XP</LessonBlockLink>
           </LessonBlockInner>
         </LessonBlockMenu>
-        {/* <div ref={scrollRef}></div> */}
       </LessonBlock>
     </LessonsContainer>
   );

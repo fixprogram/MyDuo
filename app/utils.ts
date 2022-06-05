@@ -104,7 +104,12 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
         item.trim().toLocaleLowerCase() === arrItem.trim().toLowerCase()
     )
   );
-  return { state: !!filtered.length, length: filtered.length, items: filtered };
+  return {
+    state: !!filtered.length,
+    length: filtered.length,
+    items: filtered,
+    formatted: filtered.map((item) => item.trim().toLowerCase()),
+  };
 };
 
 export const getWeekDay = (): string => {
@@ -124,7 +129,7 @@ export const getYesterdayDay = (): string => {
   }) as string;
 };
 
-export const areArraysEqual = (arr1, arr2) => {
+export const areArraysEqual = (arr1: string[], arr2: string[]) => {
   if (arr1.length !== arr2.length) {
     false;
   }

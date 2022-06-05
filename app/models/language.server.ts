@@ -96,9 +96,12 @@ export async function getLanguages(request: Request) {
 }
 
 export async function whenLastPractice(request: Request) {
-  const languages = await getLanguages(request);
+  const languages = (await getLanguages(request)) as Language[];
   const lastUpdatedTopic = await prisma.topic.findFirst({
-    where: { projectId: { in: [...languages].id }, updatedAt: getWeekDay() },
+    where: {
+      projectId: { in: languages.map(({ id }) => id) },
+      updatedAt: getWeekDay(),
+    },
     select: { updatedAt: true },
   });
   return lastUpdatedTopic?.updatedAt;
