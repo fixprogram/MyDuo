@@ -1,5 +1,5 @@
 import { screen, render } from "@testing-library/react";
-import QuestionAnswer from "./QuestionAnswer";
+import QuestionAnswer from "./index";
 
 describe("Testing footer", () => {
   test("check button idle state", () => {

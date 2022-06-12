@@ -1,13 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { Textarea } from "~/components/lib";
-import { LessonTitle, VariantItem } from "~/modules/Lesson/components/lib";
+import { LessonTitle } from "~/modules/Lesson/components/lib";
 import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
 import type { FieldsetType } from "../../types";
-import {
-  InsertWordsInput,
-  InsertWordsTextBlock,
-  VariantItemInput,
-} from "../lib";
+import { InsertWordsInput, InsertWordsTextBlock } from "../lib";
 import Backend from "./Backend";
 import ChooseMissingWords from "./ChooseMissingWords";
 
@@ -23,8 +19,6 @@ export default function InsertWords({
   setAnswer,
   setReady,
 }: InsertWords) {
-  console.log("text: ", text);
-  console.log("answer: ", answer);
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const [isChooseVariants, setChooseVariants] = useState(false);

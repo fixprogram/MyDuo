@@ -5,7 +5,18 @@ import InsertWords from "./InsertWords";
 import Variants from "./Variants";
 import Pairs from "./Pairs";
 import { Lesson } from "@prisma/client";
-import { shuffleArray } from "~/utils";
+
+type BodyProps = {
+  stepNumber: number;
+  maxSteps: number;
+  content: Lesson;
+  setAnswer: Function;
+  formDisabled: boolean;
+  userAnswer: string[];
+  checkAnswer: Function;
+  setValue: Function;
+  changeDisabled: Function;
+};
 
 const Body = ({
   stepNumber,
@@ -13,57 +24,51 @@ const Body = ({
   content,
   setAnswer,
   formDisabled,
-  answer,
+  userAnswer,
   checkAnswer,
   setValue,
   changeDisabled,
-}: {
-  stepNumber: number;
-  maxSteps: number;
-  content: Lesson;
-  setAnswer: Function;
-  formDisabled: boolean;
-  answer: string[];
-  checkAnswer: Function;
-  setValue: Function;
-  changeDisabled: Function;
-}) => {
-  const { question, text, stepType, variants } = content;
+}: BodyProps) => {
+  const { question, text, stepType, variants, isToChoose } = content;
   return (
     <LessonBody>
-      {stepNumber === maxSteps + 1 ? (
+      {/* {stepNumber === maxSteps + 1 ? (
         <LessonBodyResults>Results Screen</LessonBodyResults>
-      ) : (
-        <Fragment>
-          {stepType === "Question" ? (
-            <QuestionAnswer
-              question={question as string}
-              answer={answer}
-              setAnswer={setAnswer}
-              formDisabled={formDisabled}
-            />
-          ) : stepType === "Insert" ? (
-            <InsertWords
-              answer={answer}
-              setValue={setValue}
-              changeDisabled={changeDisabled}
-              text={text as string}
-              contentAnswer={content.answer}
-              formDisabled={formDisabled}
-              isToChoose={content.isToChoose as boolean}
-              variants={content.variants}
-            />
-          ) : stepType === "Variants" ? (
-            <Variants content={content} setAnswer={setAnswer} answer={answer} />
-          ) : stepType === "Pairs" ? (
-            <Pairs
-              contentAnswer={content.answer}
-              variants={variants}
-              checkAnswer={checkAnswer}
-            />
-          ) : null}
-        </Fragment>
-      )}
+      ) : ( */}
+      <Fragment>
+        {stepType === "Question" ? (
+          <QuestionAnswer
+            question={question as string}
+            userAnswer={userAnswer}
+            setAnswer={setAnswer}
+            formDisabled={formDisabled}
+          />
+        ) : stepType === "Insert" ? (
+          <InsertWords
+            userAnswer={userAnswer}
+            setValue={setValue}
+            changeDisabled={changeDisabled}
+            text={text as string}
+            contentAnswer={content.answer}
+            formDisabled={formDisabled}
+            isToChoose={isToChoose as boolean}
+            variants={variants}
+          />
+        ) : stepType === "Variants" ? (
+          <Variants
+            content={content}
+            setAnswer={setAnswer}
+            userAnswer={userAnswer}
+          />
+        ) : stepType === "Pairs" ? (
+          <Pairs
+            contentAnswer={userAnswer}
+            variants={variants}
+            checkAnswer={checkAnswer}
+          />
+        ) : null}
+      </Fragment>
+      {/* )} */}
     </LessonBody>
   );
 };

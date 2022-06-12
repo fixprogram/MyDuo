@@ -5,16 +5,16 @@ import {
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
   LessonTitle,
-} from "./lib";
+} from "../lib";
 import Duo from "~/styles/duo.svg";
 
 export default function QuestionAnswerPractice({
-  answer,
+  userAnswer,
   question,
   setAnswer,
   formDisabled,
 }: {
-  answer: string[];
+  userAnswer: string[];
   question: string;
   setAnswer: Function;
   formDisabled: boolean;
@@ -40,8 +40,8 @@ export default function QuestionAnswerPractice({
       <Textarea
         id={`answer`}
         name="answer"
-        placeholder="Enter answer"
-        value={answer}
+        placeholder="Enter user answer"
+        value={userAnswer}
         onChange={(e) => setAnswer([e.target.value])}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

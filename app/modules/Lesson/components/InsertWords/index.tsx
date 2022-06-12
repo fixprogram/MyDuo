@@ -8,7 +8,7 @@ import Variants from "./Variants";
 import Text from "./Text";
 
 export type InsertWordsType = {
-  answer: string[];
+  userAnswer: string[];
   setValue: Function;
   changeDisabled: Function;
   text: string;
@@ -19,7 +19,7 @@ export type InsertWordsType = {
 };
 
 export default function InsertWords({
-  answer,
+  userAnswer,
   setValue,
   changeDisabled,
   text,
@@ -33,7 +33,7 @@ export default function InsertWords({
   ]);
 
   useEffect(() => {
-    if (areArraysEqual(answer, values) && !isToChoose) {
+    if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }
     if (values.length !== contentAnswer.length) {
@@ -52,10 +52,10 @@ export default function InsertWords({
     if (isToChoose) {
       return;
     }
-    if (answer[0].length) {
-      setValues([...answer]);
+    if (userAnswer[0].length) {
+      setValues([...userAnswer]);
     }
-  }, [answer]);
+  }, [userAnswer]);
 
   return (
     <Fragment>

@@ -27,14 +27,35 @@ export default function Text({
     }
   }, [formDisabled]);
 
+  const handleChange = (evt, index: number) => {
+    setValues((prevArray: string[]) => {
+      prevArray[index] = evt.target.value;
+      return [...prevArray];
+    });
+  };
+
+  const handleInputClick = (evt, index: number) => {
+    const target = evt.currentTarget;
+    if (target.value === "" || target.value === " ") {
+      return;
+    }
+    if (isToChoose) {
+      target.blur();
+      setValues((prevArray: string[]) => {
+        prevArray[index] = " ";
+        return [...prevArray];
+      });
+    }
+  };
+
   return (
     <Fragment>
-      {text.split(" ").map((item: string, idx: number) => {
-        const { newItem, sign } = doesItemContainSign(item);
+      {text.split(" ").map((textItem: string, idx: number) => {
+        const { newItem, sign } = doesItemContainSign(textItem);
 
         if (contentAnswer.includes(newItem)) {
-          return contentAnswer.map((it: string, index: number) => {
-            if (newItem !== it) {
+          return contentAnswer.map((answerItem: string, index: number) => {
+            if (newItem !== answerItem) {
               // sets position for inputs
               return null;
             }
@@ -46,25 +67,8 @@ export default function Text({
                   isToChoose={isToChoose}
                   length={newItem.length}
                   value={values[index]}
-                  onChange={(e) => {
-                    setValues((prevArray: string[]) => {
-                      prevArray[index] = e.target.value;
-                      return [...prevArray];
-                    });
-                  }}
-                  onClick={(evt) => {
-                    const target = evt.currentTarget;
-                    if (target.value === "" || target.value === " ") {
-                      return;
-                    }
-                    if (isToChoose) {
-                      target.blur();
-                      setValues((prevArray: string[]) => {
-                        prevArray[index] = " ";
-                        return [...prevArray];
-                      });
-                    }
-                  }}
+                  onChange={(evt) => handleChange(evt, index)}
+                  onClick={(evt) => handleInputClick(evt, index)}
                   disabled={formDisabled}
                 />
                 <span style={{ marginRight: 4 }}>{sign}</span>
@@ -74,7 +78,7 @@ export default function Text({
         }
         return (
           <span style={{ marginRight: 4 }} key={`text${idx}`}>
-            {item}
+            {textItem}
           </span>
         );
       })}

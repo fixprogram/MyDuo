@@ -1,15 +1,15 @@
-import { LessonStep } from "@prisma/client";
+import { Lesson } from "@prisma/client";
 import { Fragment } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
 import { LessonTitle, VariantItem } from "./lib";
 
 export default function VariantsPractice({
-  answer,
+  userAnswer,
   content,
   setAnswer,
 }: {
-  answer: string[];
-  content: LessonStep;
+  userAnswer: string[];
+  content: Lesson;
   setAnswer: Function;
 }) {
   const { definition, question, variants } = content;
@@ -25,13 +25,13 @@ export default function VariantsPractice({
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
         {variants.map(({ value }, idx: number) => (
           <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
-            <VariantItemNumber isFocused={value === answer[0]}>
+            <VariantItemNumber isFocused={value === userAnswer[0]}>
               {idx + 1}
             </VariantItemNumber>
             <VariantItem
               type="button"
               onClick={() => setAnswer([value])}
-              isFocused={value === answer[0]}
+              isFocused={value === userAnswer[0]}
             >
               {value}
             </VariantItem>

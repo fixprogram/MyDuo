@@ -4,7 +4,7 @@ import { Action } from "./actions";
 import { LessonState } from "./types";
 
 const basicState: LessonState = {
-  disabled: false, // Disabled state for preventing actions when the asnwer is checked
+  // disabled: false, // Disabled state for preventing actions when the asnwer is checked
   progress: 0, // Current progress
   stepNumber: 0, // Current stepNumber number
   content: {
@@ -20,10 +20,12 @@ const basicState: LessonState = {
   }, // Current stepNumber. Contains Question, Answer and Keywords
   lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
-  stateWrong: false, // Was the answer wrong
-  stateRight: false, // Was the answer right
-  formDisabled: false, // Disable form when check the answer
-  nextStep: false, // Next stepNumber if the answer was wrong
+  topicState: { status: "idle", formDisabled: false, buttonDisabled: true },
+  userAnswer: [""],
+  // stateWrong: false, // Was the answer wrong
+  // stateRight: false, // Was the answer right
+  // formDisabled: false, // Disable form when check the answer
+  // nextStep: false, // Next stepNumber if the answer was wrong
 };
 
 // The function returns next stepNumber if there is any
@@ -31,38 +33,57 @@ const continueContent = (content: Lesson, lessonSteps: Lesson[] | any) =>
   lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
 
 const reducer = (state: LessonState, action: Action): LessonState => {
-  const { content, stepNumber, maxSteps, lessonSteps } = state;
+  const { content, stepNumber, maxSteps, lessonSteps, topicState, userAnswer } =
+    state;
   switch (action.type) {
     case "CONTINUE":
+      const isResults = stepNumber === maxSteps;
       return {
         ...state,
         stepNumber: stepNumber + 1,
-        disabled: stepNumber === maxSteps ? false : true,
+        // disabled: stepNumber === maxSteps ? false : true,
         content: continueContent(content, lessonSteps),
-        formDisabled: false,
-        stateRight: false,
-        stateWrong: false,
-        nextStep: false,
+        // formDisabled: false,
+        // stateRight: false,
+        // stateWrong: false,
+        // nextStep: false,
+        topicState: {
+          ...topicState,
+          status: isResults ? "results" : "idle",
+          formDisabled: false,
+          buttonDisabled: isResults ? false : true,
+        },
+        userAnswer: [""],
       };
     case "CHECK_ANSWER":
       const negativeState = {
         ...state,
-        stateWrong: true,
-        formDisabled: true,
-        disabled: false,
+        // stateWrong: true,
+        // formDisabled: true,
+        // disabled: false,
         lessonSteps: [...lessonSteps, content],
         stepNumber: stepNumber - 1,
-        nextStep: true,
+        // nextStep: true,
+        topicState: {
+          status: "wrong",
+          formDisabled: true,
+          buttonDisabled: false,
+        },
       };
       const positiveState = {
         ...state,
-        disabled: false,
-        nextStep: true,
-        stateRight: true,
-        formDisabled: true,
+        // disabled: false,
+        // nextStep: true,
+        // stateRight: true,
+        // formDisabled: true,
         progress: stepNumber / maxSteps,
+        topicState: {
+          status: "right",
+          formDisabled: true,
+          buttonDisabled: false,
+        },
       };
-      const { answer } = action.payload;
+      // const { answer } = action.payload;
 
       switch (content.stepType) {
         case "Insert": {
@@ -77,7 +98,8 @@ const reducer = (state: LessonState, action: Action): LessonState => {
 
           const { state, length } = doesArrayContainItems(
             content.answer,
-            answer[0].split(" ")
+            // answer[0].split(" ")
+            userAnswer[0].split(" ")
           );
 
           if (!state) {
@@ -85,7 +107,8 @@ const reducer = (state: LessonState, action: Action): LessonState => {
           }
 
           if (
-            doesArrayContainItems(content.keywords, answer[0].split(" "))
+            // doesArrayContainItems(content.keywords, answer[0].split(" "))
+            doesArrayContainItems(content.keywords, userAnswer[0].split(" "))
               .length === content.keywords.length
           ) {
             if (length < content.answer.length) {
@@ -102,7 +125,8 @@ const reducer = (state: LessonState, action: Action): LessonState => {
         }
 
         case "Variants": {
-          if (content.answer[0] === answer[0]) {
+          // if (content.answer[0] === answer[0]) {
+          if (content.answer[0] === userAnswer[0]) {
             return positiveState;
           }
           return negativeState;
@@ -113,8 +137,10 @@ const reducer = (state: LessonState, action: Action): LessonState => {
             content.answer.find((answerItem: string, id: number) => {
               idx = id;
               return (
-                answerItem === answer[0] ||
-                answerItem.split("").reverse().join("") === answer[0]
+                // answerItem === answer[0] ||
+                answerItem === userAnswer[0] ||
+                // answerItem.split("").reverse().join("") === answer[0]
+                answerItem.split("").reverse().join("") === userAnswer[0]
               );
             })
           ) {
@@ -126,12 +152,13 @@ const reducer = (state: LessonState, action: Action): LessonState => {
             return {
               ...state,
               content: newContent,
-              disabled: true,
+              // disabled: true,
             };
           } else {
             return {
               ...state,
-              disabled: true,
+              // disabled: true,
+              topicState: { ...topicState, buttonDisabled: true },
             };
           }
         }
@@ -139,14 +166,26 @@ const reducer = (state: LessonState, action: Action): LessonState => {
           throw new Error(`We don't know this type: ${action.type}`);
         }
       }
-    case "CHANGE_DISABLED":
-      return { ...state, disabled: action.payload.isDisabled };
+    // case "CHANGE_DISABLED":
+    //   return { ...state, disabled: action.payload.isDisabled };
+    case "CHANGE_USER_ANSWER": {
+      const { newAnswer } = action.payload;
+      return {
+        ...state,
+        userAnswer: newAnswer,
+        topicState: {
+          ...topicState,
+          buttonDisabled: newAnswer[0].length === 0,
+        },
+      };
+    }
     case "RESULTS":
       return {
         ...state,
         stepNumber: stepNumber + 1,
-        stateRight: false,
-        stateWrong: false,
+        // stateRight: false,
+        // stateWrong: false,
+        topicState: { ...topicState, status: "results" },
       };
     case "SET_CASE": // Initial action to set data right after loading component
       const { steps } = action.payload;
@@ -156,7 +195,8 @@ const reducer = (state: LessonState, action: Action): LessonState => {
         lessonSteps: steps,
         maxSteps: steps.length,
         content: steps.shift() as Lesson,
-        disabled: true,
+        userAnswer: [""],
+        // disabled: true,
       };
     default:
       throw new Error(`We don't know this type: ${action.type}`);

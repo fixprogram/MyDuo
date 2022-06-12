@@ -1,6 +1,10 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { getActiveLanguage } from "~/models/language.server";
-import { deleteLessonById, getTopics } from "~/models/lesson.server";
+import {
+  deleteTopicById,
+  deleteLessonsFromTopic,
+  getTopics,
+} from "~/models/lesson.server";
 import WeeklyProgress from "~/components/WeeklyProgress";
 import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
@@ -21,7 +25,8 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Error("Lesson ID wasnt found");
   }
 
-  return await deleteLessonById(id);
+  await deleteLessonsFromTopic(id as string);
+  return await deleteTopicById(id);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

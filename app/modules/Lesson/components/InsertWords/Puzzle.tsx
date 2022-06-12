@@ -40,7 +40,6 @@ export default function Puzzle({
                 type="button"
                 isFocused={false}
                 onClick={() => selectVariant(answer)}
-                // disabled={!!values.find((value) => value === answer)?.length}
                 disabled={alreadyChoosen}
               >
                 {answer}

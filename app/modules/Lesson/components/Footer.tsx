@@ -9,62 +9,130 @@ import {
   LessonButton,
 } from "./lib";
 
-export default function Footer({
-  stateRight,
-  stateWrong,
-  isResult,
-  answer,
-  disabled,
-  onContinue,
-  setValue,
-}: {
+type FooterProps = {
   stateRight: boolean;
   stateWrong: boolean;
   isResult: boolean;
   answer: string[];
-  disabled: boolean;
+  // disabled: boolean;
   onContinue: Function;
   setValue: Function;
-}) {
+  status: string;
+  buttonDisabled: boolean;
+};
+
+export default function Footer({
+  // stateRight,
+  // stateWrong,
+  // isResult,
+  answer,
+  // disabled,
+  onContinue,
+  setValue,
+  status,
+  buttonDisabled,
+}: FooterProps) {
   const transition = useTransition();
 
+  // const buttonText =
+  //   transition.state === "submitting"
+  //     ? "Saving..."
+  //     : transition.state === "loading"
+  //     ? "Saved!"
+  //     : stateRight
+  //     ? "Next"
+  //     : stateWrong || isResult
+  //     ? "Continue"
+  //     : "Check";
   const buttonText =
     transition.state === "submitting"
       ? "Saving..."
       : transition.state === "loading"
       ? "Saved!"
-      : stateRight
+      : status === "right"
       ? "Next"
-      : stateWrong || isResult
+      : // : stateWrong || isResult
+      status !== "idle"
       ? "Continue"
       : "Check";
-  const buttonDisabled = !disabled;
+
+  const handleContinue = (evt) => {
+    if (buttonText === "Saving..." || buttonText === "Saved!") {
+      evt.preventDefault();
+    }
+    // if (!disabled) {
+    // if (status === "idle") {
+    //   onContinue();
+    // }
+    // if (stateRight || stateWrong) {
+    // if (status === "wrong" || status === "right") {
+    //   // setValue([""]);
+    //   onContinue();
+    // }
+    onContinue();
+  };
+
+  const handleSkip = () => {
+    onContinue();
+  };
+
   return (
-    <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
+    // <LessonFooter stateRight={stateRight} stateWrong={stateWrong}>
+    <LessonFooter status={status}>
       <LessonFooterInner>
-        <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}>
-          {(stateRight || stateWrong) && (
-            <LessonFooterIcon stateRight={stateRight} stateWrong={stateWrong} />
+        <LessonButton
+          style={{
+            // display: stateRight || stateWrong ? "none" : "block",
+            display:
+              status === "right" || status === "wrong" ? "none" : "block",
+          }}
+          onClick={handleSkip}
+          skip={true}
+        >
+          Skip
+        </LessonButton>
+
+        <LessonButton
+          skip={true}
+          style={{
+            // display: stateRight || stateWrong ? "none" : "block",
+            display:
+              status === "right" || status === "wrong" ? "none" : "block",
+            borderWidth: 0,
+            width: "auto",
+          }}
+        >
+          Use word bank
+        </LessonButton>
+
+        {/* <LessonFooterMessage stateRight={stateRight} stateWrong={stateWrong}> */}
+        <LessonFooterMessage status={status}>
+          {/* {(stateRight || stateWrong) && ( */}
+          {(status === "right" || status === "wrong") && (
+            // <LessonFooterIcon stateRight={stateRight} stateWrong={stateWrong} />
+            <LessonFooterIcon status={status} />
           )}
           <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
             <LessonFooterTitle>
-              {stateWrong ? "Right answer: " : "Great!"}
+              {/* {stateWrong ? "Right answer: " : "Great!"} */}
+              {status === "wrong" ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
             <LessonFooterText> {answer.join(" ")}</LessonFooterText>
           </div>
         </LessonFooterMessage>
+
         <LessonButton
-          active={buttonDisabled}
-          stateRight={stateRight}
-          stateWrong={stateWrong}
-          onClick={(e) => {
-            if (buttonText === "Saving..." || buttonText === "Saved!") {
-              e.preventDefault();
+          // active={!disabled}
+          active={!buttonDisabled}
+          stateRight={status === "right"}
+          // stateRight={stateRight}
+          // stateWrong={stateWrong}
+          stateWrong={status === "wrong"}
+          onClick={(evt) => {
+            if (buttonDisabled) {
+              return;
             }
-            onContinue();
-            if (stateRight || stateWrong) {
-              setValue([""]);
-            }
+            handleContinue(evt);
           }}
           disabled={buttonText === "Saving..." || buttonText === "Saved!"}
         >

@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useRef, useState, Fragment } from "react";
+import { useReducer, useEffect, useRef, Fragment } from "react";
 
 import Progress from "~/components/Progress";
 import Body from "./components/Body";
@@ -15,25 +15,28 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
   const sectionRef = useRef<HTMLFormElement>(null);
   const [
     {
-      disabled,
+      // disabled,
       progress,
       content,
       stepNumber,
       maxSteps,
-      stateRight,
-      stateWrong,
-      formDisabled,
-      nextStep,
+      // stateRight,
+      // stateWrong,
+      // formDisabled,
+      // nextStep,
+      topicState,
+      userAnswer,
     },
     dispatch,
   ] = useReducer(reducer, basicState);
-  const [value, setValue] = useState<string[]>([""]);
+  // const [value, setValue] = useState<string[]>([""]);
   const {
     checkAnswer,
     showResultsPractice,
     continuePractice,
     changeDisabled,
     setCase,
+    setNewUserAnswer,
   } = actionCreator(dispatch);
   const submit = useSubmit();
   const transition = useTransition();
@@ -45,7 +48,8 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
   }, []);
 
   useEffect(() => {
-    if (stateRight || stateWrong) {
+    // if (stateRight || stateWrong) {
+    if (topicState.status !== "idle") {
       return sectionRef.current?.focus();
     }
     if (content.stepType === "Question") {
@@ -53,15 +57,16 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
     }
 
     return sectionRef.current?.focus(); // always have focus in order to make Enter key events work
-  }, [stateRight, stateWrong]);
+    // }, [stateRight, stateWrong]);
+  }, [topicState.status]);
 
   const onContinue = () => {
-    if (disabled) {
-      return;
-    }
     if (currentStep > -1 && currentStep <= maxSteps) {
-      if (!nextStep && value[0] !== "") {
-        checkAnswer(value);
+      // if (!nextStep && value[0] !== "") {
+      // if (topicState.status !== "idle" && value[0] !== "") {
+      if (topicState.status === "idle" && userAnswer[0] !== "") {
+        // checkAnswer(value);
+        checkAnswer();
       } else {
         continuePractice();
       }
@@ -76,8 +81,9 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
 
   const setAnswer = (val: string[]) => {
     // Insert words will return an array of objects and it won't work with the disabling button
-    changeDisabled(val[0] === "");
-    setValue(val);
+    // changeDisabled(val[0] === "");
+    // // setValue(val);
+    setNewUserAnswer(val);
   };
 
   return (
@@ -97,32 +103,37 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
             setAnswer([content.variants[2].value]);
           }
         }
-        if (disabled) {
+        if (topicState.buttonDisabled) {
           return;
         }
         if (e.key !== "Enter") {
           return;
         }
-        if (value[0] !== "" && !stateRight && !stateWrong) {
-          return checkAnswer(value);
+        // if (value[0] !== "" && !stateRight && !stateWrong) {
+        if (userAnswer[0] !== "" && topicState.status === "idle") {
+          // return checkAnswer(value);
+          return checkAnswer();
         }
-        if (currentStep === maxSteps + 1) {
+        // if (currentStep === maxSteps + 1) {
+        if (topicState.status === "results") {
           if (submitting) {
             return;
           }
           onContinue();
         }
         // Go futher if the answer was checked already
-        if (stateRight || stateWrong) {
+        // if (stateRight || stateWrong) {
+        if (topicState.status !== "idle") {
           e.preventDefault(); // prevent next line in textarea
           onContinue();
-          setValue([""]);
+          // setValue([""]);
+          // setNewUserAnswer([""]);
         }
       }}
       tabIndex={0}
       ref={sectionRef}
     >
-      {currentStep === maxSteps + 1 ? (
+      {topicState.status === "results" ? (
         <Results refName={ref} />
       ) : (
         <Fragment>
@@ -131,23 +142,29 @@ export default function Lesson({ steps }: { steps: Lesson[] }) {
             stepNumber={stepNumber}
             maxSteps={maxSteps}
             content={content}
-            answer={value}
+            // userAnswer={value}
+            userAnswer={userAnswer}
             setAnswer={setAnswer}
-            formDisabled={formDisabled}
+            // formDisabled={formDisabled}
+            formDisabled={topicState.formDisabled}
             checkAnswer={checkAnswer}
-            setValue={setValue}
+            // setValue={setValue}
+            setValue={setNewUserAnswer}
             changeDisabled={changeDisabled}
           />
         </Fragment>
       )}
       <Footer
-        stateRight={stateRight}
-        stateWrong={stateWrong}
+        // stateRight={stateRight}
+        // stateWrong={stateWrong}
+        status={topicState.status}
+        buttonDisabled={topicState.buttonDisabled}
         isResult={currentStep === maxSteps + 1}
-        setValue={setValue}
+        // setValue={setValue}
+        setValue={setNewUserAnswer}
         answer={content.answer}
         onContinue={onContinue}
-        disabled={disabled}
+        // disabled={disabled}
       />
     </LessonContainer>
   );

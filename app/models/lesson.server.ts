@@ -54,7 +54,7 @@ export async function getLastActivity(request: Request) {
   return { day: today, exp: user.weeklyActivity[today] };
 }
 
-export async function deleteLessonById(id: string) {
+export async function deleteTopicById(id: string) {
   return await prisma.topic.delete({ where: { id } });
 }
 
