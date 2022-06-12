@@ -1,5 +1,5 @@
 import { WeeklyActivity } from "@prisma/client";
-import { getWeekDay } from "~/utils";
+import { getCurrentWeek } from "~/utils";
 import { ExpProgressBlock, ExpProgressTitle } from "./lib";
 
 const DAY_COORDS = [
@@ -41,11 +41,11 @@ export default function WeeklyProgress({
   EXP_VALUES[3].val = Math.round(maxActivity / 1.2);
   EXP_VALUES[4].val = Math.round(maxActivity / 0.9);
 
-  const dotsData = Object.values(activity).map((exp, index) => ({
+  const days = getCurrentWeek();
+  const dotsData = days.map((day, index) => ({
     x: DOTS_X_COORDS[index],
-    // y: (exp / maxActivity) * 120,
-    y: maxActivity && (exp / EXP_VALUES[4].val) * 150,
-    exp,
+    y: maxActivity && (activity[day] / EXP_VALUES[4].val) * 150,
+    exp: activity[day],
   }));
 
   return (
@@ -62,7 +62,7 @@ export default function WeeklyProgress({
               fontFamily="sans-serif"
               textAnchor="middle"
             >
-              {Object.keys(activity).map((day, index) => (
+              {days.map((day, index) => (
                 <g
                   className="tick"
                   opacity="1"

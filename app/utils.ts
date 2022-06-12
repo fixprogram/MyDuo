@@ -118,20 +118,32 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
 };
 
 export const getWeekDay = (): string => {
-  const today = new Date();
-
-  return today.toLocaleDateString("en-US", {
-    weekday: "short",
-  }) as string;
+  return getShortWeekday(new Date());
 };
 
 export const getYesterdayDay = (): string => {
   const today = new Date();
   today.setDate(today.getDate() - 1);
 
-  return today.toLocaleDateString("en-US", {
+  return getShortWeekday(today);
+};
+
+function getShortWeekday(day: Date) {
+  return day.toLocaleDateString("en-US", {
     weekday: "short",
   }) as string;
+}
+
+export const getCurrentWeek = () => {
+  const week = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const today = new Date();
+    today.setDate(today.getDate() - i);
+    week.push(getShortWeekday(today));
+  }
+
+  return week;
 };
 
 export const areArraysEqual = (arr1: string[], arr2: string[]) => {

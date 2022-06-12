@@ -1451,17 +1451,26 @@ var doesArrayContainItems = (items, arr) => {
   };
 };
 var getWeekDay = () => {
-  const today = new Date();
-  return today.toLocaleDateString("en-US", {
-    weekday: "short"
-  });
+  return getShortWeekday(new Date());
 };
 var getYesterdayDay = () => {
   const today = new Date();
   today.setDate(today.getDate() - 1);
-  return today.toLocaleDateString("en-US", {
+  return getShortWeekday(today);
+};
+function getShortWeekday(day) {
+  return day.toLocaleDateString("en-US", {
     weekday: "short"
   });
+}
+var getCurrentWeek = () => {
+  const week = [];
+  for (let i = 6; i >= 0; i--) {
+    const today = new Date();
+    today.setDate(today.getDate() - i);
+    week.push(getShortWeekday(today));
+  }
+  return week;
 };
 var areArraysEqual = (arr1, arr2) => {
   if (arr1.length !== arr2.length) {
@@ -2717,6 +2726,9 @@ var loader3 = async ({ request }) => {
   }
   if (!(user == null ? void 0 : user.wasToday) && user.weeklyActivity[getWeekDay()]) {
     user = await updateUserStreak(user.id, true, user.streak + 1);
+    return { user, languages };
+  }
+  if (user == null ? void 0 : user.wasToday) {
     return { user, languages };
   }
   if (user.weeklyActivity[getYesterdayDay()]) {
@@ -4198,10 +4210,11 @@ function WeeklyProgress({
   EXP_VALUES[2].val = Math.round(maxActivity / 2);
   EXP_VALUES[3].val = Math.round(maxActivity / 1.2);
   EXP_VALUES[4].val = Math.round(maxActivity / 0.9);
-  const dotsData = Object.values(activity).map((exp, index) => ({
+  const days = getCurrentWeek();
+  const dotsData = days.map((day, index) => ({
     x: DOTS_X_COORDS[index],
-    y: maxActivity && exp / EXP_VALUES[4].val * 150,
-    exp
+    y: maxActivity && activity[day] / EXP_VALUES[4].val * 150,
+    exp: activity[day]
   }));
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(ExpProgressBlock, null, /* @__PURE__ */ React.createElement(ExpProgressTitle, null, "XP Progress"), /* @__PURE__ */ React.createElement("svg", {
     direction: "ltr",
@@ -4215,7 +4228,7 @@ function WeeklyProgress({
     fontSize: "10",
     fontFamily: "sans-serif",
     textAnchor: "middle"
-  }, Object.keys(activity).map((day, index) => /* @__PURE__ */ React.createElement("g", {
+  }, days.map((day, index) => /* @__PURE__ */ React.createElement("g", {
     className: "tick",
     opacity: "1",
     transform: `translate(${DAY_COORDS[index]})`,
@@ -4700,7 +4713,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "c2965b55", "entry": { "module": "/build/entry.client-LYYJYPJM.js", "imports": ["/build/_shared/chunk-2STOGE6O.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-6DBI2BND.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-M2YJC454.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-CSCIYMK2.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-GCJTELT2.js", "imports": ["/build/_shared/chunk-NZW2XAK4.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-TKUCG22G.js", "imports": ["/build/_shared/chunk-NZW2XAK4.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-CPPCVTBZ.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-ZECH4HPG.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-BMU5BLFQ.js", "imports": ["/build/_shared/chunk-S4H5VJT2.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-CSCIYMK2.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-TLG5DHG6.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-GMIYFB7Z.js", "imports": ["/build/_shared/chunk-S4H5VJT2.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-CSCIYMK2.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-2YBFQYIU.js", "imports": ["/build/_shared/chunk-S4H5VJT2.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-CSCIYMK2.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-C2965B55.js" };
+var assets_manifest_default = { "version": "c3eff905", "entry": { "module": "/build/entry.client-LYYJYPJM.js", "imports": ["/build/_shared/chunk-2STOGE6O.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-6DBI2BND.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-3VBMRTNZ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-NBB7GPRL.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-SJE7SZ5C.js", "imports": ["/build/_shared/chunk-5NA4KBNW.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-FXJQYI3P.js", "imports": ["/build/_shared/chunk-5NA4KBNW.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-HCQLFEJA.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-ZECH4HPG.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-7X2MAB3B.js", "imports": ["/build/_shared/chunk-LWIDHAES.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-NBB7GPRL.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-TLG5DHG6.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-CIDFI43U.js", "imports": ["/build/_shared/chunk-LWIDHAES.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-NBB7GPRL.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-EIP2ABKA.js", "imports": ["/build/_shared/chunk-LWIDHAES.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-ODYJBRQK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-NBB7GPRL.js", "/build/_shared/chunk-LR6FFUCK.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-C3EFF905.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };
