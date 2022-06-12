@@ -58,6 +58,10 @@ export const useFocus = () => {
 
 export const isItemInArray = (arr: string[], item: string) => {
   return arr.find((arrItem) => arrItem === item);
+  // return arr.find((arrItem) => {
+  //   const { newItem } = doesItemContainSign(arrItem);
+  //   return newItem === item;
+  // });
 };
 
 export const findInArrayById = (arr = [{ id: "" }], id: string) => {
@@ -108,7 +112,8 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
     state: !!filtered.length,
     length: filtered.length,
     items: filtered,
-    formatted: filtered.map((item) => item.trim().toLowerCase()),
+    // formatted: filtered.map((item) => item.trim().toLowerCase()),
+    formatted: filtered.map((item) => item.trim()),
   };
 };
 

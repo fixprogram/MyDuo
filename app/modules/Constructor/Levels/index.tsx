@@ -49,6 +49,7 @@ export default function Levels({
             id,
             variants,
             ready,
+            text,
             chapter,
           }: Step,
           idx: number
@@ -111,6 +112,7 @@ export default function Levels({
                 />
               ) : stepType === "Insert" ? (
                 <InsertWords
+                  text={text}
                   number={number}
                   answer={
                     typeof answer !== "string" ? answer.join(" ") : answer

@@ -1,37 +1,24 @@
 import { Variant } from "@prisma/client";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
 import { VariantItem } from "../lib";
+import { VariantsContainer, VariantsItem, VariantsList } from "./lib";
+
+type VariantsProps = {
+  variants: Variant[];
+  values: string[];
+  setValues: Function;
+};
 
 export default function Variants({
   variants,
   values,
   setValues,
-}: {
-  variants: Variant[];
-  values: string[];
-  setValues: Function;
-}) {
+}: VariantsProps) {
   return (
-    <div style={{ width: "100%", marginTop: "20px" }}>
-      <ul
-        style={{
-          listStyleType: "none",
-          padding: 0,
-          margin: 0,
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
-      >
+    <VariantsContainer>
+      <VariantsList>
         {variants.map(({ value }, idx: number) => (
-          <li
-            key={idx}
-            style={{
-              position: "relative",
-              marginBottom: 8,
-              width: "49%",
-            }}
-          >
+          <VariantsItem key={idx}>
             <VariantItemNumber isFocused={value === values[0]}>
               {idx + 1}
             </VariantItemNumber>
@@ -42,9 +29,9 @@ export default function Variants({
             >
               {value}
             </VariantItem>
-          </li>
+          </VariantsItem>
         ))}
-      </ul>
-    </div>
+      </VariantsList>
+    </VariantsContainer>
   );
 }

@@ -1,5 +1,5 @@
 import { Lesson } from "@prisma/client";
-import { areArraysEqual, doesArrayContainItems, shuffleArray } from "~/utils";
+import { areArraysEqual, doesArrayContainItems } from "~/utils";
 import { Action } from "./actions";
 import { LessonState } from "./types";
 

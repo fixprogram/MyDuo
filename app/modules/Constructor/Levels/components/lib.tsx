@@ -11,6 +11,7 @@ type VariantItemNumberProps = {
 
 type InsertWordsInputProps = {
   length: number;
+  isToChoose: boolean;
 };
 
 const StepContent = styled("div")`
@@ -57,15 +58,19 @@ const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   box-sizing: border-box;
   font-size: 19px;
   font-family: "Roboto";
+  line-height: 40px;
 `;
 
 const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   outline: none;
   border: none;
   font-size: 19px;
-  margin: 0 7px -2px;
+  // margin: 0 7px -2px;
+  margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
+  cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
+  text-align: center;
 `;
 
 const VariantItemInput = styled("input")`

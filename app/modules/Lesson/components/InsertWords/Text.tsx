@@ -2,7 +2,7 @@ import { Fragment, useEffect } from "react";
 import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 
-type TextType = {
+type TextProps = {
   text: string;
   contentAnswer: string[];
   isToChoose: boolean;
@@ -18,7 +18,7 @@ export default function Text({
   values,
   setValues,
   formDisabled,
-}: TextType) {
+}: TextProps) {
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
     if (!formDisabled) {
@@ -43,9 +43,7 @@ export default function Text({
                 <InsertWordsInput
                   type="text"
                   id={`input${0}`}
-                  style={{
-                    cursor: isToChoose ? "pointer" : "text",
-                  }}
+                  isToChoose={isToChoose}
                   length={newItem.length}
                   value={values[index]}
                   onChange={(e) => {
