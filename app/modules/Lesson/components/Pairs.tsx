@@ -6,17 +6,23 @@ export default function Pairs({
   contentAnswer,
   variants,
   checkAnswer,
+  setAnswer,
 }: {
   contentAnswer: string[];
   variants: Variant[];
   checkAnswer: Function;
+  setAnswer: Function;
 }) {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
+  console.log(contentAnswer);
+  console.log(variants);
+
   const isDisabled = (idx: number) => {
-    return !contentAnswer.find((answerItem) =>
+    return contentAnswer.find((answerItem) =>
       answerItem.includes((idx + 1).toString())
     );
+    // return false;
   };
 
   return (
@@ -45,7 +51,9 @@ export default function Pairs({
               if (activeIdx === -1) {
                 return setActiveIdx(Number(target.id));
               }
-              checkAnswer([`${activeIdx}${target.id}`]);
+              setAnswer([`${activeIdx}${target.id}`]);
+              // checkAnswer([`${activeIdx}${target.id}`]);
+              checkAnswer();
               setActiveIdx(-1);
             }}
           >

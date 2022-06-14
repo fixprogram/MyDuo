@@ -46,8 +46,9 @@ const Body = ({
         ) : stepType === "Insert" ? (
           <InsertWords
             userAnswer={userAnswer}
-            setValue={setValue}
-            changeDisabled={changeDisabled}
+            // setValue={setValue}
+            setValue={setAnswer}
+            // changeDisabled={changeDisabled}
             text={text as string}
             contentAnswer={content.answer}
             formDisabled={formDisabled}
@@ -64,7 +65,9 @@ const Body = ({
           <Pairs
             contentAnswer={userAnswer}
             variants={variants}
-            checkAnswer={checkAnswer}
+            setAnswer={setAnswer}
+            userAnswer={userAnswer}
+            // checkAnswer={checkAnswer}
           />
         ) : null}
       </Fragment>

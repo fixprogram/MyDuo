@@ -10,7 +10,7 @@ import Text from "./Text";
 export type InsertWordsType = {
   userAnswer: string[];
   setValue: Function;
-  changeDisabled: Function;
+  // changeDisabled: Function;
   text: string;
   contentAnswer: string[];
   formDisabled: boolean;
@@ -21,7 +21,7 @@ export type InsertWordsType = {
 export default function InsertWords({
   userAnswer,
   setValue,
-  changeDisabled,
+  // changeDisabled,
   text,
   contentAnswer,
   formDisabled,
@@ -44,7 +44,7 @@ export default function InsertWords({
         return true;
       }
     });
-    changeDisabled(!!isFieldEmpty.length);
+    // changeDisabled(!!isFieldEmpty.length);
     setValue(values);
   }, [values]);
 

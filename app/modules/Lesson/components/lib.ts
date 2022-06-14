@@ -14,6 +14,7 @@ type LessonButtonProps = {
   stateWrong?: boolean;
   stateRight?: boolean;
   skip?: boolean;
+  hidden?: boolean;
 };
 type VariantItemProps = {
   isFocused: boolean;
@@ -109,6 +110,7 @@ const LessonButton = styled("button")<LessonButtonProps>`
   letter-spacing: 0.8px;
   border-radius: 15px;
   padding: 0 20px;
+  display: ${(props) => (props.hidden ? "none" : "block")};
 `;
 
 const LessonBody = styled("div")`

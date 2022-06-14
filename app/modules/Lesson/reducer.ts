@@ -87,7 +87,11 @@ const reducer = (state: LessonState, action: Action): LessonState => {
 
       switch (content.stepType) {
         case "Insert": {
-          const { formatted } = doesArrayContainItems(content.answer, answer);
+          // const { formatted } = doesArrayContainItems(content.answer, answer);
+          const { formatted } = doesArrayContainItems(
+            content.answer,
+            userAnswer
+          );
           if (areArraysEqual(content.answer, formatted)) {
             return positiveState;
           }
@@ -170,12 +174,24 @@ const reducer = (state: LessonState, action: Action): LessonState => {
     //   return { ...state, disabled: action.payload.isDisabled };
     case "CHANGE_USER_ANSWER": {
       const { newAnswer } = action.payload;
+      let buttonDisabled = newAnswer[0].length === 0;
+      if (content.stepType === "Insert") {
+        const haveLength = newAnswer.filter((item) => {
+          if (item.length && item !== " ") {
+            return item;
+          }
+        });
+        buttonDisabled = haveLength.length !== newAnswer.length;
+      }
+      // if(content.stepType === 'Pairs') {
+
+      // }
       return {
         ...state,
         userAnswer: newAnswer,
         topicState: {
           ...topicState,
-          buttonDisabled: newAnswer[0].length === 0,
+          buttonDisabled,
         },
       };
     }

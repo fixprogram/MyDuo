@@ -1,4 +1,5 @@
 import { useTransition } from "@remix-run/react";
+import { Fragment } from "react";
 import {
   LessonFooter,
   LessonFooterInner,
@@ -81,23 +82,22 @@ export default function Footer({
     <LessonFooter status={status}>
       <LessonFooterInner>
         <LessonButton
-          style={{
-            // display: stateRight || stateWrong ? "none" : "block",
-            display:
-              status === "right" || status === "wrong" ? "none" : "block",
-          }}
+          style={
+            {
+              // display: stateRight || stateWrong ? "none" : "block",
+            }
+          }
           onClick={handleSkip}
           skip={true}
+          hidden={status !== "idle"}
         >
           Skip
         </LessonButton>
-
         <LessonButton
           skip={true}
+          hidden={status !== "idle"}
           style={{
             // display: stateRight || stateWrong ? "none" : "block",
-            display:
-              status === "right" || status === "wrong" ? "none" : "block",
             borderWidth: 0,
             width: "auto",
           }}
@@ -135,6 +135,7 @@ export default function Footer({
             handleContinue(evt);
           }}
           disabled={buttonText === "Saving..." || buttonText === "Saved!"}
+          style={{ marginLeft: status === "results" ? "auto" : 0 }}
         >
           {buttonText}
         </LessonButton>
