@@ -1,5 +1,8 @@
 import { useTransition } from "@remix-run/react";
 import { Fragment } from "react";
+import { useSkill } from "..";
+import { useSkillReducer } from "../reducer";
+import { useLesson } from "./Les/Les";
 import {
   LessonFooter,
   LessonFooterInner,
@@ -22,17 +25,17 @@ type FooterProps = {
   buttonDisabled: boolean;
 };
 
-export default function Footer({
-  // stateRight,
-  // stateWrong,
-  // isResult,
-  answer,
-  // disabled,
-  onContinue,
-  setValue,
-  status,
-  buttonDisabled,
-}: FooterProps) {
+export default function Footer({}) {
+  // export default function Footer({}: // stateRight,
+  // // stateWrong,
+  // // isResult,
+  // // answer,
+  // // // disabled,
+  // // onContinue,
+  // // setValue,
+  // // status,
+  // // buttonDisabled,
+  // FooterProps) {
   const transition = useTransition();
 
   // const buttonText =
@@ -45,6 +48,12 @@ export default function Footer({
   //     : stateWrong || isResult
   //     ? "Continue"
   //     : "Check";
+
+  const { topicState, content, continueTopic } = useSkill();
+
+  const { answer } = content;
+  const { status, buttonDisabled } = topicState;
+
   const buttonText =
     transition.state === "submitting"
       ? "Saving..."
@@ -70,11 +79,13 @@ export default function Footer({
     //   // setValue([""]);
     //   onContinue();
     // }
-    onContinue();
+    continueTopic();
+    // onContinue();
   };
 
   const handleSkip = () => {
-    onContinue();
+    // onContinue();
+    continueTopic();
   };
 
   return (

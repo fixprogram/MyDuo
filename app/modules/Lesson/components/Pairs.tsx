@@ -15,9 +15,6 @@ export default function Pairs({
 }) {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
-  console.log(contentAnswer);
-  console.log(variants);
-
   const isDisabled = (idx: number) => {
     return contentAnswer.find((answerItem) =>
       answerItem.includes((idx + 1).toString())

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Textarea } from "~/components/lib";
 import {
   LessonQuestion,
@@ -7,23 +7,46 @@ import {
   LessonTitle,
 } from "../lib";
 import Duo from "~/styles/duo.svg";
+import Footer from "../Footer";
+
+type QuestionAnswerPracticeProps = {
+  question: string;
+  formDisabled: boolean;
+  checkAnswer: (arg0: string) => void;
+  setCheckDisabled: (arg0: boolean) => void;
+};
 
 export default function QuestionAnswerPractice({
-  userAnswer,
   question,
-  setAnswer,
   formDisabled,
-}: {
-  userAnswer: string[];
-  question: string;
-  setAnswer: Function;
-  formDisabled: boolean;
-}) {
+  checkAnswer,
+  setCheckDisabled,
+}: QuestionAnswerPracticeProps) {
+  const [answer, setAnswer] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     ref.current?.focus();
+    if (!formDisabled) {
+      setAnswer("");
+    }
   }, [formDisabled]);
+
+  useEffect(() => {
+    if (answer.length > 0) {
+      return setCheckDisabled(false);
+    }
+    return setCheckDisabled(true);
+  }, [answer]);
+
+  const onKeyDownHandle = (e) => {
+    if (e.key !== "Enter" || answer.length === 0) {
+      return;
+    }
+
+    e.preventDefault();
+    checkAnswer(answer);
+  };
 
   return (
     <Fragment>
@@ -38,15 +61,13 @@ export default function QuestionAnswerPractice({
         </div>
       </div>
       <Textarea
-        id={`answer`}
+        id="answer"
         name="answer"
         placeholder="Enter user answer"
-        value={userAnswer}
-        onChange={(e) => setAnswer([e.target.value])}
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-          }
+          onKeyDownHandle(e);
         }}
         disabled={formDisabled}
         ref={ref}
