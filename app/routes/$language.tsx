@@ -62,11 +62,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     return { user, languages };
   }
 
-  // if (lastActive.day === getYesterdayDay()) {
   if (user.weeklyActivity[getYesterdayDay()]) {
     user = await updateUserStreak(user.id, false, user.streak);
     return { user, languages };
   }
+
+  // if (lastActive.day === getYesterdayDay()) {
 
   if (!languages) {
     throw new Error("languages are not found");

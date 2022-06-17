@@ -7,46 +7,34 @@ import {
   LessonTitle,
 } from "../lib";
 import Duo from "~/styles/duo.svg";
-import Footer from "../Footer";
+import { useSkill } from "../..";
 
 type QuestionAnswerPracticeProps = {
   question: string;
-  formDisabled: boolean;
   checkAnswer: (arg0: string) => void;
-  setCheckDisabled: (arg0: boolean) => void;
 };
 
 export default function QuestionAnswerPractice({
-  question,
-  formDisabled,
-  checkAnswer,
-  setCheckDisabled,
+  userAnswer,
+  setUserAnswer,
 }: QuestionAnswerPracticeProps) {
-  const [answer, setAnswer] = useState("");
+  const { content, topicState, setCheckDisabled } = useSkill();
+  const { formDisabled } = topicState;
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     ref.current?.focus();
     if (!formDisabled) {
-      setAnswer("");
+      setUserAnswer("");
     }
   }, [formDisabled]);
 
   useEffect(() => {
-    if (answer.length > 0) {
+    if (userAnswer.length > 0) {
       return setCheckDisabled(false);
     }
     return setCheckDisabled(true);
-  }, [answer]);
-
-  const onKeyDownHandle = (e) => {
-    if (e.key !== "Enter" || answer.length === 0) {
-      return;
-    }
-
-    e.preventDefault();
-    checkAnswer(answer);
-  };
+  }, [userAnswer]);
 
   return (
     <Fragment>
@@ -54,7 +42,7 @@ export default function QuestionAnswerPractice({
       <div style={{ display: "flex", alignItems: "center" }}>
         <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
         <div style={{ position: "relative" }}>
-          <LessonQuestion>{question}</LessonQuestion>
+          <LessonQuestion>{content.question}</LessonQuestion>
           <LessonQuestionTriangleContainer>
             <LessonQuestionTriangle />
           </LessonQuestionTriangleContainer>
@@ -64,11 +52,9 @@ export default function QuestionAnswerPractice({
         id="answer"
         name="answer"
         placeholder="Enter user answer"
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        onKeyDown={(e) => {
-          onKeyDownHandle(e);
-        }}
+        value={userAnswer}
+        onChange={(e) => setUserAnswer(e.target.value)}
+        // onKeyDown={onKeyDownHandle}
         disabled={formDisabled}
         ref={ref}
       />

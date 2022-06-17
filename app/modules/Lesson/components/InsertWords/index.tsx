@@ -6,37 +6,26 @@ import { LessonTitle } from "../lib";
 import Puzzle from "./Puzzle";
 import Variants from "./Variants";
 import Text from "./Text";
+import { useSkill } from "../..";
 
 export type InsertWordsType = {
   userAnswer: string[];
-  setValue: Function;
-  // changeDisabled: Function;
-  text: string;
-  contentAnswer: string[];
-  formDisabled: boolean;
-  isToChoose: boolean;
-  variants: Variant[];
+  setUserAnswer: Function;
 };
 
 export default function InsertWords({
   userAnswer,
-  setValue,
-  // changeDisabled,
-  text,
-  contentAnswer,
-  formDisabled,
-  isToChoose,
-  variants,
+  setUserAnswer,
 }: InsertWordsType) {
-  const [values, setValues] = useState([
-    ...new Array(contentAnswer.length).fill(" "),
-  ]);
+  const { content, setCheckDisabled, topicState } = useSkill();
+  const { text, isToChoose, variants, answer } = content;
+  const [values, setValues] = useState([...new Array(answer.length).fill(" ")]);
 
   useEffect(() => {
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }
-    if (values.length !== contentAnswer.length) {
+    if (values.length !== answer.length) {
       return;
     }
     const isFieldEmpty = values.filter((val) => {
@@ -44,8 +33,8 @@ export default function InsertWords({
         return true;
       }
     });
-    // changeDisabled(!!isFieldEmpty.length);
-    setValue(values);
+    setCheckDisabled(!!isFieldEmpty.length);
+    setUserAnswer(values);
   }, [values]);
 
   useEffect(() => {
@@ -65,10 +54,10 @@ export default function InsertWords({
         <Text
           values={values}
           setValues={setValues}
-          contentAnswer={contentAnswer}
+          contentAnswer={answer}
           text={text}
           isToChoose={isToChoose}
-          formDisabled={formDisabled}
+          formDisabled={topicState.formDisabled}
         />
 
         {variants && (
@@ -79,7 +68,7 @@ export default function InsertWords({
           <Puzzle
             values={values}
             setValues={setValues}
-            contentAnswer={contentAnswer}
+            contentAnswer={answer}
           />
         )}
       </InsertWordsTextBlock>

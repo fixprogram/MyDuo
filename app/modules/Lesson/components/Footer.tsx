@@ -13,19 +13,19 @@ import {
   LessonButton,
 } from "./lib";
 
-type FooterProps = {
-  stateRight: boolean;
-  stateWrong: boolean;
-  isResult: boolean;
-  answer: string[];
-  // disabled: boolean;
-  onContinue: Function;
-  setValue: Function;
-  status: string;
-  buttonDisabled: boolean;
-};
+// type FooterProps = {
+//   stateRight: boolean;
+//   stateWrong: boolean;
+//   isResult: boolean;
+//   answer: string[];
+//   // disabled: boolean;
+//   onContinue: Function;
+//   setValue: Function;
+//   status: string;
+//   buttonDisabled: boolean;
+// };
 
-export default function Footer({}) {
+export default function Footer({ checkAnswer }) {
   // export default function Footer({}: // stateRight,
   // // stateWrong,
   // // isResult,
@@ -68,7 +68,10 @@ export default function Footer({}) {
 
   const handleContinue = (evt) => {
     if (buttonText === "Saving..." || buttonText === "Saved!") {
-      evt.preventDefault();
+      return evt.preventDefault();
+    }
+    if (status === "idle") {
+      return checkAnswer();
     }
     // if (!disabled) {
     // if (status === "idle") {

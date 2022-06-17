@@ -16,6 +16,7 @@ const actionTypes = {
   SET_STATE_RIGHT: "SET_STATE_RIGHT",
   SET_STATE_WRONG: "SET_STATE_WRONG",
   SET_CHECK_DISABLED: "SET_CHECK_DISABLED",
+  CHECK_QUESTION_ANSWER: "CHECK_QUESTION_ANSWER",
 };
 
 const basicState: LessonState = {
@@ -41,6 +42,25 @@ const basicState: LessonState = {
 function skillReducer(state: LessonState, action: Action): LessonState {
   const { content, stepNumber, maxSteps, lessonSteps, topicState, userAnswer } =
     state;
+  const positiveState = {
+    ...state,
+    progress: stepNumber / maxSteps,
+    topicState: {
+      status: "right",
+      formDisabled: true,
+      buttonDisabled: false,
+    },
+  };
+  const negativeState = {
+    ...state,
+    lessonSteps: [...lessonSteps, content],
+    stepNumber: stepNumber - 1,
+    topicState: {
+      status: "wrong",
+      formDisabled: true,
+      buttonDisabled: false,
+    },
+  };
   switch (action.type) {
     case actionTypes.CONTINUE:
       const isResults = stepNumber === maxSteps;
@@ -76,27 +96,37 @@ function skillReducer(state: LessonState, action: Action): LessonState {
         // stateWrong: false,
         topicState: { ...topicState, status: "results" },
       };
+    case actionTypes.CHECK_QUESTION_ANSWER: {
+      const userAnswer = action.payload;
+      const { state, length } = doesArrayContainItems(
+        content.answer,
+        userAnswer.split(" ")
+      );
+
+      if (!state) {
+        return negativeState;
+      }
+
+      if (
+        doesArrayContainItems(content.keywords, userAnswer.split(" "))
+          .length === content.keywords.length
+      ) {
+        if (length < content.answer.length) {
+          return positiveState;
+        }
+
+        return positiveState;
+      }
+
+      if (length < content.answer.length * 0.8) {
+        // if user's response is less than 80% right, then return negative
+        return negativeState;
+      }
+    }
     case actionTypes.SET_STATE_RIGHT:
-      return {
-        ...state,
-        progress: stepNumber / maxSteps,
-        topicState: {
-          status: "right",
-          formDisabled: true,
-          buttonDisabled: false,
-        },
-      };
+      return positiveState;
     case actionTypes.SET_STATE_WRONG:
-      return {
-        ...state,
-        lessonSteps: [...lessonSteps, content],
-        stepNumber: stepNumber - 1,
-        topicState: {
-          status: "wrong",
-          formDisabled: true,
-          buttonDisabled: false,
-        },
-      };
+      return negativeState;
     case actionTypes.SET_CHECK_DISABLED:
       const disabled = action.disabled;
       return {
@@ -125,6 +155,8 @@ function useSkillReducer({
   const setStateWrong = () => dispatch({ type: actionTypes.SET_STATE_WRONG });
   const setCheckDisabled = (disabled) =>
     dispatch({ type: actionTypes.SET_CHECK_DISABLED, disabled });
+  const checkQuestionAnswer = (userAnswer) =>
+    dispatch({ type: actionTypes.CHECK_QUESTION_ANSWER, userAnswer });
 
   return {
     content,
@@ -138,6 +170,7 @@ function useSkillReducer({
     setStateRight,
     setStateWrong,
     setCheckDisabled,
+    checkQuestionAnswer,
   };
 }
 
