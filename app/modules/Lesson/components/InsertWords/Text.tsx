@@ -1,4 +1,5 @@
-import { Fragment, useEffect } from "react";
+import { Variant } from "@prisma/client";
+import { Fragment, useEffect, useRef } from "react";
 import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 
@@ -9,6 +10,7 @@ type TextProps = {
   values: string[];
   setValues: Function;
   formDisabled: boolean;
+  variants: Variant[];
 };
 
 export default function Text({
@@ -18,6 +20,7 @@ export default function Text({
   values,
   setValues,
   formDisabled,
+  variants,
 }: TextProps) {
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
@@ -25,12 +28,14 @@ export default function Text({
       setValues([...new Array(contentAnswer.length).fill(" ")]);
       //   setValues([" ", " ", " "]);
     }
+    // firstInputRef.current?.focus();
   }, [formDisabled]);
 
   const handleChange = (evt, index: number) => {
     setValues((prevArray: string[]) => {
-      prevArray[index] = evt.target.value;
-      return [...prevArray];
+      const newArray = prevArray;
+      newArray[index] = evt.target.value;
+      return [...newArray];
     });
   };
 
@@ -39,7 +44,7 @@ export default function Text({
     if (target.value === "" || target.value === " ") {
       return;
     }
-    if (isToChoose) {
+    if (isToChoose || variants) {
       target.blur();
       setValues((prevArray: string[]) => {
         prevArray[index] = " ";

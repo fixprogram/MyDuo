@@ -5,6 +5,7 @@ import React, {
   useContext,
   createContext,
   useState,
+  useCallback,
 } from "react";
 
 import Progress from "~/components/Progress";
@@ -13,14 +14,15 @@ import { useSubmit, useTransition } from "@remix-run/react";
 import Results from "./components/Results";
 import Footer from "./components/Footer";
 import { LessonBody, LessonContainer } from "./components/lib";
-import { Lesson } from "@prisma/client";
+import { Lesson as LessonType } from "@prisma/client";
 import InsertWords from "./components/InsertWords";
 import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
 import { areArraysEqual, doesArrayContainItems } from "~/utils";
+import { Lesson } from "./components/Lesson";
 
-const SkillContext = createContext();
+const SkillContext = createContext({});
 SkillContext.displayName = "LessonContext";
 
 export function useSkill() {
@@ -31,7 +33,7 @@ export function useSkill() {
   return context;
 }
 
-export default function Skill({ steps }: { steps: Lesson[] }) {
+export default function Skill({ steps }: { steps: LessonType[] }) {
   const ref = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLFormElement>(null);
 
@@ -47,47 +49,21 @@ export default function Skill({ steps }: { steps: Lesson[] }) {
     setStateRight,
     setStateWrong,
     setCheckDisabled,
+    updateState,
   } = useSkillReducer();
   const submit = useSubmit();
   const transition = useTransition();
   const submitting = transition.state !== "idle";
-  let currentStep = stepNumber;
 
   useEffect(() => {
-    // setCase(steps); // Ones the data is loaded, we set the it in reducer
     setup(steps); // Ones the data is loaded, we set the it in reducer
   }, []);
 
   useEffect(() => {
-    // if (stateRight || stateWrong) {
-    if (topicState.status !== "idle") {
+    if (topicState.status === "results") {
       return sectionRef.current?.focus();
     }
-    if (content.stepType === "Question") {
-      return;
-    }
-
-    return sectionRef.current?.focus(); // always have focus in order to make Enter key events work
-    // }, [stateRight, stateWrong]);
   }, [topicState.status]);
-
-  // const onContinue = () => {
-  //   if (currentStep > -1 && currentStep <= maxSteps) {
-  //     // if (!nextStep && value[0] !== "") {
-  //     // if (topicState.status !== "idle" && value[0] !== "") {
-
-  //     // continuePractice();
-  //     continueTopic();
-  //   } else {
-  //     currentStep === maxSteps
-  //       ? // ? showResultsPractice()
-  //         showResults()
-  //       : currentStep === maxSteps + 1
-  //       ? submit(ref.current, { replace: true })
-  //       : // : continuePractice();
-  //         continueTopic();
-  //   }
-  // };
 
   const onContinue = () => {
     if (topicState.status === "results") {
@@ -111,83 +87,53 @@ export default function Skill({ steps }: { steps: Lesson[] }) {
     setStateRight,
     setStateWrong,
     setCheckDisabled,
+    updateState,
   };
 
   return (
     <SkillContext.Provider value={cox}>
-      <LessonContainer
-      // onKeyDown={(e) => {
-      //   if (
-      //     content.stepType === "Variants" ||
-      //     (content.stepType === "Insert" && content.variants.length)
-      //   ) {
-      //     if (e.key === "1") {
-      //       setAnswer([content.variants[0].value]);
-      //     }
-      //     if (e.key === "2") {
-      //       setAnswer([content.variants[1].value]);
-      //     }
-      //     if (e.key === "3") {
-      //       setAnswer([content.variants[2].value]);
-      //     }
-      //   }
-      //   if (topicState.buttonDisabled) {
-      //     return;
-      //   }
-      //   if (e.key !== "Enter") {
-      //     return;
-      //   }
-      //   // if (value[0] !== "" && !stateRight && !stateWrong) {
-      //   if (userAnswer[0] !== "" && topicState.status === "idle") {
-      //     // return checkAnswer(value);
-      //     return checkAnswer();
-      //   }
-      //   // if (currentStep === maxSteps + 1) {
-
-      //   // Go futher if the answer was checked already
-      //   // if (stateRight || stateWrong) {
-      //   if (topicState.status !== "idle") {
-      //     e.preventDefault(); // prevent next line in textarea
-      //     onContinue();
-      //     // setValue([""]);
-      //     // setNewUserAnswer([""]);
-      //   }
-      // }}
-      // tabIndex={0}
-      // ref={sectionRef}
-      >
+      <LessonContainer>
         {topicState.status === "results" ? (
-          <Fragment>
-            <Results
-              refName={ref}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onContinue();
-                }
-              }}
-            />
+          <div
+            ref={sectionRef}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onContinue();
+              }
+            }}
+            style={{ outline: "none" }}
+          >
+            <Results refName={ref} />
             <Footer />
-          </Fragment>
+          </div>
         ) : (
           <Fragment>
             <Progress />
-            {/* <LessonBody> */}
             <LessonQuestion />
             <LessonInsert />
             <LessonVariants />
             <LessonPairs />
-            {/* </LessonBody> */}
-            {/* <Footer /> */}
           </Fragment>
         )}
       </LessonContainer>
     </SkillContext.Provider>
   );
 }
-function LessonQuestion({}) {
-  const { content, setStateWrong, setStateRight } = useSkill();
+function LessonQuestion() {
+  const { content, setStateWrong, setStateRight, setCheckDisabled } =
+    useSkill();
 
-  const checkAnswer = (userAnswer) => {
+  const [userAnswer, setUserAnswer] = useState("");
+
+  useEffect(() => {
+    if (userAnswer.length > 0) {
+      return setCheckDisabled(false);
+    }
+    return setCheckDisabled(true);
+  }, [userAnswer]);
+
+  const checkAnswer = () => {
     const { state, length } = doesArrayContainItems(
       content.answer,
       userAnswer.split(" ")
@@ -214,128 +160,15 @@ function LessonQuestion({}) {
     }
   };
 
-  return (
-    content.stepType === "Question" && (
-      <Lesson checkAnswer={checkAnswer}>
-        <QuestionAnswerPractice />
-      </Lesson>
-    )
-  );
-}
-
-// function LessonQuestion({}) {
-//   const { content, topicState, setStateWrong, setStateRight, continueTopic } =
-//     useSkill();
-
-//   const [userAnswer, setUserAnswer] = useState("");
-//   const lessonRef = useRef(null);
-
-//   useEffect(() => {
-//     lessonRef?.current?.focus();
-//   }, [topicState.status]);
-
-//   // const checkAnswer = (userAnswer) => {
-//   const checkAnswer = () => {
-//     const { state, length } = doesArrayContainItems(
-//       content.answer,
-//       userAnswer.split(" ")
-//     );
-
-//     if (!state) {
-//       return setStateWrong();
-//     }
-
-//     if (
-//       doesArrayContainItems(content.keywords, userAnswer.split(" ")).length ===
-//       content.keywords.length
-//     ) {
-//       if (length < content.answer.length) {
-//         return setStateRight();
-//       }
-
-//       return setStateRight();
-//     }
-
-//     if (length < content.answer.length * 0.8) {
-//       // if user's response is less than 80% right, then return negative
-//       return setStateWrong();
-//     }
-//   };
-
-//   const onKeyDownHandle = (e) => {
-//     e.preventDefault();
-//     if (e.key !== "Enter" || topicState.buttonDisabled) {
-//       return;
-//     }
-
-//     if (topicState.status !== "idle") {
-//       return continueTopic();
-//     }
-//   };
-
-//   return content.stepType === "Question" ? (
-//     <div
-//       tabIndex={0}
-//       onKeyDown={(e) => {
-//         if (e.key === "Enter") {
-//           onKeyDownHandle(e);
-//         }
-//       }}
-//       ref={lessonRef}
-//       style={{
-//         display: "flex",
-//         flexDirection: "column",
-//         height: "calc(100vh - 63px)",
-//         outline: 0,
-//       }}
-//     >
-//       <LessonBody>
-//         <QuestionAnswerPractice
-//           userAnswer={userAnswer}
-//           setUserAnswer={setUserAnswer}
-//           checkAnswer={checkAnswer}
-//         />
-//       </LessonBody>
-//       <Footer checkAnswer={checkAnswer} />
-//     </div>
-//   ) : null;
-// }
-
-function Lesson({ checkAnswer, children }) {
-  const { topicState, continueTopic } = useSkill();
-
-  const lessonRef = useRef(null);
-  const [userAnswer, setUserAnswer] = useState("");
-
-  useEffect(() => {
-    if (topicState.status === "wrong" || topicState.status === "right") {
-      lessonRef?.current?.focus();
-    }
-  }, [topicState.status]);
-
-  const onKeyDownHandle = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-    }
-    if (e.key !== "Enter" || topicState.buttonDisabled) {
-      return;
-    }
-    if (topicState.status === "idle") {
-      return checkAnswer(userAnswer);
-    }
-    return continueTopic();
-  };
-
-  return (
-    <div tabIndex={0} onKeyDown={onKeyDownHandle} ref={lessonRef}>
-      <LessonBody>
-        {React.Children.map(children, (child) => {
-          return React.cloneElement(child, { userAnswer, setUserAnswer });
-        })}
-      </LessonBody>
-      <Footer checkAnswer={() => checkAnswer(userAnswer)} />
-    </div>
-  );
+  return content.stepType === "Question" ? (
+    <Lesson
+      setUserAnswer={setUserAnswer}
+      userAnswer={userAnswer}
+      checkAnswer={checkAnswer}
+    >
+      <QuestionAnswerPractice />
+    </Lesson>
+  ) : null;
 }
 
 function LessonInsert({}) {
@@ -366,21 +199,113 @@ function LessonInsert({}) {
   };
 
   return content.stepType === "Insert" ? (
-    <div tabIndex={0} onKeyDown={onKeyDownHandle} ref={lessonRef}>
-      <LessonBody>
-        <InsertWords userAnswer={userAnswer} setUserAnswer={setUserAnswer} />
-      </LessonBody>
-      <Footer checkAnswer={checkAnswer} />
-    </div>
+    <Lesson
+      userAnswer={userAnswer}
+      setUserAnswer={setUserAnswer}
+      checkAnswer={checkAnswer}
+    >
+      <InsertWords />
+    </Lesson>
   ) : null;
 }
 
 function LessonVariants({}) {
-  const { content } = useSkill();
-  return content.stepType === "Variants" ? <VariantsPractice /> : null;
+  const {
+    content,
+    setStateRight,
+    setStateWrong,
+    setCheckDisabled,
+    topicState,
+  } = useSkill();
+  const { question, variants } = content;
+
+  const [userAnswer, setUserAnswer] = useState("");
+
+  useEffect(() => {
+    if (!topicState.formDisabled) {
+      setUserAnswer("");
+    }
+  }, [topicState.formDisabled]);
+
+  useEffect(() => {
+    if (userAnswer.length) {
+      return setCheckDisabled(false);
+    }
+    return setCheckDisabled(true);
+  }, [userAnswer]);
+
+  const checkAnswer = () => {
+    if (userAnswer === content.answer[0]) {
+      return setStateRight();
+    }
+    return setStateWrong();
+  };
+
+  const handleOnKeyDown = (e) => {
+    if (e.key === "1") {
+      return setUserAnswer(variants[0].value);
+    }
+    if (e.key === "2") {
+      return setUserAnswer(variants[1].value);
+    }
+    if (e.key === "3") {
+      return setUserAnswer(variants[2].value);
+    }
+  };
+
+  return content.stepType === "Variants" ? (
+    <Lesson
+      userAnswer={userAnswer}
+      setUserAnswer={setUserAnswer}
+      checkAnswer={checkAnswer}
+      keyDownHandle={handleOnKeyDown}
+    >
+      <VariantsPractice question={question} variants={variants} />
+    </Lesson>
+  ) : null;
 }
 
 function LessonPairs({}) {
-  const { content } = useSkill();
-  return content.stepType === "Variants" ? <Pairs /> : null;
+  const { content, setStateRight, updateState, topicState } = useSkill();
+  const { answer, variants } = content;
+
+  const [userAnswer, setUserAnswer] = useState([]);
+
+  const checkAnswer = (uAns) => {
+    let idx = 0;
+    if (
+      answer.find((answerItem: string, id: number) => {
+        idx = id;
+        return (
+          answerItem === uAns ||
+          answerItem.split("").reverse().join("") === uAns
+        );
+      })
+    ) {
+      const newContent = content;
+      newContent.answer.splice(idx, 1);
+      setUserAnswer((prevUserAnswer) => [...prevUserAnswer, uAns]);
+      return updateState({ content: newContent });
+    } else {
+      setUserAnswer((prevUserAnswer) => [...prevUserAnswer]);
+      return updateState({
+        topicState: { ...topicState, buttonDisabled: true },
+      });
+    }
+  };
+  useEffect(() => {
+    if (answer.length === 0) {
+      return setStateRight();
+    }
+  }, [userAnswer]);
+
+  return content.stepType === "Pairs" ? (
+    <Lesson setUserAnswer={setUserAnswer}>
+      <Pairs
+        answer={userAnswer}
+        variants={variants}
+        checkAnswer={checkAnswer}
+      />
+    </Lesson>
+  ) : null;
 }

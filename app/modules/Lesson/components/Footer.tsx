@@ -2,7 +2,6 @@ import { useTransition } from "@remix-run/react";
 import { Fragment } from "react";
 import { useSkill } from "..";
 import { useSkillReducer } from "../reducer";
-import { useLesson } from "./Les/Les";
 import {
   LessonFooter,
   LessonFooterInner,
@@ -25,7 +24,7 @@ import {
 //   buttonDisabled: boolean;
 // };
 
-export default function Footer({ checkAnswer }) {
+export default function Footer({ checkAnswer }: { checkAnswer?: Function }) {
   // export default function Footer({}: // stateRight,
   // // stateWrong,
   // // isResult,

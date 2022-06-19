@@ -17,6 +17,7 @@ const actionTypes = {
   SET_STATE_WRONG: "SET_STATE_WRONG",
   SET_CHECK_DISABLED: "SET_CHECK_DISABLED",
   CHECK_QUESTION_ANSWER: "CHECK_QUESTION_ANSWER",
+  UPDATE_STATE: "UPDATE_STATE",
 };
 
 const basicState: LessonState = {
@@ -133,6 +134,9 @@ function skillReducer(state: LessonState, action: Action): LessonState {
         ...state,
         topicState: { ...topicState, buttonDisabled: disabled },
       };
+    case actionTypes.UPDATE_STATE:
+      const update = action.update;
+      return { ...state, ...update };
     default: {
       throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -157,6 +161,8 @@ function useSkillReducer({
     dispatch({ type: actionTypes.SET_CHECK_DISABLED, disabled });
   const checkQuestionAnswer = (userAnswer) =>
     dispatch({ type: actionTypes.CHECK_QUESTION_ANSWER, userAnswer });
+  const updateState = (update) =>
+    dispatch({ type: actionTypes.UPDATE_STATE, update });
 
   return {
     content,
@@ -171,6 +177,7 @@ function useSkillReducer({
     setStateWrong,
     setCheckDisabled,
     checkQuestionAnswer,
+    updateState,
   };
 }
 
@@ -309,36 +316,36 @@ export { useSkillReducer, skillReducer, actionTypes };
 //           return negativeState;
 //         }
 //         case "Pairs": {
-//           let idx = 0;
-//           if (
-//             content.answer.find((answerItem: string, id: number) => {
-//               idx = id;
-//               return (
-//                 // answerItem === answer[0] ||
-//                 answerItem === userAnswer[0] ||
-//                 // answerItem.split("").reverse().join("") === answer[0]
-//                 answerItem.split("").reverse().join("") === userAnswer[0]
-//               );
-//             })
-//           ) {
-//             const newContent = content;
-//             newContent.answer.splice(idx, 1);
-//             if (newContent.answer.length === 0) {
-//               return positiveState;
-//             }
-//             return {
-//               ...state,
-//               content: newContent,
-//               // disabled: true,
-//             };
-//           } else {
-//             return {
-//               ...state,
-//               // disabled: true,
-//               topicState: { ...topicState, buttonDisabled: true },
-//             };
-//           }
-//         }
+//   let idx = 0;
+//   if (
+//     content.answer.find((answerItem: string, id: number) => {
+//       idx = id;
+//       return (
+//         // answerItem === answer[0] ||
+//         answerItem === userAnswer[0] ||
+//         // answerItem.split("").reverse().join("") === answer[0]
+//         answerItem.split("").reverse().join("") === userAnswer[0]
+//       );
+//     })
+//   ) {
+//     const newContent = content;
+//     newContent.answer.splice(idx, 1);
+//     if (newContent.answer.length === 0) {
+//       return positiveState;
+//     }
+//     return {
+//       ...state,
+//       content: newContent,
+//       // disabled: true,
+//     };
+//   } else {
+//     return {
+//       ...state,
+//       // disabled: true,
+//       topicState: { ...topicState, buttonDisabled: true },
+//     };
+//   }
+// }
 //         default: {
 //           throw new Error(`We don't know this type: ${action.type}`);
 //         }

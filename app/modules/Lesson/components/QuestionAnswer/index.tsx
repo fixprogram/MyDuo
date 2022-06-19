@@ -18,23 +18,20 @@ export default function QuestionAnswerPractice({
   userAnswer,
   setUserAnswer,
 }: QuestionAnswerPracticeProps) {
-  const { content, topicState, setCheckDisabled } = useSkill();
+  const { content, topicState } = useSkill();
   const { formDisabled } = topicState;
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    ref.current?.focus();
     if (!formDisabled) {
       setUserAnswer("");
     }
-  }, [formDisabled]);
+    const timeout = setTimeout(() => {
+      ref.current?.focus();
+    }, 10);
 
-  useEffect(() => {
-    if (userAnswer.length > 0) {
-      return setCheckDisabled(false);
-    }
-    return setCheckDisabled(true);
-  }, [userAnswer]);
+    return () => clearTimeout(timeout);
+  }, [formDisabled]);
 
   return (
     <Fragment>
@@ -54,7 +51,6 @@ export default function QuestionAnswerPractice({
         placeholder="Enter user answer"
         value={userAnswer}
         onChange={(e) => setUserAnswer(e.target.value)}
-        // onKeyDown={onKeyDownHandle}
         disabled={formDisabled}
         ref={ref}
       />

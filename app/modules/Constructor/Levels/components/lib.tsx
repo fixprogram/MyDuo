@@ -68,6 +68,7 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   // margin: 0 7px -2px;
   margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
+  // width: ${(props) => props.length * 20}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
   text-align: center;

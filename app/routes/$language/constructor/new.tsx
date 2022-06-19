@@ -22,7 +22,6 @@ export function ErrorBoundary() {
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const today = new Date();
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
@@ -53,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     const stepType = form.get(`type${index}`);
     // const stepChapter = form.get(`chapter${index}`) as string;
     let answer: string | string[] = form.get(`answer${index}`) as string;
-    answer = answer.trim().split(" ");
+    // answer = answer.trim().split(" ");
     const returnData = {
       stepType,
       number: index,
@@ -64,6 +63,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       case "Question": {
         const question = form.get(`question${index}`);
         const keywords = form.get(`keywords${index}`) as string;
+        answer = answer.trim().split(" ");
         return {
           ...returnData,
           question,
@@ -75,6 +75,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         const text = form.get(`text${index}`) as string;
         const isToChoose = !!form.get(`isToChoose${index}`);
         const variantValues = form.getAll(`variant${index}`);
+        answer = answer.trim().split(" ");
         const variants = variantValues.map((value, idx) => ({
           idx,
           value,
@@ -91,6 +92,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       case "Variants": {
         const question = form.get(`question${index}`);
         const variants = form.getAll(`variant${index}`);
+        console.log("asnwer: ", answer);
         return {
           ...returnData,
           answer,
@@ -106,7 +108,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         const variants = form.getAll(`variant${index}`) as string[];
         return {
           ...returnData,
-          answer: answer[0].split(","),
+          answer: answer.split(","),
           variants: variants.map((variant, idx) => ({
             value: variant,
             isFocused: false,

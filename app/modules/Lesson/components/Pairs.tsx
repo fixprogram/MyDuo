@@ -3,20 +3,20 @@ import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
 export default function Pairs({
-  contentAnswer,
+  answer,
   variants,
   checkAnswer,
-  setAnswer,
+  setUserAnswer,
 }: {
-  contentAnswer: string[];
+  answer: string[];
   variants: Variant[];
   checkAnswer: Function;
-  setAnswer: Function;
+  setUserAnswer: Function;
 }) {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
   const isDisabled = (idx: number) => {
-    return contentAnswer.find((answerItem) =>
+    return answer.find((answerItem) =>
       answerItem.includes((idx + 1).toString())
     );
     // return false;
@@ -48,9 +48,12 @@ export default function Pairs({
               if (activeIdx === -1) {
                 return setActiveIdx(Number(target.id));
               }
-              setAnswer([`${activeIdx}${target.id}`]);
+              console.log(111);
+              // setUserAnswer([`${activeIdx}${target.id}`]);
               // checkAnswer([`${activeIdx}${target.id}`]);
-              checkAnswer();
+
+              // setUserAnswer(`${activeIdx}${target.id}`);
+              checkAnswer(`${activeIdx}${target.id}`);
               setActiveIdx(-1);
             }}
           >

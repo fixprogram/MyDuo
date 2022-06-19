@@ -1,5 +1,4 @@
-import { Variant } from "@prisma/client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { areArraysEqual } from "~/utils";
 import { LessonTitle } from "../lib";
@@ -21,6 +20,8 @@ export default function InsertWords({
   const { text, isToChoose, variants, answer } = content;
   const [values, setValues] = useState([...new Array(answer.length).fill(" ")]);
 
+  const focusRef = useRef(null);
+
   useEffect(() => {
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
@@ -28,13 +29,17 @@ export default function InsertWords({
     if (values.length !== answer.length) {
       return;
     }
+
+    setUserAnswer(values);
+  }, [values]);
+
+  useEffect(() => {
     const isFieldEmpty = values.filter((val) => {
       if (val === "" || val === " ") {
         return true;
       }
     });
     setCheckDisabled(!!isFieldEmpty.length);
-    setUserAnswer(values);
   }, [values]);
 
   useEffect(() => {
@@ -57,6 +62,7 @@ export default function InsertWords({
           contentAnswer={answer}
           text={text}
           isToChoose={isToChoose}
+          variants={variants}
           formDisabled={topicState.formDisabled}
         />
 
