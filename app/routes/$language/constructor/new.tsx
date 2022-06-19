@@ -6,6 +6,7 @@ import Constructor from "~/modules/Constructor";
 import { Language, Lesson, Topic } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
 import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
+import { getTodayDate } from "~/utils";
 
 export type ActionData = {
   errors?: {
@@ -128,7 +129,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     currentChapter: 0,
     level: 0,
     projectId: activeLanguage?.id,
-    updatedAt: today.getDate().toString(),
+    // updatedAt: today.getDate().toString(),
+    updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber),
   };
   const topic = await prisma.topic.create({ data });

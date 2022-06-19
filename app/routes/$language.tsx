@@ -12,7 +12,7 @@ import { getLastActivity } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
-import { getWeekDay, getYesterdayDay } from "~/utils";
+import { getTodayDate, getWeekDay, getYesterdayDay } from "~/utils";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -36,6 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let user = await getUser(request);
   const languages = await getLanguages(request);
   const activeLanguage = languages?.find((item) => item.active);
+  const today = getTodayDate();
 
   if (!user) {
     return redirect("/login");
@@ -45,29 +46,25 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error("Active language wasnt found");
   }
 
-  // const lastActive = await getLastActivity(user.id);
   const lastActive = await getLastActivity(request);
-  if (!lastActive) {
+  if (today - lastActive > 1 || lastActive === 0) {
     user = await updateUserStreak(user.id, false, 0);
     return { user, languages };
   }
 
-  // if (!user?.wasToday && lastActive.day === getWeekDay()) {
-  if (!user?.wasToday && user.weeklyActivity[getWeekDay()]) {
-    user = await updateUserStreak(user.id, true, user.streak + 1);
-    return { user, languages };
-  }
-
-  if (user?.wasToday) {
-    return { user, languages };
-  }
-
-  if (user.weeklyActivity[getYesterdayDay()]) {
+  if (today - lastActive === 1) {
     user = await updateUserStreak(user.id, false, user.streak);
     return { user, languages };
   }
 
-  // if (lastActive.day === getYesterdayDay()) {
+  if (!user.wasToday && lastActive === today) {
+    user = await updateUserStreak(user.id, true, user.streak + 1);
+    return { user, languages };
+  }
+
+  if (user.wasToday) {
+    return { user, languages };
+  }
 
   if (!languages) {
     throw new Error("languages are not found");

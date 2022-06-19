@@ -1,9 +1,8 @@
 import { Lesson, Topic, User } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { getUser } from "~/session.server";
-import { getWeekDay, getYesterdayDay } from "~/utils";
+import { getTodayDate } from "~/utils";
 import { whenLastPractice } from "./language.server";
-import { resetTodayActivity } from "./user.server";
+import { resetMultipleActivity } from "./user.server";
 
 export async function createLessons(data: Lesson[]) {
   const batch = await prisma.lesson.createMany({ data });
@@ -37,21 +36,15 @@ export async function getTopics(languageId: string) {
 }
 
 export async function getLastActivity(request: Request) {
-  const today = getWeekDay() as string;
-  const yesterday = getYesterdayDay() as string;
-  const lastPracticed = (await whenLastPractice(request)) as string;
+  const today = getTodayDate();
+  const lastPracticed = await whenLastPractice(request);
 
-  let user = (await getUser(request)) as User;
-  if (!lastPracticed) {
-    user = (await resetTodayActivity(request)) as User;
-
-    return {
-      day: yesterday,
-      exp: user.weeklyActivity[yesterday],
-    };
+  if (today - lastPracticed > 0) {
+    await resetMultipleActivity(request, lastPracticed);
+    return lastPracticed;
   }
 
-  return { day: today, exp: user.weeklyActivity[today] };
+  return today;
 }
 
 export async function deleteTopicById(id: string) {

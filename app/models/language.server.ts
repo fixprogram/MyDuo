@@ -1,7 +1,7 @@
 import type { Language } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getUserId, logout } from "~/session.server";
-import { getWeekDay } from "~/utils";
+import { getTodayDate, getWeekDay } from "~/utils";
 
 export type { Language } from "@prisma/client";
 
@@ -100,9 +100,12 @@ export async function whenLastPractice(request: Request) {
   const lastUpdatedTopic = await prisma.topic.findFirst({
     where: {
       projectId: { in: languages.map(({ id }) => id) },
-      updatedAt: getWeekDay(),
     },
     select: { updatedAt: true },
+    orderBy: { updatedAt: "desc" },
   });
-  return lastUpdatedTopic?.updatedAt;
+  if (!lastUpdatedTopic) {
+    return 0;
+  }
+  return lastUpdatedTopic.updatedAt as number;
 }

@@ -1,9 +1,9 @@
 import { Topic } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { getWeekDay } from "~/utils";
+import { getWeekDay, getTodayDate } from "~/utils";
 
 export async function updateCurrentChapter(topic: Topic) {
-  const today = getWeekDay() as string;
+  const today = getTodayDate();
 
   return await prisma.topic.update({
     where: {

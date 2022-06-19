@@ -3,10 +3,20 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
 import { getUser } from "~/session.server";
-import { getWeekDay } from "~/utils";
+import { getCurrentWeek, getTodayDate, getWeekDay } from "~/utils";
 import { createInitialLanguage } from "./language.server";
 
 export type { User } from "@prisma/client";
+
+const emptyWeek = {
+  Sun: 0,
+  Mon: 0,
+  Tue: 0,
+  Wed: 0,
+  Thu: 0,
+  Fri: 0,
+  Sat: 0,
+};
 
 export async function createUser(username: User["username"], password: string) {
   const passwordHash = await bcrypt.hash(password, 10);
@@ -18,13 +28,7 @@ export async function createUser(username: User["username"], password: string) {
       streak: 0,
       wasToday: false,
       weeklyActivity: {
-        Sun: 0,
-        Mon: 0,
-        Tue: 0,
-        Wed: 0,
-        Thu: 0,
-        Fri: 0,
-        Sat: 0,
+        ...emptyWeek,
       },
     },
   });
@@ -104,6 +108,40 @@ export async function resetTodayActivity(request: Request) {
       weeklyActivity: {
         ...user.weeklyActivity,
         [`${getWeekDay()}`]: 0,
+      },
+    },
+  });
+}
+
+export async function resetMultipleActivity(request: Request, lastActivity) {
+  const today = getTodayDate();
+  const user = await getUser(request);
+  if (!user) throw new Error("User is undefined");
+
+  const currentWeek = getCurrentWeek();
+  const newWeek = user.weeklyActivity;
+  let i = today - lastActivity;
+
+  if (i > 6) {
+    return await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        weeklyActivity: {
+          ...emptyWeek,
+        },
+      },
+    });
+  }
+
+  for (i; i > 0; i--) {
+    newWeek[currentWeek[Object.keys(currentWeek)[6 - i]]] = 0;
+  }
+
+  return await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      weeklyActivity: {
+        ...newWeek,
       },
     },
   });

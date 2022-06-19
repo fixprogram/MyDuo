@@ -117,11 +117,11 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
   };
 };
 
-export const getWeekDay = (): string => {
+export const getWeekDay = () => {
   return getShortWeekday(new Date());
 };
 
-export const getYesterdayDay = (): string => {
+export const getYesterdayDay = () => {
   const today = new Date();
   today.setDate(today.getDate() - 1);
 
@@ -152,4 +152,10 @@ export const areArraysEqual = (arr1: string[], arr2: string[]) => {
   }
   const filtered = arr1.filter((arr1Item, idx) => arr1Item === arr2[idx]);
   return filtered.length === arr1.length;
+};
+
+export const getTodayDate = () => {
+  const today = new Date();
+
+  return today.getFullYear() + today.getUTCMonth() + today.getDate();
 };

@@ -13,6 +13,7 @@ import { ActionData } from "./new";
 import { json } from "remix";
 import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
 import { getActiveLanguage } from "~/models/language.server";
+import { getTodayDate } from "~/utils";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -125,7 +126,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     currentChapter: 0,
     level: 0,
     projectId: activeLanguage?.id,
-    updatedAt: today.getDate().toString(),
+    // updatedAt: today.getDate().toString(),
+    updatedAt: getTodayDate(),
   };
 
   await prisma.topic.update({
