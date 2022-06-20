@@ -48,7 +48,6 @@ export default function Pairs({
               if (activeIdx === -1) {
                 return setActiveIdx(Number(target.id));
               }
-              console.log(111);
               // setUserAnswer([`${activeIdx}${target.id}`]);
               // checkAnswer([`${activeIdx}${target.id}`]);
 

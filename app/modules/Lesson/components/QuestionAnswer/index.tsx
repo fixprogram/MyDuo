@@ -1,59 +1,61 @@
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Textarea } from "~/components/lib";
-import {
-  LessonQuestion,
-  LessonQuestionTriangle,
-  LessonQuestionTriangleContainer,
-  LessonTitle,
-} from "../lib";
-import Duo from "~/styles/duo.svg";
+import { useEffect, useState } from "react";
 import { useSkill } from "../..";
+import { doesArrayContainItems } from "~/utils";
+import QuestionAnswerScreen from "./QuestionAnswerScreen";
+import { Lesson } from "../Lesson";
 
-type QuestionAnswerPracticeProps = {
-  question: string;
-  checkAnswer: (arg0: string) => void;
-};
-
-export default function QuestionAnswerPractice({
-  userAnswer,
-  setUserAnswer,
-}: QuestionAnswerPracticeProps) {
-  const { content, topicState } = useSkill();
-  const { formDisabled } = topicState;
-  const ref = useRef<HTMLTextAreaElement>(null);
+export default function QuestionAnswerPractice() {
+  const { content, setStateWrong, setStateRight, setCheckDisabled } =
+    useSkill();
+  const [userAnswer, setUserAnswer] = useState("");
 
   useEffect(() => {
-    if (!formDisabled) {
-      setUserAnswer("");
+    if (userAnswer.length > 0) {
+      return setCheckDisabled(false);
     }
-    const timeout = setTimeout(() => {
-      ref.current?.focus();
-    }, 10);
+    return setCheckDisabled(true);
+  }, [userAnswer]);
 
-    return () => clearTimeout(timeout);
-  }, [formDisabled]);
+  const checkAnswer = () => {
+    const { state, length } = doesArrayContainItems(
+      content.answer,
+      userAnswer.split(" ")
+    );
 
-  return (
-    <Fragment>
-      <LessonTitle>Answer the question</LessonTitle>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
-        <div style={{ position: "relative" }}>
-          <LessonQuestion>{content.question}</LessonQuestion>
-          <LessonQuestionTriangleContainer>
-            <LessonQuestionTriangle />
-          </LessonQuestionTriangleContainer>
-        </div>
-      </div>
-      <Textarea
-        id="answer"
-        name="answer"
-        placeholder="Enter user answer"
-        value={userAnswer}
-        onChange={(e) => setUserAnswer(e.target.value)}
-        disabled={formDisabled}
-        ref={ref}
-      />
-    </Fragment>
-  );
+    if (!state) {
+      return setStateWrong();
+    }
+
+    if (
+      doesArrayContainItems(content.keywords, userAnswer.split(" ")).length ===
+      content.keywords.length
+    ) {
+      if (length < content.answer.length) {
+        return setStateRight();
+      }
+
+      return setStateRight();
+    }
+
+    if (length < content.answer.length * 0.8) {
+      // if user's response is less than 80% right, then return negative
+      return setStateWrong();
+    }
+  };
+
+  // useEffect(() => {
+  //   if (!formDisabled) {
+  //     setUserAnswer("");
+  //   }
+  // }, [formDisabled]);
+
+  return content.stepType === "Question" ? (
+    <Lesson
+      checkAnswer={checkAnswer}
+      userAnswer={userAnswer}
+      setUserAnswer={setUserAnswer}
+    >
+      <QuestionAnswerScreen question={content.question} />
+    </Lesson>
+  ) : null;
 }

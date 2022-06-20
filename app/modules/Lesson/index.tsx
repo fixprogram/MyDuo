@@ -23,7 +23,7 @@ import { areArraysEqual, doesArrayContainItems } from "~/utils";
 import { Lesson } from "./components/Lesson";
 
 const SkillContext = createContext({});
-SkillContext.displayName = "LessonContext";
+SkillContext.displayName = "SkillContext";
 
 export function useSkill() {
   const context = useContext(SkillContext);
@@ -56,14 +56,17 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
   const submitting = transition.state !== "idle";
 
   useEffect(() => {
+    console.log(steps);
+    // if (steps) {
     setup(steps); // Ones the data is loaded, we set the it in reducer
+    // }
   }, []);
 
-  useEffect(() => {
-    if (topicState.status === "results") {
-      return sectionRef.current?.focus();
-    }
-  }, [topicState.status]);
+  // useEffect(() => {
+  //   if (topicState.status === "results") {
+  //     return sectionRef.current?.focus();
+  //   }
+  // }, [topicState.status]);
 
   const onContinue = () => {
     if (topicState.status === "results") {
@@ -72,7 +75,7 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
       }
       return submit(ref.current, { replace: true });
     }
-    continueTopic();
+    return continueTopic();
   };
 
   const cox = {
@@ -110,8 +113,9 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
         ) : (
           <Fragment>
             <Progress />
-            <LessonQuestion />
-            <LessonInsert />
+            <QuestionAnswerPractice />
+            <InsertWords />
+            {/* <LessonInsert /> */}
             <LessonVariants />
             <LessonPairs />
           </Fragment>
@@ -120,93 +124,36 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
     </SkillContext.Provider>
   );
 }
-function LessonQuestion() {
-  const { content, setStateWrong, setStateRight, setCheckDisabled } =
-    useSkill();
-
-  const [userAnswer, setUserAnswer] = useState("");
-
-  useEffect(() => {
-    if (userAnswer.length > 0) {
-      return setCheckDisabled(false);
-    }
-    return setCheckDisabled(true);
-  }, [userAnswer]);
-
-  const checkAnswer = () => {
-    const { state, length } = doesArrayContainItems(
-      content.answer,
-      userAnswer.split(" ")
-    );
-
-    if (!state) {
-      return setStateWrong();
-    }
-
-    if (
-      doesArrayContainItems(content.keywords, userAnswer.split(" ")).length ===
-      content.keywords.length
-    ) {
-      if (length < content.answer.length) {
-        return setStateRight();
-      }
-
-      return setStateRight();
-    }
-
-    if (length < content.answer.length * 0.8) {
-      // if user's response is less than 80% right, then return negative
-      return setStateWrong();
-    }
-  };
-
-  return content.stepType === "Question" ? (
-    <Lesson
-      setUserAnswer={setUserAnswer}
-      userAnswer={userAnswer}
-      checkAnswer={checkAnswer}
-    >
-      <QuestionAnswerPractice />
-    </Lesson>
-  ) : null;
-}
-
 function LessonInsert({}) {
-  const { content, setStateRight, setStateWrong, topicState } = useSkill();
-
-  const lessonRef = useRef(null);
-  const [userAnswer, setUserAnswer] = useState([""]);
-
-  useEffect(() => {
-    lessonRef?.current?.focus();
-  }, [topicState.buttonDisabled]);
-
-  const checkAnswer = () => {
-    const { formatted } = doesArrayContainItems(content.answer, userAnswer);
-    if (areArraysEqual(content.answer, formatted)) {
-      return setStateRight();
-    }
-    return setStateWrong();
-  };
-
-  const onKeyDownHandle = (e) => {
-    if (e.key !== "Enter" || topicState.buttonDisabled) {
-      return;
-    }
-
-    e.preventDefault();
-    checkAnswer(userAnswer);
-  };
-
-  return content.stepType === "Insert" ? (
-    <Lesson
-      userAnswer={userAnswer}
-      setUserAnswer={setUserAnswer}
-      checkAnswer={checkAnswer}
-    >
-      <InsertWords />
-    </Lesson>
-  ) : null;
+  // const { content, setStateRight, setStateWrong, topicState } = useSkill();
+  // const lessonRef = useRef(null);
+  // const [userAnswer, setUserAnswer] = useState([""]);
+  // useEffect(() => {
+  //   lessonRef?.current?.focus();
+  // }, [topicState.buttonDisabled]);
+  // const checkAnswer = () => {
+  //   const { formatted } = doesArrayContainItems(content.answer, userAnswer);
+  //   if (areArraysEqual(content.answer, formatted)) {
+  //     return setStateRight();
+  //   }
+  //   return setStateWrong();
+  // };
+  // const onKeyDownHandle = (e) => {
+  //   if (e.key !== "Enter" || topicState.buttonDisabled) {
+  //     return;
+  //   }
+  //   e.preventDefault();
+  //   checkAnswer(userAnswer);
+  // };
+  // return content.stepType === "Insert" ? (
+  //   <Lesson
+  //     userAnswer={userAnswer}
+  //     setUserAnswer={setUserAnswer}
+  //     checkAnswer={checkAnswer}
+  //   >
+  //     <InsertWords />
+  //   </Lesson>
+  // ) : null;
 }
 
 function LessonVariants({}) {

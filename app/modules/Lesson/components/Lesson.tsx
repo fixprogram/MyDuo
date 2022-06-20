@@ -1,22 +1,19 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  EventHandler,
-  SyntheticEvent,
-} from "react";
+import React, { useRef, useEffect, SyntheticEvent } from "react";
+import { useFocus } from "~/utils";
 import { useSkill } from "..";
 import Footer from "./Footer";
 import { LessonBody } from "./lib";
 
 type LessonProps = {
+  initialValue?: string | string[];
   userAnswer: string | string[];
-  setUserAnswer: () => void;
+  setUserAnswer: Function;
   checkAnswer: () => void;
   keyDownHandle?: (event: SyntheticEvent) => void;
 };
 
 export const Lesson: React.FC<LessonProps> = ({
+  initialValue = "",
   userAnswer,
   setUserAnswer,
   checkAnswer,
@@ -25,11 +22,16 @@ export const Lesson: React.FC<LessonProps> = ({
   ...props
 }) => {
   const { topicState, continueTopic } = useSkill();
+  const { status, formDisabled, buttonDisabled } = topicState;
 
-  const lessonRef = useRef(null);
-  useEffect(() => {
-    lessonRef?.current?.focus();
-  }, [topicState.formDisabled]);
+  const lessonRef = useFocus(status);
+  // const lessonRef = useRef(null);
+  // useEffect(() => {
+  //   // console.log("Before: ", document.activeElement);
+  //   if (!document.activeElement) {
+  //     lessonRef?.current?.focus();
+  //   }
+  // }, [topicState.formDisabled]);
 
   const onKeyDownHandle = (event: SyntheticEvent) => {
     if (keyDownHandle) {
@@ -37,17 +39,23 @@ export const Lesson: React.FC<LessonProps> = ({
     }
     // if (event.key === "Enter") {
     // }
-    if (event.key !== "Enter" || topicState.buttonDisabled) {
+    if (event.key !== "Enter" || buttonDisabled) {
       return;
     }
     event.preventDefault();
 
-    if (topicState.status === "idle") {
+    if (status === "idle") {
       return checkAnswer();
     }
 
     return continueTopic();
   };
+
+  useEffect(() => {
+    if (!formDisabled) {
+      setUserAnswer(initialValue);
+    }
+  }, [formDisabled]);
 
   return (
     <div

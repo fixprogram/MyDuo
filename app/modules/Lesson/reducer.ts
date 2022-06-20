@@ -75,18 +75,18 @@ function skillReducer(state: LessonState, action: Action): LessonState {
           formDisabled: false,
           buttonDisabled: isResults ? false : true,
         },
-        userAnswer: [""],
+        // userAnswer: [""],
       };
     case actionTypes.SETUP: // Initial action to set data right after loading component
-      // console.log(action);
       const steps = action.steps;
+      // console.log(steps.shift());
       return {
         ...basicState,
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
         content: steps.shift() as Lesson,
-        userAnswer: [""],
+        // userAnswer: [""],
         // disabled: true,
       };
     case actionTypes.RESULTS:

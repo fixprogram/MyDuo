@@ -46,12 +46,17 @@ export function validateUsername(username: unknown): username is string {
   return typeof username === "string" && username.length > 3;
 }
 
-export const useFocus = () => {
+export const useFocus = (dependency) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    ref.current?.focus();
-  }, []);
+    // if (!document.activeElement) {
+    //   ref.current?.focus();
+    // }
+    // if (dependency) {
+    // }
+    return ref.current?.focus();
+  }, [dependency]);
 
   return ref;
 };
