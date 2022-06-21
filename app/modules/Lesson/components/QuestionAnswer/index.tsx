@@ -50,12 +50,12 @@ export default function QuestionAnswerPractice() {
   // }, [formDisabled]);
 
   return content.stepType === "Question" ? (
-    <Lesson
-      checkAnswer={checkAnswer}
-      userAnswer={userAnswer}
-      setUserAnswer={setUserAnswer}
-    >
-      <QuestionAnswerScreen question={content.question} />
+    <Lesson checkAnswer={checkAnswer}>
+      <QuestionAnswerScreen
+        question={content.question as string}
+        userAnswer={userAnswer}
+        setUserAnswer={setUserAnswer}
+      />
     </Lesson>
   ) : null;
 }

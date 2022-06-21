@@ -14,9 +14,34 @@ export default function Variants({
   variants,
   values,
   setValues,
+  topicState,
+  keyDownCheck,
 }: VariantsProps) {
+  const myRef = useRef(null);
+
+  useEffect(() => {
+    if (topicState.status === "idle") {
+      const timeout = setTimeout(() => {
+        myRef.current?.focus();
+      }, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [topicState.status]);
+
+  const KeyDownHandler = (e) => {
+    variants.forEach((variant, idx) => {
+      if (e.key == idx + 1) {
+        setValues([variant.value]);
+      }
+    });
+  };
+
   return (
-    <VariantsContainer onKeyDown={(e) => console.log(e.key)}>
+    <VariantsContainer
+      tabIndex={0}
+      ref={myRef}
+      onKeyDown={(e) => keyDownCheck(e, (e) => KeyDownHandler(e))}
+    >
       <VariantsList>
         {variants.map(({ value }, idx: number) => (
           <VariantsItem key={idx} onClick={() => setValues([value])}>

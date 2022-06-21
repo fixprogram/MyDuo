@@ -18,7 +18,7 @@ export default function Results({ refName }: { refName: HTMLFormElement }) {
       <ResultsLeftBlock />
       <Form
         method="post"
-        ref={refName}
+        ref={refName.current}
         style={{
           position: "absolute",
           width: 1,

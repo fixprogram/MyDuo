@@ -16,47 +16,8 @@ export type InsertWordsType = {
 
 export default function InsertWords() {
   const { content, setStateRight, setStateWrong } = useSkill();
-  // console.log(content);
-  // const { text, isToChoose, variants, answer } = content;
-  // const [values, setValues] = useState([...new Array(answer.length).fill(" ")]);
-
   const initialUserAnswer = [""];
   const [userAnswer, setUserAnswer] = useState(initialUserAnswer);
-
-  // const lessonRef = useRef(null);
-
-  // useEffect(() => {
-  //   lessonRef?.current?.focus();
-  // }, [topicState.buttonDisabled]);
-
-  // useEffect(() => {
-  //   if (areArraysEqual(userAnswer, values) && !isToChoose) {
-  //     return;
-  //   }
-  //   if (values.length !== answer.length) {
-  //     return;
-  //   }
-
-  //   setUserAnswer(values);
-  // }, [values]);
-
-  // useEffect(() => {
-  //   const isFieldEmpty = values.filter((val) => {
-  //     if (val === "" || val === " ") {
-  //       return true;
-  //     }
-  //   });
-  //   setCheckDisabled(!!isFieldEmpty.length);
-  // }, [values]);
-
-  // useEffect(() => {
-  //   if (isToChoose) {
-  //     return;
-  //   }
-  //   if (userAnswer[0].length) {
-  //     setValues([...userAnswer]);
-  //   }
-  // }, [userAnswer]);
 
   const checkAnswer = () => {
     const { formatted } = doesArrayContainItems(content.answer, userAnswer);

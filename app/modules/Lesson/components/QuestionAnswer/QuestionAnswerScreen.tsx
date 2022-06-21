@@ -22,7 +22,7 @@ export default function QuestionAnswerScreen({
 }: QuestionAnswerScreenType) {
   const { topicState } = useSkill();
 
-  const myRef = useRef(null);
+  const myRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (topicState.status === "idle") {

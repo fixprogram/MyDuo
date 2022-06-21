@@ -29,6 +29,7 @@ const PuzzleItem = styled("li")<PuzzleItemProps>`
 const VariantsContainer = styled("section")`
   width: 100%;
   margin-top: 20px;
+  outline: none;
 `;
 
 const VariantsList = styled("ul")`

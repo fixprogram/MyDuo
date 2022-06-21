@@ -1,47 +1,87 @@
-import { Lesson, Variant } from "@prisma/client";
-import { Fragment } from "react";
+import { Variant } from "@prisma/client";
+import { Fragment, useEffect, useState } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
+import VariantsScreen from "~/modules/Constructor/Levels/components/VariantsScreen";
+import { useSkill } from "..";
+import { Lesson } from "./Lesson";
 import { LessonTitle, VariantItem } from "./lib";
 
-export default function VariantsPractice({
-  userAnswer,
-  // content,
-  question,
-  variants,
-  setUserAnswer,
-}: {
-  userAnswer: string;
-  // content: Lesson;
-  question: string;
-  variants: Variant[];
-  setUserAnswer: Function;
+export default function VariantsPractice({}: // userAnswer,
+// // content,
+// question,
+// variants,
+// setUserAnswer,
+{
+  // userAnswer: string;
+  // // content: Lesson;
+  // question: string;
+  // variants: Variant[];
+  // setUserAnswer: Function;
 }) {
   // const { definition, question, variants } = content;
 
-  return (
-    <Fragment>
-      <LessonTitle>Choose right variant</LessonTitle>
-      {/* <div>
-        <p>{definition}</p>
-      </div> */}
-      <b>{question}</b>
+  const {
+    content,
+    setStateRight,
+    setStateWrong,
+    setCheckDisabled,
+    topicState,
+  } = useSkill();
+  const { question, variants, stepType } = content;
 
-      <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-        {variants.map(({ value }, idx: number) => (
-          <li
-            key={idx}
-            style={{ position: "relative", marginBottom: 8 }}
-            onClick={() => setUserAnswer(value)}
-          >
-            <VariantItemNumber isFocused={value === userAnswer}>
-              {idx + 1}
-            </VariantItemNumber>
-            <VariantItem type="button" isFocused={value === userAnswer}>
-              {value}
-            </VariantItem>
-          </li>
-        ))}
-      </ul>
-    </Fragment>
-  );
+  const [userAnswer, setUserAnswer] = useState("");
+
+  useEffect(() => {
+    if (!topicState.formDisabled) {
+      setUserAnswer("");
+    }
+  }, [topicState.formDisabled]);
+
+  useEffect(() => {
+    if (userAnswer.length) {
+      return setCheckDisabled(false);
+    }
+    return setCheckDisabled(true);
+  }, [userAnswer]);
+
+  const checkAnswer = () => {
+    if (userAnswer === content.answer[0]) {
+      return setStateRight();
+    }
+    return setStateWrong();
+  };
+
+  const handleOnKeyDown = (e) => {
+    if (e.key === "1") {
+      return setUserAnswer(variants[0].value);
+    }
+    if (e.key === "2") {
+      return setUserAnswer(variants[1].value);
+    }
+    if (e.key === "3") {
+      return setUserAnswer(variants[2].value);
+    }
+  };
+
+  return stepType === "Variants" ? (
+    <Lesson
+      userAnswer={userAnswer}
+      setUserAnswer={setUserAnswer}
+      checkAnswer={checkAnswer}
+      keyDownHandle={handleOnKeyDown}
+    >
+      <VariantsScreen question={question} variants={variants} />
+    </Lesson>
+  ) : null;
 }
+
+// return content.stepType === "Variants" ? (
+//   <Lesson
+//     userAnswer={userAnswer}
+//     setUserAnswer={setUserAnswer}
+//     checkAnswer={checkAnswer}
+//     keyDownHandle={handleOnKeyDown}
+//   >
+//     <VariantsPractice question={question} variants={variants} />
+//   </Lesson>
+// ) : null;

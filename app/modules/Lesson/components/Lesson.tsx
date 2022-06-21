@@ -6,9 +6,9 @@ import { LessonBody } from "./lib";
 
 type LessonProps = {
   initialValue?: string | string[];
-  userAnswer: string | string[];
-  setUserAnswer: Function;
-  checkAnswer: () => void;
+  userAnswer?: string | string[];
+  setUserAnswer?: Function;
+  checkAnswer?: () => void;
   keyDownHandle?: (event: SyntheticEvent) => void;
 };
 
@@ -37,14 +37,12 @@ export const Lesson: React.FC<LessonProps> = ({
     if (keyDownHandle) {
       keyDownHandle(event);
     }
-    // if (event.key === "Enter") {
-    // }
     if (event.key !== "Enter" || buttonDisabled) {
       return;
     }
     event.preventDefault();
 
-    if (status === "idle") {
+    if (status === "idle" && checkAnswer) {
       return checkAnswer();
     }
 
@@ -52,7 +50,7 @@ export const Lesson: React.FC<LessonProps> = ({
   };
 
   useEffect(() => {
-    if (!formDisabled) {
+    if (!formDisabled && setUserAnswer) {
       setUserAnswer(initialValue);
     }
   }, [formDisabled]);
@@ -74,6 +72,7 @@ export const Lesson: React.FC<LessonProps> = ({
           return React.cloneElement(child, {
             userAnswer,
             setUserAnswer,
+            keyDownCheck: onKeyDownHandle,
             ...props,
           });
         })}
