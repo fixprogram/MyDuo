@@ -71,7 +71,7 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   // width: ${(props) => props.length * 20}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
-  text-align: center;
+  // text-align: center;
 `;
 
 const VariantItemInput = styled("input")`

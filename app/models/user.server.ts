@@ -91,8 +91,8 @@ export async function increaseTodayExp(request: Request, value: number) {
     where: { id: user.id },
     data: {
       weeklyActivity: {
-        ...user?.weeklyActivity,
-        [`${getWeekDay()}`]: user?.weeklyActivity[`${getWeekDay()}`] + value,
+        ...user.weeklyActivity,
+        [`${getWeekDay()}`]: user.weeklyActivity[`${getWeekDay()}`] + value,
       },
     },
   });
@@ -113,14 +113,17 @@ export async function resetTodayActivity(request: Request) {
   });
 }
 
-export async function resetMultipleActivity(request: Request, lastActivity) {
+export async function resetMultipleActivity(
+  request: Request,
+  lastPracticed: number
+) {
   const today = getTodayDate();
   const user = await getUser(request);
   if (!user) throw new Error("User is undefined");
 
   const currentWeek = getCurrentWeek();
   const newWeek = user.weeklyActivity;
-  let i = today - lastActivity;
+  let i = today - lastPracticed;
 
   if (i > 6) {
     return await prisma.user.update({
@@ -133,9 +136,9 @@ export async function resetMultipleActivity(request: Request, lastActivity) {
     });
   }
 
-  for (i; i > 0; i--) {
-    newWeek[currentWeek[Object.keys(currentWeek)[6 - i]]] = 0;
-  }
+  // for (i; i > 0; i--) {
+  //   newWeek[currentWeek[Object.keys(currentWeek)[6 - i]]] = 0;
+  // }
 
   return await prisma.user.update({
     where: { id: user.id },

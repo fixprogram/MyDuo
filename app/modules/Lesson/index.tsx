@@ -56,7 +56,6 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
   const submitting = transition.state !== "idle";
 
   useEffect(() => {
-    console.log(steps);
     // if (steps) {
     setup(steps); // Ones the data is loaded, we set the it in reducer
     // }

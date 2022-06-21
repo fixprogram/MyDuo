@@ -19,17 +19,27 @@ export default function Text({
   isToChoose,
   values,
   setValues,
-  formDisabled,
+  topicState,
   variants,
 }: TextProps) {
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
-    if (!formDisabled) {
+    if (!topicState.formDisabled) {
       setValues([...new Array(contentAnswer.length).fill(" ")]);
-      //   setValues([" ", " ", " "]);
     }
     // firstInputRef.current?.focus();
-  }, [formDisabled]);
+  }, [topicState.formDisabled]);
+
+  const myRef = useRef(null);
+
+  useEffect(() => {
+    if (topicState.status === "idle" && !isToChoose && !variants.length) {
+      const timeout = setTimeout(() => {
+        myRef.current?.focus();
+      }, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [topicState.status]);
 
   const handleChange = (evt, index: number) => {
     setValues((prevArray: string[]) => {
@@ -53,6 +63,8 @@ export default function Text({
     }
   };
 
+  let firstInput = 0;
+
   return (
     <Fragment>
       {text.split(" ").map((textItem: string, idx: number) => {
@@ -64,6 +76,7 @@ export default function Text({
               // sets position for inputs
               return null;
             }
+            firstInput = firstInput && index;
             return (
               <Fragment key={index}>
                 <InsertWordsInput
@@ -74,7 +87,8 @@ export default function Text({
                   value={values[index]}
                   onChange={(evt) => handleChange(evt, index)}
                   onClick={(evt) => handleInputClick(evt, index)}
-                  disabled={formDisabled}
+                  disabled={topicState.formDisabled}
+                  ref={firstInput === index ? myRef : null}
                 />
                 <span style={{ marginRight: 4 }}>{sign}</span>
               </Fragment>

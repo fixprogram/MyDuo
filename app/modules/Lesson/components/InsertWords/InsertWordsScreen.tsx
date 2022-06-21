@@ -54,7 +54,7 @@ export default function InsertWordsScreen({ userAnswer, setUserAnswer }) {
           text={text}
           isToChoose={isToChoose}
           variants={variants}
-          formDisabled={topicState.formDisabled}
+          topicState={topicState}
         />
 
         {variants && (

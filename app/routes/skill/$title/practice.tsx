@@ -53,7 +53,5 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function LessonScreen() {
   const steps = useLoaderData();
 
-  console.log(steps);
-
   return <Lesson steps={steps} />;
 }

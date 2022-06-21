@@ -5,7 +5,8 @@ import { LessonTitle } from "../lib";
 import Puzzle from "./Puzzle";
 import Variants from "./Variants";
 import Text from "./Text";
-import Lesson, { useSkill } from "../..";
+import { useSkill } from "../..";
+import { Lesson } from "../Lesson";
 import InsertWordsScreen from "./InsertWordsScreen";
 
 export type InsertWordsType = {

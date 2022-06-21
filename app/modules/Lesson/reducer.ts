@@ -86,8 +86,8 @@ function skillReducer(state: LessonState, action: Action): LessonState {
         lessonSteps: steps,
         maxSteps: steps.length,
         content: steps.shift() as Lesson,
-        // userAnswer: [""],
-        // disabled: true,
+        userAnswer: [""],
+        disabled: true,
       };
     case actionTypes.RESULTS:
       return {
