@@ -150,7 +150,7 @@ export default function WeeklyProgress({
                   className="_2Hihu"
                   cx={x}
                   cy={y}
-                  fill="#ffc800"
+                  fill={exp > 50 ? "#ffc800" : "#fff"}
                   r="3.75"
                   stroke="#ffc800"
                   strokeWidth="2"
