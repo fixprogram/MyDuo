@@ -1,11 +1,11 @@
 import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
-export default function PairsScreen({ variants, checkAnswer, answer }) {
+export default function PairsScreen({ variants, checkAnswer, userAnswer }) {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
-  const isDisabled = (idx: number) => {
-    return answer.find((answerItem) =>
+  const isVariantDisabled = (idx: number) => {
+    return userAnswer.find((answerItem) =>
       answerItem.includes((idx + 1).toString())
     );
     // return false;
@@ -31,7 +31,7 @@ export default function PairsScreen({ variants, checkAnswer, answer }) {
             style={{ marginBottom: 5, position: "relative", width: "48%" }}
             onClick={(evt) => {
               const target = evt.target as HTMLInputElement;
-              if (isDisabled(idx)) {
+              if (isVariantDisabled(idx)) {
                 return;
               }
               if (activeIdx === -1) {
@@ -49,22 +49,22 @@ export default function PairsScreen({ variants, checkAnswer, answer }) {
               type="button"
               id={(idx + 1).toString()}
               style={{
-                cursor: isDisabled(idx) ? "default" : "pointer",
+                cursor: isVariantDisabled(idx) ? "default" : "pointer",
                 color:
                   activeIdx === idx + 1
                     ? "#1899d6"
-                    : isDisabled(idx)
+                    : isVariantDisabled(idx)
                     ? "#e5e5e5"
                     : "#4b4b4b",
                 borderColor:
                   activeIdx === idx + 1
                     ? "#84d8ff"
-                    : isDisabled(idx)
+                    : isVariantDisabled(idx)
                     ? "#e5e5e5"
                     : "#e5e5e5",
                 backgroundColor: activeIdx === idx + 1 ? "#ddf4ff" : "#fff",
               }}
-              disabled={isDisabled(idx)}
+              disabled={isVariantDisabled(idx)}
               isFocused={isFocused}
             >
               {value}

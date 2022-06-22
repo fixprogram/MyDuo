@@ -1,5 +1,5 @@
 import { Variant } from "@prisma/client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, SyntheticEvent, useEffect, useState } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
 import VariantsScreen from "~/modules/Constructor/Levels/components/VariantsScreen";
 import { useSkill } from "..";
@@ -29,29 +29,29 @@ export default function VariantsPractice({}: // userAnswer,
   } = useSkill();
   const { question, variants, stepType } = content;
 
-  const [userAnswer, setUserAnswer] = useState("");
+  // const [userAnswer, setUserAnswer] = useState("");
 
-  useEffect(() => {
-    if (!topicState.formDisabled) {
-      setUserAnswer("");
-    }
-  }, [topicState.formDisabled]);
+  // useEffect(() => {
+  //   if (!topicState.formDisabled) {
+  //     setUserAnswer("");
+  //   }
+  // }, [topicState.formDisabled]);
 
-  useEffect(() => {
-    if (userAnswer.length) {
-      return setCheckDisabled(false);
-    }
-    return setCheckDisabled(true);
-  }, [userAnswer]);
+  // useEffect(() => {
+  //   if (userAnswer.length) {
+  //     return setCheckDisabled(false);
+  //   }
+  //   return setCheckDisabled(true);
+  // }, [userAnswer]);
 
-  const checkAnswer = () => {
+  const checkAnswer = (userAnswer: string) => {
     if (userAnswer === content.answer[0]) {
       return setStateRight();
     }
     return setStateWrong();
   };
 
-  const handleOnKeyDown = (e) => {
+  const handleOnKeyDown = (e: SyntheticEvent, setUserAnswer: Function) => {
     if (e.key === "1") {
       return setUserAnswer(variants[0].value);
     }
@@ -65,8 +65,9 @@ export default function VariantsPractice({}: // userAnswer,
 
   return stepType === "Variants" ? (
     <Lesson
-      userAnswer={userAnswer}
-      setUserAnswer={setUserAnswer}
+      // userAnswer={userAnswer}
+      // setUserAnswer={setUserAnswer}
+      disabledCondition={(userAnswer: string) => userAnswer.length}
       checkAnswer={checkAnswer}
       keyDownHandle={handleOnKeyDown}
     >

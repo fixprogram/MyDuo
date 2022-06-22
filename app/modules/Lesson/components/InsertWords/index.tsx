@@ -17,9 +17,8 @@ export type InsertWordsType = {
 export default function InsertWords() {
   const { content, setStateRight, setStateWrong } = useSkill();
   const initialUserAnswer = [""];
-  const [userAnswer, setUserAnswer] = useState(initialUserAnswer);
 
-  const checkAnswer = () => {
+  const checkAnswer = (userAnswer: string[]) => {
     const { formatted } = doesArrayContainItems(content.answer, userAnswer);
     if (areArraysEqual(content.answer, formatted)) {
       return setStateRight();
@@ -38,9 +37,21 @@ export default function InsertWords() {
 
   return content.stepType === "Insert" ? (
     <Lesson
+      disabledCondition={(userAnswer: string[]) => {
+        if (
+          userAnswer.find((uA) => {
+            if (uA === " " || uA === "") {
+              return uA;
+            }
+          })
+        ) {
+          return false;
+        }
+        return userAnswer.length === content.answer.length;
+      }}
       initialValue={initialUserAnswer}
-      userAnswer={userAnswer}
-      setUserAnswer={setUserAnswer}
+      // userAnswer={userAnswer}
+      // setUserAnswer={setUserAnswer}
       checkAnswer={checkAnswer}
     >
       <InsertWordsScreen />

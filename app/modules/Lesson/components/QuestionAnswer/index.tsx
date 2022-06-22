@@ -7,16 +7,16 @@ import { Lesson } from "../Lesson";
 export default function QuestionAnswerPractice() {
   const { content, setStateWrong, setStateRight, setCheckDisabled } =
     useSkill();
-  const [userAnswer, setUserAnswer] = useState("");
+  // const [userAnswer, setUserAnswer] = useState("");
 
-  useEffect(() => {
-    if (userAnswer.length > 0) {
-      return setCheckDisabled(false);
-    }
-    return setCheckDisabled(true);
-  }, [userAnswer]);
+  // useEffect(() => {
+  //   if (userAnswer.length > 0) {
+  //     return setCheckDisabled(false);
+  //   }
+  //   return setCheckDisabled(true);
+  // }, [userAnswer]);
 
-  const checkAnswer = () => {
+  const checkAnswer = (userAnswer: string) => {
     const { state, length } = doesArrayContainItems(
       content.answer,
       userAnswer.split(" ")
@@ -50,12 +50,11 @@ export default function QuestionAnswerPractice() {
   // }, [formDisabled]);
 
   return content.stepType === "Question" ? (
-    <Lesson checkAnswer={checkAnswer}>
-      <QuestionAnswerScreen
-        question={content.question as string}
-        userAnswer={userAnswer}
-        setUserAnswer={setUserAnswer}
-      />
+    <Lesson
+      checkAnswer={checkAnswer}
+      disabledCondition={(userAnswer) => userAnswer.length > 0}
+    >
+      <QuestionAnswerScreen question={content.question as string} />
     </Lesson>
   ) : null;
 }

@@ -12,7 +12,7 @@ export default function InsertWordsScreen({
   setUserAnswer,
   keyDownCheck,
 }) {
-  const { content, topicState, setCheckDisabled } = useSkill();
+  const { content, topicState } = useSkill();
 
   const { text, isToChoose, variants, answer } = content;
   const [values, setValues] = useState([...new Array(answer.length).fill(" ")]);
@@ -26,15 +26,6 @@ export default function InsertWordsScreen({
     }
 
     setUserAnswer(values);
-  }, [values]);
-
-  useEffect(() => {
-    const isFieldEmpty = values.filter((val) => {
-      if (val === "" || val === " ") {
-        return true;
-      }
-    });
-    setCheckDisabled(!!isFieldEmpty.length);
   }, [values]);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, SyntheticEvent } from "react";
+import React, { useRef, useEffect, SyntheticEvent, useState } from "react";
 import { useFocus } from "~/utils";
 import { useSkill } from "..";
 import Footer from "./Footer";
@@ -6,36 +6,38 @@ import { LessonBody } from "./lib";
 
 type LessonProps = {
   initialValue?: string | string[];
-  userAnswer?: string | string[];
-  setUserAnswer?: Function;
-  checkAnswer?: () => void;
-  keyDownHandle?: (event: SyntheticEvent) => void;
+  checkAnswer?: Function;
+  disabledCondition: Function | null;
+  keyDownHandle?: (event: SyntheticEvent, callback?: Function) => void;
 };
 
 export const Lesson: React.FC<LessonProps> = ({
   initialValue = "",
-  userAnswer,
-  setUserAnswer,
+  disabledCondition,
   checkAnswer,
   keyDownHandle,
   children,
   ...props
 }) => {
-  const { topicState, continueTopic } = useSkill();
+  const { topicState, continueTopic, setCheckDisabled } = useSkill();
   const { status, formDisabled, buttonDisabled } = topicState;
+  const [userAnswer, setUserAnswer] = useState(initialValue);
 
   const lessonRef = useFocus(status);
-  // const lessonRef = useRef(null);
-  // useEffect(() => {
-  //   // console.log("Before: ", document.activeElement);
-  //   if (!document.activeElement) {
-  //     lessonRef?.current?.focus();
-  //   }
-  // }, [topicState.formDisabled]);
+
+  useEffect(() => {
+    if (disabledCondition === null) {
+      return;
+    }
+    if (disabledCondition(userAnswer)) {
+      return setCheckDisabled(false);
+    }
+    return setCheckDisabled(true);
+  }, [userAnswer]);
 
   const onKeyDownHandle = (event: SyntheticEvent) => {
     if (keyDownHandle) {
-      keyDownHandle(event);
+      keyDownHandle(event, setUserAnswer);
     }
     if (event.key !== "Enter" || buttonDisabled) {
       return;
@@ -43,7 +45,7 @@ export const Lesson: React.FC<LessonProps> = ({
     event.preventDefault();
 
     if (status === "idle" && checkAnswer) {
-      return checkAnswer();
+      return checkAnswer(userAnswer);
     }
 
     return continueTopic();
@@ -73,11 +75,12 @@ export const Lesson: React.FC<LessonProps> = ({
             userAnswer,
             setUserAnswer,
             keyDownCheck: onKeyDownHandle,
+            checkAnswer: (uAnswer) => checkAnswer(uAnswer, setUserAnswer),
             ...props,
           });
         })}
       </LessonBody>
-      <Footer checkAnswer={checkAnswer} />
+      <Footer checkAnswer={() => checkAnswer(userAnswer)} />
     </div>
   );
 };
