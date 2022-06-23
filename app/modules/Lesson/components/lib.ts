@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import styled from "@emotion/styled";
+import { Form } from "remix";
 import RightIcon from "~/styles/right.svg";
 import WrongIcon from "~/styles/wrong.svg";
 
@@ -270,6 +271,15 @@ const ResultsContainer = styled("section")`
   display: flex;
   height: calc(100vh - 140px);
   justify-content: center;
+  outline: none;
+`;
+
+const ResultsHiddenForm = styled(Form)`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  top: -1000px;
+  left: -1000px;
 `;
 
 const ResultsTitle = styled("h2")`
@@ -309,6 +319,7 @@ export {
   LessonQuestionTriangle,
   LessonFooterIcon,
   ResultsContainer,
+  ResultsHiddenForm,
   ResultsTitle,
   ResultsLeftBlock,
   ResultsSeparateLine,

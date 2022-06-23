@@ -1,44 +1,25 @@
 import {
   useEffect,
-  useRef,
   Fragment,
   useContext,
   createContext,
-  RefObject,
+  createRef,
 } from "react";
 
 import Progress from "~/components/Progress";
-import { useSkillReducer } from "./reducer";
-import { useSubmit, useTransition } from "@remix-run/react";
-import Results from "./components/Results";
+import { useSkillReducer, defaultSkillContextState } from "./reducer";
+import { useSubmit } from "@remix-run/react";
+import { Results } from "./components/Results";
 import Footer from "./components/Footer";
 import { LessonContainer } from "./components/lib";
-import { Lesson, Lesson as LessonType } from "@prisma/client";
+import { Lesson as LessonType } from "@prisma/client";
 import InsertWords from "./components/InsertWords";
 import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
+import { SkillContextType } from "./types";
 
-type SkillContextType = {
-  content: Lesson;
-  progress: number;
-  topicState: {
-    status: string;
-    formDisabled: boolean;
-    buttonDisabled: boolean;
-  };
-  stepNumber: number;
-  maxSteps: number;
-  setup: Function;
-  continueTopic: Function;
-  showResults: Function;
-  setStateRight: Function;
-  setStateWrong: Function;
-  setCheckDisabled: Function;
-  updateState: Function;
-};
-
-const SkillContext = createContext<SkillContextType>({});
+const SkillContext = createContext<SkillContextType>(defaultSkillContextState);
 SkillContext.displayName = "SkillContext";
 
 export function useSkill() {
@@ -50,79 +31,33 @@ export function useSkill() {
 }
 
 export default function Skill({ steps }: { steps: LessonType[] }) {
-  const ref = useRef<HTMLFormElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const resultsFormRef = createRef<HTMLFormElement>();
 
-  const {
-    content,
-    progress,
-    topicState,
-    stepNumber,
-    maxSteps,
-    setup,
-    continueTopic,
-    showResults,
-    setStateRight,
-    setStateWrong,
-    setCheckDisabled,
-    updateState,
-  } = useSkillReducer();
+  const value = useSkillReducer();
   const submit = useSubmit();
-  const transition = useTransition();
-  const submitting = transition.state !== "idle";
+
+  const { setup, topicState, continueTopic } = value;
+  const { status } = topicState;
 
   useEffect(() => {
     setup(steps); // Ones the data is loaded, we set the it in reducer
   }, []);
 
-  useEffect(() => {
-    if (topicState.status === "results") {
-      return sectionRef.current?.focus();
-    }
-  }, [topicState.status]);
-
   const onContinue = () => {
-    if (topicState.status === "results") {
-      if (submitting) {
-        return;
-      }
-      return submit(ref.current, { replace: true });
+    if (status === "results") {
+      return submit(resultsFormRef.current, { replace: true });
     }
     return continueTopic();
   };
 
-  const cox = {
-    content,
-    progress,
-    topicState,
-    stepNumber,
-    maxSteps,
-    setup,
-    continueTopic: onContinue,
-    showResults,
-    setStateRight,
-    setStateWrong,
-    setCheckDisabled,
-    updateState,
-  };
-
   return (
-    <SkillContext.Provider value={cox}>
+    <SkillContext.Provider value={{ ...value, continueTopic: onContinue }}>
       <LessonContainer>
-        {topicState.status === "results" ? (
-          <div
-            ref={sectionRef}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onContinue();
-              }
-            }}
-            style={{ outline: "none" }}
-          >
-            <Results refName={ref} />
+        {status === "results" ? (
+          <Fragment>
+            <Results onSubmit={onContinue} ref={resultsFormRef} />
             <Footer />
-          </div>
+          </Fragment>
         ) : (
           <Fragment>
             <Progress />

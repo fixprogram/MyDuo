@@ -1,14 +1,30 @@
-import { Form } from "remix";
+import React from "react";
+import { useFocus } from "~/utils";
 import {
   ResultsContainer,
+  ResultsHiddenForm,
   ResultsLeftBlock,
   ResultsSeparateLine,
   ResultsTitle,
 } from "./lib";
 
-export default function Results({ refName }: { refName: HTMLFormElement }) {
+export const Results = React.forwardRef<HTMLFormElement>((props, ref) => {
+  const containerRef = useFocus<HTMLDivElement>();
+
   return (
-    <ResultsContainer>
+    <ResultsContainer
+      ref={containerRef}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          props.onSubmit();
+        }
+      }}
+      tabIndex={0}
+    >
+      <ResultsHiddenForm method="post" ref={ref}>
+        <input type="text" name="exp" value="16" readOnly />
+      </ResultsHiddenForm>
+
       <ResultsLeftBlock>
         <ResultsTitle>Right answers and mistakes</ResultsTitle>
       </ResultsLeftBlock>
@@ -16,19 +32,6 @@ export default function Results({ refName }: { refName: HTMLFormElement }) {
       <ResultsSeparateLine />
 
       <ResultsLeftBlock />
-      <Form
-        method="post"
-        ref={refName}
-        style={{
-          position: "absolute",
-          width: 1,
-          height: 1,
-          top: -1000,
-          left: -1000,
-        }}
-      >
-        <input type="text" name="exp" value="16" readOnly />
-      </Form>
     </ResultsContainer>
   );
-}
+});

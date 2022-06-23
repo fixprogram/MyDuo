@@ -1,10 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { areArraysEqual, doesArrayContainItems } from "~/utils";
-import { LessonTitle } from "../lib";
-import Puzzle from "./Puzzle";
-import Variants from "./Variants";
-import Text from "./Text";
 import { useSkill } from "../..";
 import { Lesson } from "../Lesson";
 import InsertWordsScreen from "./InsertWordsScreen";
@@ -26,15 +20,6 @@ export default function InsertWords() {
     return setStateWrong();
   };
 
-  // const onKeyDownHandle = (e) => {
-  //   if (e.key !== "Enter" || topicState.buttonDisabled) {
-  //     return;
-  //   }
-
-  //   e.preventDefault();
-  //   checkAnswer();
-  // };
-
   return content.stepType === "Insert" ? (
     <Lesson
       disabledCondition={(userAnswer: string[]) => {
@@ -50,8 +35,6 @@ export default function InsertWords() {
         return userAnswer.length === content.answer.length;
       }}
       initialValue={initialUserAnswer}
-      // userAnswer={userAnswer}
-      // setUserAnswer={setUserAnswer}
       checkAnswer={checkAnswer}
     >
       <InsertWordsScreen />

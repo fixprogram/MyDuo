@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
 import { useSkill } from "../..";
 import { doesArrayContainItems } from "~/utils";
 import QuestionAnswerScreen from "./QuestionAnswerScreen";
 import { Lesson } from "../Lesson";
 
 export default function QuestionAnswerPractice() {
-  const { content, setStateWrong, setStateRight, setCheckDisabled } =
-    useSkill();
-  // const [userAnswer, setUserAnswer] = useState("");
-
-  // useEffect(() => {
-  //   if (userAnswer.length > 0) {
-  //     return setCheckDisabled(false);
-  //   }
-  //   return setCheckDisabled(true);
-  // }, [userAnswer]);
+  const { content, setStateWrong, setStateRight } = useSkill();
 
   const checkAnswer = (userAnswer: string) => {
     const { state, length } = doesArrayContainItems(
@@ -43,16 +33,10 @@ export default function QuestionAnswerPractice() {
     }
   };
 
-  // useEffect(() => {
-  //   if (!formDisabled) {
-  //     setUserAnswer("");
-  //   }
-  // }, [formDisabled]);
-
   return content.stepType === "Question" ? (
     <Lesson
       checkAnswer={checkAnswer}
-      disabledCondition={(userAnswer) => userAnswer.length > 0}
+      disabledCondition={(userAnswer: string) => userAnswer.length > 0}
     >
       <QuestionAnswerScreen question={content.question as string} />
     </Lesson>

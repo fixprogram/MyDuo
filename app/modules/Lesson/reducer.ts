@@ -1,6 +1,6 @@
 import { Lesson } from "@prisma/client";
 import { useReducer } from "react";
-import { LessonState } from "./types";
+import { SkillState } from "./types";
 
 // The function returns next stepNumber if there is any
 const continueContent = (content: Lesson, lessonSteps: Lesson[] | any) =>
@@ -25,7 +25,7 @@ type Action =
   | { type: actionTypes.setStateWrong }
   | { type: actionTypes.updateState; update: {} };
 
-const basicState: LessonState = {
+export const basicState: SkillState = {
   progress: 0,
   stepNumber: 0,
   content: {
@@ -49,7 +49,7 @@ const basicState: LessonState = {
   topicState: { status: "idle", formDisabled: false, buttonDisabled: true },
 };
 
-function skillReducer(state: LessonState, action: Action): LessonState {
+function skillReducer(state: SkillState, action: Action): SkillState {
   const { content, stepNumber, maxSteps, lessonSteps, topicState } = state;
   const positiveState = {
     ...state,
@@ -152,4 +152,15 @@ function useSkillReducer({
   };
 }
 
-export { useSkillReducer, skillReducer };
+const defaultSkillContextState = {
+  ...basicState,
+  setup: () => {},
+  continueTopic: () => {},
+  showResults: () => {},
+  setStateRight: () => {},
+  setStateWrong: () => {},
+  setCheckDisabled: () => {},
+  updateState: () => {},
+};
+
+export { useSkillReducer, skillReducer, defaultSkillContextState };

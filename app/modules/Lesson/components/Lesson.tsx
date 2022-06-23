@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, SyntheticEvent, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useFocus } from "~/utils";
 import { useSkill } from "..";
 import Footer from "./Footer";
@@ -6,9 +6,9 @@ import { LessonBody } from "./lib";
 
 type LessonProps = {
   initialValue?: string | string[];
-  checkAnswer?: Function;
+  checkAnswer: Function;
   disabledCondition: Function | null;
-  keyDownHandle?: (event: SyntheticEvent, callback?: Function) => void;
+  keyDownHandle?: (event: React.KeyboardEvent, callback?: Function) => void;
 };
 
 export const Lesson: React.FC<LessonProps> = ({
@@ -23,7 +23,7 @@ export const Lesson: React.FC<LessonProps> = ({
   const { status, formDisabled, buttonDisabled } = topicState;
   const [userAnswer, setUserAnswer] = useState(initialValue);
 
-  const lessonRef = useFocus(status);
+  const lessonRef = useFocus<HTMLDivElement>(status);
 
   useEffect(() => {
     if (disabledCondition === null) {
@@ -35,7 +35,7 @@ export const Lesson: React.FC<LessonProps> = ({
     return setCheckDisabled(true);
   }, [userAnswer]);
 
-  const onKeyDownHandle = (event: SyntheticEvent) => {
+  const onKeyDownHandle = (event: React.KeyboardEvent) => {
     if (keyDownHandle) {
       keyDownHandle(event, setUserAnswer);
     }
@@ -44,7 +44,7 @@ export const Lesson: React.FC<LessonProps> = ({
     }
     event.preventDefault();
 
-    if (status === "idle" && checkAnswer) {
+    if (status === "idle") {
       return checkAnswer(userAnswer);
     }
 
@@ -71,11 +71,12 @@ export const Lesson: React.FC<LessonProps> = ({
     >
       <LessonBody>
         {React.Children.map(children, (child) => {
-          return React.cloneElement(child, {
+          return React.cloneElement(child as ReactElement, {
             userAnswer,
             setUserAnswer,
             keyDownCheck: onKeyDownHandle,
-            checkAnswer: (uAnswer) => checkAnswer(uAnswer, setUserAnswer),
+            checkAnswer: (uAnswer: string | string[]) =>
+              checkAnswer(uAnswer, setUserAnswer),
             ...props,
           });
         })}

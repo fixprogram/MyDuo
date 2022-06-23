@@ -1,14 +1,27 @@
+import { Variant } from "@prisma/client";
 import { Fragment, useState } from "react";
 import { LessonTitle, VariantItem } from "./lib";
 
-export default function PairsScreen({ variants, checkAnswer, userAnswer }) {
+type PairsScreenProps = {
+  variants: Variant[];
+  checkAnswer: Function;
+  userAnswer: string[];
+};
+
+export default function PairsScreen({
+  variants,
+  checkAnswer,
+  userAnswer,
+}: PairsScreenProps) {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
   const isVariantDisabled = (idx: number) => {
-    return userAnswer.find((answerItem) =>
-      answerItem.includes((idx + 1).toString())
-    );
-    // return false;
+    if (
+      userAnswer.find((answerItem) => answerItem.includes((idx + 1).toString()))
+    ) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -37,10 +50,6 @@ export default function PairsScreen({ variants, checkAnswer, userAnswer }) {
               if (activeIdx === -1) {
                 return setActiveIdx(Number(target.id));
               }
-              // setUserAnswer([`${activeIdx}${target.id}`]);
-              // checkAnswer([`${activeIdx}${target.id}`]);
-
-              // setUserAnswer(`${activeIdx}${target.id}`);
               checkAnswer(`${activeIdx}${target.id}`);
               setActiveIdx(-1);
             }}
