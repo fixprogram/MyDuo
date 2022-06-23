@@ -1,5 +1,5 @@
 import { Variant } from "@prisma/client";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, SyntheticEvent, useEffect, useRef } from "react";
 import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 
@@ -11,6 +11,7 @@ type TextProps = {
   setValues: Function;
   formDisabled: boolean;
   variants: Variant[];
+  topicState: { status: string; formDisabled: boolean };
 };
 
 export default function Text({

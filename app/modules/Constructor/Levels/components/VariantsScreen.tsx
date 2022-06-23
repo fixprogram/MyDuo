@@ -1,20 +1,25 @@
+import { Variant } from "@prisma/client";
 import { Fragment } from "react";
 import { LessonTitle } from "~/components/lib";
 import { VariantItem } from "~/modules/Lesson/components/lib";
 import { VariantItemNumber } from "./lib";
+
+type VariantsScreenProps = {
+  question: string;
+  variants: Variant[];
+  userAnswer: string;
+  setUserAnswer: (answer: string) => void;
+};
 
 export default function VariantsScreen({
   question,
   variants,
   userAnswer,
   setUserAnswer,
-}) {
+}: VariantsScreenProps) {
   return (
     <Fragment>
       <LessonTitle>Choose right variant</LessonTitle>
-      {/* <div>
-      <p>{definition}</p>
-    </div> */}
       <b>{question}</b>
 
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>

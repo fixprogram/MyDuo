@@ -35,7 +35,10 @@ export const Lesson: React.FC<LessonProps> = ({
     return setCheckDisabled(true);
   }, [userAnswer]);
 
-  const onKeyDownHandle = (event: React.KeyboardEvent) => {
+  const onKeyDownHandle = (event: React.KeyboardEvent, callback?: Function) => {
+    if (callback) {
+      callback(event);
+    }
     if (keyDownHandle) {
       keyDownHandle(event, setUserAnswer);
     }

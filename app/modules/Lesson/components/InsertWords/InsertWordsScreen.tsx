@@ -7,11 +7,17 @@ import Variants from "./Variants";
 import Text from "./Text";
 import { areArraysEqual } from "~/utils";
 
+type InsertWordsScreenProps = {
+  userAnswer: string[];
+  setUserAnswer: Function;
+  keyDownCheck: Function;
+};
+
 export default function InsertWordsScreen({
   userAnswer,
   setUserAnswer,
   keyDownCheck,
-}) {
+}: InsertWordsScreenProps) {
   const { content, topicState } = useSkill();
 
   const { text, isToChoose, variants, answer } = content;
@@ -57,7 +63,7 @@ export default function InsertWordsScreen({
             values={values}
             variants={variants}
             setValues={setValues}
-            topicState={topicState}
+            status={topicState.status}
             keyDownCheck={keyDownCheck}
           />
         )}

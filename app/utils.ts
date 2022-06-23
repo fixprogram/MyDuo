@@ -46,7 +46,7 @@ export function validateUsername(username: unknown): username is string {
   return typeof username === "string" && username.length > 3;
 }
 
-export const useFocus = <T extends HTMLElement>(dependency: string) => {
+export const useFocus = <T extends HTMLElement>(dependency?: string) => {
   const ref = useRef<T>(null);
 
   useEffect(() => {

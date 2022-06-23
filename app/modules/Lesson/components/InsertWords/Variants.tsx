@@ -8,25 +8,26 @@ type VariantsProps = {
   variants: Variant[];
   values: string[];
   setValues: Function;
+  status: string;
 };
 
 export default function Variants({
   variants,
   values,
   setValues,
-  topicState,
+  status,
   keyDownCheck,
 }: VariantsProps) {
   const myRef = useRef(null);
 
   useEffect(() => {
-    if (topicState.status === "idle") {
+    if (status === "idle") {
       const timeout = setTimeout(() => {
         myRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [status]);
 
   const KeyDownHandler = (e) => {
     variants.forEach((variant, idx) => {
