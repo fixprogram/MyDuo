@@ -1,20 +1,29 @@
+import { useTransition } from "@remix-run/react";
 import React, { Fragment } from "react";
-import actionCreator, { Action } from "../actions";
-import { Step } from "../types";
+import { FormButton } from "~/components/lib";
+import { useConstructor } from "../..";
 
-const Sidebar: React.FC<{
-  chapters: number[];
-  steps: Step[];
-  currentScreen: string;
-  dispatch: React.Dispatch<Action>;
-}> = ({ children, chapters, steps, currentScreen, dispatch }) => {
+const Sidebar: React.FC = ({ children }) => {
   const {
+    steps,
+    currentScreen,
+    chapters,
+    changeCurrentScreen,
+    stepsReady,
+    basicInfoReady,
+    setStepActive,
+    removeStep,
     addChapter,
     addStep,
-    removeStep,
-    setStepActive,
-    changeCurrentScreen,
-  } = actionCreator(dispatch);
+  } = useConstructor();
+
+  const transition = useTransition();
+  const submitText = transition.state === "submitting" ? "Saving" : "Save";
+
+  const isSubmitActive = stepsReady === true && basicInfoReady === true;
+  const isSubmitDisabled =
+    stepsReady === false || basicInfoReady === false || submitText !== "Save";
+
   return (
     <Fragment>
       <h2>Sidebar</h2>
@@ -116,6 +125,14 @@ const Sidebar: React.FC<{
         ))}
       </ul>
       {children}
+
+      <FormButton
+        type="submit"
+        active={isSubmitActive}
+        disabled={isSubmitDisabled}
+      >
+        {submitText}
+      </FormButton>
     </Fragment>
   );
 };

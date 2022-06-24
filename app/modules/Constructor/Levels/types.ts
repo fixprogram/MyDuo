@@ -26,3 +26,8 @@ export type FieldsetType = {
   setAnswer: Function;
   setReady: Function;
 };
+
+export type ConstructorData = {
+  title: string;
+  steps: Step[];
+};

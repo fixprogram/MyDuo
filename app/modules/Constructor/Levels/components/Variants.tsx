@@ -8,6 +8,7 @@ import {
   variantSetValue,
   variantsSetup,
 } from "./MatchingPairs/actions";
+import { useConstructor } from "../..";
 
 type VariantsProps = FieldsetType & {
   initialQuestion: string | null;
@@ -20,10 +21,12 @@ export default function Variants({
   initialVariants = [],
   number,
   answer,
-  setAnswer,
-  setReady,
+  // setAnswer,
+  // setReady,
   variantsCount,
+  initialValue,
 }: VariantsProps) {
+  const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
     pairs: [],
@@ -40,7 +43,7 @@ export default function Variants({
     if (
       variants.filter((variant: Variant) => variant.value.length === 0).length
     ) {
-      return setReady(false);
+      return setStepReady(false);
     }
 
     if (
@@ -48,15 +51,15 @@ export default function Variants({
         (variant: Variant) => variant.isFocused || variant.value === answer[0]
       )
     ) {
-      setReady(true);
+      setStepReady(true);
     } else {
-      return setReady(false);
+      return setStepReady(false);
     }
 
     if (question?.length) {
-      setReady(true);
+      setStepReady(true);
     } else {
-      setReady(false);
+      setStepReady(false);
     }
   }, [variants, question]);
 

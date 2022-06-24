@@ -11,22 +11,24 @@ import {
   LessonTitle,
 } from "~/components/lib";
 import { ActionData } from "~/routes/$language/constructor/new";
+import { useConstructor } from "..";
 
 import { LessonTitleInput, ScreenContainer } from "./lib";
 
 export default function TopicInfo({
   title = "",
-  setReady,
-  screen,
+  // setReady,
+  // screen,
   actionData,
   lastAddedTopics,
 }: {
   lastAddedTopics: Topic[];
   title: string | undefined;
-  setReady: Function;
-  screen: string;
+  // setReady: Function;
+  // screen: string;
   actionData: ActionData;
 }) {
+  const { setBasicInfoReady, screen } = useConstructor();
   const [topicTitle, setLessonTitle] = useState("");
   const [lineNumber, setLineNumber] = useState(0);
   useEffect(() => {
@@ -35,8 +37,8 @@ export default function TopicInfo({
     }
   }, []);
   useEffect(() => {
-    setReady(!!topicTitle.length);
-  }, [topicTitle, setReady]);
+    setBasicInfoReady(!!topicTitle.length);
+  }, [topicTitle, setBasicInfoReady]);
 
   return (
     <ScreenContainer screen={screen} target="Topic">

@@ -11,7 +11,7 @@ type VariantItemNumberProps = {
 
 type InsertWordsInputProps = {
   length: number;
-  isToChoose: boolean;
+  isToChoose?: boolean;
 };
 
 const StepContent = styled("div")`
@@ -65,15 +65,21 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   outline: none;
   border: none;
   font-size: 19px;
-  // margin: 0 7px -2px;
   margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
-  // width: ${(props) => props.length * 20}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
-  // text-align: center;
+  &:disabled {
+    background: inherit;
+    cursor: default;
+  }
 `;
 
+const InsertWordsAnswerField = styled("span")<InsertWordsInputProps>`
+  margin: 9px 7px 0;
+  width: ${(props) => props.length * 13}px;
+  border-bottom: 2px solid #afafaf;
+`;
 const VariantItemInput = styled("input")`
   border: 1px solid #e5e5e5;
   border-radius: 12px;
@@ -129,6 +135,7 @@ export {
   StyleButton,
   InsertWordsTextBlock,
   InsertWordsInput,
+  InsertWordsAnswerField,
   VariantItemInput,
   VariantItemNumber,
 };

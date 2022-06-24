@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { useFocus } from "~/utils";
+import { useFocus } from "~/hooks/useFocus";
 import { useSkill } from "..";
 import Footer from "./Footer";
 import { LessonBody } from "./lib";

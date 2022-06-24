@@ -1,6 +1,9 @@
 import { Variant } from "@prisma/client";
 import { Fragment, SyntheticEvent, useEffect, useRef } from "react";
-import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
+import {
+  InsertWordsAnswerField,
+  InsertWordsInput,
+} from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 
 type TextProps = {
@@ -28,10 +31,9 @@ export default function Text({
     if (!topicState.formDisabled) {
       setValues([...new Array(contentAnswer.length).fill(" ")]);
     }
-    // firstInputRef.current?.focus();
   }, [topicState.formDisabled]);
 
-  const myRef = useRef(null);
+  const myRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (topicState.status === "idle" && !isToChoose && !variants.length) {
@@ -43,9 +45,10 @@ export default function Text({
   }, [topicState.status]);
 
   const handleChange = (evt, index: number) => {
+    const target = evt.target as HTMLInputElement;
     setValues((prevArray: string[]) => {
       const newArray = prevArray;
-      newArray[index] = evt.target.value;
+      newArray[index] = target.value;
       return [...newArray];
     });
   };
@@ -80,17 +83,26 @@ export default function Text({
             firstInput = firstInput && index;
             return (
               <Fragment key={index}>
-                <InsertWordsInput
-                  type="text"
-                  id={`input${0}`}
-                  isToChoose={isToChoose}
-                  length={newItem.length}
-                  value={values[index]}
-                  onChange={(evt) => handleChange(evt, index)}
-                  onClick={(evt) => handleInputClick(evt, index)}
-                  disabled={topicState.formDisabled}
-                  ref={firstInput === index ? myRef : null}
-                />
+                {variants ? (
+                  <InsertWordsInput
+                    type="text"
+                    length={newItem.length}
+                    disabled={!!variants}
+                  />
+                ) : (
+                  <InsertWordsInput
+                    type="text"
+                    id={`input${0}`}
+                    isToChoose={isToChoose}
+                    length={newItem.length}
+                    value={values[index]}
+                    onChange={(evt) => handleChange(evt, index)}
+                    onClick={(evt) => handleInputClick(evt, index)}
+                    disabled={topicState.formDisabled || variants}
+                    ref={firstInput === index ? myRef : null}
+                  />
+                )}
+
                 <span style={{ marginRight: 4 }}>{sign}</span>
               </Fragment>
             );

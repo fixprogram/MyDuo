@@ -15,9 +15,8 @@ export type ActionData = {
 };
 
 export function ErrorBoundary() {
-  const { lessonId } = useParams();
   return (
-    <div className="error-container">{`There was an error loading lesson by the id ${lessonId}. Sorry.`}</div>
+    <div className="error-container">{`There was an error loading the constructor. Sorry.`}</div>
   );
 }
 
@@ -151,6 +150,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
   const { lastAddedTopics } = useLoaderData();
+
+  console.log(actionData);
+  console.log();
 
   return (
     <Constructor actionData={actionData} lastAddedTopics={lastAddedTopics} />

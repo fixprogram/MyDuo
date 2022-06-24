@@ -1,7 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { Textarea } from "~/components/lib";
+import { useFocus } from "~/hooks/useFocus";
+import { useConstructor } from "~/modules/Constructor";
 import { LessonTitle } from "~/modules/Lesson/components/lib";
-import { doesItemContainSign, isItemInArray, useFocus } from "~/utils";
+import { doesItemContainSign, isItemInArray } from "~/utils";
 import type { FieldsetType } from "../../types";
 import { InsertWordsInput, InsertWordsTextBlock } from "../lib";
 import Backend from "./Backend";
@@ -13,16 +15,18 @@ type InsertWords = FieldsetType & {
 };
 
 export default function InsertWords({
-  text,
-  number,
-  answer,
-  setAnswer,
-  setReady,
-}: InsertWords) {
+  // text,
+  // number,
+  // answer,
+  initialState,
+}: // setAnswer,
+// setReady,
+InsertWords) {
+  const { text, number, answer } = initialState;
+  const { setStepReady, setAnswer } = useConstructor();
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
   const [isChooseVariants, setChooseVariants] = useState(false);
-  // const [variants, setVariants] = useState([""]);
   const ref = useFocus();
 
   const defaultAnswer = words
@@ -34,15 +38,12 @@ export default function InsertWords({
     .join("");
 
   useEffect(() => {
-    // if (words.length === 1) {
-    //   setVariants([...words]);
-    // }
-    setReady(!!words.length);
+    setStepReady(!!words.length, number);
   }, [words.length]);
 
   useEffect(() => {
     if (text) {
-      setAnswer(text);
+      setAnswer(text, number);
       const newWords = text.split(" ").filter((txt) => {
         const { newItem } = doesItemContainSign(txt);
         return isItemInArray(answer.split(" "), newItem);
@@ -73,9 +74,8 @@ export default function InsertWords({
         name={`text${number}`}
         placeholder="Type text"
         value={answer}
-        // value={text}
         onChange={(evt) => {
-          setAnswer(evt.target.value);
+          setAnswer(evt.target.value, number);
         }}
         ref={ref}
         required

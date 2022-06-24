@@ -9,6 +9,7 @@ type VariantsProps = {
   values: string[];
   setValues: Function;
   status: string;
+  keyDownCheck: Function;
 };
 
 export default function Variants({
@@ -18,7 +19,7 @@ export default function Variants({
   status,
   keyDownCheck,
 }: VariantsProps) {
-  const myRef = useRef(null);
+  const myRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (status === "idle") {
@@ -29,9 +30,9 @@ export default function Variants({
     }
   }, [status]);
 
-  const KeyDownHandler = (e) => {
+  const KeyDownHandler = (e: KeyboardEvent) => {
     variants.forEach((variant, idx) => {
-      if (e.key == idx + 1) {
+      if (Number(e.key) === idx + 1) {
         setValues([variant.value]);
       }
     });
@@ -41,7 +42,9 @@ export default function Variants({
     <VariantsContainer
       tabIndex={0}
       ref={myRef}
-      onKeyDown={(e) => keyDownCheck(e, (e) => KeyDownHandler(e))}
+      onKeyDown={(e) =>
+        keyDownCheck(e, (e: KeyboardEvent) => KeyDownHandler(e))
+      }
     >
       <VariantsList>
         {variants.map(({ value }, idx: number) => (

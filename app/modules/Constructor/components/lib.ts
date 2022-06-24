@@ -1,9 +1,26 @@
 import styled from "@emotion/styled";
+import { Form } from "remix";
 
 type ScreenContainerProps = {
   screen: string;
   target: string;
 };
+
+const ConstructorForm = styled(Form)`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  height: calc(100vh - 95px);
+`;
+
+const ConstructorFormInner = styled("section")`
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  padding-left: 30px;
+`;
 
 const LessonTitleInput = styled("input")`
   width: fit-content;
@@ -54,4 +71,6 @@ export {
   ConstructorMenu,
   ScreenContainer,
   ConstructorSidebar,
+  ConstructorForm,
+  ConstructorFormInner,
 };

@@ -1,5 +1,5 @@
 import { useMatches } from "@remix-run/react";
-import React, { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
 
@@ -45,16 +45,6 @@ export function useUser(): User {
 export function validateUsername(username: unknown): username is string {
   return typeof username === "string" && username.length > 3;
 }
-
-export const useFocus = <T extends HTMLElement>(dependency?: string) => {
-  const ref = useRef<T>(null);
-
-  useEffect(() => {
-    return ref.current?.focus();
-  }, [dependency]);
-
-  return ref;
-};
 
 export const isItemInArray = (arr: string[], item: string) => {
   return arr.find((arrItem) => arrItem === item);

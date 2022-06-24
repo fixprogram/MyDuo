@@ -1,5 +1,5 @@
 import React from "react";
-import { useFocus } from "~/utils";
+import { useFocus } from "~/hooks/useFocus";
 import {
   ResultsContainer,
   ResultsHiddenForm,
