@@ -66,6 +66,24 @@ const ConstructorSidebar = styled("section")`
   padding: 24px;
 `;
 
+const BtnClose = styled("button")`
+  position: absolute;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  left: 30px;
+  bottom: -60px;
+`;
+
+const BtnCloseImage = styled("img")`
+  width: 16px;
+  height: 16px;
+  vertical-align: initial;
+`;
+
 export {
   LessonTitleInput,
   ConstructorMenu,
@@ -73,4 +91,6 @@ export {
   ConstructorSidebar,
   ConstructorForm,
   ConstructorFormInner,
+  BtnClose,
+  BtnCloseImage,
 };

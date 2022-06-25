@@ -18,6 +18,8 @@ export type State = {
   chapters: number[];
   currentScreen: string;
   steps: Step[];
+  basicInfoReady: boolean;
+  stepsReady: boolean;
 };
 
 export type FieldsetType = {
@@ -30,4 +32,21 @@ export type FieldsetType = {
 export type ConstructorData = {
   title: string;
   steps: Step[];
+};
+
+export type ContextType = State & {
+  setStepType: Function;
+  setup: Function;
+  removeStep: Function;
+  removeStepType: Function;
+  setStepActive: Function;
+  setQuestion: Function;
+  setAnswer: Function;
+  setKeywords: Function;
+  addChapter: Function;
+  addStep: Function;
+  setStepReady: Function;
+  changeCurrentScreen: Function;
+  setBasicInfoReady: Function;
+  setStepsReady: Function;
 };

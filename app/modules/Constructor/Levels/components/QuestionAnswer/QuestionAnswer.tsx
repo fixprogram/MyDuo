@@ -1,9 +1,12 @@
 import { Fragment, useEffect } from "react";
 import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
-import Keywords from "../../components/Keywords";
+// import Keywords from "../../components/Keywords";
 import { doesItemContainSign } from "~/utils";
 import type { FieldsetType } from "../types";
-import { useConstructor } from "../..";
+// import { useConstructor } from "../..";
+import Step from "../Step";
+import { useConstructor } from "~/modules/Constructor";
+import Keywords from "~/modules/Constructor/components/Keywords";
 
 // type QA = FieldsetType & {
 //   question?: string | null;
@@ -72,7 +75,7 @@ export default function QuestionAnswer({
         <Keywords
           answer={answer as string}
           initialKeywords={keywords}
-          onSet={setKeywords}
+          onSet={(kwords) => setKeywords(kwords, number)}
         />
 
         <input

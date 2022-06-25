@@ -17,18 +17,14 @@ import { LessonTitleInput, ScreenContainer } from "./lib";
 
 export default function TopicInfo({
   title = "",
-  // setReady,
-  // screen,
   actionData,
   lastAddedTopics,
 }: {
   lastAddedTopics: Topic[];
   title: string | undefined;
-  // setReady: Function;
-  // screen: string;
   actionData: ActionData;
 }) {
-  const { setBasicInfoReady, screen } = useConstructor();
+  const { setBasicInfoReady, currentScreen } = useConstructor();
   const [topicTitle, setLessonTitle] = useState("");
   const [lineNumber, setLineNumber] = useState(0);
   useEffect(() => {
@@ -38,10 +34,10 @@ export default function TopicInfo({
   }, []);
   useEffect(() => {
     setBasicInfoReady(!!topicTitle.length);
-  }, [topicTitle, setBasicInfoReady]);
+  }, [topicTitle]);
 
   return (
-    <ScreenContainer screen={screen} target="Topic">
+    <ScreenContainer screen={currentScreen} target="Topic">
       <input type="hidden" name="formType" value="repeat" />
       <input type="hidden" name="lineNumber" value={lineNumber} />
 

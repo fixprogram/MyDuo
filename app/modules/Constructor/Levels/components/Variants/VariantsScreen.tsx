@@ -2,7 +2,7 @@ import { Variant } from "@prisma/client";
 import { Fragment } from "react";
 import { LessonTitle } from "~/components/lib";
 import { VariantItem } from "~/modules/Lesson/components/lib";
-import { VariantItemNumber } from "./lib";
+import { VariantItemNumber } from "../lib";
 
 type VariantsScreenProps = {
   question: string;

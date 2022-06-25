@@ -1,5 +1,4 @@
 import type { Step, State } from "./types";
-// import { Action } from "./actions";
 import { nanoid } from "nanoid";
 
 const createStep = ({ number = 0, chapter = 1 }) => {
@@ -181,7 +180,7 @@ export const basicState = {
   stepsReady: false,
 } as State;
 
-function constructorReducer(state: State, action: Action) {
+function constructorReducer(state: State, action: Action): State {
   const { steps, chapters } = state;
   const { type } = action;
 
@@ -287,6 +286,14 @@ function constructorReducer(state: State, action: Action) {
       const { currentScreen } = action;
       return { ...state, currentScreen };
     }
+    case actionTypes.setBasicInfoReady: {
+      const { isReady } = action;
+      return { ...state, basicInfoReady: isReady };
+    }
+    case actionTypes.setStepsReady: {
+      const { isReady } = action;
+      return { ...state, stepsReady: isReady };
+    }
     default:
       throw new Error(`We don't know this action type: ${type}`);
   }
@@ -314,7 +321,7 @@ function useConstructorReducer({
     dispatch({ type: actionTypes.setKeywords, payload: { keywords, number } });
   const addChapter = () => dispatch({ type: actionTypes.addChapter });
   const addStep = (chapter: number) =>
-    dispatch({ type: actionTypes.addStep, payload: { chapter } });
+    dispatch({ type: actionTypes.addStep, chapter });
   const setStepReady = (isReady: boolean, number: number) =>
     dispatch({ type: actionTypes.setStepReady, payload: { isReady, number } });
   const setAnswer = (answer: string, number: number) =>
@@ -345,4 +352,22 @@ function useConstructorReducer({
   };
 }
 
-export { useConstructorReducer, constructorReducer };
+const initialContext = {
+  ...basicState,
+  setStepType: (stepType: string, id: string) => {},
+  setup: (steps: Lesson[]) => {},
+  removeStep: (id: string) => {},
+  removeStepType: (id: string) => {},
+  setStepActive: (id: string) => {},
+  setQuestion: (question: string, number: number) => {},
+  setAnswer: (answer: string, number: number) => {},
+  setKeywords: (keywords: string[], number: number) => {},
+  addChapter: () => {},
+  addStep: (chapter: number) => {},
+  setStepReady: (isReady: boolean, number: number) => {},
+  changeCurrentScreen: (currentScreen: string) => {},
+  setBasicInfoReady: (isReady: boolean) => {},
+  setStepsReady: (isReady: boolean) => {},
+};
+
+export { useConstructorReducer, constructorReducer, initialContext };

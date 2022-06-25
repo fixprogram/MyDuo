@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useReducer } from "react";
+import { useConstructor } from "~/modules/Constructor";
 import { FieldsetType } from "../../types";
 import { VariantItemNumber, VariantItemInput } from "../lib";
 import { pairsChoose, pairsConnect, pairsSetup, pairsType } from "./actions";
@@ -10,13 +11,17 @@ type MP = FieldsetType & {
 };
 
 export default function MatchingPairs({
-  number,
-  answer,
-  setAnswer,
+  // number,
+  // answer,
+  // setAnswer,
   variantsCount = 4,
-  setReady,
+  // setReady,
   initialVariants = [],
+  initialState,
 }: MP) {
+  const { number, answer, stepType } = initialState;
+  const { setStepReady, setAnswer } = useConstructor();
+
   const [{ variants, pairs }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
     pairs: [],
@@ -29,14 +34,14 @@ export default function MatchingPairs({
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {
       setAnswer(pairs);
-      setReady(true);
+      setStepReady(true, number);
     }
     if (pairs.length !== variantsCount / 2) {
-      setReady(false);
+      setStepReady(false, number);
     }
   }, [pairs.length, pairs]);
 
-  return (
+  return stepType === "Pairs" ? (
     <Fragment>
       <input type="hidden" name={`type${number}`} value={"Pairs"} />
       <input type="hidden" name={`answer${number}`} value={answer} />
@@ -101,5 +106,5 @@ export default function MatchingPairs({
         </button>
       </ul>
     </Fragment>
-  );
+  ) : null;
 }

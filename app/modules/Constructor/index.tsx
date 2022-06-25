@@ -1,15 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
-import { Form, useTransition } from "remix";
-import { FormButton } from "~/components/lib";
+import { createContext, useContext, useEffect } from "react";
 import TopicInfo from "./components/TopicInfo";
-import { basicState, useConstructorReducer } from "./Levels/reducer";
-import actionCreator from "./Levels/actions";
+import { initialContext, useConstructorReducer } from "./Levels/reducer";
 import {
   ConstructorForm,
   ConstructorFormInner,
@@ -18,20 +9,10 @@ import {
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
-import { ConstructorData, Step } from "./Levels/types";
+import { ConstructorData } from "./Levels/types";
 
-const ConstructorContext = createContext();
+const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
-
-// const ConstructorProvider: React.FC = ({ children }) => {
-// const { state } = useConstructorReducer();
-
-//   return (
-//     <ConstructorContext.Provider value={state}>
-//       {children}
-//     </ConstructorContext.Provider>
-//   );
-// };
 
 export const useConstructor = () => {
   const state = useContext(ConstructorContext);
@@ -50,14 +31,12 @@ export default function Constructor({
   data?: ConstructorData;
   actionData: ActionData;
 }) {
-  // const { currentScreen, setData, changeCurrentScreen } = useConstructor();
-
   const state = useConstructorReducer();
-  const { currentScreen, setData, changeCurrentScreen } = state;
+  const { currentScreen, setup, changeCurrentScreen } = state;
 
   useEffect(() => {
     if (data) {
-      setData(data.steps);
+      setup(data.steps);
     }
   }, [data]);
 
@@ -68,43 +47,21 @@ export default function Constructor({
   }, [actionData]);
 
   return (
-    // <ConstructorProvider>
     <ConstructorContext.Provider value={state}>
       <ConstructorForm method="post">
         <ConstructorFormInner>
           <TopicInfo
             title={data?.title}
-            // setReady={(val: boolean) => setTopicInfoReady(val)}
-            // screen={currentScreen}
             actionData={actionData}
             lastAddedTopics={lastAddedTopics}
           />
 
-          <Levels
-          // steps={steps}
-          // setReady={(val: boolean) => setStepsReady(val)}
-          // screen={currentScreen}
-          // dispatch={dispatch}
-          />
+          <Levels />
         </ConstructorFormInner>
         <ConstructorSidebar>
-          <Sidebar
-          // chapters={chapters}
-          // steps={steps}
-          // currentScreen={currentScreen}
-          // dispatch={dispatch}
-          >
-            {/* <FormButton
-            type="submit"
-            active={isSubmitActive}
-            disabled={isSubmitDisabled}
-          >
-            {submitText}
-          </FormButton> */}
-          </Sidebar>
+          <Sidebar />
         </ConstructorSidebar>
       </ConstructorForm>
     </ConstructorContext.Provider>
-    // </ConstructorProvider>
   );
 }

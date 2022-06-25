@@ -14,15 +14,8 @@ type InsertWords = FieldsetType & {
   answer: string;
 };
 
-export default function InsertWords({
-  // text,
-  // number,
-  // answer,
-  initialState,
-}: // setAnswer,
-// setReady,
-InsertWords) {
-  const { text, number, answer } = initialState;
+export default function InsertWords({ initialState }: InsertWords) {
+  const { text, number, answer, stepType } = initialState;
   const { setStepReady, setAnswer } = useConstructor();
   const [words, setWords] = useState<string[]>([]);
   const [showText, setShowText] = useState(false);
@@ -51,10 +44,9 @@ InsertWords) {
       setWords(newWords);
       setShowText(true);
     }
-    // }, [text]);
   }, []);
 
-  return (
+  return stepType === "Insert" ? (
     <fieldset style={{ padding: "0 25%" }}>
       <input
         type="hidden"
@@ -122,5 +114,5 @@ InsertWords) {
         isChooseVariants={isChooseVariants}
       />
     </fieldset>
-  );
+  ) : null;
 }

@@ -151,9 +151,6 @@ export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
   const { lastAddedTopics } = useLoaderData();
 
-  console.log(actionData);
-  console.log();
-
   return (
     <Constructor actionData={actionData} lastAddedTopics={lastAddedTopics} />
   );

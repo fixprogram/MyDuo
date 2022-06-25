@@ -1,14 +1,14 @@
 import { Fragment, useEffect, useReducer, useState } from "react";
 import { Textarea } from "~/components/lib";
-import { FieldsetType } from "../types";
-import { VariantItemInput, VariantItemNumber } from "./lib";
-import { reducer, Variant } from "./MatchingPairs/reducer";
+import { FieldsetType } from "../../types";
+import { VariantItemInput, VariantItemNumber } from "../lib";
+import { reducer, Variant } from "../MatchingPairs/reducer";
 import {
   variantChoose,
   variantSetValue,
   variantsSetup,
-} from "./MatchingPairs/actions";
-import { useConstructor } from "../..";
+} from "../MatchingPairs/actions";
+import { useConstructor } from "../../..";
 
 type VariantsProps = FieldsetType & {
   initialQuestion: string | null;
@@ -19,13 +19,10 @@ type VariantsProps = FieldsetType & {
 export default function Variants({
   initialQuestion = "",
   initialVariants = [],
-  number,
-  answer,
-  // setAnswer,
-  // setReady,
-  variantsCount,
-  initialValue,
+  variantsCount = 3,
+  initialState,
 }: VariantsProps) {
+  const { number, answer, stepType } = initialState;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
@@ -43,7 +40,7 @@ export default function Variants({
     if (
       variants.filter((variant: Variant) => variant.value.length === 0).length
     ) {
-      return setStepReady(false);
+      return setStepReady(false, number);
     }
 
     if (
@@ -51,19 +48,19 @@ export default function Variants({
         (variant: Variant) => variant.isFocused || variant.value === answer[0]
       )
     ) {
-      setStepReady(true);
+      setStepReady(true, number);
     } else {
-      return setStepReady(false);
+      return setStepReady(false, number);
     }
 
     if (question?.length) {
-      setStepReady(true);
+      setStepReady(true, number);
     } else {
-      setStepReady(false);
+      setStepReady(false, number);
     }
   }, [variants, question]);
 
-  return (
+  return stepType === "Variants" ? (
     <Fragment>
       <input type="hidden" name={`answer${number}`} value={answer} />
       <input type="hidden" name={`type${number}`} value={"Variants"} />
@@ -114,5 +111,5 @@ export default function Variants({
         ))}
       </ul>
     </Fragment>
-  );
+  ) : null;
 }
