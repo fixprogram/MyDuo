@@ -34,7 +34,6 @@ export default function ChooseMissingWords({ words, number }) {
                 type="text"
                 name={`variant${number}`}
                 placeholder="type variant"
-                autoComplete="off"
                 defaultValue={variant}
                 required
               />

@@ -1,4 +1,5 @@
-import VariantsScreen from "~/modules/Constructor/Levels/components/VariantsScreen";
+// import VariantsScreen from "~/modules/Constructor/Levels/components/VariantsScreen";
+import VariantsScreen from "~/modules/Constructor/Levels/components/Variants/VariantsScreen";
 import { useSkill } from "..";
 import { Lesson } from "./Lesson";
 

@@ -39,7 +39,8 @@ const ChooseStyle = styled("div")`
 `;
 
 const StyleButton = styled("button")`
-  padding: 15px;
+  padding: 35px;
+  font-size: 20px;
   border: none;
   cursor: pointer;
   font-family: "Roboto";

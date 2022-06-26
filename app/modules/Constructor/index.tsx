@@ -48,14 +48,13 @@ export default function Constructor({
 
   return (
     <ConstructorContext.Provider value={state}>
-      <ConstructorForm method="post">
+      <ConstructorForm method="post" autoComplete="off">
         <ConstructorFormInner>
           <TopicInfo
             title={data?.title}
             actionData={actionData}
             lastAddedTopics={lastAddedTopics}
           />
-
           <Levels />
         </ConstructorFormInner>
         <ConstructorSidebar>

@@ -84,6 +84,14 @@ const BtnCloseImage = styled("img")`
   vertical-align: initial;
 `;
 
+const PairsList = styled("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
 export {
   LessonTitleInput,
   ConstructorMenu,
@@ -93,4 +101,5 @@ export {
   ConstructorFormInner,
   BtnClose,
   BtnCloseImage,
+  PairsList,
 };

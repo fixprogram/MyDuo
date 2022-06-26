@@ -1,33 +1,20 @@
 import { Fragment, useEffect } from "react";
 import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
-// import Keywords from "../../components/Keywords";
 import { doesItemContainSign } from "~/utils";
-import type { FieldsetType } from "../types";
-// import { useConstructor } from "../..";
-import Step from "../Step";
 import { useConstructor } from "~/modules/Constructor";
 import Keywords from "~/modules/Constructor/components/Keywords";
+import { Step } from "../../types";
 
-// type QA = FieldsetType & {
-//   question?: string | null;
-//   setQuestion: Function;
-//   setKeywords: Function;
-//   keywords: string[];
-// };
+const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
+  question: "",
+  answer: "",
+  number: 0,
+  keywords: [""],
+  stepType: "",
+};
 
-export default function QuestionAnswer({
-  // question,
-  // setQuestion,
-  // number,
-  // answer,
-  // setAnswer,
-  // setReady,
-  // setKeywords,
-  // keywords,
-
-  initialState,
-}) {
-  const { question, answer, number, keywords, stepType } = initialState;
+export default function QuestionAnswer({ state = initialState }) {
+  const { question, answer, number, keywords, stepType } = state;
   const { setStepReady, setKeywords, setQuestion, setAnswer } =
     useConstructor();
 
@@ -44,7 +31,7 @@ export default function QuestionAnswer({
 
   return stepType === "Question" ? (
     <Fragment>
-      <input type="hidden" name={`type${number}`} value={"Question"} />
+      {/* <input type="hidden" name={`type${number}`} value={"Question"} /> */}
 
       <fieldset style={{ padding: "0 25%" }}>
         <input
@@ -75,7 +62,7 @@ export default function QuestionAnswer({
         <Keywords
           answer={answer as string}
           initialKeywords={keywords}
-          onSet={(kwords) => setKeywords(kwords, number)}
+          onSet={(kwords: string[]) => setKeywords(kwords, number)}
         />
 
         <input

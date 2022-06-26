@@ -1121,10 +1121,10 @@ function skillReducer(state, action10) {
   }
 }
 function useSkillReducer({
-  initialState = basicState,
+  initialState: initialState5 = basicState,
   reducer: reducer2 = skillReducer
 } = {}) {
-  const [state, dispatch] = (0, import_react2.useReducer)(reducer2, initialState);
+  const [state, dispatch] = (0, import_react2.useReducer)(reducer2, initialState5);
   const { content, progress, topicState, stepNumber, maxSteps } = state;
   const continueTopic = () => dispatch({ type: "CONTINUE" /* continue */ });
   const setup = (steps) => dispatch({ type: "SETUP" /* setup */, steps });
@@ -1674,7 +1674,8 @@ var ChooseStyle = (0, import_styled3.default)("div")`
   margin: auto 0;
 `;
 var StyleButton = (0, import_styled3.default)("button")`
-  padding: 15px;
+  padding: 35px;
+  font-size: 20px;
   border: none;
   cursor: pointer;
   font-family: "Roboto";
@@ -2193,7 +2194,7 @@ function QuestionAnswerPractice() {
 // app/modules/Lesson/components/Variants.tsx
 init_react();
 
-// app/modules/Constructor/Levels/components/VariantsScreen.tsx
+// app/modules/Constructor/Levels/components/Variants/VariantsScreen.tsx
 init_react();
 var import_react14 = require("react");
 function VariantsScreen({
@@ -2981,6 +2982,29 @@ var ConstructorSidebar = (0, import_styled5.default)("section")`
   margin: 0 24px 24px;
   padding: 24px;
 `;
+var BtnClose = (0, import_styled5.default)("button")`
+  position: absolute;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  left: 30px;
+  bottom: -60px;
+`;
+var BtnCloseImage = (0, import_styled5.default)("img")`
+  width: 16px;
+  height: 16px;
+  vertical-align: initial;
+`;
+var PairsList = (0, import_styled5.default)("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  max-width: 600px;
+  margin: 0 auto;
+`;
 
 // app/modules/Constructor/components/TopicInfo.tsx
 function TopicInfo({
@@ -3145,11 +3169,6 @@ function constructorReducer(state, action10) {
     case "SET_KEYWORDS" /* setKeywords */: {
       let { keywords, number } = action10.payload;
       let newSteps = steps;
-      console.log("Keywords!");
-      console.log(newSteps);
-      console.log(keywords);
-      console.log(number);
-      console.log("-------");
       newSteps[number].keywords = keywords;
       return __spreadProps(__spreadValues({}, state), { steps: [...newSteps] });
     }
@@ -3194,10 +3213,10 @@ function constructorReducer(state, action10) {
   }
 }
 function useConstructorReducer({
-  initialState = basicState2,
+  initialState: initialState5 = basicState2,
   reducer: reducer2 = constructorReducer
 } = {}) {
-  const [state, dispatch] = (0, import_react22.useReducer)(reducer2, initialState);
+  const [state, dispatch] = (0, import_react22.useReducer)(reducer2, initialState5);
   const setup = (steps) => dispatch({ type: "SET_DATA" /* setData */, steps });
   const setStepType = (stepType, id) => dispatch({ type: "SET_STEP_TYPE" /* setStepType */, payload: { stepType, id } });
   const removeStep = (id) => dispatch({ type: "REMOVE_STEP" /* removeStep */, id });
@@ -3206,7 +3225,7 @@ function useConstructorReducer({
   const setQuestion = (question, number) => dispatch({ type: "SET_QUESTION" /* setQuestion */, payload: { question, number } });
   const setKeywords = (keywords, number) => dispatch({ type: "SET_KEYWORDS" /* setKeywords */, payload: { keywords, number } });
   const addChapter = () => dispatch({ type: "ADD_CHAPTER" /* addChapter */ });
-  const addStep = (chapter) => dispatch({ type: "ADD_STEP" /* addStep */, payload: { chapter } });
+  const addStep = (chapter) => dispatch({ type: "ADD_STEP" /* addStep */, chapter });
   const setStepReady = (isReady, number) => dispatch({ type: "SET_STEP_READY" /* setStepReady */, payload: { isReady, number } });
   const setAnswer = (answer, number) => dispatch({ type: "SET_ANSWER" /* setAnswer */, payload: { answer, number } });
   const changeCurrentScreen = (currentScreen) => dispatch({ type: "CHANGE_CURRENT_SCREEN" /* changeCurrentScreen */, currentScreen });
@@ -3229,12 +3248,42 @@ function useConstructorReducer({
     setStepsReady
   });
 }
+var initialContext = __spreadProps(__spreadValues({}, basicState2), {
+  setStepType: (stepType, id) => {
+  },
+  setup: (steps) => {
+  },
+  removeStep: (id) => {
+  },
+  removeStepType: (id) => {
+  },
+  setStepActive: (id) => {
+  },
+  setQuestion: (question, number) => {
+  },
+  setAnswer: (answer, number) => {
+  },
+  setKeywords: (keywords, number) => {
+  },
+  addChapter: () => {
+  },
+  addStep: (chapter) => {
+  },
+  setStepReady: (isReady, number) => {
+  },
+  changeCurrentScreen: (currentScreen) => {
+  },
+  setBasicInfoReady: (isReady) => {
+  },
+  setStepsReady: (isReady) => {
+  }
+});
 
 // app/modules/Constructor/Levels/index.tsx
 init_react();
 var import_react31 = require("react");
 
-// app/modules/Constructor/Levels/components/Variants.tsx
+// app/modules/Constructor/Levels/components/Variants/index.tsx
 init_react();
 var import_react23 = require("react");
 
@@ -3382,14 +3431,24 @@ var pairsConnect = (activeIdx, idx) => ({
   payload: { activeIdx, idx }
 });
 
-// app/modules/Constructor/Levels/components/Variants.tsx
-function Variants2({
-  initialQuestion = "",
-  initialVariants = [],
-  variantsCount,
-  initialState
-}) {
-  const { number, answer, stepType } = initialState;
+// app/modules/Constructor/Levels/components/Variants/index.tsx
+var initialState = {
+  variantsCount: 3,
+  initialVariants: [],
+  initialQuestion: "",
+  number: 0,
+  answer: "",
+  stepType: ""
+};
+function Variants2({ state = initialState }) {
+  const {
+    number,
+    answer,
+    stepType,
+    initialQuestion,
+    initialVariants,
+    variantsCount
+  } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = (0, import_react23.useReducer)(reducer, {
     variants: initialVariants,
@@ -3420,10 +3479,6 @@ function Variants2({
     type: "hidden",
     name: `answer${number}`,
     value: answer
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "hidden",
-    name: `type${number}`,
-    value: "Variants"
   }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, "Read and Respond")), /* @__PURE__ */ React.createElement(Textarea, {
     name: `question${number}`,
     placeholder: "Type question",
@@ -3440,19 +3495,18 @@ function Variants2({
     onClick: (e) => {
       e.preventDefault();
       dispatch(variantChoose(index));
-      setAnswer(variant.value);
+      setAnswer(variant.value, number);
     },
     isFocused: variant.isFocused || variant.value === answer[0]
   }, variant.idx), /* @__PURE__ */ React.createElement(VariantItemInput, {
     type: "text",
     name: `variant${number}`,
     placeholder: "type first variant",
-    autoComplete: "off",
     value: variant.value,
     onChange: (e) => {
       dispatch(variantSetValue(index, e.target.value));
       if (variant.isFocused) {
-        setAnswer(e.target.value);
+        setAnswer(e.target.value, number);
       }
     },
     required: true
@@ -3461,16 +3515,16 @@ function Variants2({
 
 // app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
 init_react();
-
-// app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx
-init_react();
 var import_react24 = require("react");
-function MatchingPairs({
-  variantsCount = 4,
-  initialVariants = [],
-  initialState
-}) {
-  const { number, answer, stepType } = initialState;
+var initialState2 = {
+  variantsCount: 4,
+  initialVariants: [],
+  number: 0,
+  answer: [],
+  stepType: ""
+};
+function MatchingPairs({ state = initialState2 }) {
+  const { number, answer, stepType, variantsCount, initialVariants } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants, pairs }, dispatch] = (0, import_react24.useReducer)(reducer, {
     variants: initialVariants,
@@ -3481,7 +3535,7 @@ function MatchingPairs({
   }, []);
   (0, import_react24.useEffect)(() => {
     if (pairs.length === variantsCount / 2) {
-      setAnswer(pairs);
+      setAnswer(pairs, number);
       setStepReady(true, number);
     }
     if (pairs.length !== variantsCount / 2) {
@@ -3490,23 +3544,11 @@ function MatchingPairs({
   }, [pairs.length, pairs]);
   return stepType === "Pairs" ? /* @__PURE__ */ React.createElement(import_react24.Fragment, null, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
-    name: `type${number}`,
-    value: "Pairs"
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "hidden",
     name: `answer${number}`,
     value: answer
   }), /* @__PURE__ */ React.createElement("div", {
     style: { marginBottom: "20px" }
-  }, /* @__PURE__ */ React.createElement("h2", null, "Create and Connect pairs")), /* @__PURE__ */ React.createElement("ul", {
-    style: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-evenly",
-      maxWidth: 600,
-      margin: "0 auto"
-    }
-  }, variants.map((variant) => /* @__PURE__ */ React.createElement("li", {
+  }, /* @__PURE__ */ React.createElement("h2", null, "Create and Connect pairs")), /* @__PURE__ */ React.createElement(PairsList, null, variants.map((variant) => /* @__PURE__ */ React.createElement("li", {
     key: variant.idx,
     style: { marginBottom: 5 }
   }, /* @__PURE__ */ React.createElement("label", {
@@ -3529,7 +3571,6 @@ function MatchingPairs({
     name: `variant${number}`,
     placeholder: "type first variant",
     value: variant.value,
-    autoComplete: "off",
     onChange: (e) => dispatch(pairsType(e.target.value, variant.idx)),
     required: true
   })))), /* @__PURE__ */ React.createElement("button", {
@@ -3539,13 +3580,7 @@ function MatchingPairs({
   }, "Add pair"))) : null;
 }
 
-// app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
-var MatchingPairs_default = MatchingPairs;
-
 // app/modules/Constructor/Levels/components/InsertWords/index.tsx
-init_react();
-
-// app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
 init_react();
 var import_react26 = require("react");
 
@@ -3608,7 +3643,6 @@ function ChooseMissingWords({ words, number }) {
     type: "text",
     name: `variant${number}`,
     placeholder: "type variant",
-    autoComplete: "off",
     defaultValue: variant,
     required: true
   }))) : words.map((word, idx) => /* @__PURE__ */ React.createElement("li", {
@@ -3620,11 +3654,15 @@ function ChooseMissingWords({ words, number }) {
   }, word)))));
 }
 
-// app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
-function InsertWords2({
-  initialState
-}) {
-  const { text, number, answer, stepType } = initialState;
+// app/modules/Constructor/Levels/components/InsertWords/index.tsx
+var initialState3 = {
+  text: "",
+  number: 0,
+  answer: "",
+  stepType: ""
+};
+function InsertWords2({ state = initialState3 }) {
+  const { text, number, answer, stepType } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [words, setWords] = (0, import_react26.useState)([]);
   const [showText, setShowText] = (0, import_react26.useState)(false);
@@ -3654,10 +3692,6 @@ function InsertWords2({
     type: "hidden",
     name: `answer${number}`,
     defaultValue: defaultAnswer
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "hidden",
-    name: `type${number}`,
-    value: "Insert"
   }), /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `isToChoose${number}`,
@@ -3709,9 +3743,6 @@ function InsertWords2({
   })) : null;
 }
 
-// app/modules/Constructor/Levels/components/InsertWords/index.tsx
-var InsertWords_default = InsertWords2;
-
 // app/modules/Constructor/Levels/components/Step.tsx
 init_react();
 var import_react27 = __toESM(require("react"));
@@ -3721,52 +3752,29 @@ init_react();
 function CloseBtn({
   onClickHandler
 }) {
-  return /* @__PURE__ */ React.createElement("button", {
+  return /* @__PURE__ */ React.createElement(BtnClose, {
     type: "button",
-    style: {
-      position: "absolute",
-      cursor: "pointer",
-      width: 16,
-      height: 16,
-      border: "none",
-      backgroundColor: "inherit",
-      padding: 0,
-      left: 30,
-      bottom: -60
-    },
     onClick: onClickHandler
-  }, /* @__PURE__ */ React.createElement("img", {
+  }, /* @__PURE__ */ React.createElement(BtnCloseImage, {
     src: close_default,
-    alt: "close",
-    style: {
-      width: "16px",
-      height: "16px",
-      verticalAlign: "initial"
-    }
+    alt: "close"
   }));
 }
 
-// app/modules/Constructor/Levels/components/ChooseStyleScreen.tsx
-init_react();
-function ChooseStyleScreen({ setStepType, id }) {
-  return /* @__PURE__ */ React.createElement(ChooseStyle, null, /* @__PURE__ */ React.createElement(StyleButton, {
-    type: "button",
-    onClick: () => setStepType("Question", id)
-  }, "Question / Answer"), /* @__PURE__ */ React.createElement(StyleButton, {
-    type: "button",
-    onClick: () => setStepType("Insert", id)
-  }, "Insert words"), /* @__PURE__ */ React.createElement(StyleButton, {
-    type: "button",
-    onClick: () => setStepType("Variants", id)
-  }, "Choose right variant"), /* @__PURE__ */ React.createElement(StyleButton, {
-    type: "button",
-    onClick: () => setStepType("Pairs", id)
-  }, "Matching pairs"));
-}
-
 // app/modules/Constructor/Levels/components/Step.tsx
-function Step({ data, index, children }) {
-  const { active, chapter, stepType, id } = data;
+var STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
+var Step = ({ data, index, children }) => {
+  const {
+    active,
+    chapter,
+    stepType,
+    id,
+    number,
+    variants,
+    text,
+    answer,
+    question
+  } = data;
   const { removeStepType, setStepType, setQuestion, setAnswer } = useConstructor();
   return /* @__PURE__ */ import_react27.default.createElement("section", {
     className: `${!active && "visuallyHidden"}`
@@ -3778,21 +3786,28 @@ function Step({ data, index, children }) {
     type: "hidden",
     name: `chapter`,
     value: chapter
+  }), /* @__PURE__ */ import_react27.default.createElement("input", {
+    type: "hidden",
+    name: `type${number}`,
+    value: stepType
   }), /* @__PURE__ */ import_react27.default.createElement(Legend, null, stepType ? stepType : "Choose type"), /* @__PURE__ */ import_react27.default.createElement(StepHeader, null, stepType !== "" && /* @__PURE__ */ import_react27.default.createElement(CloseBtn, {
     onClickHandler: () => removeStepType(id)
-  })), /* @__PURE__ */ import_react27.default.createElement(StepContent, null, stepType === "" ? /* @__PURE__ */ import_react27.default.createElement(ChooseStyleScreen, {
-    setStepType,
-    id
-  }) : import_react27.default.Children.map(children, (child) => {
+  })), /* @__PURE__ */ import_react27.default.createElement(StepContent, null, stepType === "" ? /* @__PURE__ */ import_react27.default.createElement(ChooseStyle, null, STEP_TYPES.map((type, idx) => /* @__PURE__ */ import_react27.default.createElement(StyleButton, {
+    type: "button",
+    onClick: () => setStepType(type, id),
+    key: idx
+  }, type))) : import_react27.default.Children.map(children, (child) => {
+    if (child === null) {
+      return;
+    }
     return import_react27.default.cloneElement(child, {
-      initialState: data,
-      setQuestion,
-      setAnswer
+      state: data
     });
   })));
-}
+};
+var Step_default = Step;
 
-// app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
+// app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
 init_react();
 var import_react30 = require("react");
 
@@ -3850,11 +3865,16 @@ function Keywords({
   }));
 }
 
-// app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
-function QuestionAnswer({
-  initialState
-}) {
-  const { question, answer, number, keywords, stepType } = initialState;
+// app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
+var initialState4 = {
+  question: "",
+  answer: "",
+  number: 0,
+  keywords: [""],
+  stepType: ""
+};
+function QuestionAnswer({ state = initialState4 }) {
+  const { question, answer, number, keywords, stepType } = state;
   const { setStepReady, setKeywords, setQuestion, setAnswer } = useConstructor();
   (0, import_react30.useEffect)(() => {
     if (question && answer) {
@@ -3865,11 +3885,7 @@ function QuestionAnswer({
   (0, import_react30.useEffect)(() => {
     setKeywords(keywords, number);
   }, []);
-  return stepType === "Question" ? /* @__PURE__ */ React.createElement(import_react30.Fragment, null, /* @__PURE__ */ React.createElement("input", {
-    type: "hidden",
-    name: `type${number}`,
-    value: "Question"
-  }), /* @__PURE__ */ React.createElement("fieldset", {
+  return stepType === "Question" ? /* @__PURE__ */ React.createElement(import_react30.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
     style: { padding: "0 25%" }
   }, /* @__PURE__ */ React.createElement("input", {
     type: "text",
@@ -3907,7 +3923,7 @@ function QuestionAnswer({
 }
 
 // app/modules/Constructor/Levels/index.tsx
-function Levels({}) {
+function Levels() {
   const { steps, setStepsReady, currentScreen } = useConstructor();
   (0, import_react31.useEffect)(() => {
     setStepsReady(!steps.find((step) => step.ready === false));
@@ -3915,11 +3931,11 @@ function Levels({}) {
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
     screen: currentScreen,
     target: "Steps"
-  }, steps.map((data, idx) => /* @__PURE__ */ React.createElement(Step, {
+  }, steps.map((data, idx) => /* @__PURE__ */ React.createElement(Step_default, {
     data,
     index: idx,
     key: data.id
-  }, /* @__PURE__ */ React.createElement(QuestionAnswer, null), /* @__PURE__ */ React.createElement(InsertWords_default, null), /* @__PURE__ */ React.createElement(Variants2, null), /* @__PURE__ */ React.createElement(MatchingPairs_default, null))));
+  }, data.stepType === "Question" ? /* @__PURE__ */ React.createElement(QuestionAnswer, null) : null, data.stepType === "Insert" ? /* @__PURE__ */ React.createElement(InsertWords2, null) : null, data.stepType === "Variants" ? /* @__PURE__ */ React.createElement(Variants2, null) : null, data.stepType === "Pairs" ? /* @__PURE__ */ React.createElement(MatchingPairs, null) : null)));
 }
 
 // app/modules/Constructor/Levels/components/Sidebar.tsx
@@ -4016,7 +4032,7 @@ var Sidebar = ({ children }) => {
 var Sidebar_default = Sidebar;
 
 // app/modules/Constructor/index.tsx
-var ConstructorContext = (0, import_react34.createContext)();
+var ConstructorContext = (0, import_react34.createContext)(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
 var useConstructor = () => {
   const state = (0, import_react34.useContext)(ConstructorContext);
@@ -4031,10 +4047,10 @@ function Constructor({
   lastAddedTopics
 }) {
   const state = useConstructorReducer();
-  const { currentScreen, setData, changeCurrentScreen } = state;
+  const { currentScreen, setup, changeCurrentScreen } = state;
   (0, import_react34.useEffect)(() => {
     if (data) {
-      setData(data.steps);
+      setup(data.steps);
     }
   }, [data]);
   (0, import_react34.useEffect)(() => {
@@ -4046,7 +4062,8 @@ function Constructor({
   return /* @__PURE__ */ React.createElement(ConstructorContext.Provider, {
     value: state
   }, /* @__PURE__ */ React.createElement(ConstructorForm, {
-    method: "post"
+    method: "post",
+    autoComplete: "off"
   }, /* @__PURE__ */ React.createElement(ConstructorFormInner, null, /* @__PURE__ */ React.createElement(TopicInfo, {
     title: data == null ? void 0 : data.title,
     actionData,
@@ -4864,7 +4881,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "85d80736", "entry": { "module": "/build/entry.client-TCEYEOIP.js", "imports": ["/build/_shared/chunk-HQYRZ2HU.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-VNIHUBLD.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-GCI4G3WS.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-F3MUQ76F.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-AJ4NYH76.js", "imports": ["/build/_shared/chunk-BKIVXWBQ.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-7VBKYO2B.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-AJWM4Q7W.js", "imports": ["/build/_shared/chunk-BKIVXWBQ.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-7VBKYO2B.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-K62QG47Q.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-AVREYT3B.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-F3MUQ76F.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-564IJWPF.js", "imports": ["/build/_shared/chunk-YTGE3O76.js", "/build/_shared/chunk-7VBKYO2B.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-F3MUQ76F.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-LNWFKMLM.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-A5P2B3AD.js", "imports": ["/build/_shared/chunk-YTGE3O76.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-7VBKYO2B.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-F3MUQ76F.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-3YILAA7Z.js", "imports": ["/build/_shared/chunk-YTGE3O76.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-7VBKYO2B.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-F3MUQ76F.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-85D80736.js" };
+var assets_manifest_default = { "version": "72abb985", "entry": { "module": "/build/entry.client-ENTOS6AK.js", "imports": ["/build/_shared/chunk-3N2L7MIL.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-27ZQA3LC.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-3GSXUMT3.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-N4ROW4SO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-OCMYKS5F.js", "imports": ["/build/_shared/chunk-OFEGC73Z.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-XKZIGHKD.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-CXHGU5NK.js", "imports": ["/build/_shared/chunk-OFEGC73Z.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-XKZIGHKD.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-5UXBQRZ3.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-TAXZJL7L.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-N4ROW4SO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-VMCJBVHM.js", "imports": ["/build/_shared/chunk-EYFB7B7H.js", "/build/_shared/chunk-XKZIGHKD.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-N4ROW4SO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-JX5ABZSL.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-6AQW2LID.js", "imports": ["/build/_shared/chunk-EYFB7B7H.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-XKZIGHKD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-N4ROW4SO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-MNM2FDLU.js", "imports": ["/build/_shared/chunk-EYFB7B7H.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-XKZIGHKD.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-N4ROW4SO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-72ABB985.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useReducer, useState } from "react";
 import { Textarea } from "~/components/lib";
-import { FieldsetType } from "../../types";
 import { VariantItemInput, VariantItemNumber } from "../lib";
 import { reducer, Variant } from "../MatchingPairs/reducer";
 import {
@@ -10,19 +9,24 @@ import {
 } from "../MatchingPairs/actions";
 import { useConstructor } from "../../..";
 
-type VariantsProps = FieldsetType & {
-  initialQuestion: string | null;
-  initialVariants: Variant[] | undefined;
-  variantsCount: number;
+const initialState = {
+  variantsCount: 3,
+  initialVariants: [],
+  initialQuestion: "",
+  number: 0,
+  answer: "",
+  stepType: "",
 };
 
-export default function Variants({
-  initialQuestion = "",
-  initialVariants = [],
-  variantsCount = 3,
-  initialState,
-}: VariantsProps) {
-  const { number, answer, stepType } = initialState;
+export default function Variants({ state = initialState }) {
+  const {
+    number,
+    answer,
+    stepType,
+    initialQuestion,
+    initialVariants,
+    variantsCount,
+  } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
@@ -63,7 +67,7 @@ export default function Variants({
   return stepType === "Variants" ? (
     <Fragment>
       <input type="hidden" name={`answer${number}`} value={answer} />
-      <input type="hidden" name={`type${number}`} value={"Variants"} />
+      {/* <input type="hidden" name={`type${number}`} value={"Variants"} /> */}
 
       <div>
         <h2>Read and Respond</h2>
@@ -85,7 +89,7 @@ export default function Variants({
                 onClick={(e) => {
                   e.preventDefault();
                   dispatch(variantChoose(index));
-                  setAnswer(variant.value);
+                  setAnswer(variant.value, number);
                 }}
                 isFocused={variant.isFocused || variant.value === answer[0]}
               >
@@ -95,13 +99,12 @@ export default function Variants({
                 type="text"
                 name={`variant${number}`}
                 placeholder="type first variant"
-                autoComplete="off"
                 value={variant.value}
                 onChange={(e) => {
                   dispatch(variantSetValue(index, e.target.value));
 
                   if (variant.isFocused) {
-                    setAnswer(e.target.value);
+                    setAnswer(e.target.value, number);
                   }
                 }}
                 required

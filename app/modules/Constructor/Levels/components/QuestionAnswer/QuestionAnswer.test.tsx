@@ -1,7 +1,7 @@
 import { screen, render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, it, describe, expect } from "vitest";
-import QuestionAnswer from "./QuestionAnswer";
+import QuestionAnswer from ".";
 
 const props = {
   number: 2,
