@@ -130,6 +130,9 @@ const LessonBlockLink = styled(Link)`
   font-family: "Roboto";
   font-weight: 500;
   letter-spacing: 0.8px;
+  &:hover {
+    filter: brightness(1.1);
+  }
 `;
 
 const LessonBlockButton = styled("button")`
@@ -322,7 +325,7 @@ const FormButton = styled("button")<FormButtonProps>`
   text-transform: uppercase;
   font-family: "Montserrat";
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.3px;
   border-radius: 15px;
 `;
@@ -368,6 +371,9 @@ const LessonProgressInner = styled("div")`
   display: flex;
   justify-content: center;
   align-items: center;
+  &:hover {
+    opacity: 0.85;
+  }
 `;
 
 const Main = styled("main")`
@@ -432,7 +438,7 @@ const LoginButton = styled("button")`
   margin-top: 20px;
   width: 100%;
   letter-spacing: 0.8px;
-  font: 700 15px "Roboto";
+  font: 600 15px "Roboto";
   padding: 0 16px;
   height: 50px;
   color: white;
@@ -449,7 +455,7 @@ const LoginToggle = styled("label")`
   top: 0;
   right: 0;
   letter-spacing: 0.8px;
-  font: 700 15px "Roboto";
+  font: 600 15px "Roboto";
   line-height: 1.2;
   padding: 0 16px;
   height: 50px;
@@ -479,7 +485,7 @@ const MenuNavLink = styled(NavLink)`
   text-decoration: none;
   text-transform: uppercase;
   font-family: "Montserrat";
-  font-weight: 700;
+  font-weight: 600;
   color: #afafaf;
   letter-spacing: 0.8px;
   display: flex;

@@ -88,7 +88,11 @@ export default function Footer({
           stateRight={status === "right"}
           stateWrong={status === "wrong"}
           onClick={handleContinue}
-          disabled={buttonText === "Saving..." || buttonText === "Saved!"}
+          disabled={
+            buttonText === "Saving..." ||
+            buttonText === "Saved!" ||
+            buttonDisabled
+          }
           style={{
             marginLeft:
               status === "results" || content.stepType === "Pairs" ? "auto" : 0,

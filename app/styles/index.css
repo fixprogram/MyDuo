@@ -239,10 +239,6 @@ a {
   color: #0d6efd;
 }
 
-a:hover {
-  color: #1cb0f6;
-}
-
 a:not([href]):not([class]),
 a:not([href]):not([class]):hover {
   color: inherit;
@@ -436,14 +432,6 @@ legend + * {
   -webkit-appearance: textfield;
 }
 
-/* rtl:raw:
-[type="tel"],
-[type="url"],
-[type="email"],
-[type="number"] {
-  direction: ltr;
-}
-*/
 ::-webkit-search-decoration {
   -webkit-appearance: none;
 }

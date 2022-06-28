@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
 import { getUser } from "~/session.server";
-import { getTodayDate, getWeekDay } from "~/utils";
+import { getCurrentWeek, getTodayDate, getWeekDay } from "~/utils";
 import { createInitialLanguage } from "./language.server";
 
 export type { User } from "@prisma/client";
@@ -122,6 +122,7 @@ export async function resetMultipleActivity(
   const user = await getUser(request);
   if (!user) throw new Error("User is undefined");
 
+  const currentWeek = getCurrentWeek();
   const newWeek = user.weeklyActivity;
   let i = today - lastPracticed;
 
@@ -135,6 +136,13 @@ export async function resetMultipleActivity(
       },
     });
   }
+
+  currentWeek.forEach((day, index) => {
+    if (i > 0 && index === 7 - i) {
+      newWeek[day as keyof WeeklyActivity] = 0;
+      i -= 1;
+    }
+  });
 
   return await prisma.user.update({
     where: { id: user.id },

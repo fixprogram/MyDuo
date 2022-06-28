@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Form } from "remix";
 import RightIcon from "~/styles/right.svg";
@@ -39,10 +40,8 @@ const LessonFooter = styled("section")<LessonFooterProps>`
   justify-content: space-between;
   box-sizing: border-box;
   background-color: ${({ status }) =>
-    // props.stateRight ? "#d7ffb8" : props.stateWrong ? "#ffdfe0" : "#fff"};
     status === "right" ? "#d7ffb8" : status === "wrong" ? "#ffdfe0" : "#fff"};
   color: ${({ status }) =>
-    // props.stateRight ? "#58a700" : props.stateWrong ? "#ea2b2b" : "#fff"};
     status === "right" ? "#58a700" : status === "wrong" ? "#ea2b2b" : "#fff"};
 `;
 
@@ -58,7 +57,6 @@ const LessonFooterInner = styled("div")`
 const LessonFooterMessage = styled("div")<LessonFooterProps>`
   width: 100%;
   display: ${({ status }) =>
-    // props.stateRight || props.stateWrong ? "flex" : "none"};
     status === "right" || status === "wrong" ? "flex" : "none"};
   align-items: center;
 `;
@@ -89,7 +87,7 @@ const LessonButton = styled("button")<LessonButtonProps>`
       : props.active
       ? "#78C83D"
       : props.skip
-      ? "inherit"
+      ? "#fff"
       : "#E5E5E5"};
   color: ${(props) => (props.active ? "#fff" : "#AFAFAF")};
   border-color: ${(props) =>
@@ -101,25 +99,52 @@ const LessonButton = styled("button")<LessonButtonProps>`
       ? "#e5e5e5"
       : "white"};
   border-width: ${(props) => (props.skip ? "2px" : 0)};
+  border-bottom-width: ${(props) =>
+    props.active || props.skip ? `4px` : "transparent"};
+  border-bottom-color: ${(props) =>
+    props.skip ? "#e5e5e5" : props.stateWrong ? "#ea2b2b" : "#58a700"};
   height: 50px;
   width: 150px;
   cursor: ${(props) => (props.active || props.skip ? "pointer" : "default")};
   text-transform: uppercase;
   font-family: "Montserrat";
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: 0.8px;
   border-radius: 15px;
   padding: 0 20px;
   display: ${(props) => (props.hidden ? "none" : "block")};
+  transition: filter 0.2s;
+  &:hover:enabled {
+    filter: ${(props) => (props.skip ? "brightness(.9)" : "brightness(1.1)")};
+  }
+  &:active:enabled {
+    filter: ${(props) => (props.skip ? "brightness(.9)" : "brightness(1.1)")};
+    border-bottom-width: ${(props) => (props.skip ? `2px` : "0")};
+    height: 46px;
+    transform: translateY(4px);
+  }
+`;
+
+const LessonAppear = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(150px)
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0)
+  }
 `;
 
 const LessonBody = styled("div")`
-  // margin: 72px 29% 4% 32%; // 4% instead of 240px
   margin: 72px 30% 4%;
   flex-grow: 1;
   position: relative;
   max-height: calc(100% - 240px);
+  animation-name: ${LessonAppear};
+  animation-duration: 0.2s;
 `;
 
 const LessonBodyTitle = styled("h3")`
@@ -251,13 +276,27 @@ const LessonQuestionTriangle = styled("span")`
   width: 14.14427px;
 `;
 
+const messageIconAppear = keyframes`
+
+  50% {
+    transform: scale(1.1)
+  }
+
+  75% {
+    transform: scale(0.9)
+  }
+
+  100% {
+    transform: scale(1)
+  }
+`;
+
 const LessonFooterIcon = styled("div")<LessonFooterProps>`
   border-radius: 98px;
   display: block;
   float: left;
   height: 80px;
   width: 80px;
-  // background: url(${(props) => (props.stateRight ? RightIcon : WrongIcon)});
   background: url(${({ status }) =>
     status === "right" ? RightIcon : WrongIcon});
 
@@ -265,6 +304,10 @@ const LessonFooterIcon = styled("div")<LessonFooterProps>`
     status === "right" ? "-145px -64px" : "-183px -65px"};
   background-color: #fff;
   display: block;
+  animation-name: ${messageIconAppear};
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
 `;
 
 const ResultsContainer = styled("section")`
