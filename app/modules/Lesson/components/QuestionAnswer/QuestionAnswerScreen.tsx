@@ -36,24 +36,26 @@ export default function QuestionAnswerScreen({
   return (
     <Fragment>
       <LessonTitle>Answer the question</LessonTitle>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
-        <div style={{ position: "relative" }}>
-          <LessonQuestion>{question}</LessonQuestion>
-          <LessonQuestionTriangleContainer>
-            <LessonQuestionTriangle />
-          </LessonQuestionTriangleContainer>
+      <section>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
+          <div style={{ position: "relative" }}>
+            <LessonQuestion>{question}</LessonQuestion>
+            <LessonQuestionTriangleContainer>
+              <LessonQuestionTriangle />
+            </LessonQuestionTriangleContainer>
+          </div>
         </div>
-      </div>
-      <Textarea
-        id="answer"
-        name="answer"
-        placeholder="Enter your answer"
-        value={userAnswer}
-        onChange={(e) => setUserAnswer(e.target.value)}
-        disabled={topicState.formDisabled}
-        ref={myRef}
-      />
+        <Textarea
+          id="answer"
+          name="answer"
+          placeholder="Enter your answer"
+          value={userAnswer}
+          onChange={(e) => setUserAnswer(e.target.value)}
+          disabled={topicState.formDisabled}
+          ref={myRef}
+        />
+      </section>
     </Fragment>
   );
 }

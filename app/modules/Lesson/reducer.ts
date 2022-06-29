@@ -4,7 +4,9 @@ import { SkillState } from "./types";
 
 // The function returns next stepNumber if there is any
 const continueContent = (content: Lesson, lessonSteps: Lesson[] | any) =>
-  lessonSteps.length > 0 ? lessonSteps.shift(0, 1) : content;
+  lessonSteps.length > 0
+    ? { ...lessonSteps.shift(0, 1), difficulty: "easy" }
+    : content;
 
 enum actionTypes {
   continue = "CONTINUE",
@@ -14,6 +16,7 @@ enum actionTypes {
   setStateWrong = "SET_STATE_WRONG",
   setCheckDisabled = "SET_CHECK_DISABLED",
   updateState = "UPDATE_STATE",
+  setDifficulty = "SET_DIFFICULTY",
 }
 
 type Action =
@@ -23,6 +26,7 @@ type Action =
   | { type: actionTypes.setCheckDisabled; disabled: boolean }
   | { type: actionTypes.setStateRight }
   | { type: actionTypes.setStateWrong }
+  | { type: actionTypes.setDifficulty; difficulty: "easy" | "hard" }
   | { type: actionTypes.updateState; update: {} };
 
 export const basicState: SkillState = {
@@ -43,6 +47,7 @@ export const basicState: SkillState = {
     updatedAt: new Date(),
     chapter: 1,
     languageId: "",
+    difficulty: "easy",
   },
   lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
@@ -91,7 +96,9 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: steps.shift() as Lesson,
+        content: { ...steps.shift(), difficulty: "easy" } as Lesson & {
+          difficulty: "easy" | "hard";
+        },
       };
     case actionTypes.results:
       return {
@@ -112,6 +119,9 @@ function skillReducer(state: SkillState, action: Action): SkillState {
     case actionTypes.updateState:
       const { update } = action;
       return { ...state, ...update };
+    case actionTypes.setDifficulty:
+      const { difficulty } = action;
+      return { ...state, content: { ...state.content, difficulty } };
     default: {
       throw new Error(`Unsupported action: ${action}`);
     }
@@ -135,6 +145,8 @@ function useSkillReducer({
     dispatch({ type: actionTypes.setCheckDisabled, disabled });
   const updateState = (update: {}) =>
     dispatch({ type: actionTypes.updateState, update });
+  const setDifficulty = (difficulty: "easy" | "hard") =>
+    dispatch({ type: actionTypes.setDifficulty, difficulty });
 
   return {
     content,
@@ -149,6 +161,7 @@ function useSkillReducer({
     setStateWrong,
     setCheckDisabled,
     updateState,
+    setDifficulty,
   };
 }
 
@@ -161,6 +174,7 @@ const defaultSkillContextState = {
   setStateWrong: () => {},
   setCheckDisabled: () => {},
   updateState: () => {},
+  setDifficulty: () => {},
 };
 
 export { useSkillReducer, skillReducer, defaultSkillContextState };

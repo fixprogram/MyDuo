@@ -46,7 +46,11 @@ const Menu = ({
         <HorizontalList>
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
-              <MenuNavLink to={`${link}`} className="nav-link">
+              <MenuNavLink
+                to={`${link}`}
+                className="nav-link"
+                prefetch="render"
+              >
                 {({ isActive }) => (
                   <Fragment>
                     <NavIcon src={isActive ? activeIcon : icon} alt={title} />

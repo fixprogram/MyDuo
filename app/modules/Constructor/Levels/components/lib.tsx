@@ -48,6 +48,7 @@ const StyleButton = styled("button")`
 
 const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   min-height: 200px;
+  flex-grow: 1;
   width: 100%;
   padding: 10px 0;
   background-color: #fff;

@@ -1,35 +1,20 @@
-import { Variant } from "@prisma/client";
 import { Fragment, SyntheticEvent, useEffect, useRef } from "react";
-import {
-  InsertWordsAnswerField,
-  InsertWordsInput,
-} from "~/modules/Constructor/Levels/components/lib";
+import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
+import { useSkill } from "../..";
 
 type TextProps = {
-  text: string;
-  contentAnswer: string[];
-  isToChoose: boolean;
   values: string[];
   setValues: Function;
-  formDisabled: boolean;
-  variants: Variant[];
-  topicState: { status: string; formDisabled: boolean };
 };
 
-export default function Text({
-  text,
-  contentAnswer,
-  isToChoose,
-  values,
-  setValues,
-  topicState,
-  variants,
-}: TextProps) {
+export default function Text({ values, setValues }: TextProps) {
+  const { content, topicState } = useSkill();
+  const { text, isToChoose, variants, answer, difficulty } = content;
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
     if (!topicState.formDisabled) {
-      setValues([...new Array(contentAnswer.length).fill(" ")]);
+      setValues([...new Array(answer.length).fill(" ")]);
     }
   }, [topicState.formDisabled]);
 
@@ -44,7 +29,7 @@ export default function Text({
     }
   }, [topicState.status]);
 
-  const handleChange = (evt, index: number) => {
+  const handleChange = (evt: SyntheticEvent, index: number) => {
     const target = evt.target as HTMLInputElement;
     setValues((prevArray: string[]) => {
       const newArray = prevArray;
@@ -53,8 +38,8 @@ export default function Text({
     });
   };
 
-  const handleInputClick = (evt, index: number) => {
-    const target = evt.currentTarget;
+  const handleInputClick = (evt: SyntheticEvent, index: number) => {
+    const target = evt.target as HTMLInputElement;
     if (target.value === "" || target.value === " ") {
       return;
     }
@@ -70,12 +55,12 @@ export default function Text({
   let firstInput = 0;
 
   return (
-    <Fragment>
-      {text.split(" ").map((textItem: string, idx: number) => {
+    <section>
+      {text?.split(" ").map((textItem: string, idx: number) => {
         const { newItem, sign } = doesItemContainSign(textItem);
 
-        if (contentAnswer.includes(newItem)) {
-          return contentAnswer.map((answerItem: string, index: number) => {
+        if (answer.includes(newItem)) {
+          return answer.map((answerItem: string, index: number) => {
             if (newItem !== answerItem) {
               // sets position for inputs
               return null;
@@ -83,22 +68,22 @@ export default function Text({
             firstInput = firstInput && index;
             return (
               <Fragment key={index}>
-                {variants ? (
+                {difficulty === "easy" && variants ? (
                   <InsertWordsInput
                     type="text"
                     length={newItem.length}
-                    disabled={!!variants}
+                    disabled={true}
                   />
                 ) : (
                   <InsertWordsInput
                     type="text"
                     id={`input${0}`}
-                    isToChoose={isToChoose}
+                    isToChoose={isToChoose as boolean}
                     length={newItem.length}
                     value={values[index]}
                     onChange={(evt) => handleChange(evt, index)}
                     onClick={(evt) => handleInputClick(evt, index)}
-                    disabled={topicState.formDisabled || variants}
+                    disabled={topicState.formDisabled}
                     ref={firstInput === index ? myRef : null}
                   />
                 )}
@@ -114,6 +99,6 @@ export default function Text({
           </span>
         );
       })}
-    </Fragment>
+    </section>
   );
 }

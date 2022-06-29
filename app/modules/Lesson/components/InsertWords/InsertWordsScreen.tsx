@@ -20,10 +20,15 @@ export default function InsertWordsScreen({
 }: InsertWordsScreenProps) {
   const { content, topicState } = useSkill();
 
-  const { text, isToChoose, variants, answer } = content;
-  const [values, setValues] = useState([...new Array(answer.length).fill(" ")]);
+  const { isToChoose, variants, answer, difficulty } = content;
+  const initalValues =
+    variants && difficulty === "easy"
+      ? [...new Array(answer.length).fill(" ")]
+      : [""];
+  const [values, setValues] = useState(initalValues);
 
   useEffect(() => {
+    console.log("Values: ", values);
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }
@@ -43,38 +48,27 @@ export default function InsertWordsScreen({
     }
   }, [userAnswer]);
 
+  useEffect(() => {
+    if (topicState.formDisabled) {
+      return;
+    }
+    setValues(initalValues);
+  }, [difficulty, topicState.formDisabled]);
+
   return (
     <Fragment>
       <LessonTitle>Add missing words</LessonTitle>
 
       <InsertWordsTextBlock>
-        <Text
+        <Text values={values} setValues={setValues} />
+
+        <Variants
           values={values}
           setValues={setValues}
-          contentAnswer={answer}
-          text={text}
-          isToChoose={isToChoose}
-          variants={variants}
-          topicState={topicState}
+          keyDownCheck={keyDownCheck}
         />
 
-        {variants && (
-          <Variants
-            values={values}
-            variants={variants}
-            setValues={setValues}
-            status={topicState.status}
-            keyDownCheck={keyDownCheck}
-          />
-        )}
-
-        {isToChoose && (
-          <Puzzle
-            values={values}
-            setValues={setValues}
-            contentAnswer={answer}
-          />
-        )}
+        <Puzzle values={values} setValues={setValues} />
       </InsertWordsTextBlock>
     </Fragment>
   );

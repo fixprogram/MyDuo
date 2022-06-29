@@ -4,11 +4,8 @@ import {
   ProgressBarContainer,
   ProgressLeaveLesson,
 } from "~/components/lib";
-import { useSkillReducer } from "~/modules/Lesson/reducer";
-import { useLesson } from "~/modules/Lesson/components/Les/Les";
 import { useSkill } from "~/modules/Lesson";
 
-// const Progress = ({ progress }: { progress: number }) => {
 const Progress = () => {
   const { progress } = useSkill();
   return (

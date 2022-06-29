@@ -1,34 +1,33 @@
 import { Variant } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
+import { useSkill } from "../..";
 import { VariantItem } from "../lib";
 import { VariantsContainer, VariantsItem, VariantsList } from "./lib";
 
 type VariantsProps = {
-  variants: Variant[];
   values: string[];
   setValues: Function;
-  status: string;
   keyDownCheck: Function;
 };
 
 export default function Variants({
-  variants,
   values,
   setValues,
-  status,
   keyDownCheck,
 }: VariantsProps) {
   const myRef = useRef<HTMLDivElement>(null);
+  const { content, topicState } = useSkill();
+  const { variants, difficulty } = content;
 
   useEffect(() => {
-    if (status === "idle") {
+    if (topicState.status === "idle") {
       const timeout = setTimeout(() => {
         myRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [status]);
+  }, [topicState.status]);
 
   const KeyDownHandler = (e: KeyboardEvent) => {
     variants.forEach((variant, idx) => {
@@ -38,7 +37,7 @@ export default function Variants({
     });
   };
 
-  return (
+  return variants && difficulty === "easy" ? (
     <VariantsContainer
       tabIndex={0}
       ref={myRef}
@@ -59,5 +58,5 @@ export default function Variants({
         ))}
       </VariantsList>
     </VariantsContainer>
-  );
+  ) : null;
 }

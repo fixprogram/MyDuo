@@ -141,6 +141,8 @@ const LessonAppear = keyframes`
 const LessonBody = styled("div")`
   margin: 72px 30% 4%;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   position: relative;
   max-height: calc(100% - 240px);
   animation-name: ${LessonAppear};

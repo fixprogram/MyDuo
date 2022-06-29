@@ -67,7 +67,11 @@ export default function LessonItem({
               <LessonBlockLink to={editLink}>Edit</LessonBlockLink>
               <Form method="post">
                 <input type="hidden" name="lessonId" value={id} />
-                <LessonBlockButton type="submit" disabled={isDisabled}>
+                <LessonBlockButton
+                  type="submit"
+                  disabled={isDisabled}
+                  title="Delete skill"
+                >
                   <img src={Bin} alt="delete" width={20} height={20} />
                 </LessonBlockButton>
               </Form>

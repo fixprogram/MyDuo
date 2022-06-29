@@ -16,9 +16,10 @@ export default function Footer({
   checkAnswer?: Function;
 }) {
   const transition = useTransition();
-  const { topicState, content, continueTopic, setStateWrong } = useSkill();
+  const { topicState, content, continueTopic, setStateWrong, setDifficulty } =
+    useSkill();
 
-  const { answer } = content;
+  const { answer, difficulty } = content;
   const { status, buttonDisabled } = topicState;
 
   const buttonText =
@@ -67,8 +68,9 @@ export default function Footer({
             borderWidth: 0,
             width: "auto",
           }}
+          onClick={() => setDifficulty(difficulty === "easy" ? "hard" : "easy")}
         >
-          Use word bank
+          Make {difficulty === "easy" ? "harder" : "easier"}
         </LessonButton>
 
         <LessonFooterMessage status={status}>

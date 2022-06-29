@@ -1,3 +1,4 @@
+import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { NavLink, Link } from "@remix-run/react";
 
@@ -68,6 +69,18 @@ const LessonBlock = styled("div")`
   align-items: center;
 `;
 
+const MenuAppear = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%, 0);
+  }
+`;
+
 const LessonBlockMenu = styled("div")<LessonBlockMenuProps>`
   display: ${(props) => (props.isOpened ? "block" : "none")};
   position: absolute;
@@ -75,6 +88,9 @@ const LessonBlockMenu = styled("div")<LessonBlockMenuProps>`
   top: calc(100% + 20px);
   transform: translate(-50%);
   z-index: 1;
+  animation-name: ${MenuAppear};
+  animation-duration: 0.2s;
+  animation-timing-function: ease-in-out;
 `;
 
 const LessonBlockMenuTriangle = styled("div")`
@@ -152,6 +168,9 @@ const LessonBlockButton = styled("button")`
   font-family: "Roboto";
   font-weight: 500;
   letter-spacing: 0.8px;
+  &:hover img {
+    filter: brightness(1.1);
+  }
 `;
 
 const LessonBlockTitle = styled("div")`
@@ -219,6 +238,7 @@ const ProgressBar = styled("div")<ProgressProps>`
     top: 0;
     left: 0;
     border-radius: 7px;
+    transition: width 0.2s ease;
   }
   &:after {
     height: 30%;
@@ -261,7 +281,7 @@ const Textarea = styled("textarea")`
   z-index: 1;
 
   line-height: 24px;
-  color: rgba(60, 60, 60, 0.8);
+  color: #3c3c3c;
   font-size: 19px;
   font-family: "Roboto";
   font-weight: 400;
@@ -583,14 +603,19 @@ const Logout = styled("button")`
 `;
 
 const PracticeLastAddedContainer = styled("div")`
-  border-width: 2px 2px 4px;
   height: 72px;
   width: 72px;
   border-radius: 50%;
   border: solid #e5e5e5;
+  border-width: 2px 2px 4px;
   position: sticky;
   margin-bottom: 54px;
   bottom: 24px;
+  background-color: #fff;
+  transition: 0.2s ease;
+  &:hover {
+    filter: brightness(0.9);
+  }
 `;
 
 const PracticeLastAddedLink = styled(Link)`
@@ -599,6 +624,13 @@ const PracticeLastAddedLink = styled(Link)`
   align-items: center;
   width: 100%;
   height: 100%;
+  filter: inherit;
+  // background-color: #fff;
+  // border-radius: 50%;
+  // transition: 0.2s ease;
+  // &:hover {
+  //   filter: brightness(0.9);
+  // }
 `;
 
 const ErrorMessage = styled("p")`

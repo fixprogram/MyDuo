@@ -1,17 +1,15 @@
+import { useSkill } from "../..";
 import { VariantItem } from "../lib";
 import { PuzzleContainer, PuzzleItem, PuzzleList } from "./lib";
 
 type PuzzleProps = {
-  contentAnswer: string[];
   values: string[];
   setValues: Function;
 };
 
-export default function Puzzle({
-  contentAnswer,
-  values,
-  setValues,
-}: PuzzleProps) {
+export default function Puzzle({ values, setValues }: PuzzleProps) {
+  const { content } = useSkill();
+  const { answer: contentAnswer, difficulty, isToChoose } = content;
   const selectVariant = (variant: string) => {
     setValues((prevArray: string[]) => {
       const empty = prevArray.find((item) => {
@@ -29,7 +27,7 @@ export default function Puzzle({
     });
   };
 
-  return (
+  return isToChoose && difficulty === "easy" ? (
     <PuzzleContainer>
       <PuzzleList>
         {contentAnswer.map((answer, idx: number) => {
@@ -49,5 +47,5 @@ export default function Puzzle({
         })}
       </PuzzleList>
     </PuzzleContainer>
-  );
+  ) : null;
 }
