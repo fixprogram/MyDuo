@@ -16,11 +16,11 @@ export default function Footer({
   checkAnswer?: Function;
 }) {
   const transition = useTransition();
-  const { topicState, content, continueTopic, setStateWrong, setDifficulty } =
+  const { skillState, content, continueSkill, setStateWrong, setDifficulty } =
     useSkill();
 
   const { answer, difficulty } = content;
-  const { status, buttonDisabled } = topicState;
+  const { status, buttonDisabled } = skillState;
 
   const buttonText =
     transition.state === "submitting"
@@ -37,14 +37,14 @@ export default function Footer({
     if (
       buttonText === "Saving..." ||
       buttonText === "Saved!" ||
-      topicState.buttonDisabled
+      skillState.buttonDisabled
     ) {
       return;
     }
     if (status === "idle") {
       return checkAnswer();
     }
-    continueTopic();
+    continueSkill();
   };
 
   const handleSkip = () => {

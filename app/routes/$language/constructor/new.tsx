@@ -3,9 +3,9 @@ import type { ActionFunction, LoaderFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
-import { Language, Lesson, Topic } from "@prisma/client";
+import { Language, Lesson, Skill } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
-import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
+import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
 import { getTodayDate } from "~/utils";
 
 export type ActionData = {
@@ -26,11 +26,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const title = form.get("title") as string;
 
   let lineNumber = form.get("lineNumber") as string;
-  const lastAddedTopic = (await getLastAddedTopic(activeLanguage.id)) as Topic;
-  if (lastAddedTopic) {
+  const lastAddedSkill = (await getLastAddedSkill(activeLanguage.id)) as Skill;
+  if (lastAddedSkill) {
     lineNumber =
       lineNumber === "0"
-        ? (lastAddedTopic?.lineNumber + 1).toString()
+        ? (lastAddedSkill?.lineNumber + 1).toString()
         : lineNumber;
   }
 
@@ -133,25 +133,25 @@ export const action: ActionFunction = async ({ request, params }) => {
     updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber),
   };
-  const topic = await prisma.topic.create({ data });
-  return redirect(`/skill/${topic.title}/1`);
+  const skill = await prisma.skill.create({ data });
+  return redirect(`/skill/${skill.title}/1`);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedTopics = (await getLastAddedTopic(
+  const lastAddedSkills = (await getLastAddedSkill(
     activeLanguage.id,
     true
-  )) as Topic[];
+  )) as Skill[];
 
-  return { lastAddedTopics };
+  return { lastAddedSkills };
 };
 
 export default function ConstructorNew() {
   const actionData = useActionData() as ActionData;
-  const { lastAddedTopics } = useLoaderData();
+  const { lastAddedSkills } = useLoaderData();
 
   return (
-    <Constructor actionData={actionData} lastAddedTopics={lastAddedTopics} />
+    <Constructor actionData={actionData} lastAddedSkills={lastAddedSkills} />
   );
 }

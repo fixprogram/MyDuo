@@ -82,6 +82,7 @@ const InsertWordsAnswerField = styled("span")<InsertWordsInputProps>`
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
 `;
+
 const VariantItemInput = styled("input")`
   border: 1px solid #e5e5e5;
   border-radius: 12px;
@@ -91,11 +92,12 @@ const VariantItemInput = styled("input")`
   touch-action: manipulation;
   transform: translateZ(0);
   user-select: none;
-  text-align: center;
+  text-align: left;
   color: #4b4b4b;
   font-size: 19px;
   line-height: 1.4;
-  padding: 12px 16px;
+  // padding: 12px 16px;
+  padding: 12px 16px 12px 56px;
   width: 100%;
 `;
 
@@ -130,6 +132,21 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   font-family: "Roboto";
 `;
 
+const SidebarList = styled("ul")`
+  margin-bottom: auto;
+`;
+
+const SidebarBtn = styled("button")`
+  color: #3c3c3c;
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  padding: 15px 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 export {
   StepHeader,
   StepContent,
@@ -140,4 +157,6 @@ export {
   InsertWordsAnswerField,
   VariantItemInput,
   VariantItemNumber,
+  SidebarList,
+  SidebarBtn,
 };

@@ -23,11 +23,11 @@ model Language {
   active          Boolean
   userId          String
   title           String
-  topics          Topic[]
+  skills          Skill[]
   lessonsToRepeat Lesson[]
 }
 
-model Topic {
+model Skill {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
   title          String    @unique
   createdAt      DateTime  @default(now())

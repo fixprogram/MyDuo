@@ -22,10 +22,6 @@ export default function Levels() {
           {data.stepType === "Insert" ? <InsertWords /> : null}
           {data.stepType === "Variants" ? <Variants /> : null}
           {data.stepType === "Pairs" ? <MatchingPairs /> : null}
-          {/* <QuestionAnswer />
-          <InsertWords />
-          <Variants />
-          <MatchingPairs /> */}
         </Step>
       ))}
     </ScreenContainer>

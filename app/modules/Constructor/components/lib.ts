@@ -84,6 +84,16 @@ const BtnCloseImage = styled("img")`
   vertical-align: initial;
 `;
 
+const VariantsList = styled("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const VariantsItem = styled("li")`
+  min-width: 240px;
+`;
+
 const PairsList = styled("ul")`
   display: flex;
   flex-wrap: wrap;
@@ -102,4 +112,6 @@ export {
   BtnClose,
   BtnCloseImage,
   PairsList,
+  VariantsList,
+  VariantsItem,
 };

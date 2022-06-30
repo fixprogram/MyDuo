@@ -15,9 +15,9 @@ import {
 } from "./lib";
 import Bin from "~/styles/bin.svg";
 import useOnClickOutside from "~/hooks/useOnClickOutside";
-import { Topic } from "@prisma/client";
+import { Skill } from "@prisma/client";
 
-type LessonItem = Topic & {
+type LessonItem = Skill & {
   editLink: string;
 };
 
@@ -41,7 +41,7 @@ export default function LessonItem({
 
   const isDisabled = transition.state !== "idle";
   const exp = ((currentChapter / chapters) * 100).toString();
-  const topicLink = `/skill/${title}/${
+  const skillLink = `/skill/${title}/${
     currentChapter / chapters === 1 ? "practice" : currentChapter + 1
   }`;
 
@@ -76,9 +76,9 @@ export default function LessonItem({
                 </LessonBlockButton>
               </Form>
             </div>
-            {/* If the topic is 100% done, then we just repeat all lessons from it */}
+            {/* If the skill is 100% done, then we just repeat all lessons from it */}
             {/* Otherwise we study lessons only from next chapter */}
-            <LessonBlockLink to={topicLink}>Start +16 XP</LessonBlockLink>
+            <LessonBlockLink to={skillLink}>Start +16 XP</LessonBlockLink>
           </LessonBlockInner>
         </LessonBlockMenu>
       </LessonBlock>

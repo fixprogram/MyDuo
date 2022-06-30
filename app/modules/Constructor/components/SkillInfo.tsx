@@ -1,4 +1,4 @@
-import { Topic } from "@prisma/client";
+import { Skill } from "@prisma/client";
 import { useEffect, useState } from "react";
 import {
   ErrorMessage,
@@ -15,40 +15,40 @@ import { useConstructor } from "..";
 
 import { LessonTitleInput, ScreenContainer } from "./lib";
 
-export default function TopicInfo({
+export default function SkillInfo({
   title = "",
   actionData,
-  lastAddedTopics,
+  lastAddedSkills = [],
 }: {
-  lastAddedTopics: Topic[];
+  lastAddedSkills?: Skill[];
   title: string | undefined;
   actionData: ActionData;
 }) {
   const { setBasicInfoReady, currentScreen } = useConstructor();
-  const [topicTitle, setLessonTitle] = useState("");
+  const [skillTitle, setSkillTitle] = useState("");
   const [lineNumber, setLineNumber] = useState(0);
   useEffect(() => {
     if (title) {
-      setLessonTitle(title);
+      setSkillTitle(title);
     }
   }, []);
   useEffect(() => {
-    setBasicInfoReady(!!topicTitle.length);
-  }, [topicTitle]);
+    setBasicInfoReady(!!skillTitle.length);
+  }, [skillTitle]);
 
   return (
-    <ScreenContainer screen={currentScreen} target="Topic">
+    <ScreenContainer screen={currentScreen} target="Skill">
       <input type="hidden" name="formType" value="repeat" />
       <input type="hidden" name="lineNumber" value={lineNumber} />
 
-      <Legend>Topic info</Legend>
+      <Legend>Skill info</Legend>
       <LessonProgress exp={"0"} style={{ margin: "40px auto 0 auto" }} />
       <LessonTitleInput
         type="text"
         name="title"
-        placeholder="Enter topic title"
-        value={topicTitle}
-        onChange={(e) => setLessonTitle(e.target.value)}
+        placeholder="Enter skill title"
+        value={skillTitle}
+        onChange={(e) => setSkillTitle(e.target.value)}
         required
         autoFocus={true}
       />
@@ -58,11 +58,11 @@ export default function TopicInfo({
         </ErrorMessage>
       )}
 
-      {lastAddedTopics.length > 0 && (
+      {lastAddedSkills.length > 0 && (
         <div style={{ width: "100%", maxWidth: "440px", margin: "0 auto" }}>
-          <h2 style={{ marginTop: 60 }}>Choose position for topic</h2>
+          <h2 style={{ marginTop: 60 }}>Choose position for the skill</h2>
           <LessonsBlock>
-            {lastAddedTopics.map((lastAdded: Topic) => (
+            {lastAddedSkills.map((lastAdded: Skill) => (
               <LessonsContainer key={lastAdded.id}>
                 <LessonBlock>
                   <button type="button" aria-labelledby={lastAdded.title}>
@@ -79,23 +79,23 @@ export default function TopicInfo({
                 </LessonBlock>
               </LessonsContainer>
             ))}
-            {lastAddedTopics.length < 3 && (
+            {lastAddedSkills.length < 3 && (
               <LessonsContainer key={"312dsdf"}>
                 <LessonBlock>
                   <button
                     type="button"
                     aria-labelledby={"121"}
-                    onClick={() => setLineNumber(lastAddedTopics[0].lineNumber)}
+                    onClick={() => setLineNumber(lastAddedSkills[0].lineNumber)}
                   >
                     <LessonProgress exp={"0"} style={{ fontSize: "39px" }}>
-                      {lastAddedTopics[0].lineNumber === lineNumber ? (
+                      {lastAddedSkills[0].lineNumber === lineNumber ? (
                         <LessonProgressInner />
                       ) : (
                         "+"
                       )}
                     </LessonProgress>
                     <LessonTitle>
-                      {topicTitle.length ? topicTitle : "Topic title"}
+                      {skillTitle.length ? skillTitle : "Skill title"}
                     </LessonTitle>
                   </button>
                 </LessonBlock>
@@ -106,17 +106,17 @@ export default function TopicInfo({
             <button
               type="button"
               aria-labelledby={"121"}
-              onClick={() => setLineNumber(lastAddedTopics[0].lineNumber + 1)}
+              onClick={() => setLineNumber(lastAddedSkills[0].lineNumber + 1)}
             >
               <LessonProgress exp={"0"} style={{ fontSize: "39px" }}>
-                {lastAddedTopics[0].lineNumber + 1 === lineNumber ? (
+                {lastAddedSkills[0].lineNumber + 1 === lineNumber ? (
                   <LessonProgressInner />
                 ) : (
                   "+"
                 )}
               </LessonProgress>
               <LessonTitle>
-                {topicTitle.length ? topicTitle : "Topic title"}
+                {skillTitle.length ? skillTitle : "Skill title"}
               </LessonTitle>
             </button>
           </LessonBlock>

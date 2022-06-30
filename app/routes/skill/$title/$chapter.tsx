@@ -3,7 +3,7 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
 import Lesson from "~/modules/Lesson";
 import { getActiveLanguage } from "~/models/language.server";
-import { updateCurrentChapter } from "~/models/topic.server";
+import { updateCurrentChapter } from "~/models/skill.server";
 import { increaseTodayExp } from "~/models/user.server";
 
 export function ErrorBoundary() {
@@ -19,15 +19,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   const expData = Number(form.get("exp"));
   const title = params.title;
 
-  const topic = await prisma.topic.findUnique({
+  const skill = await prisma.skill.findUnique({
     where: { title },
   });
 
-  if (!topic) {
+  if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
   }
 
-  await updateCurrentChapter(topic);
+  await updateCurrentChapter(skill);
 
   await increaseTodayExp(request, expData);
 
@@ -35,16 +35,16 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const topic = await prisma.topic.findFirst({
+  const skill = await prisma.skill.findFirst({
     where: { title: params.title },
   });
 
-  if (!topic) {
+  if (!skill) {
     throw new Error("Skill is not found");
   }
 
   const lessons = await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs }, chapter: Number(params.chapter) },
+    where: { id: { in: skill.lessonIDs }, chapter: Number(params.chapter) },
   });
 
   return lessons;

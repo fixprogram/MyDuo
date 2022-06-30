@@ -14,7 +14,14 @@ const initialState = {
 };
 
 export default function MatchingPairs({ state = initialState }) {
-  const { number, answer, stepType, variantsCount, initialVariants } = state;
+  const {
+    number,
+    answer,
+    stepType,
+    variantsCount = 4,
+    initialVariants = [],
+  } = state;
+
   const { setStepReady, setAnswer } = useConstructor();
 
   const [{ variants, pairs }, dispatch] = useReducer(reducer, {
@@ -65,7 +72,7 @@ export default function MatchingPairs({ state = initialState }) {
                     dispatch(pairsChoose(variant.idx));
                   }
                 }}
-                isConnected={variant.isConnected}
+                isConnected={variant.isConnected as boolean}
                 isFocused={variant.isFocused}
               >
                 {variant.idx}

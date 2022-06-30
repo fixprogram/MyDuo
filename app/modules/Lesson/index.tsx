@@ -36,22 +36,22 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
   const value = useSkillReducer();
   const submit = useSubmit();
 
-  const { setup, topicState, continueTopic } = value;
-  const { status } = topicState;
+  const { setup, skillState, continueSkill } = value;
+  const { status } = skillState;
 
   useEffect(() => {
-    setup(steps); // Ones the data is loaded, we set the it in reducer
+    setup(steps); // Once the data is loaded, we set the it in reducer
   }, []);
 
   const onContinue = () => {
     if (status === "results") {
       return submit(resultsFormRef.current, { replace: true });
     }
-    return continueTopic();
+    return continueSkill();
   };
 
   return (
-    <SkillContext.Provider value={{ ...value, continueTopic: onContinue }}>
+    <SkillContext.Provider value={{ ...value, continueSkill: onContinue }}>
       <LessonContainer>
         {status === "results" ? (
           <Fragment>

@@ -2,30 +2,16 @@ import React, { ReactElement } from "react";
 import { Legend } from "~/components/lib";
 import { useConstructor } from "../..";
 import CloseBtn from "../../components/CloseBtn";
-import { Step } from "../types";
+import { Step as StepType } from "../types";
 import { StepHeader, StepContent, ChooseStyle, StyleButton } from "./lib";
-import Variants from "./Variants";
 
 const STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
 
-type StepProps = { data: Step; index: number };
+type StepProps = { data: StepType; index: number };
 
 const Step: React.FC<StepProps> = ({ data, index, children }) => {
-  const {
-    active,
-    chapter,
-    stepType,
-    id,
-    number,
-    variants,
-    text,
-    answer,
-    question,
-  } = data;
-  const { removeStepType, setStepType, setQuestion, setAnswer } =
-    useConstructor();
-
-  // const Component = stepType;
+  const { active, chapter, stepType, id, number } = data;
+  const { removeStepType, setStepType } = useConstructor();
 
   return (
     <section className={`${!active && "visuallyHidden"}`}>

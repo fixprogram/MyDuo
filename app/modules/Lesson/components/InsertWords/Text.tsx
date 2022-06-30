@@ -9,25 +9,25 @@ type TextProps = {
 };
 
 export default function Text({ values, setValues }: TextProps) {
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
   const { text, isToChoose, variants, answer, difficulty } = content;
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
-    if (!topicState.formDisabled) {
+    if (!skillState.formDisabled) {
       setValues([...new Array(answer.length).fill(" ")]);
     }
-  }, [topicState.formDisabled]);
+  }, [skillState.formDisabled]);
 
   const myRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (topicState.status === "idle" && !isToChoose && !variants.length) {
+    if (skillState.status === "idle" && !isToChoose && !variants.length) {
       const timeout = setTimeout(() => {
         myRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
 
   const handleChange = (evt: SyntheticEvent, index: number) => {
     const target = evt.target as HTMLInputElement;
@@ -83,7 +83,7 @@ export default function Text({ values, setValues }: TextProps) {
                     value={values[index]}
                     onChange={(evt) => handleChange(evt, index)}
                     onClick={(evt) => handleInputClick(evt, index)}
-                    disabled={topicState.formDisabled}
+                    disabled={skillState.formDisabled}
                     ref={firstInput === index ? myRef : null}
                   />
                 )}

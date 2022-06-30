@@ -13,7 +13,7 @@ const Progress = () => {
       <ProgressLeaveLesson to="/">
         <img
           src={CloseIcon}
-          alt="Close the topic"
+          alt="Close the skill"
           width={16}
           height={16}
           style={{ verticalAlign: "initial" }}

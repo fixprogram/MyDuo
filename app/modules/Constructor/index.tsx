@@ -1,15 +1,12 @@
 import { createContext, useContext, useEffect } from "react";
-import TopicInfo from "./components/TopicInfo";
+import SkillInfo from "./components/SkillInfo";
 import { initialContext, useConstructorReducer } from "./Levels/reducer";
-import {
-  ConstructorForm,
-  ConstructorFormInner,
-  ConstructorSidebar,
-} from "./components/lib";
+import { ConstructorForm, ConstructorFormInner } from "./components/lib";
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
 import { ConstructorData } from "./Levels/types";
+import { Skill } from "@prisma/client";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -25,9 +22,9 @@ export const useConstructor = () => {
 export default function Constructor({
   data,
   actionData,
-  lastAddedTopics,
+  lastAddedSkills,
 }: {
-  lastAddedTopics?: any;
+  lastAddedSkills?: Skill[];
   data?: ConstructorData;
   actionData: ActionData;
 }) {
@@ -41,8 +38,8 @@ export default function Constructor({
   }, [data]);
 
   useEffect(() => {
-    if (actionData?.errors?.title && currentScreen !== "Topic") {
-      changeCurrentScreen("Topic");
+    if (actionData?.errors?.title && currentScreen !== "Skill") {
+      changeCurrentScreen("Skill");
     }
   }, [actionData]);
 
@@ -50,16 +47,14 @@ export default function Constructor({
     <ConstructorContext.Provider value={state}>
       <ConstructorForm method="post" autoComplete="off">
         <ConstructorFormInner>
-          <TopicInfo
+          <SkillInfo
             title={data?.title}
             actionData={actionData}
-            lastAddedTopics={lastAddedTopics}
+            lastAddedSkills={lastAddedSkills}
           />
           <Levels />
         </ConstructorFormInner>
-        <ConstructorSidebar>
-          <Sidebar />
-        </ConstructorSidebar>
+        <Sidebar />
       </ConstructorForm>
     </ConstructorContext.Provider>
   );

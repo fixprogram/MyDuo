@@ -4,6 +4,13 @@ import { doesItemContainSign } from "~/utils";
 import { useConstructor } from "~/modules/Constructor";
 import Keywords from "~/modules/Constructor/components/Keywords";
 import { Step } from "../../types";
+import {
+  LessonQuestion,
+  LessonQuestionTriangle,
+  LessonQuestionTriangleContainer,
+  LessonTitle,
+} from "~/modules/Lesson/components/lib";
+import Duo from "~/styles/duo.svg";
 
 const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
   question: "",
@@ -34,20 +41,30 @@ export default function QuestionAnswer({ state = initialState }) {
       {/* <input type="hidden" name={`type${number}`} value={"Question"} /> */}
 
       <fieldset style={{ padding: "0 25%" }}>
-        <input
-          type="text"
-          name={`question${number}`}
-          placeholder="Set question"
-          style={{
-            border: "none",
-            marginBottom: 10,
-            width: "100%",
-          }}
-          value={question === null ? "" : question}
-          onChange={(evt) => setQuestion(evt.target.value, number)}
-          autoFocus={true}
-          required
-        />
+        <LessonTitle>Answer the question</LessonTitle>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
+          <div style={{ position: "relative" }}>
+            <LessonQuestion>
+              <input
+                type="text"
+                name={`question${number}`}
+                placeholder="Set question"
+                style={{
+                  border: "none",
+                  width: "100%",
+                }}
+                value={question === null ? "" : question}
+                onChange={(evt) => setQuestion(evt.target.value, number)}
+                autoFocus={true}
+                required
+              />
+            </LessonQuestion>
+            <LessonQuestionTriangleContainer>
+              <LessonQuestionTriangle />
+            </LessonQuestionTriangleContainer>
+          </div>
+        </div>
 
         <Textarea
           name={`answer${number}`}

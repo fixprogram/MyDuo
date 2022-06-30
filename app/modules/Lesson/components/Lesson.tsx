@@ -19,8 +19,8 @@ export const Lesson: React.FC<LessonProps> = ({
   children,
   ...props
 }) => {
-  const { topicState, continueTopic, setCheckDisabled } = useSkill();
-  const { status, formDisabled, buttonDisabled } = topicState;
+  const { skillState, continueSkill, setCheckDisabled } = useSkill();
+  const { status, formDisabled, buttonDisabled } = skillState;
   const [userAnswer, setUserAnswer] = useState(initialValue);
 
   const lessonRef = useFocus<HTMLDivElement>(status);
@@ -51,7 +51,7 @@ export const Lesson: React.FC<LessonProps> = ({
       return checkAnswer(userAnswer);
     }
 
-    return continueTopic();
+    return continueSkill();
   };
 
   useEffect(() => {

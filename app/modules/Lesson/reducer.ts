@@ -51,15 +51,15 @@ export const basicState: SkillState = {
   },
   lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
-  topicState: { status: "idle", formDisabled: false, buttonDisabled: true },
+  skillState: { status: "idle", formDisabled: false, buttonDisabled: true },
 };
 
 function skillReducer(state: SkillState, action: Action): SkillState {
-  const { content, stepNumber, maxSteps, lessonSteps, topicState } = state;
+  const { content, stepNumber, maxSteps, lessonSteps, skillState } = state;
   const positiveState = {
     ...state,
     progress: stepNumber / maxSteps,
-    topicState: {
+    skillState: {
       status: "right",
       formDisabled: true,
       buttonDisabled: false,
@@ -69,7 +69,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
     ...state,
     lessonSteps: [...lessonSteps, content],
     stepNumber: stepNumber - 1,
-    topicState: {
+    skillState: {
       status: "wrong",
       formDisabled: true,
       buttonDisabled: false,
@@ -82,8 +82,8 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         ...state,
         stepNumber: stepNumber + 1,
         content: continueContent(content, lessonSteps),
-        topicState: {
-          ...topicState,
+        skillState: {
+          ...skillState,
           status: isResults ? "results" : "idle",
           formDisabled: false,
           buttonDisabled: isResults ? false : true,
@@ -104,7 +104,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
       return {
         ...state,
         stepNumber: stepNumber + 1,
-        topicState: { ...topicState, status: "results" },
+        skillState: { ...skillState, status: "results" },
       };
     case actionTypes.setStateRight:
       return positiveState;
@@ -114,7 +114,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
       const { disabled } = action;
       return {
         ...state,
-        topicState: { ...topicState, buttonDisabled: disabled },
+        skillState: { ...skillState, buttonDisabled: disabled },
       };
     case actionTypes.updateState:
       const { update } = action;
@@ -133,9 +133,9 @@ function useSkillReducer({
   reducer = skillReducer,
 } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { content, progress, topicState, stepNumber, maxSteps } = state;
+  const { content, progress, skillState, stepNumber, maxSteps } = state;
 
-  const continueTopic = () => dispatch({ type: actionTypes.continue });
+  const continueSkill = () => dispatch({ type: actionTypes.continue });
   const setup = (steps: Lesson[]) =>
     dispatch({ type: actionTypes.setup, steps });
   const showResults = () => dispatch({ type: actionTypes.results });
@@ -151,10 +151,10 @@ function useSkillReducer({
   return {
     content,
     progress,
-    topicState,
+    skillState,
     stepNumber,
     maxSteps,
-    continueTopic,
+    continueSkill,
     setup,
     showResults,
     setStateRight,
@@ -168,7 +168,7 @@ function useSkillReducer({
 const defaultSkillContextState = {
   ...basicState,
   setup: () => {},
-  continueTopic: () => {},
+  continueSkill: () => {},
   showResults: () => {},
   setStateRight: () => {},
   setStateWrong: () => {},

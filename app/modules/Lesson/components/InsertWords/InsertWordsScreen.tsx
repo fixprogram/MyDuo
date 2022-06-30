@@ -18,7 +18,7 @@ export default function InsertWordsScreen({
   setUserAnswer,
   keyDownCheck,
 }: InsertWordsScreenProps) {
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
 
   const { isToChoose, variants, answer, difficulty } = content;
   const initalValues =
@@ -49,11 +49,11 @@ export default function InsertWordsScreen({
   }, [userAnswer]);
 
   useEffect(() => {
-    if (topicState.formDisabled) {
+    if (skillState.formDisabled) {
       return;
     }
     setValues(initalValues);
-  }, [difficulty, topicState.formDisabled]);
+  }, [difficulty, skillState.formDisabled]);
 
   return (
     <Fragment>

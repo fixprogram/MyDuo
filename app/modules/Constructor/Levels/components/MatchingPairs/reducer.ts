@@ -5,7 +5,7 @@ export type Variant = {
   value: string;
   idx: number;
   isFocused: boolean;
-  isConnected: boolean;
+  isConnected: boolean | null;
 };
 
 export type State = {
@@ -113,7 +113,7 @@ export const reducer = (state: State, action: Action): State => {
         variants: variants.map((variant: Variant) => ({
           ...variant,
           isFocused: false,
-          isConnected: newPairs.filter((pair) =>
+          isConnected: !!newPairs.filter((pair) =>
             pair.includes(`${variant.idx}`)
           ).length,
         })),

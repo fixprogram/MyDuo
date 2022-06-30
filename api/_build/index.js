@@ -1046,7 +1046,7 @@ var SkillsListContainer = (0, import_styled.default)("section")`
   flex-direction: column;
   height: calc(100vh - 95px);
 `;
-var TopicsLineBlock = (0, import_styled.default)("div")`
+var SkillsLineBlock = (0, import_styled.default)("div")`
   width: 100%;
   max-width: 440px;
   margin: 0 auto 38px auto;
@@ -1059,7 +1059,7 @@ var Progress = () => {
     to: "/"
   }, /* @__PURE__ */ React.createElement("img", {
     src: close_default,
-    alt: "Close the topic",
+    alt: "Close the skill",
     width: 16,
     height: 16,
     style: { verticalAlign: "initial" }
@@ -1095,13 +1095,13 @@ var basicState = {
   },
   lessonSteps: [],
   maxSteps: 0,
-  topicState: { status: "idle", formDisabled: false, buttonDisabled: true }
+  skillState: { status: "idle", formDisabled: false, buttonDisabled: true }
 };
 function skillReducer(state, action10) {
-  const { content, stepNumber, maxSteps, lessonSteps, topicState } = state;
+  const { content, stepNumber, maxSteps, lessonSteps, skillState } = state;
   const positiveState = __spreadProps(__spreadValues({}, state), {
     progress: stepNumber / maxSteps,
-    topicState: {
+    skillState: {
       status: "right",
       formDisabled: true,
       buttonDisabled: false
@@ -1110,7 +1110,7 @@ function skillReducer(state, action10) {
   const negativeState = __spreadProps(__spreadValues({}, state), {
     lessonSteps: [...lessonSteps, content],
     stepNumber: stepNumber - 1,
-    topicState: {
+    skillState: {
       status: "wrong",
       formDisabled: true,
       buttonDisabled: false
@@ -1122,7 +1122,7 @@ function skillReducer(state, action10) {
       return __spreadProps(__spreadValues({}, state), {
         stepNumber: stepNumber + 1,
         content: continueContent(content, lessonSteps),
-        topicState: __spreadProps(__spreadValues({}, topicState), {
+        skillState: __spreadProps(__spreadValues({}, skillState), {
           status: isResults ? "results" : "idle",
           formDisabled: false,
           buttonDisabled: isResults ? false : true
@@ -1139,7 +1139,7 @@ function skillReducer(state, action10) {
     case "RESULTS" /* results */:
       return __spreadProps(__spreadValues({}, state), {
         stepNumber: stepNumber + 1,
-        topicState: __spreadProps(__spreadValues({}, topicState), { status: "results" })
+        skillState: __spreadProps(__spreadValues({}, skillState), { status: "results" })
       });
     case "SET_STATE_RIGHT" /* setStateRight */:
       return positiveState;
@@ -1148,7 +1148,7 @@ function skillReducer(state, action10) {
     case "SET_CHECK_DISABLED" /* setCheckDisabled */:
       const { disabled } = action10;
       return __spreadProps(__spreadValues({}, state), {
-        topicState: __spreadProps(__spreadValues({}, topicState), { buttonDisabled: disabled })
+        skillState: __spreadProps(__spreadValues({}, skillState), { buttonDisabled: disabled })
       });
     case "UPDATE_STATE" /* updateState */:
       const { update } = action10;
@@ -1166,8 +1166,8 @@ function useSkillReducer({
   reducer: reducer2 = skillReducer
 } = {}) {
   const [state, dispatch] = (0, import_react3.useReducer)(reducer2, initialState5);
-  const { content, progress, topicState, stepNumber, maxSteps } = state;
-  const continueTopic = () => dispatch({ type: "CONTINUE" /* continue */ });
+  const { content, progress, skillState, stepNumber, maxSteps } = state;
+  const continueSkill = () => dispatch({ type: "CONTINUE" /* continue */ });
   const setup = (steps) => dispatch({ type: "SETUP" /* setup */, steps });
   const showResults = () => dispatch({ type: "RESULTS" /* results */ });
   const setStateRight = () => dispatch({ type: "SET_STATE_RIGHT" /* setStateRight */ });
@@ -1178,10 +1178,10 @@ function useSkillReducer({
   return {
     content,
     progress,
-    topicState,
+    skillState,
     stepNumber,
     maxSteps,
-    continueTopic,
+    continueSkill,
     setup,
     showResults,
     setStateRight,
@@ -1194,7 +1194,7 @@ function useSkillReducer({
 var defaultSkillContextState = __spreadProps(__spreadValues({}, basicState), {
   setup: () => {
   },
-  continueTopic: () => {
+  continueSkill: () => {
   },
   showResults: () => {
   },
@@ -1534,18 +1534,18 @@ function Footer({
   }
 }) {
   const transition = (0, import_react7.useTransition)();
-  const { topicState, content, continueTopic, setStateWrong, setDifficulty } = useSkill();
+  const { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill();
   const { answer, difficulty } = content;
-  const { status, buttonDisabled } = topicState;
+  const { status, buttonDisabled } = skillState;
   const buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check";
   const handleContinue = () => {
-    if (buttonText === "Saving..." || buttonText === "Saved!" || topicState.buttonDisabled) {
+    if (buttonText === "Saving..." || buttonText === "Saved!" || skillState.buttonDisabled) {
       return;
     }
     if (status === "idle") {
       return checkAnswer();
     }
-    continueTopic();
+    continueSkill();
   };
   const handleSkip = () => {
     setStateWrong();
@@ -1679,8 +1679,8 @@ var Lesson = (_a) => {
     "keyDownHandle",
     "children"
   ]);
-  const { topicState, continueTopic, setCheckDisabled } = useSkill();
-  const { status, formDisabled, buttonDisabled } = topicState;
+  const { skillState, continueSkill, setCheckDisabled } = useSkill();
+  const { status, formDisabled, buttonDisabled } = skillState;
   const [userAnswer, setUserAnswer] = (0, import_react10.useState)(initialValue);
   const lessonRef = useFocus(status);
   (0, import_react10.useEffect)(() => {
@@ -1706,7 +1706,7 @@ var Lesson = (_a) => {
     if (status === "idle") {
       return checkAnswer(userAnswer);
     }
-    return continueTopic();
+    return continueSkill();
   };
   (0, import_react10.useEffect)(() => {
     if (!formDisabled && setUserAnswer) {
@@ -1813,11 +1813,12 @@ var VariantItemInput = (0, import_styled3.default)("input")`
   touch-action: manipulation;
   transform: translateZ(0);
   user-select: none;
-  text-align: center;
+  text-align: left;
   color: #4b4b4b;
   font-size: 19px;
   line-height: 1.4;
-  padding: 12px 16px;
+  // padding: 12px 16px;
+  padding: 12px 16px 12px 56px;
   width: 100%;
 `;
 var VariantItemNumber = (0, import_styled3.default)("span")`
@@ -1839,6 +1840,19 @@ var VariantItemNumber = (0, import_styled3.default)("span")`
   justify-content: center;
   align-items: center;
   font-family: "Roboto";
+`;
+var SidebarList = (0, import_styled3.default)("ul")`
+  margin-bottom: auto;
+`;
+var SidebarBtn = (0, import_styled3.default)("button")`
+  color: #3c3c3c;
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  padding: 15px 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 // app/modules/Lesson/components/InsertWords/Puzzle.tsx
@@ -1926,17 +1940,17 @@ function Variants({
   keyDownCheck
 }) {
   const myRef = (0, import_react11.useRef)(null);
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
   const { variants, difficulty } = content;
   (0, import_react11.useEffect)(() => {
-    if (topicState.status === "idle") {
+    if (skillState.status === "idle") {
       const timeout = setTimeout(() => {
         var _a;
         (_a = myRef.current) == null ? void 0 : _a.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
   const KeyDownHandler = (e) => {
     variants.forEach((variant, idx) => {
       if (Number(e.key) === idx + 1) {
@@ -1963,23 +1977,23 @@ function Variants({
 init_react();
 var import_react12 = require("react");
 function Text({ values, setValues }) {
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
   const { text, isToChoose, variants, answer, difficulty } = content;
   (0, import_react12.useEffect)(() => {
-    if (!topicState.formDisabled) {
+    if (!skillState.formDisabled) {
       setValues([...new Array(answer.length).fill(" ")]);
     }
-  }, [topicState.formDisabled]);
+  }, [skillState.formDisabled]);
   const myRef = (0, import_react12.useRef)(null);
   (0, import_react12.useEffect)(() => {
-    if (topicState.status === "idle" && !isToChoose && !variants.length) {
+    if (skillState.status === "idle" && !isToChoose && !variants.length) {
       const timeout = setTimeout(() => {
         var _a;
         (_a = myRef.current) == null ? void 0 : _a.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
   const handleChange = (evt, index) => {
     const target = evt.target;
     setValues((prevArray) => {
@@ -2024,7 +2038,7 @@ function Text({ values, setValues }) {
           value: values[index],
           onChange: (evt) => handleChange(evt, index),
           onClick: (evt) => handleInputClick(evt, index),
-          disabled: topicState.formDisabled,
+          disabled: skillState.formDisabled,
           ref: firstInput === index ? myRef : null
         }), /* @__PURE__ */ React.createElement("span", {
           style: { marginRight: 4 }
@@ -2044,7 +2058,7 @@ function InsertWordsScreen({
   setUserAnswer,
   keyDownCheck
 }) {
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
   const { isToChoose, variants, answer, difficulty } = content;
   const initalValues = variants && difficulty === "easy" ? [...new Array(answer.length).fill(" ")] : [""];
   const [values, setValues] = (0, import_react13.useState)(initalValues);
@@ -2067,11 +2081,11 @@ function InsertWordsScreen({
     }
   }, [userAnswer]);
   (0, import_react13.useEffect)(() => {
-    if (topicState.formDisabled) {
+    if (skillState.formDisabled) {
       return;
     }
     setValues(initalValues);
-  }, [difficulty, topicState.formDisabled]);
+  }, [difficulty, skillState.formDisabled]);
   return /* @__PURE__ */ React.createElement(import_react13.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, /* @__PURE__ */ React.createElement(Text, {
     values,
     setValues
@@ -2169,7 +2183,7 @@ function PairsScreen({
 
 // app/modules/Lesson/components/Pairs.tsx
 function Pairs() {
-  const { content, setStateRight, updateState, topicState } = useSkill();
+  const { content, setStateRight, updateState, skillState } = useSkill();
   const { answer, variants } = content;
   const initialValue = [""];
   const checkAnswer = (uAns, setUserAnswer) => {
@@ -2188,7 +2202,7 @@ function Pairs() {
     } else {
       setUserAnswer((prevUserAnswer) => [...prevUserAnswer]);
       return updateState({
-        topicState: __spreadProps(__spreadValues({}, topicState), { buttonDisabled: true })
+        skillState: __spreadProps(__spreadValues({}, skillState), { buttonDisabled: true })
       });
     }
   };
@@ -2217,17 +2231,17 @@ function QuestionAnswerScreen({
   userAnswer,
   setUserAnswer
 }) {
-  const { topicState } = useSkill();
+  const { skillState } = useSkill();
   const myRef = (0, import_react15.useRef)(null);
   (0, import_react15.useEffect)(() => {
-    if (topicState.status === "idle") {
+    if (skillState.status === "idle") {
       const timeout = setTimeout(() => {
         var _a;
         (_a = myRef.current) == null ? void 0 : _a.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
   return /* @__PURE__ */ React.createElement(import_react15.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center" }
   }, /* @__PURE__ */ React.createElement("img", {
@@ -2243,7 +2257,7 @@ function QuestionAnswerScreen({
     placeholder: "Enter your answer",
     value: userAnswer,
     onChange: (e) => setUserAnswer(e.target.value),
-    disabled: topicState.formDisabled,
+    disabled: skillState.formDisabled,
     ref: myRef
   })));
 }
@@ -2345,8 +2359,8 @@ function Skill({ steps }) {
   const resultsFormRef = (0, import_react17.createRef)();
   const value = useSkillReducer();
   const submit = (0, import_react18.useSubmit)();
-  const { setup, topicState, continueTopic } = value;
-  const { status } = topicState;
+  const { setup, skillState, continueSkill } = value;
+  const { status } = skillState;
   (0, import_react17.useEffect)(() => {
     setup(steps);
   }, []);
@@ -2354,10 +2368,10 @@ function Skill({ steps }) {
     if (status === "results") {
       return submit(resultsFormRef.current, { replace: true });
     }
-    return continueTopic();
+    return continueSkill();
   };
   return /* @__PURE__ */ React.createElement(SkillContext.Provider, {
-    value: __spreadProps(__spreadValues({}, value), { continueTopic: onContinue })
+    value: __spreadProps(__spreadValues({}, value), { continueSkill: onContinue })
   }, /* @__PURE__ */ React.createElement(LessonContainer, null, status === "results" ? /* @__PURE__ */ React.createElement(import_react17.Fragment, null, /* @__PURE__ */ React.createElement(Results, {
     onSubmit: onContinue,
     ref: resultsFormRef
@@ -2596,48 +2610,49 @@ async function getLanguages(request) {
 }
 async function whenLastPractice(request) {
   const languages = await getLanguages(request);
-  const lastUpdatedTopic = await prisma.topic.findFirst({
+  const lastUpdatedSkill = await prisma.skill.findFirst({
     where: {
       projectId: { in: languages.map(({ id }) => id) }
     },
     select: { updatedAt: true },
     orderBy: { updatedAt: "desc" }
   });
-  if (!lastUpdatedTopic) {
+  if (!lastUpdatedSkill) {
     return 0;
   }
-  return lastUpdatedTopic.updatedAt;
+  return lastUpdatedSkill.updatedAt;
 }
 
-// app/models/topic.server.ts
+// app/models/skill.server.ts
 init_react();
-async function updateCurrentChapter(topic) {
+async function updateCurrentChapter(skill) {
+  const { title, currentChapter, chapters } = skill;
   const today = getTodayDate();
-  return await prisma.topic.update({
+  return await prisma.skill.update({
     where: {
-      title: topic.title
+      title
     },
     data: {
-      currentChapter: topic.chapters !== topic.currentChapter ? topic.currentChapter + 1 : topic.currentChapter,
+      currentChapter: chapters !== currentChapter ? currentChapter + 1 : currentChapter,
       updatedAt: today
     }
   });
 }
 async function checkTitleUnique(projectId, title) {
-  const topics = await prisma.topic.findMany({ where: { projectId } });
-  return !!topics.find((topic) => topic.title === title);
+  const skills = await prisma.skill.findMany({ where: { projectId } });
+  return !!skills.find((skill) => skill.title === title);
 }
-async function getLastAddedTopic(projectId, neighbors = false) {
-  const lastAddedTopic = await prisma.topic.findFirst({
+async function getLastAddedSkill(projectId, neighbors = false) {
+  const lastAddedSkill = await prisma.skill.findFirst({
     where: { projectId },
     orderBy: { createdAt: "desc" }
   });
   if (neighbors) {
-    return await prisma.topic.findMany({
-      where: { projectId, lineNumber: lastAddedTopic == null ? void 0 : lastAddedTopic.lineNumber }
+    return await prisma.skill.findMany({
+      where: { projectId, lineNumber: lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber }
     });
   }
-  return lastAddedTopic;
+  return lastAddedSkill;
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
@@ -2652,25 +2667,25 @@ var action = async ({ request, params }) => {
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const title = params.title;
-  const topic = await prisma.topic.findUnique({
+  const skill = await prisma.skill.findUnique({
     where: { title }
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
   }
-  await updateCurrentChapter(topic);
+  await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
   return (0, import_remix4.redirect)(`/${language == null ? void 0 : language.title}/skills`);
 };
 var loader = async ({ params }) => {
-  const topic = await prisma.topic.findFirst({
+  const skill = await prisma.skill.findFirst({
     where: { title: params.title }
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error("Skill is not found");
   }
   const lessons = await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs }, chapter: Number(params.chapter) }
+    where: { id: { in: skill.lessonIDs }, chapter: Number(params.chapter) }
   });
   return lessons;
 };
@@ -2702,25 +2717,25 @@ var action2 = async ({ request, params }) => {
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const title = params.title;
-  const topic = await prisma.topic.findUnique({
+  const skill = await prisma.skill.findUnique({
     where: { title }
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
   }
-  await updateCurrentChapter(topic);
+  await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
   return (0, import_remix5.redirect)(`/${language == null ? void 0 : language.title}/skills`);
 };
 var loader2 = async ({ params }) => {
-  const topic = await prisma.topic.findUnique({
+  const skill = await prisma.skill.findUnique({
     where: { title: params.title }
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error("Skill is not found");
   }
   const lessons = await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs } }
+    where: { id: { in: skill.lessonIDs } }
   });
   return lessons;
 };
@@ -2893,8 +2908,8 @@ async function createLessons(data) {
   });
   return IDs.map((idItem) => idItem.id);
 }
-async function getTopics(languageId) {
-  return await prisma.topic.findMany({
+async function getSkills(languageId) {
+  return await prisma.skill.findMany({
     take: 20,
     where: { projectId: languageId },
     select: {
@@ -2917,19 +2932,19 @@ async function getLastActivity(request) {
   }
   return today;
 }
-async function deleteTopicById(id) {
-  return await prisma.topic.delete({ where: { id } });
+async function deleteSkillById(id) {
+  return await prisma.skill.delete({ where: { id } });
 }
-async function deleteLessonsFromTopic(topicId) {
-  const topic = await prisma.topic.findUnique({ where: { id: topicId } });
+async function deleteLessonsFromSkill(skillId) {
+  const skill = await prisma.skill.findUnique({ where: { id: skillId } });
   return await prisma.lesson.deleteMany({
-    where: { id: { in: topic == null ? void 0 : topic.lessonIDs } }
+    where: { id: { in: skill == null ? void 0 : skill.lessonIDs } }
   });
 }
-async function getLessonsByTopicId(id) {
-  const topic = await prisma.topic.findUnique({ where: { id } });
+async function getLessonsBySkillId(id) {
+  const skill = await prisma.skill.findUnique({ where: { id } });
   return await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs } }
+    where: { id: { in: skill.lessonIDs } }
   });
 }
 
@@ -3012,7 +3027,7 @@ var import_node3 = require("@remix-run/node");
 init_react();
 var import_react36 = require("react");
 
-// app/modules/Constructor/components/TopicInfo.tsx
+// app/modules/Constructor/components/SkillInfo.tsx
 init_react();
 var import_react23 = require("react");
 
@@ -3089,6 +3104,14 @@ var BtnCloseImage = (0, import_styled5.default)("img")`
   height: 16px;
   vertical-align: initial;
 `;
+var VariantsList2 = (0, import_styled5.default)("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+var VariantsItem2 = (0, import_styled5.default)("li")`
+  min-width: 240px;
+`;
 var PairsList = (0, import_styled5.default)("ul")`
   display: flex;
   flex-wrap: wrap;
@@ -3097,27 +3120,27 @@ var PairsList = (0, import_styled5.default)("ul")`
   margin: 0 auto;
 `;
 
-// app/modules/Constructor/components/TopicInfo.tsx
-function TopicInfo({
+// app/modules/Constructor/components/SkillInfo.tsx
+function SkillInfo({
   title = "",
   actionData,
-  lastAddedTopics
+  lastAddedSkills = []
 }) {
   var _a;
   const { setBasicInfoReady, currentScreen } = useConstructor();
-  const [topicTitle, setLessonTitle] = (0, import_react23.useState)("");
+  const [skillTitle, setSkillTitle] = (0, import_react23.useState)("");
   const [lineNumber, setLineNumber] = (0, import_react23.useState)(0);
   (0, import_react23.useEffect)(() => {
     if (title) {
-      setLessonTitle(title);
+      setSkillTitle(title);
     }
   }, []);
   (0, import_react23.useEffect)(() => {
-    setBasicInfoReady(!!topicTitle.length);
-  }, [topicTitle]);
+    setBasicInfoReady(!!skillTitle.length);
+  }, [skillTitle]);
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
     screen: currentScreen,
-    target: "Topic"
+    target: "Skill"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: "formType",
@@ -3126,48 +3149,48 @@ function TopicInfo({
     type: "hidden",
     name: "lineNumber",
     value: lineNumber
-  }), /* @__PURE__ */ React.createElement(Legend, null, "Topic info"), /* @__PURE__ */ React.createElement(LessonProgress, {
+  }), /* @__PURE__ */ React.createElement(Legend, null, "Skill info"), /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: "0",
     style: { margin: "40px auto 0 auto" }
   }), /* @__PURE__ */ React.createElement(LessonTitleInput, {
     type: "text",
     name: "title",
-    placeholder: "Enter topic title",
-    value: topicTitle,
-    onChange: (e) => setLessonTitle(e.target.value),
+    placeholder: "Enter skill title",
+    value: skillTitle,
+    onChange: (e) => setSkillTitle(e.target.value),
     required: true,
     autoFocus: true
   }), ((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && /* @__PURE__ */ React.createElement(ErrorMessage, {
     role: "alert",
     id: "title-error"
-  }, actionData.errors.title), lastAddedTopics.length > 0 && /* @__PURE__ */ React.createElement("div", {
+  }, actionData.errors.title), lastAddedSkills.length > 0 && /* @__PURE__ */ React.createElement("div", {
     style: { width: "100%", maxWidth: "440px", margin: "0 auto" }
   }, /* @__PURE__ */ React.createElement("h2", {
     style: { marginTop: 60 }
-  }, "Choose position for topic"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedTopics.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
+  }, "Choose position for the skill"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedSkills.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
     key: lastAdded.id
   }, /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
     "aria-labelledby": lastAdded.title
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: (lastAdded.currentChapter / lastAdded.chapters * 100).toString()
-  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle, null, lastAdded.title))))), lastAddedTopics.length < 3 && /* @__PURE__ */ React.createElement(LessonsContainer, {
+  }, /* @__PURE__ */ React.createElement(LessonProgressInner, null)), /* @__PURE__ */ React.createElement(LessonTitle, null, lastAdded.title))))), lastAddedSkills.length < 3 && /* @__PURE__ */ React.createElement(LessonsContainer, {
     key: "312dsdf"
   }, /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
     "aria-labelledby": "121",
-    onClick: () => setLineNumber(lastAddedTopics[0].lineNumber)
+    onClick: () => setLineNumber(lastAddedSkills[0].lineNumber)
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: "0",
     style: { fontSize: "39px" }
-  }, lastAddedTopics[0].lineNumber === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, topicTitle.length ? topicTitle : "Topic title"))))), /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
+  }, lastAddedSkills[0].lineNumber === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, skillTitle.length ? skillTitle : "Skill title"))))), /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
     "aria-labelledby": "121",
-    onClick: () => setLineNumber(lastAddedTopics[0].lineNumber + 1)
+    onClick: () => setLineNumber(lastAddedSkills[0].lineNumber + 1)
   }, /* @__PURE__ */ React.createElement(LessonProgress, {
     exp: "0",
     style: { fontSize: "39px" }
-  }, lastAddedTopics[0].lineNumber + 1 === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, topicTitle.length ? topicTitle : "Topic title")))));
+  }, lastAddedSkills[0].lineNumber + 1 === lineNumber ? /* @__PURE__ */ React.createElement(LessonProgressInner, null) : "+"), /* @__PURE__ */ React.createElement(LessonTitle, null, skillTitle.length ? skillTitle : "Skill title")))));
 }
 
 // app/modules/Constructor/Levels/reducer.ts
@@ -3191,7 +3214,7 @@ var createStep = ({ number = 0, chapter = 1 }) => {
 };
 var basicState2 = {
   chapters: [1],
-  currentScreen: "Topic",
+  currentScreen: "Skill",
   steps: [createStep({})],
   basicInfoReady: false,
   stepsReady: false
@@ -3460,7 +3483,7 @@ var reducer = (state, action10) => {
       return __spreadProps(__spreadValues({}, state), {
         variants: variants.map((variant) => __spreadProps(__spreadValues({}, variant), {
           isFocused: false,
-          isConnected: newPairs.filter((pair) => pair.includes(`${variant.idx}`)).length
+          isConnected: !!newPairs.filter((pair) => pair.includes(`${variant.idx}`)).length
         })),
         pairs: newPairs
       });
@@ -3537,8 +3560,8 @@ function Variants2({ state = initialState }) {
     answer,
     stepType,
     initialQuestion,
-    initialVariants,
-    variantsCount
+    initialVariants = [],
+    variantsCount = 3
   } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = (0, import_react25.useReducer)(reducer, {
@@ -3577,7 +3600,7 @@ function Variants2({ state = initialState }) {
     value: question === null ? "" : question,
     onChange: (e) => setQuestion(e.target.value),
     required: true
-  }), /* @__PURE__ */ React.createElement("ul", null, variants.map((variant, index) => /* @__PURE__ */ React.createElement("li", {
+  }), /* @__PURE__ */ React.createElement(VariantsList2, null, variants.map((variant, index) => /* @__PURE__ */ React.createElement(VariantsItem2, {
     key: variant.idx,
     style: { marginBottom: 5 }
   }, /* @__PURE__ */ React.createElement("label", {
@@ -3615,7 +3638,13 @@ var initialState2 = {
   stepType: ""
 };
 function MatchingPairs({ state = initialState2 }) {
-  const { number, answer, stepType, variantsCount, initialVariants } = state;
+  const {
+    number,
+    answer,
+    stepType,
+    variantsCount = 4,
+    initialVariants = []
+  } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants, pairs }, dispatch] = (0, import_react26.useReducer)(reducer, {
     variants: initialVariants,
@@ -3855,18 +3884,8 @@ function CloseBtn({
 // app/modules/Constructor/Levels/components/Step.tsx
 var STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
 var Step = ({ data, index, children }) => {
-  const {
-    active,
-    chapter,
-    stepType,
-    id,
-    number,
-    variants,
-    text,
-    answer,
-    question
-  } = data;
-  const { removeStepType, setStepType, setQuestion, setAnswer } = useConstructor();
+  const { active, chapter, stepType, id, number } = data;
+  const { removeStepType, setStepType } = useConstructor();
   return /* @__PURE__ */ import_react29.default.createElement("section", {
     className: `${!active && "visuallyHidden"}`
   }, /* @__PURE__ */ import_react29.default.createElement("input", {
@@ -3978,20 +3997,28 @@ function QuestionAnswer({ state = initialState4 }) {
   }, []);
   return stepType === "Question" ? /* @__PURE__ */ React.createElement(import_react32.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
     style: { padding: "0 25%" }
-  }, /* @__PURE__ */ React.createElement("input", {
+  }, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
+    style: { display: "flex", alignItems: "center" }
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: duo_default,
+    alt: "Duo",
+    height: 150,
+    style: { marginBottom: -60 }
+  }), /* @__PURE__ */ React.createElement("div", {
+    style: { position: "relative" }
+  }, /* @__PURE__ */ React.createElement(LessonQuestion, null, /* @__PURE__ */ React.createElement("input", {
     type: "text",
     name: `question${number}`,
     placeholder: "Set question",
     style: {
       border: "none",
-      marginBottom: 10,
       width: "100%"
     },
     value: question === null ? "" : question,
     onChange: (evt) => setQuestion(evt.target.value, number),
     autoFocus: true,
     required: true
-  }), /* @__PURE__ */ React.createElement(Textarea, {
+  })), /* @__PURE__ */ React.createElement(LessonQuestionTriangleContainer, null, /* @__PURE__ */ React.createElement(LessonQuestionTriangle, null)))), /* @__PURE__ */ React.createElement(Textarea, {
     name: `answer${number}`,
     placeholder: "Type answer",
     value: answer,
@@ -4050,42 +4077,20 @@ var Sidebar = ({ children }) => {
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled = stepsReady === false || basicInfoReady === false || submitText !== "Save";
-  return /* @__PURE__ */ import_react35.default.createElement(import_react35.Fragment, null, /* @__PURE__ */ import_react35.default.createElement("h2", null, "Sidebar"), /* @__PURE__ */ import_react35.default.createElement("ul", {
-    style: { marginBottom: "auto" }
-  }, /* @__PURE__ */ import_react35.default.createElement("li", null, /* @__PURE__ */ import_react35.default.createElement("button", {
+  return /* @__PURE__ */ import_react35.default.createElement(ConstructorSidebar, null, /* @__PURE__ */ import_react35.default.createElement(SidebarList, null, /* @__PURE__ */ import_react35.default.createElement("li", null, /* @__PURE__ */ import_react35.default.createElement(SidebarBtn, {
     type: "button",
     onClick: () => {
-      changeCurrentScreen("Topic");
-    },
-    style: {
-      color: "#3c3c3c",
-      display: "block",
-      fontSize: 16,
-      fontWeight: 700,
-      overflow: "hidden",
-      padding: "15px 20px",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
+      changeCurrentScreen("Skill");
     }
-  }, "Topic Info")), chapters.map((chapter) => /* @__PURE__ */ import_react35.default.createElement("li", {
+  }, "Skill Info")), chapters.map((chapter) => /* @__PURE__ */ import_react35.default.createElement("li", {
     key: `chapter-${chapter}`
-  }, /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, /* @__PURE__ */ import_react35.default.createElement(SidebarBtn, {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Steps");
       setStepActive(steps[steps.length - 1].id);
-    },
-    style: {
-      color: "#3c3c3c",
-      display: "block",
-      fontSize: 16,
-      fontWeight: 700,
-      overflow: "hidden",
-      padding: "15px 20px",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
     }
-  }, "Chapter ", chapter), /* @__PURE__ */ import_react35.default.createElement("ul", null, steps.map((stepsItem) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react35.default.createElement("li", {
+  }, "Chapter ", chapter), /* @__PURE__ */ import_react35.default.createElement("ul", null, steps.map((stepsItem, index) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react35.default.createElement("li", {
     key: stepsItem.id
   }, /* @__PURE__ */ import_react35.default.createElement("button", {
     type: "button",
@@ -4093,7 +4098,7 @@ var Sidebar = ({ children }) => {
       changeCurrentScreen("Steps");
       setStepActive(stepsItem.id);
     }
-  }, "Step ", stepsItem.number + 1), stepsItem.number > 0 ? /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, "Step ", index + 1), index > 0 ? /* @__PURE__ */ import_react35.default.createElement("button", {
     type: "button",
     onClick: () => {
       removeStep(stepsItem.id);
@@ -4135,7 +4140,7 @@ var useConstructor = () => {
 function Constructor({
   data,
   actionData,
-  lastAddedTopics
+  lastAddedSkills
 }) {
   const state = useConstructorReducer();
   const { currentScreen, setup, changeCurrentScreen } = state;
@@ -4146,8 +4151,8 @@ function Constructor({
   }, [data]);
   (0, import_react36.useEffect)(() => {
     var _a;
-    if (((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && currentScreen !== "Topic") {
-      changeCurrentScreen("Topic");
+    if (((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && currentScreen !== "Skill") {
+      changeCurrentScreen("Skill");
     }
   }, [actionData]);
   return /* @__PURE__ */ React.createElement(ConstructorContext.Provider, {
@@ -4155,11 +4160,11 @@ function Constructor({
   }, /* @__PURE__ */ React.createElement(ConstructorForm, {
     method: "post",
     autoComplete: "off"
-  }, /* @__PURE__ */ React.createElement(ConstructorFormInner, null, /* @__PURE__ */ React.createElement(TopicInfo, {
+  }, /* @__PURE__ */ React.createElement(ConstructorFormInner, null, /* @__PURE__ */ React.createElement(SkillInfo, {
     title: data == null ? void 0 : data.title,
     actionData,
-    lastAddedTopics
-  }), /* @__PURE__ */ React.createElement(Levels, null)), /* @__PURE__ */ React.createElement(ConstructorSidebar, null, /* @__PURE__ */ React.createElement(Sidebar_default, null))));
+    lastAddedSkills
+  }), /* @__PURE__ */ React.createElement(Levels, null)), /* @__PURE__ */ React.createElement(Sidebar_default, null)));
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$topicId.tsx
@@ -4176,10 +4181,10 @@ var action4 = async ({ request, params }) => {
   const title = form.get("title");
   const activeLanguage = await getActiveLanguage(request);
   const stepChapters = form.getAll("chapter");
-  const topic = await prisma.topic.findUnique({
-    where: { id: params.topicId }
+  const skill = await prisma.skill.findUnique({
+    where: { id: params.skillId }
   });
-  if (title !== topic.title) {
+  if (title !== skill.title) {
     const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
     if (isTitleUnique) {
       return (0, import_remix8.json)({
@@ -4253,7 +4258,7 @@ var action4 = async ({ request, params }) => {
       }
     }
   });
-  await deleteLessonsFromTopic(params.topicId);
+  await deleteLessonsFromSkill(params.skillId);
   const createdLessonsIDs = await createLessons(lessons);
   const data = {
     title,
@@ -4264,35 +4269,35 @@ var action4 = async ({ request, params }) => {
     projectId: activeLanguage == null ? void 0 : activeLanguage.id,
     updatedAt: getTodayDate()
   };
-  await prisma.topic.update({
-    where: { id: params.topicId },
+  await prisma.skill.update({
+    where: { id: params.skillId },
     data: __spreadValues({}, data)
   });
   return (0, import_node3.redirect)(`/`);
 };
 var loader4 = async ({ request, params }) => {
-  const topic = await prisma.topic.findUnique({
-    where: { id: params.topicId }
+  const skill = await prisma.skill.findUnique({
+    where: { id: params.skillId }
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error("lesson not found");
   }
   const activeLanguage = await getActiveLanguage(request);
-  const lastAddedTopics = await getLastAddedTopic(activeLanguage.id, true);
-  const lessons = await getLessonsByTopicId(topic.id);
+  const lastAddedSkills = await getLastAddedSkill(activeLanguage.id, true);
+  const lessons = await getLessonsBySkillId(skill.id);
   const data = {
-    title: topic.title,
+    title: skill.title,
     steps: lessons,
-    lineNumber: topic.lineNumber
+    lineNumber: skill.lineNumber
   };
-  return { data, lastAddedTopics };
+  return { data, lastAddedSkills };
 };
 function ConstructorEdit() {
   const actionData = (0, import_react37.useActionData)();
-  const { data, lastAddedTopics } = (0, import_react37.useLoaderData)();
+  const { data, lastAddedSkills } = (0, import_react37.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Constructor, {
     data,
-    lastAddedTopics,
+    lastAddedSkills,
     actionData
   });
 }
@@ -4317,9 +4322,9 @@ var action5 = async ({ request, params }) => {
   const form = await request.formData();
   const title = form.get("title");
   let lineNumber = form.get("lineNumber");
-  const lastAddedTopic = await getLastAddedTopic(activeLanguage.id);
-  if (lastAddedTopic) {
-    lineNumber = lineNumber === "0" ? ((lastAddedTopic == null ? void 0 : lastAddedTopic.lineNumber) + 1).toString() : lineNumber;
+  const lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
+  if (lastAddedSkill) {
+    lineNumber = lineNumber === "0" ? ((lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber) + 1).toString() : lineNumber;
   }
   const stepChapters = form.getAll("chapter");
   const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
@@ -4406,20 +4411,20 @@ var action5 = async ({ request, params }) => {
     updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber)
   };
-  const topic = await prisma.topic.create({ data });
-  return (0, import_remix9.redirect)(`/skill/${topic.title}/1`);
+  const skill = await prisma.skill.create({ data });
+  return (0, import_remix9.redirect)(`/skill/${skill.title}/1`);
 };
 var loader5 = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
-  const lastAddedTopics = await getLastAddedTopic(activeLanguage.id, true);
-  return { lastAddedTopics };
+  const lastAddedSkills = await getLastAddedSkill(activeLanguage.id, true);
+  return { lastAddedSkills };
 };
 function ConstructorNew() {
   const actionData = (0, import_remix9.useActionData)();
-  const { lastAddedTopics } = (0, import_remix9.useLoaderData)();
+  const { lastAddedSkills } = (0, import_remix9.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Constructor, {
     actionData,
-    lastAddedTopics
+    lastAddedSkills
   });
 }
 
@@ -4626,7 +4631,7 @@ function LessonItem({
   useOnClickOutside(ref, () => setIsOpened(false));
   const isDisabled = transition.state !== "idle";
   const exp = (currentChapter / chapters * 100).toString();
-  const topicLink = `/skill/${title}/${currentChapter / chapters === 1 ? "practice" : currentChapter + 1}`;
+  const skillLink = `/skill/${title}/${currentChapter / chapters === 1 ? "practice" : currentChapter + 1}`;
   function toggleMenu() {
     setIsOpened(!isOpened);
   }
@@ -4660,7 +4665,7 @@ function LessonItem({
     width: 20,
     height: 20
   })))), /* @__PURE__ */ React.createElement(LessonBlockLink, {
-    to: topicLink
+    to: skillLink
   }, "Start +16 XP")))));
 }
 
@@ -4694,7 +4699,7 @@ function SkillsList({
     style: { display: "flex", flexGrow: 1 }
   }, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "flex-end" }
-  }, skills.length > 0 && /* @__PURE__ */ React.createElement(PracticeLastAdded, null)), /* @__PURE__ */ React.createElement(TopicsLineBlock, null, lineNumbers.map((lineNumber) => /* @__PURE__ */ React.createElement(LessonsBlock, {
+  }, skills.length > 0 && /* @__PURE__ */ React.createElement(PracticeLastAdded, null)), /* @__PURE__ */ React.createElement(SkillsLineBlock, null, lineNumbers.map((lineNumber) => /* @__PURE__ */ React.createElement(LessonsBlock, {
     key: (0, import_nanoid2.nanoid)()
   }, skills.map((dataItem) => {
     if (dataItem.lineNumber === lineNumber) {
@@ -4711,7 +4716,7 @@ function SkillsList({
 function ErrorBoundary6() {
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
-  }, "Issues during loading Topics route");
+  }, "Issues during loading Skills route");
 }
 var action6 = async ({ request }) => {
   const data = await request.formData();
@@ -4719,8 +4724,8 @@ var action6 = async ({ request }) => {
   if (!id) {
     throw new Error("Lesson ID wasnt found");
   }
-  await deleteLessonsFromTopic(id);
-  return await deleteTopicById(id);
+  await deleteLessonsFromSkill(id);
+  return await deleteSkillById(id);
 };
 var loader6 = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
@@ -4728,7 +4733,7 @@ var loader6 = async ({ request }) => {
   if (!activeLanguage) {
     throw new Error(`We could not find the active language`);
   }
-  const skills = await getTopics(activeLanguage.id);
+  const skills = await getSkills(activeLanguage.id);
   return {
     skills,
     activity: user == null ? void 0 : user.weeklyActivity,
@@ -4973,7 +4978,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "0645f07c", "entry": { "module": "/build/entry.client-ZWTAC73P.js", "imports": ["/build/_shared/chunk-XQMLE7M4.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-3RVXCLX5.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-TYCQQ3MV.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-DMDOJTB7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-4HQOMKTL.js", "imports": ["/build/_shared/chunk-SO63ZPJO.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-G7FCO6SL.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-ERYU2DIZ.js", "imports": ["/build/_shared/chunk-SO63ZPJO.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-G7FCO6SL.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-TKYHVJUX.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-HRM7NDCC.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-DMDOJTB7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-3AJ3Q3X4.js", "imports": ["/build/_shared/chunk-TQH7VVPN.js", "/build/_shared/chunk-G7FCO6SL.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-DMDOJTB7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-IO7P54ZI.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-L72MYCQW.js", "imports": ["/build/_shared/chunk-TQH7VVPN.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-G7FCO6SL.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-DMDOJTB7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-NC2APIDK.js", "imports": ["/build/_shared/chunk-TQH7VVPN.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-TEJ7EXYD.js", "/build/_shared/chunk-G7FCO6SL.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-DMDOJTB7.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-0645F07C.js" };
+var assets_manifest_default = { "version": "3cc7457d", "entry": { "module": "/build/entry.client-EHID3JDN.js", "imports": ["/build/_shared/chunk-YAWGN5V2.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-WHMY6P7W.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-NOUTUOZH.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-Y43DLENM.js", "imports": ["/build/_shared/chunk-4PTW53LX.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-F3PJPSXE.js", "imports": ["/build/_shared/chunk-4PTW53LX.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-FQIMXMPQ.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-FWSZ5WAQ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-5RN7EAU4.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-C2YN3ECE.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-MUH3VXTY.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-5CWTZXWQ.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-3CC7457D.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

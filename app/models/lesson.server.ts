@@ -1,4 +1,4 @@
-import { Lesson, Topic, User } from "@prisma/client";
+import { Lesson, Skill, User } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getTodayDate } from "~/utils";
 import { whenLastPractice } from "./language.server";
@@ -15,12 +15,12 @@ export async function createLessons(data: Lesson[]) {
   return IDs.map((idItem) => idItem.id);
 }
 
-export async function createTopic(data: Topic) {
-  return await prisma.topic.create({ data });
+export async function createSkill(data: Skill) {
+  return await prisma.skill.create({ data });
 }
 
-export async function getTopics(languageId: string) {
-  return await prisma.topic.findMany({
+export async function getSkills(languageId: string) {
+  return await prisma.skill.findMany({
     take: 20,
     where: { projectId: languageId },
     select: {
@@ -47,20 +47,20 @@ export async function getLastActivity(request: Request) {
   return today;
 }
 
-export async function deleteTopicById(id: string) {
-  return await prisma.topic.delete({ where: { id } });
+export async function deleteSkillById(id: string) {
+  return await prisma.skill.delete({ where: { id } });
 }
 
-export async function deleteLessonsFromTopic(topicId: string) {
-  const topic = await prisma.topic.findUnique({ where: { id: topicId } });
+export async function deleteLessonsFromSkill(skillId: string) {
+  const skill = await prisma.skill.findUnique({ where: { id: skillId } });
   return await prisma.lesson.deleteMany({
-    where: { id: { in: topic?.lessonIDs } },
+    where: { id: { in: skill?.lessonIDs } },
   });
 }
 
-export async function getLessonsByTopicId(id: string) {
-  const topic = (await prisma.topic.findUnique({ where: { id } })) as Topic;
+export async function getLessonsBySkillId(id: string) {
+  const skill = (await prisma.skill.findUnique({ where: { id } })) as Skill;
   return await prisma.lesson.findMany({
-    where: { id: { in: topic.lessonIDs } },
+    where: { id: { in: skill.lessonIDs } },
   });
 }

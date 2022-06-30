@@ -1,15 +1,15 @@
-import { Topic } from "@prisma/client";
+import { Skill } from "@prisma/client";
 import { nanoid } from "nanoid";
 import Footer from "./Footer";
 import LessonItem from "./LessonItem";
-import { LessonsBlock, TopicsLineBlock, SkillsListContainer } from "./lib";
+import { LessonsBlock, SkillsLineBlock, SkillsListContainer } from "./lib";
 import PracticeLastAdded from "./PracticeLastAdded";
 
 export default function SkillsList({
   skills,
   languageTitle,
 }: {
-  skills: Topic[];
+  skills: Skill[];
   languageTitle: string;
 }) {
   const lineNumbers = [
@@ -22,7 +22,7 @@ export default function SkillsList({
         <div style={{ display: "flex", alignItems: "flex-end" }}>
           {skills.length > 0 && <PracticeLastAdded />}
         </div>
-        <TopicsLineBlock>
+        <SkillsLineBlock>
           {lineNumbers.map((lineNumber) => (
             <LessonsBlock key={nanoid()}>
               {skills.map((dataItem) => {
@@ -38,7 +38,7 @@ export default function SkillsList({
               })}
             </LessonsBlock>
           ))}
-        </TopicsLineBlock>
+        </SkillsLineBlock>
       </div>
       <Footer />
     </SkillsListContainer>

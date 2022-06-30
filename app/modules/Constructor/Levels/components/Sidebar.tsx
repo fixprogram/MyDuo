@@ -2,6 +2,8 @@ import { useTransition } from "@remix-run/react";
 import React, { Fragment } from "react";
 import { FormButton } from "~/components/lib";
 import { useConstructor } from "../..";
+import { ConstructorSidebar } from "../../components/lib";
+import { SidebarBtn, SidebarList } from "./lib";
 
 const Sidebar: React.FC = ({ children }) => {
   const {
@@ -25,53 +27,32 @@ const Sidebar: React.FC = ({ children }) => {
     stepsReady === false || basicInfoReady === false || submitText !== "Save";
 
   return (
-    <Fragment>
-      <h2>Sidebar</h2>
-      <ul style={{ marginBottom: "auto" }}>
+    <ConstructorSidebar>
+      <SidebarList>
         <li>
-          <button
+          <SidebarBtn
             type="button"
             onClick={() => {
-              changeCurrentScreen("Topic");
-            }}
-            style={{
-              color: "#3c3c3c",
-              display: "block",
-              fontSize: 16,
-              fontWeight: 700,
-              overflow: "hidden",
-              padding: "15px 20px",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
+              changeCurrentScreen("Skill");
             }}
           >
-            Topic Info
-          </button>
+            Skill Info
+          </SidebarBtn>
         </li>
         {chapters.map((chapter) => (
           <li key={`chapter-${chapter}`}>
-            <button
+            <SidebarBtn
               type="button"
               onClick={() => {
                 changeCurrentScreen("Steps");
                 setStepActive(steps[steps.length - 1].id);
               }}
-              style={{
-                color: "#3c3c3c",
-                display: "block",
-                fontSize: 16,
-                fontWeight: 700,
-                overflow: "hidden",
-                padding: "15px 20px",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
             >
               Chapter {chapter}
-            </button>
+            </SidebarBtn>
             <ul>
               {steps.map(
-                (stepsItem: any) =>
+                (stepsItem: any, index) =>
                   stepsItem.chapter === chapter && (
                     <li key={stepsItem.id}>
                       <button
@@ -81,9 +62,10 @@ const Sidebar: React.FC = ({ children }) => {
                           setStepActive(stepsItem.id);
                         }}
                       >
-                        Step {stepsItem.number + 1}
+                        {/* Step {stepsItem.number + 1} */}
+                        Step {index + 1}
                       </button>
-                      {stepsItem.number > 0 ? (
+                      {index > 0 ? (
                         <button
                           type="button"
                           onClick={() => {
@@ -123,7 +105,8 @@ const Sidebar: React.FC = ({ children }) => {
             </button>
           </li>
         ))}
-      </ul>
+      </SidebarList>
+
       {children}
 
       <FormButton
@@ -133,7 +116,7 @@ const Sidebar: React.FC = ({ children }) => {
       >
         {submitText}
       </FormButton>
-    </Fragment>
+    </ConstructorSidebar>
   );
 };
 

@@ -680,7 +680,7 @@ const SkillsListContainer = styled("section")`
   height: calc(100vh - 95px);
 `;
 
-const TopicsLineBlock = styled("div")`
+const SkillsLineBlock = styled("div")`
   width: 100%;
   max-width: 440px;
   margin: 0 auto 38px auto;
@@ -744,5 +744,5 @@ export {
   FooterLine,
   FooterText,
   SkillsListContainer,
-  TopicsLineBlock,
+  SkillsLineBlock,
 };

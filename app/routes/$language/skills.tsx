@@ -1,19 +1,19 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { getActiveLanguage } from "~/models/language.server";
 import {
-  deleteTopicById,
-  deleteLessonsFromTopic,
-  getTopics,
+  deleteSkillById,
+  deleteLessonsFromSkill,
+  getSkills,
 } from "~/models/lesson.server";
 import WeeklyProgress from "~/components/WeeklyProgress";
 import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
-import { Topic, WeeklyActivity } from "@prisma/client";
+import { Skill, WeeklyActivity } from "@prisma/client";
 import SkillsList from "~/components/SkillsList";
 
 export function ErrorBoundary() {
   return (
-    <div className="error-container">Issues during loading Topics route</div>
+    <div className="error-container">Issues during loading Skills route</div>
   );
 }
 
@@ -25,8 +25,8 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Error("Lesson ID wasnt found");
   }
 
-  await deleteLessonsFromTopic(id as string);
-  return await deleteTopicById(id);
+  await deleteLessonsFromSkill(id as string);
+  return await deleteSkillById(id);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Error(`We could not find the active language`);
   }
 
-  const skills = await getTopics(activeLanguage.id);
+  const skills = await getSkills(activeLanguage.id);
   return {
     skills,
     activity: user?.weeklyActivity,
@@ -47,7 +47,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function SkillsPage() {
   const { skills, activity, languageTitle } = useLoaderData() as {
-    skills: Topic[];
+    skills: Skill[];
     activity: WeeklyActivity;
     languageTitle: string;
   };

@@ -174,7 +174,7 @@ type Action =
 
 export const basicState = {
   chapters: [1],
-  currentScreen: "Topic",
+  currentScreen: "Skill",
   steps: [createStep({})],
   basicInfoReady: false,
   stepsReady: false,

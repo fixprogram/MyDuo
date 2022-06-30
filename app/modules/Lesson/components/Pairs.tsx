@@ -3,7 +3,7 @@ import { Lesson } from "./Lesson";
 import PairsScreen from "./PairsScreen";
 
 export default function Pairs() {
-  const { content, setStateRight, updateState, topicState } = useSkill();
+  const { content, setStateRight, updateState, skillState } = useSkill();
   const { answer, variants } = content;
   const initialValue = [""];
 
@@ -29,7 +29,7 @@ export default function Pairs() {
     } else {
       setUserAnswer((prevUserAnswer: string[]) => [...prevUserAnswer]);
       return updateState({
-        topicState: { ...topicState, buttonDisabled: true },
+        skillState: { ...skillState, buttonDisabled: true },
       });
     }
   };

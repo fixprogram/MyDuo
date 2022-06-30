@@ -8,6 +8,10 @@ import {
   variantsSetup,
 } from "../MatchingPairs/actions";
 import { useConstructor } from "../../..";
+import {
+  VariantsItem,
+  VariantsList,
+} from "~/modules/Constructor/components/lib";
 
 const initialState = {
   variantsCount: 3,
@@ -24,8 +28,8 @@ export default function Variants({ state = initialState }) {
     answer,
     stepType,
     initialQuestion,
-    initialVariants,
-    variantsCount,
+    initialVariants = [],
+    variantsCount = 3,
   } = state;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = useReducer(reducer, {
@@ -81,9 +85,9 @@ export default function Variants({ state = initialState }) {
         onChange={(e) => setQuestion(e.target.value)}
         required
       />
-      <ul>
+      <VariantsList>
         {variants.map((variant: Variant, index) => (
-          <li key={variant.idx} style={{ marginBottom: 5 }}>
+          <VariantsItem key={variant.idx} style={{ marginBottom: 5 }}>
             <label style={{ position: "relative" }}>
               <VariantItemNumber
                 onClick={(e) => {
@@ -110,9 +114,9 @@ export default function Variants({ state = initialState }) {
                 required
               />
             </label>
-          </li>
+          </VariantsItem>
         ))}
-      </ul>
+      </VariantsList>
     </Fragment>
   ) : null;
 }

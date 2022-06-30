@@ -6,7 +6,7 @@ export type SkillState = {
   content: Lesson & { difficulty: "easy" | "hard" };
   lessonSteps: Lesson[];
   maxSteps: number;
-  topicState: {
+  skillState: {
     status: string;
     formDisabled: boolean;
     buttonDisabled: boolean;
@@ -15,7 +15,7 @@ export type SkillState = {
 
 export type SkillContextType = Omit<SkillState, "lessonSteps"> & {
   setup: Function;
-  continueTopic: Function;
+  continueSkill: Function;
   showResults: Function;
   setStateRight: Function;
   setStateWrong: Function;

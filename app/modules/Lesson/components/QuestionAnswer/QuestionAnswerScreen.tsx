@@ -20,18 +20,18 @@ export default function QuestionAnswerScreen({
   userAnswer,
   setUserAnswer,
 }: QuestionAnswerScreenType) {
-  const { topicState } = useSkill();
+  const { skillState } = useSkill();
 
   const myRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (topicState.status === "idle") {
+    if (skillState.status === "idle") {
       const timeout = setTimeout(() => {
         myRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
 
   return (
     <Fragment>
@@ -52,7 +52,7 @@ export default function QuestionAnswerScreen({
           placeholder="Enter your answer"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
-          disabled={topicState.formDisabled}
+          disabled={skillState.formDisabled}
           ref={myRef}
         />
       </section>

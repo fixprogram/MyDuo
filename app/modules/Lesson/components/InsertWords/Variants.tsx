@@ -17,17 +17,17 @@ export default function Variants({
   keyDownCheck,
 }: VariantsProps) {
   const myRef = useRef<HTMLDivElement>(null);
-  const { content, topicState } = useSkill();
+  const { content, skillState } = useSkill();
   const { variants, difficulty } = content;
 
   useEffect(() => {
-    if (topicState.status === "idle") {
+    if (skillState.status === "idle") {
       const timeout = setTimeout(() => {
         myRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [topicState.status]);
+  }, [skillState.status]);
 
   const KeyDownHandler = (e: KeyboardEvent) => {
     variants.forEach((variant, idx) => {

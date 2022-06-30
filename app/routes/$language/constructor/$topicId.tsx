@@ -3,15 +3,15 @@ import { redirect } from "@remix-run/node";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Constructor from "~/modules/Constructor";
-import { Language, Lesson, Topic } from "@prisma/client";
+import { Language, Lesson, Skill } from "@prisma/client";
 import {
   createLessons,
-  deleteLessonsFromTopic,
-  getLessonsByTopicId,
+  deleteLessonsFromSkill,
+  getLessonsBySkillId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
 import { json } from "remix";
-import { checkTitleUnique, getLastAddedTopic } from "~/models/topic.server";
+import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 
@@ -28,11 +28,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const title = form.get("title") as string;
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const stepChapters = form.getAll("chapter") as string[];
-  const topic = (await prisma.topic.findUnique({
-    where: { id: params.topicId },
-  })) as Topic;
+  const skill = (await prisma.skill.findUnique({
+    where: { id: params.skillId },
+  })) as Skill;
 
-  if (title !== topic.title) {
+  if (title !== skill.title) {
     const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
 
     if (isTitleUnique) {
@@ -116,7 +116,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   }) as Lesson[];
 
-  await deleteLessonsFromTopic(params.topicId as string);
+  await deleteLessonsFromSkill(params.skillId as string);
 
   const createdLessonsIDs = await createLessons(lessons);
   const data = {
@@ -130,8 +130,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     updatedAt: getTodayDate(),
   };
 
-  await prisma.topic.update({
-    where: { id: params.topicId },
+  await prisma.skill.update({
+    where: { id: params.skillId },
     data: { ...data },
   });
 
@@ -139,36 +139,36 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const topic = await prisma.topic.findUnique({
-    where: { id: params.topicId },
+  const skill = await prisma.skill.findUnique({
+    where: { id: params.skillId },
   });
-  if (!topic) {
+  if (!skill) {
     throw new Error("lesson not found");
   }
 
   const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedTopics = (await getLastAddedTopic(
+  const lastAddedSkills = (await getLastAddedSkill(
     activeLanguage.id,
     true
-  )) as Topic[];
+  )) as Skill[];
 
-  const lessons = await getLessonsByTopicId(topic.id);
+  const lessons = await getLessonsBySkillId(skill.id);
   const data = {
-    title: topic.title,
+    title: skill.title,
     steps: lessons,
-    lineNumber: topic.lineNumber,
+    lineNumber: skill.lineNumber,
   };
-  return { data, lastAddedTopics };
+  return { data, lastAddedSkills };
 };
 
 export default function ConstructorEdit() {
   const actionData = useActionData() as ActionData;
-  const { data, lastAddedTopics } = useLoaderData();
+  const { data, lastAddedSkills } = useLoaderData();
 
   return (
     <Constructor
       data={data}
-      lastAddedTopics={lastAddedTopics}
+      lastAddedSkills={lastAddedSkills}
       actionData={actionData}
     />
   );
