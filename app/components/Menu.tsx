@@ -42,7 +42,7 @@ const Menu = ({
 }) => {
   return (
     <MenuContainer>
-      <nav>
+      <nav style={{ width: "35%" }}>
         <HorizontalList>
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
@@ -62,7 +62,7 @@ const Menu = ({
           ))}
         </HorizontalList>
       </nav>
-      <HorizontalList>
+      <HorizontalList style={{ width: "40%" }}>
         <ListItem>
           <Projects languages={languages} onOverlay={onOverlay} />
         </ListItem>

@@ -21,14 +21,13 @@ export default function InsertWordsScreen({
   const { content, skillState } = useSkill();
 
   const { isToChoose, variants, answer, difficulty } = content;
-  const initalValues =
-    variants && difficulty === "easy"
-      ? [...new Array(answer.length).fill(" ")]
-      : [""];
+  const initalValues = new Array(answer.length).fill(
+    variants && difficulty === "easy" ? " " : ""
+  );
+
   const [values, setValues] = useState(initalValues);
 
   useEffect(() => {
-    console.log("Values: ", values);
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }

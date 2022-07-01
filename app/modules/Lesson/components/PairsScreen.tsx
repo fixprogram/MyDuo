@@ -1,6 +1,6 @@
 import { Variant } from "@prisma/client";
 import { Fragment, useState } from "react";
-import { LessonTitle, VariantItem } from "./lib";
+import { LessonTitle, PairsItem, PairsList, VariantItem } from "./lib";
 
 type PairsScreenProps = {
   variants: Variant[];
@@ -28,20 +28,10 @@ export default function PairsScreen({
     <Fragment>
       <LessonTitle>Connect pairs</LessonTitle>
 
-      <ul
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-          listStyle: "none",
-          margin: 0,
-          padding: 0,
-        }}
-      >
+      <PairsList>
         {variants.map(({ value, isFocused }, idx: number) => (
-          <li
+          <PairsItem
             key={idx}
-            style={{ marginBottom: 5, position: "relative", width: "48%" }}
             onClick={(evt) => {
               const target = evt.target as HTMLInputElement;
               if (isVariantDisabled(idx)) {
@@ -57,30 +47,15 @@ export default function PairsScreen({
             <VariantItem
               type="button"
               id={(idx + 1).toString()}
-              style={{
-                cursor: isVariantDisabled(idx) ? "default" : "pointer",
-                color:
-                  activeIdx === idx + 1
-                    ? "#1899d6"
-                    : isVariantDisabled(idx)
-                    ? "#e5e5e5"
-                    : "#4b4b4b",
-                borderColor:
-                  activeIdx === idx + 1
-                    ? "#84d8ff"
-                    : isVariantDisabled(idx)
-                    ? "#e5e5e5"
-                    : "#e5e5e5",
-                backgroundColor: activeIdx === idx + 1 ? "#ddf4ff" : "#fff",
-              }}
               disabled={isVariantDisabled(idx)}
-              isFocused={isFocused}
+              isDisabled={isVariantDisabled(idx)}
+              isFocused={isFocused || activeIdx === idx + 1}
             >
               {value}
             </VariantItem>
-          </li>
+          </PairsItem>
         ))}
-      </ul>
+      </PairsList>
     </Fragment>
   );
 }

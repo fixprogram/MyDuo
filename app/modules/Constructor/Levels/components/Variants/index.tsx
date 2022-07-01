@@ -12,25 +12,21 @@ import {
   VariantsItem,
   VariantsList,
 } from "~/modules/Constructor/components/lib";
+import { LessonTitle } from "~/modules/Lesson/components/lib";
 
 const initialState = {
   variantsCount: 3,
-  initialVariants: [],
-  initialQuestion: "",
+  question: "",
+  variants: [],
   number: 0,
   answer: "",
   stepType: "",
 };
 
 export default function Variants({ state = initialState }) {
-  const {
-    number,
-    answer,
-    stepType,
-    initialQuestion,
-    initialVariants = [],
-    variantsCount = 3,
-  } = state;
+  const { number, answer, stepType, variantsCount = 3 } = state;
+  const initialQuestion = state.question;
+  const initialVariants = state.variants;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = useReducer(reducer, {
     variants: initialVariants,
@@ -71,52 +67,56 @@ export default function Variants({ state = initialState }) {
   return stepType === "Variants" ? (
     <Fragment>
       <input type="hidden" name={`answer${number}`} value={answer} />
-      {/* <input type="hidden" name={`type${number}`} value={"Variants"} /> */}
 
-      <div>
-        <h2>Read and Respond</h2>
-      </div>
+      <fieldset style={{ padding: "0 25%" }}>
+        <LessonTitle>Choose right variant</LessonTitle>
 
-      <Textarea
-        name={`question${number}`}
-        placeholder="Type question"
-        style={{ minHeight: 100 }}
-        value={question === null ? "" : question}
-        onChange={(e) => setQuestion(e.target.value)}
-        required
-      />
-      <VariantsList>
-        {variants.map((variant: Variant, index) => (
-          <VariantsItem key={variant.idx} style={{ marginBottom: 5 }}>
-            <label style={{ position: "relative" }}>
-              <VariantItemNumber
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(variantChoose(index));
-                  setAnswer(variant.value, number);
-                }}
-                isFocused={variant.isFocused || variant.value === answer[0]}
+        <div style={{ marginTop: 30 }}>
+          <Textarea
+            name={`question${number}`}
+            placeholder="Type question"
+            style={{ minHeight: 100, marginBottom: 20 }}
+            value={question === null ? "" : question}
+            onChange={(e) => setQuestion(e.target.value)}
+            required
+          />
+          <VariantsList>
+            {variants.map((variant: Variant, index) => (
+              <VariantsItem
+                key={variant.idx}
+                style={{ marginBottom: 5, width: "100%" }}
               >
-                {variant.idx}
-              </VariantItemNumber>
-              <VariantItemInput
-                type="text"
-                name={`variant${number}`}
-                placeholder="type first variant"
-                value={variant.value}
-                onChange={(e) => {
-                  dispatch(variantSetValue(index, e.target.value));
+                <label style={{ position: "relative" }}>
+                  <VariantItemNumber
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(variantChoose(index));
+                      setAnswer(variant.value, number);
+                    }}
+                    isFocused={variant.isFocused || variant.value === answer[0]}
+                  >
+                    {variant.idx}
+                  </VariantItemNumber>
+                  <VariantItemInput
+                    type="text"
+                    name={`variant${number}`}
+                    placeholder="Type variant"
+                    value={variant.value}
+                    onChange={(e) => {
+                      dispatch(variantSetValue(index, e.target.value));
 
-                  if (variant.isFocused) {
-                    setAnswer(e.target.value, number);
-                  }
-                }}
-                required
-              />
-            </label>
-          </VariantsItem>
-        ))}
-      </VariantsList>
+                      if (variant.isFocused) {
+                        setAnswer(e.target.value, number);
+                      }
+                    }}
+                    required
+                  />
+                </label>
+              </VariantsItem>
+            ))}
+          </VariantsList>
+        </div>
+      </fieldset>
     </Fragment>
   ) : null;
 }

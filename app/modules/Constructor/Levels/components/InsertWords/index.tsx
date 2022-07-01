@@ -74,7 +74,7 @@ export default function InsertWords({ state = initialState }) {
         required
       />
 
-      <InsertWordsTextBlock showText={showText} style={{ marginTop: -206 }}>
+      <InsertWordsTextBlock showText={showText} style={{ marginTop: -176 }}>
         {answer.split(" ").map((item, idx) => {
           const { newItem, sign } = doesItemContainSign(item);
 

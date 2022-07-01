@@ -1,6 +1,6 @@
-import { screen, render, fireEvent } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeEach, it, describe, expect } from "vitest";
+import { it, describe, expect } from "vitest";
 import QuestionAnswer from ".";
 
 const props = {
@@ -20,8 +20,5 @@ describe("QuestionAnswer check", () => {
   it("initially should be empty", async () => {
     expect(input).toHaveTextContent("");
     await userEvent.type(input, "Hello!");
-    // // await userEvent.type(textarea, "hello!");
-    // // fireEvent.change(textarea, { target: { value: "Hello!" } });
-    // expect(input.innerHTML).toBe(/hello!/);
   });
 });

@@ -16,14 +16,13 @@ import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 
 export function ErrorBoundary() {
-  const { lessonId } = useParams();
+  const { skillId } = useParams();
   return (
-    <div className="error-container">{`There was an error loading lesson by the id ${lessonId}. Sorry.`}</div>
+    <div className="error-container">{`There was an error loading lesson by the id ${skillId}. Sorry.`}</div>
   );
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const today = new Date();
   const form = await request.formData();
   const title = form.get("title") as string;
   const activeLanguage = (await getActiveLanguage(request)) as Language;
@@ -126,7 +125,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     currentChapter: 0,
     level: 0,
     projectId: activeLanguage?.id,
-    // updatedAt: today.getDate().toString(),
     updatedAt: getTodayDate(),
   };
 

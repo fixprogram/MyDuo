@@ -8,7 +8,10 @@ import {
   LessonFooterTitle,
   LessonFooterText,
   LessonButton,
+  ChangeDifficultyBtn,
 } from "./lib";
+import Easier from "~/styles/easier.svg";
+import Harder from "~/styles/harder.svg";
 
 export default function Footer({
   checkAnswer = () => {},
@@ -61,17 +64,23 @@ export default function Footer({
         >
           Skip
         </LessonButton>
-        <LessonButton
-          skip={true}
-          hidden={status !== "idle" || content.stepType === "Pairs"}
-          style={{
-            borderWidth: 0,
-            width: "auto",
-          }}
-          onClick={() => setDifficulty(difficulty === "easy" ? "hard" : "easy")}
-        >
-          Make {difficulty === "easy" ? "harder" : "easier"}
-        </LessonButton>
+
+        {difficulty && status === "idle" && (
+          <ChangeDifficultyBtn
+            onClick={() =>
+              setDifficulty(difficulty === "easy" ? "hard" : "easy")
+            }
+          >
+            <img
+              src={difficulty === "easy" ? Harder : Easier}
+              alt={difficulty}
+              height={19}
+              width={27}
+              style={{ marginRight: 10 }}
+            />
+            <p>Make {difficulty === "easy" ? "harder" : "easier"}</p>
+          </ChangeDifficultyBtn>
+        )}
 
         <LessonFooterMessage status={status}>
           {(status === "right" || status === "wrong") && (
@@ -81,7 +90,9 @@ export default function Footer({
             <LessonFooterTitle>
               {status === "wrong" ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
-            <LessonFooterText> {answer.join(" ")}</LessonFooterText>
+            {status === "wrong" && (
+              <LessonFooterText> {answer.join(" ")}</LessonFooterText>
+            )}
           </div>
         </LessonFooterMessage>
 

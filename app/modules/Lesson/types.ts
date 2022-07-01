@@ -3,7 +3,7 @@ import { Lesson } from "@prisma/client";
 export type SkillState = {
   progress: number;
   stepNumber: number;
-  content: Lesson & { difficulty: "easy" | "hard" };
+  content: Lesson & { difficulty: "easy" | "hard" | null };
   lessonSteps: Lesson[];
   maxSteps: number;
   skillState: {
@@ -22,4 +22,8 @@ export type SkillContextType = Omit<SkillState, "lessonSteps"> & {
   setCheckDisabled: Function;
   updateState: Function;
   setDifficulty: Function;
+};
+
+export type Step = Lesson & {
+  difficulty: "easy" | "hard" | null;
 };

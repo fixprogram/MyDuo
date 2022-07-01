@@ -464,20 +464,20 @@ var HorizontalList = import_styled.default.ul((props) => ({
   height: "100%",
   padding: "0 9px"
 }));
-var ListItem = import_styled.default.li((props) => ({
-  height: "100%",
-  margin: "0 15px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative"
-}));
-var LessonsContainer = import_styled.default.section((props) => ({
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  position: "relative"
-}));
+var ListItem = (0, import_styled.default)("li")`
+  height: 100%;
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+var LessonsContainer = (0, import_styled.default)("section")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+`;
 var LessonsBlock = (0, import_styled.default)("div")`
   grid-column-gap: 12px;
   display: grid;
@@ -563,7 +563,7 @@ var LessonBlockLink = (0, import_styled.default)(import_react2.Link)`
   border-radius: 18px;
   text-decoration: none;
   font-family: "Nunito";
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.8px;
   &:hover {
     filter: brightness(1.1);
@@ -584,7 +584,7 @@ var LessonBlockButton = (0, import_styled.default)("button")`
   border-radius: 18px;
   text-decoration: none;
   font-family: "Nunito";
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.8px;
   &:hover img {
     filter: brightness(1.1);
@@ -632,7 +632,6 @@ var ProgressBarContainer = (0, import_styled.default)("div")`
   box-sizing: border-box;
 `;
 var ProgressBar = (0, import_styled.default)("div")`
-  // width: 61%;
   width: 100%;
   height: 16px;
   position: relative;
@@ -743,9 +742,20 @@ var FormButton = (0, import_styled.default)("button")`
   text-transform: uppercase;
   font-family: "Nunito";
   font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
   border-radius: 15px;
+  padding: 0 20px;
+  display: ${(props) => props.hidden ? "none" : "block"};
+  transition: filter 0.2s;
+  &:hover:enabled {
+    filter: brightness(1.1);
+  }
+  &:active:enabled {
+    filter: brightness(1.1);
+    height: 46px;
+    transform: translateY(4px);
+  }
 `;
 var KeywordTemplate = (0, import_styled.default)("span")`
   margin-right: 10px;
@@ -889,7 +899,7 @@ var MenuNavLink = (0, import_styled.default)(import_react2.NavLink)`
   text-decoration: none;
   text-transform: uppercase;
   font-family: "Nunito";
-  font-weight: 700;
+  font-weight: 800;
   font-size: 15px;
   color: #afafaf;
   letter-spacing: 0.8px;
@@ -908,7 +918,7 @@ var ActiveLanguageButton = (0, import_styled.default)("button")`
   border: none;
   background-color: inherit;
   font-family: "Nunito";
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.8px;
   cursor: pointer;
 `;
@@ -938,7 +948,7 @@ var LanguagesItem = (0, import_styled.default)("button")`
   background-color: inherit;
   color: #3c3c3c;
   font-family: "Nunito";
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.8px;
   text-align: left;
   transition: background-color 0.2s ease;
@@ -984,7 +994,7 @@ var Logout = (0, import_styled.default)("button")`
   background-color: inherit;
   color: #afafaf;
   font-family: "Nunito";
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.8px;
   padding: 0;
   transition: filter 0.2s ease;
@@ -1002,7 +1012,6 @@ var PracticeLastAddedContainer = (0, import_styled.default)("div")`
   margin-bottom: 54px;
   bottom: 24px;
   background-color: #fff;
-  transition: 0.2s ease;
   &:hover {
     filter: brightness(0.9);
   }
@@ -1178,7 +1187,17 @@ var Progress_default = Progress;
 // app/modules/Lesson/reducer.ts
 init_react();
 var import_react3 = require("react");
-var continueContent = (content, lessonSteps) => lessonSteps.length > 0 ? __spreadProps(__spreadValues({}, lessonSteps.shift(0, 1)), { difficulty: "easy" }) : content;
+var continueContent = (content, lessonSteps) => {
+  const newContent = lessonSteps.shift(0, 1);
+  if (!newContent) {
+    return content;
+  }
+  newContent.difficulty = null;
+  if ((newContent == null ? void 0 : newContent.variants.length) && newContent.stepType !== "Pairs") {
+    newContent.difficulty = "easy";
+  }
+  return newContent;
+};
 var basicState = {
   progress: 0,
   stepNumber: 0,
@@ -1240,7 +1259,7 @@ function skillReducer(state, action10) {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: __spreadProps(__spreadValues({}, steps.shift()), { difficulty: "easy" })
+        content: continueContent({}, steps)
       });
     case "RESULTS" /* results */:
       return __spreadProps(__spreadValues({}, state), {
@@ -1384,6 +1403,7 @@ var LessonFooterTitle = (0, import_styled3.default)("h2")`
   font-family: "Nunito", sans-serif;
   line-height: 30px;
   font-size: 24px;
+  font-weight: 800;
   letter-spacing: 0.2px;
 `;
 var LessonFooterText = (0, import_styled3.default)("p")`
@@ -1421,6 +1441,22 @@ var LessonButton = (0, import_styled3.default)("button")`
     border-bottom-width: ${(props) => props.skip ? `2px` : "0"};
     height: 46px;
     transform: translateY(4px);
+  }
+`;
+var ChangeDifficultyBtn = (0, import_styled3.default)("button")`
+  text-transform: uppercase;
+  font-family: "Nunito";
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  border: none;
+  background-color: inherit;
+  display: flex;
+  align-items: center;
+  color: #afafaf;
+  cursor: pointer;
+  &:hover {
+    filter: brightness(1.2);
   }
 `;
 var LessonAppear = import_react5.keyframes`
@@ -1494,20 +1530,27 @@ var VariantItem = (0, import_styled3.default)("button")`
   background-color: ${(props) => props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
   height: 60px;
   border: 1px solid;
-  border-color: ${(props) => props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
+  border-color: ${(props) => props.isFocused ? "#84d8ff" : "#e5e5e5"};
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  cursor: pointer;
+  cursor: ${(props) => props.isDisabled ? "default" : "pointer"};
   position: relative;
   touch-action: manipulation;
   transform: translateZ(0);
   user-select: none;
   text-align: center;
-  color: ${(props) => props.isFocused ? "rgb(24, 153, 214)" : "#4b4b4b"};
+  color: ${(props) => props.isFocused ? "#1899d6" : props.isDisabled ? "#e5e5e5" : "#4b4b4b"};
   font-size: 19px;
   line-height: 1.4;
   padding: 12px 16px;
   width: 100%;
+  transition: background-color 0.1s;
+  &:hover {
+    background-color: ${(props) => props.isFocused ? "#ddf4ff" : props.isDisabled ? "inherit" : "#f7f7f7"};
+  }
+  &:active {
+    transform: translateY(2px) translateZ(0);
+  }
 `;
 var LessonTitle2 = (0, import_styled3.default)("h1")`
   font-size: 30px;
@@ -1609,6 +1652,19 @@ var ResultsSeparateLine = (0, import_styled3.default)("div")`
   width: 4px;
   background-color: #e5e5e5;
 `;
+var PairsList2 = (0, import_styled3.default)("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+`;
+var PairsItem = (0, import_styled3.default)("li")`
+  margin-bottom: 5px;
+  position: relative;
+  width: 48%;
+`;
 
 // app/modules/Lesson/components/Results.tsx
 var Results = import_react6.default.forwardRef((props, ref) => {
@@ -1635,6 +1691,14 @@ var Results = import_react6.default.forwardRef((props, ref) => {
 // app/modules/Lesson/components/Footer.tsx
 init_react();
 var import_react7 = require("@remix-run/react");
+
+// app/styles/easier.svg
+var easier_default = "/build/_assets/easier-J6XFH7BL.svg";
+
+// app/styles/harder.svg
+var harder_default = "/build/_assets/harder-YCUE4ZYE.svg";
+
+// app/modules/Lesson/components/Footer.tsx
 function Footer({
   checkAnswer = () => {
   }
@@ -1662,21 +1726,21 @@ function Footer({
     onClick: handleSkip,
     skip: true,
     hidden: status !== "idle" || content.stepType === "Pairs"
-  }, "Skip"), /* @__PURE__ */ React.createElement(LessonButton, {
-    skip: true,
-    hidden: status !== "idle" || content.stepType === "Pairs",
-    style: {
-      borderWidth: 0,
-      width: "auto"
-    },
+  }, "Skip"), difficulty && status === "idle" && /* @__PURE__ */ React.createElement(ChangeDifficultyBtn, {
     onClick: () => setDifficulty(difficulty === "easy" ? "hard" : "easy")
-  }, "Make ", difficulty === "easy" ? "harder" : "easier"), /* @__PURE__ */ React.createElement(LessonFooterMessage, {
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: difficulty === "easy" ? harder_default : easier_default,
+    alt: difficulty,
+    height: 19,
+    width: 27,
+    style: { marginRight: 10 }
+  }), /* @__PURE__ */ React.createElement("p", null, "Make ", difficulty === "easy" ? "harder" : "easier")), /* @__PURE__ */ React.createElement(LessonFooterMessage, {
     status
   }, (status === "right" || status === "wrong") && /* @__PURE__ */ React.createElement(LessonFooterIcon, {
     status
   }), /* @__PURE__ */ React.createElement("div", {
     style: { marginLeft: 16, width: "calc(100% - 209px)" }
-  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, status === "wrong" ? "Right answer: " : "Great!"), /* @__PURE__ */ React.createElement(LessonFooterText, null, " ", answer.join(" ")))), /* @__PURE__ */ React.createElement(LessonButton, {
+  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, status === "wrong" ? "Right answer: " : "Great!"), status === "wrong" && /* @__PURE__ */ React.createElement(LessonFooterText, null, " ", answer.join(" ")))), /* @__PURE__ */ React.createElement(LessonButton, {
     active: !buttonDisabled,
     stateRight: status === "right",
     stateWrong: status === "wrong",
@@ -1826,7 +1890,8 @@ var Lesson = (_a) => {
     style: {
       display: "flex",
       flexDirection: "column",
-      flexGrow: 1
+      flexGrow: 1,
+      outline: "none"
     }
   }, /* @__PURE__ */ import_react10.default.createElement(LessonBody, null, import_react10.default.Children.map(children, (child) => {
     return import_react10.default.cloneElement(child, __spreadValues({
@@ -1876,7 +1941,7 @@ var StyleButton = (0, import_styled4.default)("button")`
   font-family: "Nunito";
 `;
 var InsertWordsTextBlock = (0, import_styled4.default)("div")`
-  min-height: 200px;
+  min-height: 170px;
   flex-grow: 1;
   width: 100%;
   padding: 10px 0;
@@ -1898,15 +1963,32 @@ var InsertWordsInput = (0, import_styled4.default)("input")`
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => props.isToChoose ? "pointer" : "text"};
+  caret-color: #1caff6;
+  padding: 0;
   &:disabled {
     background: inherit;
     cursor: default;
+  }
+  &:focus {
+    border-bottom-color: #1caff6;
+    outline: none;
   }
 `;
 var InsertWordsAnswerField = (0, import_styled4.default)("span")`
   margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
+`;
+var VariantsList2 = (0, import_styled4.default)("ul")`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+`;
+var VariantsItem2 = (0, import_styled4.default)("li")`
+  position: relative;
+  margin-bottom: 8px;
+  background-color: white;
 `;
 var VariantItemInput = (0, import_styled4.default)("input")`
   border: 1px solid #e5e5e5;
@@ -1920,7 +2002,6 @@ var VariantItemInput = (0, import_styled4.default)("input")`
   color: #4b4b4b;
   font-size: 19px;
   line-height: 1.4;
-  // padding: 12px 16px;
   padding: 12px 16px 12px 56px;
   width: 100%;
 `;
@@ -1984,8 +2065,9 @@ var PuzzleItem = (0, import_styled5.default)("li")`
 var VariantsContainer = (0, import_styled5.default)("section")`
   width: 100%;
   margin-top: 20px;
+  outline: none;
 `;
-var VariantsList2 = (0, import_styled5.default)("ul")`
+var VariantsList3 = (0, import_styled5.default)("ul")`
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -1993,7 +2075,7 @@ var VariantsList2 = (0, import_styled5.default)("ul")`
   flex-wrap: wrap;
   justify-content: space-between;
 `;
-var VariantsItem2 = (0, import_styled5.default)("li")`
+var VariantsItem3 = (0, import_styled5.default)("li")`
   position: relative;
   margin-bottom: 8px;
   width: 49%;
@@ -2064,7 +2146,7 @@ function Variants({
     tabIndex: 0,
     ref: myRef,
     onKeyDown: (e) => keyDownCheck(e, (e2) => KeyDownHandler(e2))
-  }, /* @__PURE__ */ React.createElement(VariantsList2, null, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement(VariantsItem2, {
+  }, /* @__PURE__ */ React.createElement(VariantsList3, null, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement(VariantsItem3, {
     key: idx,
     onClick: () => setValues([value])
   }, /* @__PURE__ */ React.createElement(VariantItemNumber, {
@@ -2162,10 +2244,9 @@ function InsertWordsScreen({
 }) {
   const { content, skillState } = useSkill();
   const { isToChoose, variants, answer, difficulty } = content;
-  const initalValues = variants && difficulty === "easy" ? [...new Array(answer.length).fill(" ")] : [""];
+  const initalValues = new Array(answer.length).fill(variants && difficulty === "easy" ? " " : "");
   const [values, setValues] = (0, import_react13.useState)(initalValues);
   (0, import_react13.useEffect)(() => {
-    console.log("Values: ", values);
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }
@@ -2214,14 +2295,12 @@ function InsertWords() {
   };
   return content.stepType === "Insert" ? /* @__PURE__ */ React.createElement(Lesson, {
     disabledCondition: (userAnswer) => {
-      if (userAnswer.find((uA) => {
-        if (uA === " " || uA === "") {
-          return uA;
+      const isEachFieldContented = userAnswer.filter((uA) => {
+        if (uA !== " " && uA.length > 0) {
+          return true;
         }
-      })) {
-        return false;
-      }
-      return userAnswer.length === content.answer.length;
+      });
+      return isEachFieldContented.length === content.answer.length;
     },
     initialValue: initialUserAnswer,
     checkAnswer
@@ -2246,18 +2325,8 @@ function PairsScreen({
     }
     return false;
   };
-  return /* @__PURE__ */ React.createElement(import_react14.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement("ul", {
-    style: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-evenly",
-      listStyle: "none",
-      margin: 0,
-      padding: 0
-    }
-  }, variants.map(({ value, isFocused }, idx) => /* @__PURE__ */ React.createElement("li", {
+  return /* @__PURE__ */ React.createElement(import_react14.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement(PairsList2, null, variants.map(({ value, isFocused }, idx) => /* @__PURE__ */ React.createElement(PairsItem, {
     key: idx,
-    style: { marginBottom: 5, position: "relative", width: "48%" },
     onClick: (evt) => {
       const target = evt.target;
       if (isVariantDisabled(idx)) {
@@ -2272,14 +2341,9 @@ function PairsScreen({
   }, /* @__PURE__ */ React.createElement(VariantItem, {
     type: "button",
     id: (idx + 1).toString(),
-    style: {
-      cursor: isVariantDisabled(idx) ? "default" : "pointer",
-      color: activeIdx === idx + 1 ? "#1899d6" : isVariantDisabled(idx) ? "#e5e5e5" : "#4b4b4b",
-      borderColor: activeIdx === idx + 1 ? "#84d8ff" : isVariantDisabled(idx) ? "#e5e5e5" : "#e5e5e5",
-      backgroundColor: activeIdx === idx + 1 ? "#ddf4ff" : "#fff"
-    },
     disabled: isVariantDisabled(idx),
-    isFocused
+    isDisabled: isVariantDisabled(idx),
+    isFocused: isFocused || activeIdx === idx + 1
   }, value)))));
 }
 
@@ -2324,8 +2388,8 @@ init_react();
 init_react();
 var import_react15 = require("react");
 
-// app/styles/duo.svg
-var duo_default = "/build/_assets/duo-4STWGEJ4.svg";
+// app/styles/Duo.svg
+var Duo_default = "/build/_assets/Duo-4STWGEJ4.svg";
 
 // app/modules/Lesson/components/QuestionAnswer/QuestionAnswerScreen.tsx
 function QuestionAnswerScreen({
@@ -2347,7 +2411,7 @@ function QuestionAnswerScreen({
   return /* @__PURE__ */ React.createElement(import_react15.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
-    src: duo_default,
+    src: Duo_default,
     alt: "Duo",
     height: 150,
     style: { marginBottom: -50 }
@@ -2402,18 +2466,24 @@ function VariantsScreen({
   userAnswer,
   setUserAnswer
 }) {
-  return /* @__PURE__ */ React.createElement(import_react16.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle, null, "Choose right variant"), /* @__PURE__ */ React.createElement("b", null, question), /* @__PURE__ */ React.createElement("ul", {
-    style: { listStyleType: "none", padding: 0, margin: 0 }
-  }, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement("li", {
+  return /* @__PURE__ */ React.createElement(import_react16.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
+    style: { display: "flex", alignItems: "center", margin: "30px 0" }
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: Duo_default,
+    alt: "Duo",
+    height: 150,
+    style: { marginBottom: -50 }
+  }), /* @__PURE__ */ React.createElement("div", {
+    style: { position: "relative" }
+  }, /* @__PURE__ */ React.createElement(LessonQuestion, null, question), /* @__PURE__ */ React.createElement(LessonQuestionTriangleContainer, null, /* @__PURE__ */ React.createElement(LessonQuestionTriangle, null)))), /* @__PURE__ */ React.createElement(VariantsList2, null, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement(VariantsItem2, {
     key: idx,
-    style: { position: "relative", marginBottom: 8 },
     onClick: () => setUserAnswer(value)
   }, /* @__PURE__ */ React.createElement(VariantItemNumber, {
     isFocused: value === userAnswer
   }, idx + 1), /* @__PURE__ */ React.createElement(VariantItem, {
     type: "button",
     isFocused: value === userAnswer
-  }, value)))));
+  }, value))))));
 }
 
 // app/modules/Lesson/components/Variants.tsx
@@ -2936,6 +3006,7 @@ function Projects({
     placeholder: "Enter title",
     name: "newLanguage",
     onChange: showModal,
+    autoComplete: "off",
     required: true
   }), /* @__PURE__ */ React.createElement(LanguagesAddBtn, null, "+")) : /* @__PURE__ */ React.createElement(LanguagesItem, {
     type: "button",
@@ -2969,7 +3040,9 @@ var Menu = ({
   languages,
   onOverlay
 }) => {
-  return /* @__PURE__ */ React.createElement(MenuContainer, null, /* @__PURE__ */ React.createElement("nav", null, /* @__PURE__ */ React.createElement(HorizontalList, null, MENU.map(({ title, icon, activeIcon, link }) => /* @__PURE__ */ React.createElement(ListItem, {
+  return /* @__PURE__ */ React.createElement(MenuContainer, null, /* @__PURE__ */ React.createElement("nav", {
+    style: { width: "35%" }
+  }, /* @__PURE__ */ React.createElement(HorizontalList, null, MENU.map(({ title, icon, activeIcon, link }) => /* @__PURE__ */ React.createElement(ListItem, {
     key: title
   }, /* @__PURE__ */ React.createElement(MenuNavLink, {
     to: `${link}`,
@@ -2978,7 +3051,9 @@ var Menu = ({
   }, ({ isActive }) => /* @__PURE__ */ React.createElement(import_react21.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
     src: isActive ? activeIcon : icon,
     alt: title
-  }), title)))))), /* @__PURE__ */ React.createElement(HorizontalList, null, /* @__PURE__ */ React.createElement(ListItem, null, /* @__PURE__ */ React.createElement(Projects, {
+  }), title)))))), /* @__PURE__ */ React.createElement(HorizontalList, {
+    style: { width: "40%" }
+  }, /* @__PURE__ */ React.createElement(ListItem, null, /* @__PURE__ */ React.createElement(Projects, {
     languages,
     onOverlay
   })), /* @__PURE__ */ React.createElement(ListItem, null, /* @__PURE__ */ React.createElement("img", {
@@ -3115,9 +3190,9 @@ function ProjectPage() {
   }));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$topicId.tsx
-var topicId_exports = {};
-__export(topicId_exports, {
+// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$skillId.tsx
+var skillId_exports = {};
+__export(skillId_exports, {
   ErrorBoundary: () => ErrorBoundary4,
   action: () => action4,
   default: () => ConstructorEdit,
@@ -3561,21 +3636,16 @@ var pairsConnect = (activeIdx, idx) => ({
 // app/modules/Constructor/Levels/components/Variants/index.tsx
 var initialState = {
   variantsCount: 3,
-  initialVariants: [],
-  initialQuestion: "",
+  question: "",
+  variants: [],
   number: 0,
   answer: "",
   stepType: ""
 };
 function Variants2({ state = initialState }) {
-  const {
-    number,
-    answer,
-    stepType,
-    initialQuestion,
-    initialVariants = [],
-    variantsCount = 3
-  } = state;
+  const { number, answer, stepType, variantsCount = 3 } = state;
+  const initialQuestion = state.question;
+  const initialVariants = state.variants;
   const { setStepReady, setAnswer } = useConstructor();
   const [{ variants }, dispatch] = (0, import_react25.useReducer)(reducer, {
     variants: initialVariants,
@@ -3606,16 +3676,20 @@ function Variants2({ state = initialState }) {
     type: "hidden",
     name: `answer${number}`,
     value: answer
-  }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, "Read and Respond")), /* @__PURE__ */ React.createElement(Textarea, {
+  }), /* @__PURE__ */ React.createElement("fieldset", {
+    style: { padding: "0 25%" }
+  }, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("div", {
+    style: { marginTop: 30 }
+  }, /* @__PURE__ */ React.createElement(Textarea, {
     name: `question${number}`,
     placeholder: "Type question",
-    style: { minHeight: 100 },
+    style: { minHeight: 100, marginBottom: 20 },
     value: question === null ? "" : question,
     onChange: (e) => setQuestion(e.target.value),
     required: true
   }), /* @__PURE__ */ React.createElement(VariantsList, null, variants.map((variant, index) => /* @__PURE__ */ React.createElement(VariantsItem, {
     key: variant.idx,
-    style: { marginBottom: 5 }
+    style: { marginBottom: 5, width: "100%" }
   }, /* @__PURE__ */ React.createElement("label", {
     style: { position: "relative" }
   }, /* @__PURE__ */ React.createElement(VariantItemNumber, {
@@ -3628,7 +3702,7 @@ function Variants2({ state = initialState }) {
   }, variant.idx), /* @__PURE__ */ React.createElement(VariantItemInput, {
     type: "text",
     name: `variant${number}`,
-    placeholder: "type first variant",
+    placeholder: "Type variant",
     value: variant.value,
     onChange: (e) => {
       dispatch(variantSetValue(index, e.target.value));
@@ -3637,7 +3711,7 @@ function Variants2({ state = initialState }) {
       }
     },
     required: true
-  })))))) : null;
+  })))))))) : null;
 }
 
 // app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
@@ -3840,7 +3914,7 @@ function InsertWords2({ state = initialState3 }) {
     required: true
   }), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, {
     showText,
-    style: { marginTop: -206 }
+    style: { marginTop: -176 }
   }, answer.split(" ").map((item, idx) => {
     const { newItem, sign } = doesItemContainSign(item);
     if (!isItemInArray(words, item)) {
@@ -4013,7 +4087,7 @@ function QuestionAnswer({ state = initialState4 }) {
   }, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
-    src: duo_default,
+    src: Duo_default,
     alt: "Duo",
     height: 150,
     style: { marginBottom: -50 }
@@ -4180,16 +4254,15 @@ function Constructor({
   }), /* @__PURE__ */ React.createElement(Levels, null)), /* @__PURE__ */ React.createElement(Sidebar_default, null)));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$topicId.tsx
+// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$skillId.tsx
 var import_remix8 = __toESM(require_remix());
 function ErrorBoundary4() {
-  const { lessonId } = (0, import_react37.useParams)();
+  const { skillId } = (0, import_react37.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
-  }, `There was an error loading lesson by the id ${lessonId}. Sorry.`);
+  }, `There was an error loading lesson by the id ${skillId}. Sorry.`);
 }
 var action4 = async ({ request, params }) => {
-  const today = new Date();
   const form = await request.formData();
   const title = form.get("title");
   const activeLanguage = await getActiveLanguage(request);
@@ -4992,7 +5065,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "f5c6a839", "entry": { "module": "/build/entry.client-EHID3JDN.js", "imports": ["/build/_shared/chunk-YAWGN5V2.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-DL5BFXH3.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-S6QDYZEA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-5JD77AE5.js", "imports": ["/build/_shared/chunk-E3C6FRWD.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-HHW5G4KW.js", "imports": ["/build/_shared/chunk-E3C6FRWD.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-XTDES3NK.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-KM3SO2ZA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-DY4TWNFG.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-C2YN3ECE.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-YULMSXCW.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-4OE3AJS7.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-F5C6A839.js" };
+var assets_manifest_default = { "version": "d8f5f6bd", "entry": { "module": "/build/entry.client-TUHMP6CY.js", "imports": ["/build/_shared/chunk-QANDEPUK.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-CF3RIWOL.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-S5UOBAXF.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-Z7XA3B6W.js", "imports": ["/build/_shared/chunk-JPA5TSFU.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-Y3ZGYQ32.js", "imports": ["/build/_shared/chunk-JPA5TSFU.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-Z7ZSFW56.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-3HDHQAY3.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-L5PSZDLU.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-CVZ2MT3Q.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-ODI2AL4G.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-VEZYLCOJ.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-D8F5F6BD.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };
@@ -5029,13 +5102,13 @@ var routes = {
     caseSensitive: void 0,
     module: language_exports
   },
-  "routes/$language/constructor/$topicId": {
-    id: "routes/$language/constructor/$topicId",
+  "routes/$language/constructor/$skillId": {
+    id: "routes/$language/constructor/$skillId",
     parentId: "routes/$language",
-    path: "constructor/:topicId",
+    path: "constructor/:skillId",
     index: void 0,
     caseSensitive: void 0,
-    module: topicId_exports
+    module: skillId_exports
   },
   "routes/$language/constructor/new": {
     id: "routes/$language/constructor/new",

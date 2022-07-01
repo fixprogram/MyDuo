@@ -3,16 +3,9 @@ import { VariantItem } from "~/modules/Lesson/components/lib";
 import { VariantItemInput } from "../lib";
 
 export default function ChooseMissingWords({ words, number }) {
-  //   const [variants, setVariants] = useState([""]);
   const [variants, setVariants] = useState(() =>
     words.length ? [...words] : [""]
   );
-
-  //   useEffect(() => {
-  //     if (words.length === 1) {
-  //       setVariants([...words]);
-  //     }
-  //   }, [words]);
 
   return (
     <div style={{ width: "100%" }}>

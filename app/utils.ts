@@ -98,7 +98,6 @@ export const doesArrayContainItems = (items: string[], arr: string[]) => {
     state: !!filtered.length,
     length: filtered.length,
     items: filtered,
-    // formatted: filtered.map((item) => item.trim().toLowerCase()),
     formatted: filtered.map((item) => item.trim()),
   };
 };

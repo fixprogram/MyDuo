@@ -20,6 +20,7 @@ type LessonButtonProps = {
 };
 type VariantItemProps = {
   isFocused: boolean;
+  isDisabled?: boolean;
 };
 
 const LessonContainer = styled("section")`
@@ -65,6 +66,7 @@ const LessonFooterTitle = styled("h2")`
   font-family: "Nunito", sans-serif;
   line-height: 30px;
   font-size: 24px;
+  font-weight: 800;
   letter-spacing: 0.2px;
 `;
 
@@ -122,6 +124,23 @@ const LessonButton = styled("button")<LessonButtonProps>`
     border-bottom-width: ${(props) => (props.skip ? `2px` : "0")};
     height: 46px;
     transform: translateY(4px);
+  }
+`;
+
+const ChangeDifficultyBtn = styled("button")`
+  text-transform: uppercase;
+  font-family: "Nunito";
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  border: none;
+  background-color: inherit;
+  display: flex;
+  align-items: center;
+  color: #afafaf;
+  cursor: pointer;
+  &:hover {
+    filter: brightness(1.2);
   }
 `;
 
@@ -212,21 +231,29 @@ const VariantItem = styled("button")<VariantItemProps>`
     props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
   height: 60px;
   border: 1px solid;
-  border-color: ${(props) =>
-    props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
+  border-color: ${(props) => (props.isFocused ? "#84d8ff" : "#e5e5e5")};
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  cursor: pointer;
+  cursor: ${(props) => (props.isDisabled ? "default" : "pointer")};
   position: relative;
   touch-action: manipulation;
   transform: translateZ(0);
   user-select: none;
   text-align: center;
-  color: ${(props) => (props.isFocused ? "rgb(24, 153, 214)" : "#4b4b4b")};
+  color: ${(props) =>
+    props.isFocused ? "#1899d6" : props.isDisabled ? "#e5e5e5" : "#4b4b4b"};
   font-size: 19px;
   line-height: 1.4;
   padding: 12px 16px;
   width: 100%;
+  transition: background-color 0.1s;
+  &:hover {
+    background-color: ${(props) =>
+      props.isFocused ? "#ddf4ff" : props.isDisabled ? "inherit" : "#f7f7f7"};
+  }
+  &:active {
+    transform: translateY(2px) translateZ(0);
+  }
 `;
 
 const LessonTitle = styled("h1")`
@@ -342,6 +369,21 @@ const ResultsSeparateLine = styled("div")`
   background-color: #e5e5e5;
 `;
 
+const PairsList = styled("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+`;
+
+const PairsItem = styled("li")`
+  margin-bottom: 5px;
+  position: relative;
+  width: 48%;
+`;
+
 export {
   LessonContainer,
   LessonFooter,
@@ -368,4 +410,7 @@ export {
   ResultsTitle,
   ResultsLeftBlock,
   ResultsSeparateLine,
+  ChangeDifficultyBtn,
+  PairsList,
+  PairsItem,
 };

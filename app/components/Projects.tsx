@@ -76,6 +76,7 @@ export default function Projects({
                     placeholder="Enter title"
                     name="newLanguage"
                     onChange={showModal}
+                    autoComplete="off"
                     required
                   />
                   <LanguagesAddBtn>+</LanguagesAddBtn>

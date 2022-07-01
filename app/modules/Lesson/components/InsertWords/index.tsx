@@ -23,16 +23,12 @@ export default function InsertWords() {
   return content.stepType === "Insert" ? (
     <Lesson
       disabledCondition={(userAnswer: string[]) => {
-        if (
-          userAnswer.find((uA) => {
-            if (uA === " " || uA === "") {
-              return uA;
-            }
-          })
-        ) {
-          return false;
-        }
-        return userAnswer.length === content.answer.length;
+        const isEachFieldContented = userAnswer.filter((uA) => {
+          if (uA !== " " && uA.length > 0) {
+            return true;
+          }
+        });
+        return isEachFieldContented.length === content.answer.length;
       }}
       initialValue={initialUserAnswer}
       checkAnswer={checkAnswer}

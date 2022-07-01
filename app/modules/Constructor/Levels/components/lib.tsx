@@ -47,7 +47,7 @@ const StyleButton = styled("button")`
 `;
 
 const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
-  min-height: 200px;
+  min-height: 170px;
   flex-grow: 1;
   width: 100%;
   padding: 10px 0;
@@ -70,9 +70,15 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
+  caret-color: #1caff6;
+  padding: 0;
   &:disabled {
     background: inherit;
     cursor: default;
+  }
+  &:focus {
+    border-bottom-color: #1caff6;
+    outline: none;
   }
 `;
 
@@ -80,6 +86,19 @@ const InsertWordsAnswerField = styled("span")<InsertWordsInputProps>`
   margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
+`;
+
+const VariantsList = styled("ul")`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+`;
+
+const VariantsItem = styled("li")`
+  position: relative;
+  margin-bottom: 8px;
+  background-color: white;
 `;
 
 const VariantItemInput = styled("input")`
@@ -94,7 +113,6 @@ const VariantItemInput = styled("input")`
   color: #4b4b4b;
   font-size: 19px;
   line-height: 1.4;
-  // padding: 12px 16px;
   padding: 12px 16px 12px 56px;
   width: 100%;
 `;
@@ -153,6 +171,8 @@ export {
   InsertWordsTextBlock,
   InsertWordsInput,
   InsertWordsAnswerField,
+  VariantsList,
+  VariantsItem,
   VariantItemInput,
   VariantItemNumber,
   SidebarList,

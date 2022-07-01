@@ -49,9 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
-    // const stepChapter = form.get(`chapter${index}`) as string;
     let answer: string | string[] = form.get(`answer${index}`) as string;
-    // answer = answer.trim().split(" ");
     const returnData = {
       stepType,
       number: index,
@@ -129,7 +127,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     currentChapter: 0,
     level: 0,
     projectId: activeLanguage?.id,
-    // updatedAt: today.getDate().toString(),
     updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber),
   };

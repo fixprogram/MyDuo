@@ -69,6 +69,7 @@ export const Lesson: React.FC<LessonProps> = ({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
+        outline: "none",
       }}
     >
       <LessonBody>

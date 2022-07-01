@@ -35,22 +35,21 @@ const HorizontalList = styled.ul((props) => ({
   padding: "0 9px",
 }));
 
-const ListItem = styled.li((props) => ({
-  height: "100%",
-  margin: "0 15px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative",
-}));
+const ListItem = styled("li")`
+  height: 100%;
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
 
-const LessonsContainer = styled.section((props) => ({
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  // marginBottom: "52px",
-  position: "relative",
-}));
+const LessonsContainer = styled("section")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+`;
 
 const LessonsBlock = styled("div")`
   grid-column-gap: 12px;
@@ -144,7 +143,7 @@ const LessonBlockLink = styled(Link)`
   border-radius: 18px;
   text-decoration: none;
   font-family: "Nunito";
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.8px;
   &:hover {
     filter: brightness(1.1);
@@ -166,7 +165,7 @@ const LessonBlockButton = styled("button")`
   border-radius: 18px;
   text-decoration: none;
   font-family: "Nunito";
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.8px;
   &:hover img {
     filter: brightness(1.1);
@@ -222,7 +221,6 @@ const ProgressBarContainer = styled("div")`
 `;
 
 const ProgressBar = styled("div")<ProgressProps>`
-  // width: 61%;
   width: 100%;
   height: 16px;
   position: relative;
@@ -346,9 +344,20 @@ const FormButton = styled("button")<FormButtonProps>`
   text-transform: uppercase;
   font-family: "Nunito";
   font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
   border-radius: 15px;
+  padding: 0 20px;
+  display: ${(props) => (props.hidden ? "none" : "block")};
+  transition: filter 0.2s;
+  &:hover:enabled {
+    filter: brightness(1.1);
+  }
+  &:active:enabled {
+    filter: brightness(1.1);
+    height: 46px;
+    transform: translateY(4px);
+  }
 `;
 
 const KeywordTemplate = styled("span")<KeywordProps>`
@@ -505,7 +514,7 @@ const MenuNavLink = styled(NavLink)`
   text-decoration: none;
   text-transform: uppercase;
   font-family: "Nunito";
-  font-weight: 700;
+  font-weight: 800;
   font-size: 15px;
   color: #afafaf;
   letter-spacing: 0.8px;
@@ -525,7 +534,7 @@ const ActiveLanguageButton = styled("button")`
   border: none;
   background-color: inherit;
   font-family: "Nunito";
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.8px;
   cursor: pointer;
 `;
@@ -559,7 +568,7 @@ const LanguagesItem = styled("button")`
   background-color: inherit;
   color: #3c3c3c;
   font-family: "Nunito";
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.8px;
   text-align: left;
   transition: background-color 0.2s ease;
@@ -609,7 +618,7 @@ const Logout = styled("button")`
   background-color: inherit;
   color: #afafaf;
   font-family: "Nunito";
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.8px;
   padding: 0;
   transition: filter 0.2s ease;
@@ -628,7 +637,6 @@ const PracticeLastAddedContainer = styled("div")`
   margin-bottom: 54px;
   bottom: 24px;
   background-color: #fff;
-  transition: 0.2s ease;
   &:hover {
     filter: brightness(0.9);
   }

@@ -1,12 +1,21 @@
 import { Lesson } from "@prisma/client";
 import { useReducer } from "react";
-import { SkillState } from "./types";
+import { SkillState, Step } from "./types";
 
 // The function returns next stepNumber if there is any
-const continueContent = (content: Lesson, lessonSteps: Lesson[] | any) =>
-  lessonSteps.length > 0
-    ? { ...lessonSteps.shift(0, 1), difficulty: "easy" }
-    : content;
+const continueContent = (content: Step, lessonSteps: Step[]) => {
+  const newContent = lessonSteps.shift(0, 1);
+  if (!newContent) {
+    return content;
+  }
+
+  newContent.difficulty = null;
+  if (newContent?.variants.length && newContent.stepType !== "Pairs") {
+    newContent.difficulty = "easy";
+  }
+
+  return newContent;
+};
 
 enum actionTypes {
   continue = "CONTINUE",
@@ -20,13 +29,13 @@ enum actionTypes {
 }
 
 type Action =
-  | { type: actionTypes.setup; steps: Lesson[] }
+  | { type: actionTypes.setup; steps: Step[] }
   | { type: actionTypes.continue }
   | { type: actionTypes.results }
   | { type: actionTypes.setCheckDisabled; disabled: boolean }
   | { type: actionTypes.setStateRight }
   | { type: actionTypes.setStateWrong }
-  | { type: actionTypes.setDifficulty; difficulty: "easy" | "hard" }
+  | { type: actionTypes.setDifficulty; difficulty: "easy" | "hard" | null }
   | { type: actionTypes.updateState; update: {} };
 
 export const basicState: SkillState = {
@@ -96,8 +105,8 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: { ...steps.shift(), difficulty: "easy" } as Lesson & {
-          difficulty: "easy" | "hard";
+        content: continueContent({}, steps) as Lesson & {
+          difficulty: "easy" | "hard" | null;
         },
       };
     case actionTypes.results:
@@ -145,7 +154,7 @@ function useSkillReducer({
     dispatch({ type: actionTypes.setCheckDisabled, disabled });
   const updateState = (update: {}) =>
     dispatch({ type: actionTypes.updateState, update });
-  const setDifficulty = (difficulty: "easy" | "hard") =>
+  const setDifficulty = (difficulty: "easy" | "hard" | null) =>
     dispatch({ type: actionTypes.setDifficulty, difficulty });
 
   return {
