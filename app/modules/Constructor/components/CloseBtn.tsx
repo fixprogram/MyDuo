@@ -8,7 +8,7 @@ export default function CloseBtn({
 }) {
   return (
     <BtnClose type="button" onClick={onClickHandler}>
-      <BtnCloseImage src={Close} alt="close" />
+      <BtnCloseImage src={Close} alt="Close" />
     </BtnClose>
   );
 }

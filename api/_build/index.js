@@ -399,7 +399,7 @@ function Document({
     name: "viewport",
     content: "width=device-width,initial-scale=1,user-scalable=no"
   }), /* @__PURE__ */ React.createElement("title", null, title), /* @__PURE__ */ React.createElement("link", {
-    href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500;700&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap",
     rel: "stylesheet"
   }), /* @__PURE__ */ React.createElement(import_remix2.Links, null)), /* @__PURE__ */ React.createElement("body", {
     style: { margin: 0 }
@@ -425,7 +425,7 @@ __export(chapter_exports, {
   loader: () => loader
 });
 init_react();
-var import_remix4 = __toESM(require_remix());
+var import_remix5 = __toESM(require_remix());
 
 // app/db.server.ts
 init_react();
@@ -562,7 +562,7 @@ var LessonBlockLink = (0, import_styled.default)(import_react2.Link)`
   border-color: inherit;
   border-radius: 18px;
   text-decoration: none;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 500;
   letter-spacing: 0.8px;
   &:hover {
@@ -583,7 +583,7 @@ var LessonBlockButton = (0, import_styled.default)("button")`
   border-color: inherit;
   border-radius: 18px;
   text-decoration: none;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 500;
   letter-spacing: 0.8px;
   &:hover img {
@@ -606,7 +606,7 @@ var LessonBlockTitle = (0, import_styled.default)("div")`
   & h2 {
     font-size: 24px;
     font-weight: 700;
-    font-family: "Roboto";
+    font-family: "Nunito";
     color: #4b4b4b;
     flex-grow: 0.3;
   }
@@ -623,15 +623,17 @@ var UserImage = import_styled.default.img({
 }, (props) => ({ width: props.width, height: props.height }));
 var ProgressBarContainer = (0, import_styled.default)("div")`
   width: 100%;
-  margin-top: 1px;
-  border-top: 1px solid #dbdddd;
-  padding-top: 46px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 50px 40px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 `;
 var ProgressBar = (0, import_styled.default)("div")`
-  width: 61%;
+  // width: 61%;
+  width: 100%;
   height: 16px;
   position: relative;
   background-color: #e5e5e5;
@@ -675,10 +677,9 @@ var Input = (0, import_styled.default)("input")`
 var Textarea = (0, import_styled.default)("textarea")`
   background-color: rgb(247, 247, 247);
   border: 2px solid rgb(229, 229, 229);
-  border-color: rgb(229, 229, 229);
   border-radius: 10px;
   padding: 10px 12px;
-  min-height: 200px;
+  min-height: 170px;
   width: 100%;
   -webkit-appearance: none;
   resize: none;
@@ -690,14 +691,14 @@ var Textarea = (0, import_styled.default)("textarea")`
   line-height: 24px;
   color: #3c3c3c;
   font-size: 19px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 400;
   letter-spacing: 1px;
 `;
 var LoginTitle = (0, import_styled.default)("h1")`
   font-size: 26px;
   margin: 10px 0 15px;
-  font-family: Montserrat;
+  font-family: Nunito;
   font-weight: 700;
   text-align: center;
 `;
@@ -717,7 +718,7 @@ var LabelText = (0, import_styled.default)("span")`
   cursor: pointer;
   color: #4b4b4b;
   font-size: 15px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 700;
   letter-spacing: 0.6px;
 `;
@@ -729,7 +730,7 @@ var Legend = (0, import_styled.default)("legend")`
   margin-bottom: 14px;
   margin-top: 0;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
 `;
 var FormButton = (0, import_styled.default)("button")`
   background-color: ${(props) => props.active ? "#78C83D" : props.disabled ? "#E5E5E5" : "#fff"};
@@ -740,7 +741,7 @@ var FormButton = (0, import_styled.default)("button")`
   cursor: ${(props) => props.disabled ? "default" : "pointer"};
   width: 150px;
   text-transform: uppercase;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -768,7 +769,7 @@ var LessonProgress = (0, import_styled.default)("div")`
   font-family: Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: 700;
-  font-family: "Roboto";
+  font-family: "Nunito";
   color: #1cb0f6;
   position: relative;
 `;
@@ -831,8 +832,7 @@ var LoginInput = (0, import_styled.default)("input")`
   line-height: 27px;
   width: 100%;
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-  outline: none;
+  font-family: "Nunito", sans-serif;
   font-size: 100%;
   background: #f7f7f7;
   border: 2px solid #e5e5e5;
@@ -845,7 +845,7 @@ var LoginButton = (0, import_styled.default)("button")`
   margin-top: 20px;
   width: 100%;
   letter-spacing: 0.8px;
-  font: 600 15px "Roboto";
+  font: 600 15px "Nunito";
   padding: 0 16px;
   height: 50px;
   color: white;
@@ -861,7 +861,7 @@ var LoginToggle = (0, import_styled.default)("label")`
   top: 0;
   right: 0;
   letter-spacing: 0.8px;
-  font: 600 15px "Roboto";
+  font: 600 15px "Nunito";
   line-height: 1.2;
   padding: 0 16px;
   height: 50px;
@@ -888,18 +888,26 @@ var MenuContainer = (0, import_styled.default)("div")`
 var MenuNavLink = (0, import_styled.default)(import_react2.NavLink)`
   text-decoration: none;
   text-transform: uppercase;
-  font-family: "Montserrat";
-  font-weight: 600;
+  font-family: "Nunito";
+  font-weight: 700;
+  font-size: 15px;
   color: #afafaf;
   letter-spacing: 0.8px;
   display: flex;
   align-items: center;
+  transition: filter 0.2s ease;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
+  &.active:hover {
+    filter: none;
+  }
 `;
 var ActiveLanguageButton = (0, import_styled.default)("button")`
   color: #3c3c3c;
   border: none;
   background-color: inherit;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-weight: 700;
   letter-spacing: 0.8px;
   cursor: pointer;
@@ -926,13 +934,17 @@ var LanguagesItem = (0, import_styled.default)("button")`
   border-bottom: 2px solid #dadcde;
   width: 100%;
   cursor: pointer;
-  padding: 20px 20px;
+  padding: 16px 20px;
   background-color: inherit;
   color: #3c3c3c;
-  font-family: "Montserrat";
-  font-weight: 700;
+  font-family: "Nunito";
+  font-weight: 600;
   letter-spacing: 0.8px;
   text-align: left;
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: rgba(175, 175, 175, 0.15);
+  }
 `;
 var LanguagesInput = (0, import_styled.default)("input")`
   border: none;
@@ -943,7 +955,7 @@ var LanguagesInput = (0, import_styled.default)("input")`
   padding: 20px 30px 20px 20px;
   background-color: inherit;
   color: #3c3c3c;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-weight: 700;
   letter-spacing: 0.8px;
   text-align: left;
@@ -971,10 +983,14 @@ var Logout = (0, import_styled.default)("button")`
   cursor: pointer;
   background-color: inherit;
   color: #afafaf;
-  font-family: "Montserrat";
-  font-weight: 700;
+  font-family: "Nunito";
+  font-weight: 600;
   letter-spacing: 0.8px;
   padding: 0;
+  transition: filter 0.2s ease;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
 `;
 var PracticeLastAddedContainer = (0, import_styled.default)("div")`
   height: 72px;
@@ -998,16 +1014,10 @@ var PracticeLastAddedLink = (0, import_styled.default)(import_react2.Link)`
   width: 100%;
   height: 100%;
   filter: inherit;
-  // background-color: #fff;
-  // border-radius: 50%;
-  // transition: 0.2s ease;
-  // &:hover {
-  //   filter: brightness(0.9);
-  // }
 `;
 var ErrorMessage = (0, import_styled.default)("p")`
   line-height: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -1025,7 +1035,7 @@ var ExpProgressTitle = (0, import_styled.default)("h2")`
   font-size: 24px;
   line-height: 26px;
   margin: 0 0 25px;
-  font-family: Montserrat;
+  font-family: Nunito;
   font-weight: 700;
 `;
 var FooterLine = (0, import_styled.default)("hr")`
@@ -1036,7 +1046,7 @@ var FooterLine = (0, import_styled.default)("hr")`
 var FooterText = (0, import_styled.default)("p")`
   text-align: center;
   color: #afafaf;
-  font-family: Roboto;
+  font-family: Nunito;
   margin: 0;
 `;
 var SkillsListContainer = (0, import_styled.default)("section")`
@@ -1051,18 +1061,114 @@ var SkillsLineBlock = (0, import_styled.default)("div")`
   max-width: 440px;
   margin: 0 auto 38px auto;
 `;
+var LinkWithHover = (0, import_styled.default)("a")`
+  &:hover {
+    filter: brightness(1.3);
+  }
+`;
+
+// app/modules/Constructor/components/lib.ts
+init_react();
+var import_styled2 = __toESM(require("@emotion/styled"));
+var import_remix3 = __toESM(require_remix());
+var ConstructorForm = (0, import_styled2.default)(import_remix3.Form)`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  height: calc(100vh - 95px);
+`;
+var ConstructorFormInner = (0, import_styled2.default)("section")`
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  padding-left: 30px;
+`;
+var LessonTitleInput = (0, import_styled2.default)("input")`
+  width: fit-content;
+  margin: 0 auto;
+  text-align: center;
+  border: none;
+  font-size: 17px;
+  font-weight: 700;
+  color: #3c3c3c;
+  text-align: center;
+  margin-top: 8px;
+`;
+var ConstructorMenu = (0, import_styled2.default)("div")`
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  display: block;
+  margin: 0 24px 24px;
+  padding: 24px;
+  width: 380px;
+`;
+var ScreenContainer = (0, import_styled2.default)("section")`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  visibility: ${(props) => props.screen !== props.target ? "hidden" : "visible"};
+`;
+var ConstructorSidebar = (0, import_styled2.default)("section")`
+  max-width: 25%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 71px;
+  position: relative;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  margin: 0 24px 24px;
+  padding: 24px;
+`;
+var BtnClose = (0, import_styled2.default)("button")`
+  position: absolute;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  left: 30px;
+  bottom: -60px;
+`;
+var BtnCloseImage = (0, import_styled2.default)("img")`
+  width: 16px;
+  height: 16px;
+  vertical-align: initial;
+  transition: filter 0.2s ease;
+  opacity: 0.3;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
+`;
+var VariantsList = (0, import_styled2.default)("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+var VariantsItem = (0, import_styled2.default)("li")`
+  min-width: 240px;
+`;
+var PairsList = (0, import_styled2.default)("ul")`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  max-width: 600px;
+  margin: 0 auto;
+`;
 
 // app/components/Progress.tsx
 var Progress = () => {
   const { progress } = useSkill();
   return /* @__PURE__ */ React.createElement(ProgressBarContainer, null, /* @__PURE__ */ React.createElement(ProgressLeaveLesson, {
     to: "/"
-  }, /* @__PURE__ */ React.createElement("img", {
+  }, /* @__PURE__ */ React.createElement(BtnCloseImage, {
     src: close_default,
-    alt: "Close the skill",
-    width: 16,
-    height: 16,
-    style: { verticalAlign: "initial" }
+    alt: "Close the skill"
   })), /* @__PURE__ */ React.createElement(ProgressBar, {
     progress
   }));
@@ -1232,8 +1338,8 @@ var useFocus = (dependency) => {
 // app/modules/Lesson/components/lib.ts
 init_react();
 var import_react5 = require("@emotion/react");
-var import_styled2 = __toESM(require("@emotion/styled"));
-var import_remix3 = __toESM(require_remix());
+var import_styled3 = __toESM(require("@emotion/styled"));
+var import_remix4 = __toESM(require_remix());
 
 // app/styles/right.svg
 var right_default = "/build/_assets/right-SZKSLJM7.svg";
@@ -1242,14 +1348,13 @@ var right_default = "/build/_assets/right-SZKSLJM7.svg";
 var wrong_default = "/build/_assets/wrong-N2O2S4W4.svg";
 
 // app/modules/Lesson/components/lib.ts
-var LessonContainer = (0, import_styled2.default)("section")`
+var LessonContainer = (0, import_styled3.default)("section")`
   position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  outline: none;
 `;
-var LessonFooter = (0, import_styled2.default)("section")`
+var LessonFooter = (0, import_styled3.default)("section")`
   padding: 0 40px;
   width: 100%;
   height: 140px;
@@ -1261,34 +1366,34 @@ var LessonFooter = (0, import_styled2.default)("section")`
   background-color: ${({ status }) => status === "right" ? "#d7ffb8" : status === "wrong" ? "#ffdfe0" : "#fff"};
   color: ${({ status }) => status === "right" ? "#58a700" : status === "wrong" ? "#ea2b2b" : "#fff"};
 `;
-var LessonFooterInner = (0, import_styled2.default)("div")`
-  max-width: 1000px;
+var LessonFooterInner = (0, import_styled3.default)("div")`
+  max-width: 920px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
 `;
-var LessonFooterMessage = (0, import_styled2.default)("div")`
+var LessonFooterMessage = (0, import_styled3.default)("div")`
   width: 100%;
   display: ${({ status }) => status === "right" || status === "wrong" ? "flex" : "none"};
   align-items: center;
 `;
-var LessonFooterTitle = (0, import_styled2.default)("h2")`
+var LessonFooterTitle = (0, import_styled3.default)("h2")`
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
   line-height: 30px;
   font-size: 24px;
   letter-spacing: 0.2px;
 `;
-var LessonFooterText = (0, import_styled2.default)("p")`
+var LessonFooterText = (0, import_styled3.default)("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   overflow-y: scroll;
   max-height: 60px;
 `;
-var LessonButton = (0, import_styled2.default)("button")`
+var LessonButton = (0, import_styled3.default)("button")`
   border: 0 solid transparent;
   background-color: ${(props) => props.stateWrong ? "#ff4b4b" : props.stateRight ? "#58cc02" : props.active ? "#78C83D" : props.skip ? "#fff" : "#E5E5E5"};
   color: ${(props) => props.active ? "#fff" : "#AFAFAF"};
@@ -1300,9 +1405,9 @@ var LessonButton = (0, import_styled2.default)("button")`
   width: 150px;
   cursor: ${(props) => props.active || props.skip ? "pointer" : "default"};
   text-transform: uppercase;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: 0.8px;
   border-radius: 15px;
   padding: 0 20px;
@@ -1329,8 +1434,8 @@ var LessonAppear = import_react5.keyframes`
     transform: translateX(0)
   }
 `;
-var LessonBody = (0, import_styled2.default)("div")`
-  margin: 72px 30% 4%;
+var LessonBody = (0, import_styled3.default)("div")`
+  margin: 72px 29% 4%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -1339,8 +1444,8 @@ var LessonBody = (0, import_styled2.default)("div")`
   animation-name: ${LessonAppear};
   animation-duration: 0.2s;
 `;
-var LessonBodyTitle = (0, import_styled2.default)("h3")`
-  font-family: "Montserrat";
+var LessonBodyTitle = (0, import_styled3.default)("h3")`
+  font-family: "Nunito";
   font-size: 23px;
   font-weight: 700;
   color: #4b4b4b;
@@ -1352,10 +1457,10 @@ var LessonBodyTitle = (0, import_styled2.default)("h3")`
   z-index: 2;
   background-color: #fff;
 `;
-var LessonBodyMessage = (0, import_styled2.default)("div")`
+var LessonBodyMessage = (0, import_styled3.default)("div")`
   padding: 12px 15px 12px 21px;
   border: 2px solid #dedede;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 400;
   font-size: 18px;
   color: #4c4c4c;
@@ -1363,14 +1468,14 @@ var LessonBodyMessage = (0, import_styled2.default)("div")`
   position: relative;
   z-index: 1;
 `;
-var LessonBodyVariants = (0, import_styled2.default)("div")`
+var LessonBodyVariants = (0, import_styled3.default)("div")`
   display: flex;
   flex-direction: column;
   width: 100%;
   position: absolute;
   bottom: 0;
 `;
-var LessonBodyVariant = (0, import_styled2.default)("div")`
+var LessonBodyVariant = (0, import_styled3.default)("div")`
   position: relative;
   border-radius: 15px;
   border: 2px solid #e5e5e5;
@@ -1383,16 +1488,15 @@ var LessonBodyVariant = (0, import_styled2.default)("div")`
   background-color: ${(props) => props.active ? "#E1F3FE" : "inherit"};
   color: ${(props) => props.active ? "#4897D1" : "inherit"};
 `;
-var LessonBodyWelcome = (0, import_styled2.default)("div")``;
-var LessonBodyResults = (0, import_styled2.default)("div")``;
-var VariantItem = (0, import_styled2.default)("button")`
+var LessonBodyWelcome = (0, import_styled3.default)("div")``;
+var LessonBodyResults = (0, import_styled3.default)("div")``;
+var VariantItem = (0, import_styled3.default)("button")`
   background-color: ${(props) => props.isFocused ? "rgb(221, 244, 255)" : "inherit"};
   height: 60px;
   border: 1px solid;
   border-color: ${(props) => props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  outline: 0;
   cursor: pointer;
   position: relative;
   touch-action: manipulation;
@@ -1405,18 +1509,20 @@ var VariantItem = (0, import_styled2.default)("button")`
   padding: 12px 16px;
   width: 100%;
 `;
-var LessonTitle2 = (0, import_styled2.default)("h1")`
-  font-size: 32px;
-  font-family: "Montserrat", sans-serif;
+var LessonTitle2 = (0, import_styled3.default)("h1")`
+  font-size: 30px;
+  font-family: "Nunito", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
   text-align: left;
-  font-weight: 700;
+  font-weight: 800;
+  cursor: default;
+  margin: 0;
 `;
-var LessonQuestion = (0, import_styled2.default)("p")`
+var LessonQuestion = (0, import_styled3.default)("p")`
   font-size: 19px;
   line-height: 39px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
   color: #3c3c3c;
   padding: 12px 24px;
   margin-left: 8px;
@@ -1424,8 +1530,9 @@ var LessonQuestion = (0, import_styled2.default)("p")`
   border: 2px solid #e5e5e5;
   border-radius: 15px;
   box-sizing: border-box;
+  cursor: default;
 `;
-var LessonQuestionTriangleContainer = (0, import_styled2.default)("div")`
+var LessonQuestionTriangleContainer = (0, import_styled3.default)("div")`
   height: 10px;
   overflow: hidden;
   width: 20px;
@@ -1435,7 +1542,7 @@ var LessonQuestionTriangleContainer = (0, import_styled2.default)("div")`
   top: calc(50% - 15px);
   transform: translateY(-50%) rotate(-90deg);
 `;
-var LessonQuestionTriangle = (0, import_styled2.default)("span")`
+var LessonQuestionTriangle = (0, import_styled3.default)("span")`
   box-sizing: border-box;
   position: absolute;
   background-color: #fff;
@@ -1462,7 +1569,7 @@ var messageIconAppear = import_react5.keyframes`
     transform: scale(1)
   }
 `;
-var LessonFooterIcon = (0, import_styled2.default)("div")`
+var LessonFooterIcon = (0, import_styled3.default)("div")`
   border-radius: 98px;
   display: block;
   float: left;
@@ -1478,28 +1585,27 @@ var LessonFooterIcon = (0, import_styled2.default)("div")`
   animation-fill-mode: forwards;
   animation-timing-function: linear;
 `;
-var ResultsContainer = (0, import_styled2.default)("section")`
+var ResultsContainer = (0, import_styled3.default)("section")`
   display: flex;
   height: calc(100vh - 140px);
   justify-content: center;
-  outline: none;
 `;
-var ResultsHiddenForm = (0, import_styled2.default)(import_remix3.Form)`
+var ResultsHiddenForm = (0, import_styled3.default)(import_remix4.Form)`
   position: absolute;
   width: 1px;
   height: 1px;
   top: -1000px;
   left: -1000px;
 `;
-var ResultsTitle = (0, import_styled2.default)("h2")`
+var ResultsTitle = (0, import_styled3.default)("h2")`
   margin: 0;
-  font-family: "Montserrat";
+  font-family: "Nunito";
 `;
-var ResultsLeftBlock = (0, import_styled2.default)("div")`
+var ResultsLeftBlock = (0, import_styled3.default)("div")`
   padding: 50px 100px;
   width: calc(50% - 1px);
 `;
-var ResultsSeparateLine = (0, import_styled2.default)("div")`
+var ResultsSeparateLine = (0, import_styled3.default)("div")`
   width: 4px;
   background-color: #e5e5e5;
 `;
@@ -1720,7 +1826,6 @@ var Lesson = (_a) => {
     style: {
       display: "flex",
       flexDirection: "column",
-      outline: "none",
       flexGrow: 1
     }
   }, /* @__PURE__ */ import_react10.default.createElement(LessonBody, null, import_react10.default.Children.map(children, (child) => {
@@ -1741,21 +1846,21 @@ var import_react13 = require("react");
 
 // app/modules/Constructor/Levels/components/lib.tsx
 init_react();
-var import_styled3 = __toESM(require("@emotion/styled"));
-var StepContent = (0, import_styled3.default)("div")`
+var import_styled4 = __toESM(require("@emotion/styled"));
+var StepContent = (0, import_styled4.default)("div")`
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
   padding: 60px 24px;
   min-height: 300px;
   margin-top: 20px;
 `;
-var StepHeader = (0, import_styled3.default)("div")`
+var StepHeader = (0, import_styled4.default)("div")`
   display: flex;
   justify-content: space-between;
   margin-top: 70px;
   position: relative;
 `;
-var ChooseStyle = (0, import_styled3.default)("div")`
+var ChooseStyle = (0, import_styled4.default)("div")`
   display: grid;
   grid-template-columns: max-content max-content;
   grid-template-rows: max-content max-content;
@@ -1763,14 +1868,14 @@ var ChooseStyle = (0, import_styled3.default)("div")`
   align-items: self-end;
   margin: auto 0;
 `;
-var StyleButton = (0, import_styled3.default)("button")`
+var StyleButton = (0, import_styled4.default)("button")`
   padding: 35px;
   font-size: 20px;
   border: none;
   cursor: pointer;
-  font-family: "Roboto";
+  font-family: "Nunito";
 `;
-var InsertWordsTextBlock = (0, import_styled3.default)("div")`
+var InsertWordsTextBlock = (0, import_styled4.default)("div")`
   min-height: 200px;
   flex-grow: 1;
   width: 100%;
@@ -1783,11 +1888,10 @@ var InsertWordsTextBlock = (0, import_styled3.default)("div")`
   align-items: flex-start;
   box-sizing: border-box;
   font-size: 19px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   line-height: 40px;
 `;
-var InsertWordsInput = (0, import_styled3.default)("input")`
-  outline: none;
+var InsertWordsInput = (0, import_styled4.default)("input")`
   border: none;
   font-size: 19px;
   margin: 9px 7px 0;
@@ -1799,16 +1903,15 @@ var InsertWordsInput = (0, import_styled3.default)("input")`
     cursor: default;
   }
 `;
-var InsertWordsAnswerField = (0, import_styled3.default)("span")`
+var InsertWordsAnswerField = (0, import_styled4.default)("span")`
   margin: 9px 7px 0;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
 `;
-var VariantItemInput = (0, import_styled3.default)("input")`
+var VariantItemInput = (0, import_styled4.default)("input")`
   border: 1px solid #e5e5e5;
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  outline: 0;
   position: relative;
   touch-action: manipulation;
   transform: translateZ(0);
@@ -1821,11 +1924,11 @@ var VariantItemInput = (0, import_styled3.default)("input")`
   padding: 12px 16px 12px 56px;
   width: 100%;
 `;
-var VariantItemNumber = (0, import_styled3.default)("span")`
+var VariantItemNumber = (0, import_styled4.default)("span")`
   border: 2px solid #e5e5e5;
-  border-color: ${(props) => props.isConnected ? "green" : props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
+  border-color: ${(props) => props.isConnected ? "#78C83D" : props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
   border-radius: 8px;
-  color: ${(props) => props.isConnected ? "green" : props.isFocused ? "rgb(24, 153, 214)" : "#afafaf"};
+  color: ${(props) => props.isConnected ? "#78C83D" : props.isFocused ? "rgb(24, 153, 214)" : "#afafaf"};
   font-size: 15px;
   font-weight: 700;
   height: 30px;
@@ -1839,12 +1942,12 @@ var VariantItemNumber = (0, import_styled3.default)("span")`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Roboto";
+  font-family: "Nunito";
 `;
-var SidebarList = (0, import_styled3.default)("ul")`
+var SidebarList = (0, import_styled4.default)("ul")`
   margin-bottom: auto;
 `;
-var SidebarBtn = (0, import_styled3.default)("button")`
+var SidebarBtn = (0, import_styled4.default)("button")`
   color: #3c3c3c;
   display: block;
   font-size: 16px;
@@ -1860,11 +1963,11 @@ init_react();
 
 // app/modules/Lesson/components/InsertWords/lib.ts
 init_react();
-var import_styled4 = __toESM(require("@emotion/styled"));
-var PuzzleContainer = (0, import_styled4.default)("section")`
+var import_styled5 = __toESM(require("@emotion/styled"));
+var PuzzleContainer = (0, import_styled5.default)("section")`
   width: 100%;
 `;
-var PuzzleList = (0, import_styled4.default)("ul")`
+var PuzzleList = (0, import_styled5.default)("ul")`
   list-style-type: none;
   padding: 0;
   margin: 30px 0 0;
@@ -1873,17 +1976,16 @@ var PuzzleList = (0, import_styled4.default)("ul")`
   flex-direction: row-reverse;
   justify-content: center;
 `;
-var PuzzleItem = (0, import_styled4.default)("li")`
+var PuzzleItem = (0, import_styled5.default)("li")`
   margin: 0 16px 8px 0;
   position: ${(props) => props.alreadyChoosen ? "absolute" : "relative"};
   top: ${(props) => props.alreadyChoosen ? "-1000px" : "0"};
 `;
-var VariantsContainer = (0, import_styled4.default)("section")`
+var VariantsContainer = (0, import_styled5.default)("section")`
   width: 100%;
   margin-top: 20px;
-  outline: none;
 `;
-var VariantsList = (0, import_styled4.default)("ul")`
+var VariantsList2 = (0, import_styled5.default)("ul")`
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -1891,7 +1993,7 @@ var VariantsList = (0, import_styled4.default)("ul")`
   flex-wrap: wrap;
   justify-content: space-between;
 `;
-var VariantsItem = (0, import_styled4.default)("li")`
+var VariantsItem2 = (0, import_styled5.default)("li")`
   position: relative;
   margin-bottom: 8px;
   width: 49%;
@@ -1962,7 +2064,7 @@ function Variants({
     tabIndex: 0,
     ref: myRef,
     onKeyDown: (e) => keyDownCheck(e, (e2) => KeyDownHandler(e2))
-  }, /* @__PURE__ */ React.createElement(VariantsList, null, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement(VariantsItem, {
+  }, /* @__PURE__ */ React.createElement(VariantsList2, null, variants.map(({ value }, idx) => /* @__PURE__ */ React.createElement(VariantsItem2, {
     key: idx,
     onClick: () => setValues([value])
   }, /* @__PURE__ */ React.createElement(VariantItemNumber, {
@@ -2243,12 +2345,12 @@ function QuestionAnswerScreen({
     }
   }, [skillState.status]);
   return /* @__PURE__ */ React.createElement(import_react15.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
-    style: { display: "flex", alignItems: "center" }
+    style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
     src: duo_default,
     alt: "Duo",
     height: 150,
-    style: { marginBottom: -60 }
+    style: { marginBottom: -50 }
   }), /* @__PURE__ */ React.createElement("div", {
     style: { position: "relative" }
   }, /* @__PURE__ */ React.createElement(LessonQuestion, null, question), /* @__PURE__ */ React.createElement(LessonQuestionTriangleContainer, null, /* @__PURE__ */ React.createElement(LessonQuestionTriangle, null)))), /* @__PURE__ */ React.createElement(Textarea, {
@@ -2657,7 +2759,7 @@ async function getLastAddedSkill(projectId, neighbors = false) {
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
 function ErrorBoundary2() {
-  const { title, chapter } = (0, import_remix4.useParams)();
+  const { title, chapter } = (0, import_remix5.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading skill with the title ${title} and chapter ${chapter}. Sorry.`);
@@ -2675,7 +2777,7 @@ var action = async ({ request, params }) => {
   }
   await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
-  return (0, import_remix4.redirect)(`/${language == null ? void 0 : language.title}/skills`);
+  return (0, import_remix5.redirect)(`/${language == null ? void 0 : language.title}/skills`);
 };
 var loader = async ({ params }) => {
   const skill = await prisma.skill.findFirst({
@@ -2690,7 +2792,7 @@ var loader = async ({ params }) => {
   return lessons;
 };
 function LessonScreen() {
-  const steps = (0, import_remix4.useLoaderData)();
+  const steps = (0, import_remix5.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
     steps
   });
@@ -2705,9 +2807,9 @@ __export(practice_exports, {
   loader: () => loader2
 });
 init_react();
-var import_remix5 = __toESM(require_remix());
+var import_remix6 = __toESM(require_remix());
 function ErrorBoundary3() {
-  const { title } = (0, import_remix5.useParams)();
+  const { title } = (0, import_remix6.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading skill by the title ${title}. Sorry.`);
@@ -2725,7 +2827,7 @@ var action2 = async ({ request, params }) => {
   }
   await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
-  return (0, import_remix5.redirect)(`/${language == null ? void 0 : language.title}/skills`);
+  return (0, import_remix6.redirect)(`/${language == null ? void 0 : language.title}/skills`);
 };
 var loader2 = async ({ params }) => {
   const skill = await prisma.skill.findUnique({
@@ -2740,7 +2842,7 @@ var loader2 = async ({ params }) => {
   return lessons;
 };
 function LessonScreen2() {
-  const steps = (0, import_remix5.useLoaderData)();
+  const steps = (0, import_remix6.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
     steps
   });
@@ -2757,7 +2859,7 @@ __export(language_exports, {
 init_react();
 var import_node2 = require("@remix-run/node");
 var import_react22 = __toESM(require("react"));
-var import_remix6 = __toESM(require_remix());
+var import_remix7 = __toESM(require_remix());
 
 // app/components/Menu.tsx
 init_react();
@@ -2837,8 +2939,14 @@ function Projects({
     required: true
   }), /* @__PURE__ */ React.createElement(LanguagesAddBtn, null, "+")) : /* @__PURE__ */ React.createElement(LanguagesItem, {
     type: "button",
-    onClick: () => setIsNewLanguage(true)
-  }, "Add new language")))));
+    onClick: () => setIsNewLanguage(true),
+    style: {
+      color: "rgb(175, 175, 175)",
+      fontSize: 14,
+      padding: "13px 20px",
+      borderBottom: "none"
+    }
+  }, "Add a new course")))));
 }
 
 // app/components/Menu.tsx
@@ -2881,19 +2989,15 @@ var Menu = ({
     style: { marginRight: 6 }
   }), /* @__PURE__ */ React.createElement("b", {
     style: {
-      fontFamily: "Roboto",
+      fontFamily: "Nunito",
       color: (user == null ? void 0 : user.wasToday) ? "#ff9600" : "#e5e5e5"
     }
-  }, user == null ? void 0 : user.streak)), /* @__PURE__ */ React.createElement(ListItem, null, /* @__PURE__ */ React.createElement("div", {
-    style: { display: "flex", alignItems: "center" }
-  }, /* @__PURE__ */ React.createElement("span", {
-    style: { marginRight: 10 }
-  }, user == null ? void 0 : user.username), /* @__PURE__ */ React.createElement("form", {
+  }, user == null ? void 0 : user.streak)), /* @__PURE__ */ React.createElement(ListItem, null, /* @__PURE__ */ React.createElement("form", {
     action: "/logout",
     method: "post"
   }, /* @__PURE__ */ React.createElement(Logout, {
     type: "submit"
-  }, "Logout"))))));
+  }, "Logout")))));
 };
 var Menu_default = Menu;
 
@@ -2949,7 +3053,7 @@ async function getLessonsBySkillId(id) {
 }
 
 // app/styles/index.css
-var styles_default = "/build/_assets/index-2LRZZKOC.css";
+var styles_default = "/build/_assets/index-N3DJ5BPL.css";
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language.tsx
 var links = () => {
@@ -3000,13 +3104,13 @@ var loader3 = async ({ request }) => {
   return { user, languages };
 };
 function ProjectPage() {
-  const { user, languages } = (0, import_remix6.useLoaderData)();
+  const { user, languages } = (0, import_remix7.useLoaderData)();
   const [isOverlay, setIsOverlay] = (0, import_react22.useState)(false);
   return /* @__PURE__ */ import_react22.default.createElement(import_react22.default.Fragment, null, /* @__PURE__ */ import_react22.default.createElement(Menu_default, {
     user,
     languages,
     onOverlay: setIsOverlay
-  }), /* @__PURE__ */ import_react22.default.createElement(Main, null, /* @__PURE__ */ import_react22.default.createElement(import_remix6.Outlet, null)), /* @__PURE__ */ import_react22.default.createElement(Overlay, {
+  }), /* @__PURE__ */ import_react22.default.createElement(Main, null, /* @__PURE__ */ import_react22.default.createElement(import_remix7.Outlet, null)), /* @__PURE__ */ import_react22.default.createElement(Overlay, {
     active: isOverlay
   }));
 }
@@ -3030,97 +3134,6 @@ var import_react36 = require("react");
 // app/modules/Constructor/components/SkillInfo.tsx
 init_react();
 var import_react23 = require("react");
-
-// app/modules/Constructor/components/lib.ts
-init_react();
-var import_styled5 = __toESM(require("@emotion/styled"));
-var import_remix7 = __toESM(require_remix());
-var ConstructorForm = (0, import_styled5.default)(import_remix7.Form)`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  height: calc(100vh - 95px);
-`;
-var ConstructorFormInner = (0, import_styled5.default)("section")`
-  max-width: 70%;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  position: relative;
-  padding-left: 30px;
-`;
-var LessonTitleInput = (0, import_styled5.default)("input")`
-  width: fit-content;
-  margin: 0 auto;
-  text-align: center;
-  border: none;
-  font-size: 17px;
-  font-weight: 700;
-  color: #3c3c3c;
-  text-align: center;
-  margin-top: 8px;
-`;
-var ConstructorMenu = (0, import_styled5.default)("div")`
-  background: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 16px;
-  display: block;
-  margin: 0 24px 24px;
-  padding: 24px;
-  width: 380px;
-`;
-var ScreenContainer = (0, import_styled5.default)("section")`
-  position: absolute;
-  top: 0;
-  width: 100%;
-  text-align: center;
-  visibility: ${(props) => props.screen !== props.target ? "hidden" : "visible"};
-`;
-var ConstructorSidebar = (0, import_styled5.default)("section")`
-  max-width: 25%;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 71px;
-  position: relative;
-  background-color: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 16px;
-  margin: 0 24px 24px;
-  padding: 24px;
-`;
-var BtnClose = (0, import_styled5.default)("button")`
-  position: absolute;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  border: none;
-  background-color: inherit;
-  padding: 0;
-  left: 30px;
-  bottom: -60px;
-`;
-var BtnCloseImage = (0, import_styled5.default)("img")`
-  width: 16px;
-  height: 16px;
-  vertical-align: initial;
-`;
-var VariantsList2 = (0, import_styled5.default)("ul")`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-var VariantsItem2 = (0, import_styled5.default)("li")`
-  min-width: 240px;
-`;
-var PairsList = (0, import_styled5.default)("ul")`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-// app/modules/Constructor/components/SkillInfo.tsx
 function SkillInfo({
   title = "",
   actionData,
@@ -3167,7 +3180,7 @@ function SkillInfo({
     style: { width: "100%", maxWidth: "440px", margin: "0 auto" }
   }, /* @__PURE__ */ React.createElement("h2", {
     style: { marginTop: 60 }
-  }, "Choose position for the skill"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedSkills.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
+  }, "Skill position"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedSkills.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
     key: lastAdded.id
   }, /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
@@ -3600,7 +3613,7 @@ function Variants2({ state = initialState }) {
     value: question === null ? "" : question,
     onChange: (e) => setQuestion(e.target.value),
     required: true
-  }), /* @__PURE__ */ React.createElement(VariantsList2, null, variants.map((variant, index) => /* @__PURE__ */ React.createElement(VariantsItem2, {
+  }), /* @__PURE__ */ React.createElement(VariantsList, null, variants.map((variant, index) => /* @__PURE__ */ React.createElement(VariantsItem, {
     key: variant.idx,
     style: { marginBottom: 5 }
   }, /* @__PURE__ */ React.createElement("label", {
@@ -3728,7 +3741,7 @@ function Backend({
     return /* @__PURE__ */ React.createElement("span", {
       style: {
         marginRight: 3,
-        border: words.find((word) => word === item) ? "1px solid green" : "none"
+        border: words.find((word) => word === item) ? "1px solid #78C83D" : "none"
       },
       key: idx,
       onClick: () => {
@@ -3877,7 +3890,7 @@ function CloseBtn({
     onClick: onClickHandler
   }, /* @__PURE__ */ React.createElement(BtnCloseImage, {
     src: close_default,
-    alt: "close"
+    alt: "Close"
   }));
 }
 
@@ -3998,12 +4011,12 @@ function QuestionAnswer({ state = initialState4 }) {
   return stepType === "Question" ? /* @__PURE__ */ React.createElement(import_react32.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
     style: { padding: "0 25%" }
   }, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
-    style: { display: "flex", alignItems: "center" }
+    style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
     src: duo_default,
     alt: "Duo",
     height: 150,
-    style: { marginBottom: -60 }
+    style: { marginBottom: -50 }
   }), /* @__PURE__ */ React.createElement("div", {
     style: { position: "relative" }
   }, /* @__PURE__ */ React.createElement(LessonQuestion, null, /* @__PURE__ */ React.createElement("input", {
@@ -4578,7 +4591,7 @@ init_react();
 function Footer2() {
   return /* @__PURE__ */ React.createElement("footer", null, /* @__PURE__ */ React.createElement(FooterLine, null), /* @__PURE__ */ React.createElement("div", {
     style: { paddingBottom: 28 }
-  }, /* @__PURE__ */ React.createElement(FooterText, null, "Inspired by", " ", /* @__PURE__ */ React.createElement("a", {
+  }, /* @__PURE__ */ React.createElement(FooterText, null, "Inspired by", " ", /* @__PURE__ */ React.createElement(LinkWithHover, {
     href: "https://www.duolingo.com",
     target: "_blank"
   }, "Duolingo"))));
@@ -4678,7 +4691,8 @@ var practice_last_added_default = "/build/_assets/practice_last_added-HKEJVFEX.s
 // app/components/PracticeLastAdded.tsx
 function PracticeLastAdded() {
   return /* @__PURE__ */ React.createElement(PracticeLastAddedContainer, null, /* @__PURE__ */ React.createElement(PracticeLastAddedLink, {
-    to: "/practice"
+    to: "/practice",
+    title: "Practice"
   }, /* @__PURE__ */ React.createElement("img", {
     src: practice_last_added_default,
     alt: "Practice last added lessons",
@@ -4978,7 +4992,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "3cc7457d", "entry": { "module": "/build/entry.client-EHID3JDN.js", "imports": ["/build/_shared/chunk-YAWGN5V2.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-WHMY6P7W.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-NOUTUOZH.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-Y43DLENM.js", "imports": ["/build/_shared/chunk-4PTW53LX.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-F3PJPSXE.js", "imports": ["/build/_shared/chunk-4PTW53LX.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-FQIMXMPQ.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-FWSZ5WAQ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-5RN7EAU4.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-C2YN3ECE.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-MUH3VXTY.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-5CWTZXWQ.js", "imports": ["/build/_shared/chunk-P7K6UZ4P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WOR3GWEJ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-YPFIR4LL.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-3CC7457D.js" };
+var assets_manifest_default = { "version": "f5c6a839", "entry": { "module": "/build/entry.client-EHID3JDN.js", "imports": ["/build/_shared/chunk-YAWGN5V2.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-DL5BFXH3.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-S6QDYZEA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$topicId": { "id": "routes/$language/constructor/$topicId", "parentId": "routes/$language", "path": "constructor/:topicId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$topicId-5JD77AE5.js", "imports": ["/build/_shared/chunk-E3C6FRWD.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-HHW5G4KW.js", "imports": ["/build/_shared/chunk-E3C6FRWD.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-XTDES3NK.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-KM3SO2ZA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-DY4TWNFG.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-C2YN3ECE.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-YULMSXCW.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-4OE3AJS7.js", "imports": ["/build/_shared/chunk-M72R5C6F.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XCBFT3MZ.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-SSGQBYWV.js", "/build/_shared/chunk-PPZYSMK3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-F5C6A839.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

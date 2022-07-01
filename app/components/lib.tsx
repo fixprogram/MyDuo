@@ -143,7 +143,7 @@ const LessonBlockLink = styled(Link)`
   border-color: inherit;
   border-radius: 18px;
   text-decoration: none;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 500;
   letter-spacing: 0.8px;
   &:hover {
@@ -165,7 +165,7 @@ const LessonBlockButton = styled("button")`
   border-color: inherit;
   border-radius: 18px;
   text-decoration: none;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 500;
   letter-spacing: 0.8px;
   &:hover img {
@@ -189,7 +189,7 @@ const LessonBlockTitle = styled("div")`
   & h2 {
     font-size: 24px;
     font-weight: 700;
-    font-family: "Roboto";
+    font-family: "Nunito";
     color: #4b4b4b;
     flex-grow: 0.3;
   }
@@ -212,16 +212,18 @@ const UserImage = styled.img(
 
 const ProgressBarContainer = styled("div")`
   width: 100%;
-  margin-top: 1px;
-  border-top: 1px solid #dbdddd;
-  padding-top: 46px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 50px 40px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 const ProgressBar = styled("div")<ProgressProps>`
-  width: 61%;
+  // width: 61%;
+  width: 100%;
   height: 16px;
   position: relative;
   background-color: #e5e5e5;
@@ -268,10 +270,9 @@ const Input = styled("input")`
 const Textarea = styled("textarea")`
   background-color: rgb(247, 247, 247);
   border: 2px solid rgb(229, 229, 229);
-  border-color: rgb(229, 229, 229);
   border-radius: 10px;
   padding: 10px 12px;
-  min-height: 200px;
+  min-height: 170px;
   width: 100%;
   -webkit-appearance: none;
   resize: none;
@@ -283,7 +284,7 @@ const Textarea = styled("textarea")`
   line-height: 24px;
   color: #3c3c3c;
   font-size: 19px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 400;
   letter-spacing: 1px;
 `;
@@ -291,7 +292,7 @@ const Textarea = styled("textarea")`
 const LoginTitle = styled("h1")`
   font-size: 26px;
   margin: 10px 0 15px;
-  font-family: Montserrat;
+  font-family: Nunito;
   font-weight: 700;
   text-align: center;
 `;
@@ -315,7 +316,7 @@ const LabelText = styled("span")`
   cursor: pointer;
   color: #4b4b4b;
   font-size: 15px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 700;
   letter-spacing: 0.6px;
 `;
@@ -328,7 +329,7 @@ const Legend = styled("legend")`
   margin-bottom: 14px;
   margin-top: 0;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
 `;
 
 const FormButton = styled("button")<FormButtonProps>`
@@ -343,7 +344,7 @@ const FormButton = styled("button")<FormButtonProps>`
   cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   width: 150px;
   text-transform: uppercase;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -373,7 +374,7 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   font-family: Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: 700;
-  font-family: "Roboto";
+  font-family: "Nunito";
   color: #1cb0f6;
   position: relative;
 `;
@@ -443,8 +444,7 @@ const LoginInput = styled("input")`
   line-height: 27px;
   width: 100%;
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-  outline: none;
+  font-family: "Nunito", sans-serif;
   font-size: 100%;
   background: #f7f7f7;
   border: 2px solid #e5e5e5;
@@ -458,7 +458,7 @@ const LoginButton = styled("button")`
   margin-top: 20px;
   width: 100%;
   letter-spacing: 0.8px;
-  font: 600 15px "Roboto";
+  font: 600 15px "Nunito";
   padding: 0 16px;
   height: 50px;
   color: white;
@@ -475,7 +475,7 @@ const LoginToggle = styled("label")`
   top: 0;
   right: 0;
   letter-spacing: 0.8px;
-  font: 600 15px "Roboto";
+  font: 600 15px "Nunito";
   line-height: 1.2;
   padding: 0 16px;
   height: 50px;
@@ -504,19 +504,27 @@ const MenuContainer = styled("div")`
 const MenuNavLink = styled(NavLink)`
   text-decoration: none;
   text-transform: uppercase;
-  font-family: "Montserrat";
-  font-weight: 600;
+  font-family: "Nunito";
+  font-weight: 700;
+  font-size: 15px;
   color: #afafaf;
   letter-spacing: 0.8px;
   display: flex;
   align-items: center;
+  transition: filter 0.2s ease;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
+  &.active:hover {
+    filter: none;
+  }
 `;
 
 const ActiveLanguageButton = styled("button")`
   color: #3c3c3c;
   border: none;
   background-color: inherit;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-weight: 700;
   letter-spacing: 0.8px;
   cursor: pointer;
@@ -547,13 +555,17 @@ const LanguagesItem = styled("button")`
   border-bottom: 2px solid #dadcde;
   width: 100%;
   cursor: pointer;
-  padding: 20px 20px;
+  padding: 16px 20px;
   background-color: inherit;
   color: #3c3c3c;
-  font-family: "Montserrat";
-  font-weight: 700;
+  font-family: "Nunito";
+  font-weight: 600;
   letter-spacing: 0.8px;
   text-align: left;
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: rgba(175, 175, 175, 0.15);
+  }
 `;
 
 const LanguagesInput = styled("input")`
@@ -565,7 +577,7 @@ const LanguagesInput = styled("input")`
   padding: 20px 30px 20px 20px;
   background-color: inherit;
   color: #3c3c3c;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-weight: 700;
   letter-spacing: 0.8px;
   text-align: left;
@@ -596,10 +608,14 @@ const Logout = styled("button")`
   cursor: pointer;
   background-color: inherit;
   color: #afafaf;
-  font-family: "Montserrat";
-  font-weight: 700;
+  font-family: "Nunito";
+  font-weight: 600;
   letter-spacing: 0.8px;
   padding: 0;
+  transition: filter 0.2s ease;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
 `;
 
 const PracticeLastAddedContainer = styled("div")`
@@ -625,17 +641,11 @@ const PracticeLastAddedLink = styled(Link)`
   width: 100%;
   height: 100%;
   filter: inherit;
-  // background-color: #fff;
-  // border-radius: 50%;
-  // transition: 0.2s ease;
-  // &:hover {
-  //   filter: brightness(0.9);
-  // }
 `;
 
 const ErrorMessage = styled("p")`
   line-height: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -655,7 +665,7 @@ const ExpProgressTitle = styled("h2")`
   font-size: 24px;
   line-height: 26px;
   margin: 0 0 25px;
-  font-family: Montserrat;
+  font-family: Nunito;
   font-weight: 700;
 `;
 
@@ -668,7 +678,7 @@ const FooterLine = styled("hr")`
 const FooterText = styled("p")`
   text-align: center;
   color: #afafaf;
-  font-family: Roboto;
+  font-family: Nunito;
   margin: 0;
 `;
 
@@ -684,6 +694,12 @@ const SkillsLineBlock = styled("div")`
   width: 100%;
   max-width: 440px;
   margin: 0 auto 38px auto;
+`;
+
+const LinkWithHover = styled("a")`
+  &:hover {
+    filter: brightness(1.3);
+  }
 `;
 
 export {
@@ -745,4 +761,5 @@ export {
   FooterText,
   SkillsListContainer,
   SkillsLineBlock,
+  LinkWithHover,
 };

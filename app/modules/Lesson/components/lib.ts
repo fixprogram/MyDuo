@@ -27,7 +27,6 @@ const LessonContainer = styled("section")`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  outline: none;
 `;
 
 const LessonFooter = styled("section")<LessonFooterProps>`
@@ -46,7 +45,7 @@ const LessonFooter = styled("section")<LessonFooterProps>`
 `;
 
 const LessonFooterInner = styled("div")`
-  max-width: 1000px;
+  max-width: 920px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -63,7 +62,7 @@ const LessonFooterMessage = styled("div")<LessonFooterProps>`
 
 const LessonFooterTitle = styled("h2")`
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
   line-height: 30px;
   font-size: 24px;
   letter-spacing: 0.2px;
@@ -72,7 +71,7 @@ const LessonFooterTitle = styled("h2")`
 const LessonFooterText = styled("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   overflow-y: scroll;
   max-height: 60px;
 `;
@@ -107,9 +106,9 @@ const LessonButton = styled("button")<LessonButtonProps>`
   width: 150px;
   cursor: ${(props) => (props.active || props.skip ? "pointer" : "default")};
   text-transform: uppercase;
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: 0.8px;
   border-radius: 15px;
   padding: 0 20px;
@@ -139,7 +138,7 @@ const LessonAppear = keyframes`
 `;
 
 const LessonBody = styled("div")`
-  margin: 72px 30% 4%;
+  margin: 72px 29% 4%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -150,7 +149,7 @@ const LessonBody = styled("div")`
 `;
 
 const LessonBodyTitle = styled("h3")`
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-size: 23px;
   font-weight: 700;
   color: #4b4b4b;
@@ -166,7 +165,7 @@ const LessonBodyTitle = styled("h3")`
 const LessonBodyMessage = styled("div")`
   padding: 12px 15px 12px 21px;
   border: 2px solid #dedede;
-  font-family: "Roboto";
+  font-family: "Nunito";
   font-weight: 400;
   font-size: 18px;
   color: #4c4c4c;
@@ -217,7 +216,6 @@ const VariantItem = styled("button")<VariantItemProps>`
     props.isFocused ? "rgb(132, 216, 255)" : "#e5e5e5"};
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  outline: 0;
   cursor: pointer;
   position: relative;
   touch-action: manipulation;
@@ -232,18 +230,20 @@ const VariantItem = styled("button")<VariantItemProps>`
 `;
 
 const LessonTitle = styled("h1")`
-  font-size: 32px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 30px;
+  font-family: "Nunito", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
   text-align: left;
-  font-weight: 700;
+  font-weight: 800;
+  cursor: default;
+  margin: 0;
 `;
 
 const LessonQuestion = styled("p")`
   font-size: 19px;
   line-height: 39px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito", sans-serif;
   color: #3c3c3c;
   padding: 12px 24px;
   margin-left: 8px;
@@ -251,6 +251,7 @@ const LessonQuestion = styled("p")`
   border: 2px solid #e5e5e5;
   border-radius: 15px;
   box-sizing: border-box;
+  cursor: default;
 `;
 
 const LessonQuestionTriangleContainer = styled("div")`
@@ -316,7 +317,6 @@ const ResultsContainer = styled("section")`
   display: flex;
   height: calc(100vh - 140px);
   justify-content: center;
-  outline: none;
 `;
 
 const ResultsHiddenForm = styled(Form)`
@@ -329,7 +329,7 @@ const ResultsHiddenForm = styled(Form)`
 
 const ResultsTitle = styled("h2")`
   margin: 0;
-  font-family: "Montserrat";
+  font-family: "Nunito";
 `;
 
 const ResultsLeftBlock = styled("div")`

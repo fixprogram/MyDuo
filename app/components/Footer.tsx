@@ -1,4 +1,4 @@
-import { FooterLine, FooterText } from "./lib";
+import { FooterLine, FooterText, LinkWithHover } from "./lib";
 
 export default function Footer() {
   return (
@@ -7,9 +7,9 @@ export default function Footer() {
       <div style={{ paddingBottom: 28 }}>
         <FooterText>
           Inspired by{" "}
-          <a href="https://www.duolingo.com" target="_blank">
+          <LinkWithHover href="https://www.duolingo.com" target="_blank">
             Duolingo
-          </a>
+          </LinkWithHover>
         </FooterText>
       </div>
     </footer>

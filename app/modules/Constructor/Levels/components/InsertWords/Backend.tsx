@@ -31,7 +31,7 @@ export default function Backend({
             style={{
               marginRight: 3,
               border: words.find((word) => word === item)
-                ? "1px solid green"
+                ? "1px solid #78C83D"
                 : "none",
             }}
             key={idx}

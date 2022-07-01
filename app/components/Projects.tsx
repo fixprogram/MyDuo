@@ -84,8 +84,14 @@ export default function Projects({
                 <LanguagesItem
                   type="button"
                   onClick={() => setIsNewLanguage(true)}
+                  style={{
+                    color: "rgb(175, 175, 175)",
+                    fontSize: 14,
+                    padding: "13px 20px",
+                    borderBottom: "none",
+                  }}
                 >
-                  Add new language
+                  Add a new course
                 </LanguagesItem>
               )}
             </fieldset>

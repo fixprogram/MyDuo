@@ -82,6 +82,11 @@ const BtnCloseImage = styled("img")`
   width: 16px;
   height: 16px;
   vertical-align: initial;
+  transition: filter 0.2s ease;
+  opacity: 0.3;
+  &:hover {
+    filter: brightness(0.7) contrast(2.5);
+  }
 `;
 
 const VariantsList = styled("ul")`

@@ -76,7 +76,7 @@ const Menu = ({
           />
           <b
             style={{
-              fontFamily: "Roboto",
+              fontFamily: "Nunito",
               color: user?.wasToday ? "#ff9600" : "#e5e5e5",
             }}
           >
@@ -84,12 +84,9 @@ const Menu = ({
           </b>
         </ListItem>
         <ListItem>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <span style={{ marginRight: 10 }}>{user?.username}</span>
-            <form action="/logout" method="post">
-              <Logout type="submit">Logout</Logout>
-            </form>
-          </div>
+          <form action="/logout" method="post">
+            <Logout type="submit">Logout</Logout>
+          </form>
         </ListItem>
       </HorizontalList>
     </MenuContainer>

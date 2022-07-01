@@ -37,8 +37,10 @@ export default function QuestionAnswerScreen({
     <Fragment>
       <LessonTitle>Answer the question</LessonTitle>
       <section>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
+        <div
+          style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
+        >
+          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} />
           <div style={{ position: "relative" }}>
             <LessonQuestion>{question}</LessonQuestion>
             <LessonQuestionTriangleContainer>

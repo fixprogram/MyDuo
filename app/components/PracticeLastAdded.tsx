@@ -4,7 +4,7 @@ import { PracticeLastAddedContainer, PracticeLastAddedLink } from "./lib";
 export default function PracticeLastAdded() {
   return (
     <PracticeLastAddedContainer>
-      <PracticeLastAddedLink to="/practice">
+      <PracticeLastAddedLink to="/practice" title="Practice">
         <img
           src={Icon}
           alt="Practice last added lessons"

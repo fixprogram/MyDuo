@@ -60,7 +60,7 @@ export default function SkillInfo({
 
       {lastAddedSkills.length > 0 && (
         <div style={{ width: "100%", maxWidth: "440px", margin: "0 auto" }}>
-          <h2 style={{ marginTop: 60 }}>Choose position for the skill</h2>
+          <h2 style={{ marginTop: 60 }}>Skill position</h2>
           <LessonsBlock>
             {lastAddedSkills.map((lastAdded: Skill) => (
               <LessonsContainer key={lastAdded.id}>

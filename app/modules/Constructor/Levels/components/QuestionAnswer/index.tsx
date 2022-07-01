@@ -38,12 +38,12 @@ export default function QuestionAnswer({ state = initialState }) {
 
   return stepType === "Question" ? (
     <Fragment>
-      {/* <input type="hidden" name={`type${number}`} value={"Question"} /> */}
-
       <fieldset style={{ padding: "0 25%" }}>
         <LessonTitle>Answer the question</LessonTitle>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -60 }} />
+        <div
+          style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
+        >
+          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} />
           <div style={{ position: "relative" }}>
             <LessonQuestion>
               <input

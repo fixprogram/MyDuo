@@ -43,7 +43,7 @@ const StyleButton = styled("button")`
   font-size: 20px;
   border: none;
   cursor: pointer;
-  font-family: "Roboto";
+  font-family: "Nunito";
 `;
 
 const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
@@ -59,12 +59,11 @@ const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   align-items: flex-start;
   box-sizing: border-box;
   font-size: 19px;
-  font-family: "Roboto";
+  font-family: "Nunito";
   line-height: 40px;
 `;
 
 const InsertWordsInput = styled("input")<InsertWordsInputProps>`
-  outline: none;
   border: none;
   font-size: 19px;
   margin: 9px 7px 0;
@@ -87,7 +86,6 @@ const VariantItemInput = styled("input")`
   border: 1px solid #e5e5e5;
   border-radius: 12px;
   border-width: 2px 2px 4px;
-  outline: 0;
   position: relative;
   touch-action: manipulation;
   transform: translateZ(0);
@@ -105,14 +103,14 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   border: 2px solid #e5e5e5;
   border-color: ${(props) =>
     props.isConnected
-      ? "green"
+      ? "#78C83D"
       : props.isFocused
       ? "rgb(132, 216, 255)"
       : "#e5e5e5"};
   border-radius: 8px;
   color: ${(props) =>
     props.isConnected
-      ? "green"
+      ? "#78C83D"
       : props.isFocused
       ? "rgb(24, 153, 214)"
       : "#afafaf"};
@@ -129,7 +127,7 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Roboto";
+  font-family: "Nunito";
 `;
 
 const SidebarList = styled("ul")`

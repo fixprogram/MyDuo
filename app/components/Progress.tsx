@@ -5,19 +5,14 @@ import {
   ProgressLeaveLesson,
 } from "~/components/lib";
 import { useSkill } from "~/modules/Lesson";
+import { BtnCloseImage } from "~/modules/Constructor/components/lib";
 
 const Progress = () => {
   const { progress } = useSkill();
   return (
     <ProgressBarContainer>
       <ProgressLeaveLesson to="/">
-        <img
-          src={CloseIcon}
-          alt="Close the skill"
-          width={16}
-          height={16}
-          style={{ verticalAlign: "initial" }}
-        />
+        <BtnCloseImage src={CloseIcon} alt="Close the skill" />
       </ProgressLeaveLesson>
       <ProgressBar progress={progress} />
     </ProgressBarContainer>
