@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Textarea } from "~/components/lib";
 import {
   LessonTitle,
@@ -34,7 +34,7 @@ export default function QuestionAnswerScreen({
   }, [skillState.status]);
 
   return (
-    <Fragment>
+    <>
       <LessonTitle>Answer the question</LessonTitle>
       <section>
         <div
@@ -58,6 +58,6 @@ export default function QuestionAnswerScreen({
           ref={myRef}
         />
       </section>
-    </Fragment>
+    </>
   );
 }

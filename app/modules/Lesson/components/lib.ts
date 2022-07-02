@@ -344,6 +344,7 @@ const ResultsContainer = styled("section")`
   display: flex;
   height: calc(100vh - 140px);
   justify-content: center;
+  outline: none;
 `;
 
 const ResultsHiddenForm = styled(Form)`

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import { VariantItem } from "~/modules/Lesson/components/lib";
 import { VariantItemInput } from "../lib";
 
@@ -9,9 +9,16 @@ export default function ChooseMissingWords({ words, number }) {
 
   return (
     <div style={{ width: "100%" }}>
-      <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
+      <ul
+        style={{
+          listStyleType: "none",
+          padding: 0,
+          margin: "30px 0",
+          display: words.length > 1 ? "flex" : "block",
+        }}
+      >
         {words.length === 1 ? (
-          <Fragment>
+          <>
             <li>
               <VariantItem
                 type="button"
@@ -31,10 +38,13 @@ export default function ChooseMissingWords({ words, number }) {
                 required
               />
             ))}
-          </Fragment>
+          </>
         ) : (
           words.map((word, idx: number) => (
-            <li key={idx} style={{ position: "relative", marginBottom: 8 }}>
+            <li
+              key={idx}
+              style={{ position: "relative", marginBottom: 8, marginRight: 16 }}
+            >
               <VariantItem type="button" isFocused={false}>
                 {word}
               </VariantItem>

@@ -63,57 +63,59 @@ export default function InsertWords({ state = initialState }) {
 
       <LessonTitle>Add missing words</LessonTitle>
 
-      <Textarea
-        name={`text${number}`}
-        placeholder="Type text"
-        value={answer}
-        onChange={(evt) => {
-          setAnswer(evt.target.value, number);
-        }}
-        ref={ref}
-        required
-      />
+      <div style={{ marginTop: 30 }}>
+        <Textarea
+          name={`text${number}`}
+          placeholder="Type text"
+          value={answer}
+          onChange={(evt) => {
+            setAnswer(evt.target.value, number);
+          }}
+          ref={ref}
+          required
+        />
 
-      <InsertWordsTextBlock showText={showText} style={{ marginTop: -176 }}>
-        {answer.split(" ").map((item, idx) => {
-          const { newItem, sign } = doesItemContainSign(item);
+        <InsertWordsTextBlock showText={showText} style={{ marginTop: -176 }}>
+          {answer.split(" ").map((item, idx) => {
+            const { newItem, sign } = doesItemContainSign(item);
 
-          if (!isItemInArray(words, item)) {
+            if (!isItemInArray(words, item)) {
+              return (
+                <span style={{ marginRight: 3 }} key={idx}>
+                  {item}
+                </span>
+              );
+            }
+
+            if (sign) {
+              return (
+                <Fragment key={idx}>
+                  <InsertWordsInput type="text" length={newItem.length} />
+                  <span>{sign}</span>
+                </Fragment>
+              );
+            }
+
             return (
-              <span style={{ marginRight: 3 }} key={idx}>
-                {item}
-              </span>
+              <InsertWordsInput type="text" key={idx} length={newItem.length} />
             );
-          }
+          })}
 
-          if (sign) {
-            return (
-              <Fragment key={idx}>
-                <InsertWordsInput type="text" length={newItem.length} />
-                <span>{sign}</span>
-              </Fragment>
-            );
-          }
+          {isChooseVariants && (
+            <ChooseMissingWords words={words} number={number} />
+          )}
+        </InsertWordsTextBlock>
 
-          return (
-            <InsertWordsInput type="text" key={idx} length={newItem.length} />
-          );
-        })}
-
-        {isChooseVariants && (
-          <ChooseMissingWords words={words} number={number} />
-        )}
-      </InsertWordsTextBlock>
-
-      <Backend
-        words={words}
-        answer={answer}
-        setWords={setWords}
-        showText={setShowText}
-        setChooseVariants={setChooseVariants}
-        setShowText={setShowText}
-        isChooseVariants={isChooseVariants}
-      />
+        <Backend
+          words={words}
+          answer={answer}
+          setWords={setWords}
+          showText={setShowText}
+          setChooseVariants={setChooseVariants}
+          setShowText={setShowText}
+          isChooseVariants={isChooseVariants}
+        />
+      </div>
     </fieldset>
   ) : null;
 }

@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
 import { doesItemContainSign } from "~/utils";
 import { useConstructor } from "~/modules/Constructor";
@@ -37,7 +37,7 @@ export default function QuestionAnswer({ state = initialState }) {
   }, []);
 
   return stepType === "Question" ? (
-    <Fragment>
+    <>
       <fieldset style={{ padding: "0 25%" }}>
         <LessonTitle>Answer the question</LessonTitle>
         <div
@@ -93,6 +93,6 @@ export default function QuestionAnswer({ state = initialState }) {
           readOnly
         />
       </TextareaLabel>
-    </Fragment>
+    </>
   ) : null;
 }

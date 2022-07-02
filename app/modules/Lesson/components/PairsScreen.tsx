@@ -1,5 +1,5 @@
 import { Variant } from "@prisma/client";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { LessonTitle, PairsItem, PairsList, VariantItem } from "./lib";
 
 type PairsScreenProps = {
@@ -25,7 +25,7 @@ export default function PairsScreen({
   };
 
   return (
-    <Fragment>
+    <>
       <LessonTitle>Connect pairs</LessonTitle>
 
       <PairsList>
@@ -56,6 +56,6 @@ export default function PairsScreen({
           </PairsItem>
         ))}
       </PairsList>
-    </Fragment>
+    </>
   );
 }

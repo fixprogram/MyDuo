@@ -60,13 +60,12 @@ const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   box-sizing: border-box;
   font-size: 19px;
   font-family: "Nunito";
-  line-height: 40px;
 `;
 
 const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   border: none;
   font-size: 19px;
-  margin: 9px 7px 0;
+  margin: 0 7px;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
@@ -83,7 +82,7 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
 `;
 
 const InsertWordsAnswerField = styled("span")<InsertWordsInputProps>`
-  margin: 9px 7px 0;
+  margin: 0 7px;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
 `;

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Form } from "@remix-run/react";
 import {
   ActiveLanguageButton,
@@ -34,7 +34,7 @@ export default function Projects({
   }
 
   return (
-    <Fragment>
+    <>
       <ActiveLanguageButton
         type="button"
         onMouseEnter={showModal}
@@ -99,6 +99,6 @@ export default function Projects({
           </LanguagesContainer>
         )}
       </ActiveLanguageContainer>
-    </Fragment>
+    </>
   );
 }

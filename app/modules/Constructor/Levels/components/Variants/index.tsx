@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Textarea } from "~/components/lib";
 import { VariantItemInput, VariantItemNumber } from "../lib";
 import { reducer, Variant } from "../MatchingPairs/reducer";
@@ -65,7 +65,7 @@ export default function Variants({ state = initialState }) {
   }, [variants, question]);
 
   return stepType === "Variants" ? (
-    <Fragment>
+    <>
       <input type="hidden" name={`answer${number}`} value={answer} />
 
       <fieldset style={{ padding: "0 25%" }}>
@@ -117,6 +117,6 @@ export default function Variants({ state = initialState }) {
           </VariantsList>
         </div>
       </fieldset>
-    </Fragment>
+    </>
   ) : null;
 }

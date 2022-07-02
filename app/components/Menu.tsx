@@ -12,7 +12,6 @@ import studyActive from "~/styles/study-active.svg";
 import streak from "~/styles/streak.svg";
 import streakActive from "~/styles/streak-active.svg";
 import shopActive from "~/styles/shop-active.svg";
-import { Fragment } from "react";
 import Projects from "./Projects";
 import { Language, User } from "@prisma/client";
 
@@ -52,10 +51,10 @@ const Menu = ({
                 prefetch="render"
               >
                 {({ isActive }) => (
-                  <Fragment>
+                  <>
                     <NavIcon src={isActive ? activeIcon : icon} alt={title} />
                     {title}
-                  </Fragment>
+                  </>
                 )}
               </MenuNavLink>
             </ListItem>

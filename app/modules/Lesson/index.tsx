@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  Fragment,
-  useContext,
-  createContext,
-  createRef,
-} from "react";
+import { useEffect, useContext, createContext, createRef } from "react";
 
 import Progress from "~/components/Progress";
 import { useSkillReducer, defaultSkillContextState } from "./reducer";
@@ -54,18 +48,18 @@ export default function Skill({ steps }: { steps: LessonType[] }) {
     <SkillContext.Provider value={{ ...value, continueSkill: onContinue }}>
       <LessonContainer>
         {status === "results" ? (
-          <Fragment>
+          <>
             <Results onSubmit={onContinue} ref={resultsFormRef} />
             <Footer />
-          </Fragment>
+          </>
         ) : (
-          <Fragment>
+          <>
             <Progress />
             <QuestionAnswerPractice />
             <InsertWords />
             <VariantsPractice />
             <Pairs />
-          </Fragment>
+          </>
         )}
       </LessonContainer>
     </SkillContext.Provider>

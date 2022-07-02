@@ -1,5 +1,4 @@
 import { Variant } from "@prisma/client";
-import { Fragment } from "react";
 import {
   LessonQuestion,
   LessonQuestionTriangle,
@@ -24,7 +23,7 @@ export default function VariantsScreen({
   setUserAnswer,
 }: VariantsScreenProps) {
   return (
-    <Fragment>
+    <>
       <LessonTitle>Choose right variant</LessonTitle>
       <section>
         <div
@@ -52,6 +51,6 @@ export default function VariantsScreen({
           ))}
         </VariantsList>
       </section>
-    </Fragment>
+    </>
   );
 }

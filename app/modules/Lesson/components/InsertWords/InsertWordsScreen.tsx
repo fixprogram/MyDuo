@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { useSkill } from "../..";
 import { LessonTitle } from "../lib";
@@ -55,7 +55,7 @@ export default function InsertWordsScreen({
   }, [difficulty, skillState.formDisabled]);
 
   return (
-    <Fragment>
+    <>
       <LessonTitle>Add missing words</LessonTitle>
 
       <InsertWordsTextBlock>
@@ -69,6 +69,6 @@ export default function InsertWordsScreen({
 
         <Puzzle values={values} setValues={setValues} />
       </InsertWordsTextBlock>
-    </Fragment>
+    </>
   );
 }

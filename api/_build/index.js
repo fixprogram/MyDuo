@@ -443,7 +443,7 @@ if (false) {
 
 // app/modules/Lesson/index.tsx
 init_react();
-var import_react17 = require("react");
+var import_react16 = require("react");
 
 // app/components/Progress.tsx
 init_react();
@@ -1336,7 +1336,7 @@ var defaultSkillContextState = __spreadProps(__spreadValues({}, basicState), {
 });
 
 // app/modules/Lesson/index.tsx
-var import_react18 = require("@remix-run/react");
+var import_react17 = require("@remix-run/react");
 
 // app/modules/Lesson/components/Results.tsx
 init_react();
@@ -1632,6 +1632,7 @@ var ResultsContainer = (0, import_styled3.default)("section")`
   display: flex;
   height: calc(100vh - 140px);
   justify-content: center;
+  outline: none;
 `;
 var ResultsHiddenForm = (0, import_styled3.default)(import_remix4.Form)`
   position: absolute;
@@ -1954,12 +1955,11 @@ var InsertWordsTextBlock = (0, import_styled4.default)("div")`
   box-sizing: border-box;
   font-size: 19px;
   font-family: "Nunito";
-  line-height: 40px;
 `;
 var InsertWordsInput = (0, import_styled4.default)("input")`
   border: none;
   font-size: 19px;
-  margin: 9px 7px 0;
+  margin: 0 7px;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => props.isToChoose ? "pointer" : "text"};
@@ -1975,7 +1975,7 @@ var InsertWordsInput = (0, import_styled4.default)("input")`
   }
 `;
 var InsertWordsAnswerField = (0, import_styled4.default)("span")`
-  margin: 9px 7px 0;
+  margin: 0 7px;
   width: ${(props) => props.length * 13}px;
   border-bottom: 2px solid #afafaf;
 `;
@@ -2269,7 +2269,7 @@ function InsertWordsScreen({
     }
     setValues(initalValues);
   }, [difficulty, skillState.formDisabled]);
-  return /* @__PURE__ */ React.createElement(import_react13.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, /* @__PURE__ */ React.createElement(Text, {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, /* @__PURE__ */ React.createElement(Text, {
     values,
     setValues
   }), /* @__PURE__ */ React.createElement(Variants, {
@@ -2325,7 +2325,7 @@ function PairsScreen({
     }
     return false;
   };
-  return /* @__PURE__ */ React.createElement(import_react14.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement(PairsList2, null, variants.map(({ value, isFocused }, idx) => /* @__PURE__ */ React.createElement(PairsItem, {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement(PairsList2, null, variants.map(({ value, isFocused }, idx) => /* @__PURE__ */ React.createElement(PairsItem, {
     key: idx,
     onClick: (evt) => {
       const target = evt.target;
@@ -2408,7 +2408,7 @@ function QuestionAnswerScreen({
       return () => clearTimeout(timeout);
     }
   }, [skillState.status]);
-  return /* @__PURE__ */ React.createElement(import_react15.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
     src: Duo_default,
@@ -2459,14 +2459,13 @@ init_react();
 
 // app/modules/Constructor/Levels/components/Variants/VariantsScreen.tsx
 init_react();
-var import_react16 = require("react");
 function VariantsScreen({
   question,
   variants,
   userAnswer,
   setUserAnswer
 }) {
-  return /* @__PURE__ */ React.createElement(import_react16.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Choose right variant"), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center", margin: "30px 0" }
   }, /* @__PURE__ */ React.createElement("img", {
     src: Duo_default,
@@ -2518,22 +2517,22 @@ function VariantsPractice() {
 }
 
 // app/modules/Lesson/index.tsx
-var SkillContext = (0, import_react17.createContext)(defaultSkillContextState);
+var SkillContext = (0, import_react16.createContext)(defaultSkillContextState);
 SkillContext.displayName = "SkillContext";
 function useSkill() {
-  const context = (0, import_react17.useContext)(SkillContext);
+  const context = (0, import_react16.useContext)(SkillContext);
   if (context === void 0) {
     throw new Error("useSkill must be used within a <Lesson />");
   }
   return context;
 }
 function Skill({ steps }) {
-  const resultsFormRef = (0, import_react17.createRef)();
+  const resultsFormRef = (0, import_react16.createRef)();
   const value = useSkillReducer();
-  const submit = (0, import_react18.useSubmit)();
+  const submit = (0, import_react17.useSubmit)();
   const { setup, skillState, continueSkill } = value;
   const { status } = skillState;
-  (0, import_react17.useEffect)(() => {
+  (0, import_react16.useEffect)(() => {
     setup(steps);
   }, []);
   const onContinue = () => {
@@ -2544,10 +2543,10 @@ function Skill({ steps }) {
   };
   return /* @__PURE__ */ React.createElement(SkillContext.Provider, {
     value: __spreadProps(__spreadValues({}, value), { continueSkill: onContinue })
-  }, /* @__PURE__ */ React.createElement(LessonContainer, null, status === "results" ? /* @__PURE__ */ React.createElement(import_react17.Fragment, null, /* @__PURE__ */ React.createElement(Results, {
+  }, /* @__PURE__ */ React.createElement(LessonContainer, null, status === "results" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Results, {
     onSubmit: onContinue,
     ref: resultsFormRef
-  }), /* @__PURE__ */ React.createElement(Footer, null)) : /* @__PURE__ */ React.createElement(import_react17.Fragment, null, /* @__PURE__ */ React.createElement(Progress_default, null), /* @__PURE__ */ React.createElement(QuestionAnswerPractice, null), /* @__PURE__ */ React.createElement(InsertWords, null), /* @__PURE__ */ React.createElement(VariantsPractice, null), /* @__PURE__ */ React.createElement(Pairs, null))));
+  }), /* @__PURE__ */ React.createElement(Footer, null)) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Progress_default, null), /* @__PURE__ */ React.createElement(QuestionAnswerPractice, null), /* @__PURE__ */ React.createElement(InsertWords, null), /* @__PURE__ */ React.createElement(VariantsPractice, null), /* @__PURE__ */ React.createElement(Pairs, null))));
 }
 
 // app/models/language.server.ts
@@ -2928,7 +2927,7 @@ __export(language_exports, {
 });
 init_react();
 var import_node2 = require("@remix-run/node");
-var import_react22 = __toESM(require("react"));
+var import_react20 = require("react");
 var import_remix7 = __toESM(require_remix());
 
 // app/components/Menu.tsx
@@ -2952,19 +2951,16 @@ var streak_active_default = "/build/_assets/streak-active-KWRZ6YVX.svg";
 // app/styles/shop-active.svg
 var shop_active_default = "/build/_assets/shop-active-TP5GEMDP.svg";
 
-// app/components/Menu.tsx
-var import_react21 = require("react");
-
 // app/components/Projects.tsx
 init_react();
-var import_react19 = require("react");
-var import_react20 = require("@remix-run/react");
+var import_react18 = require("react");
+var import_react19 = require("@remix-run/react");
 function Projects({
   onOverlay,
   languages
 }) {
-  const [showWindow, setShowWindow] = (0, import_react19.useState)(false);
-  const [isNewLanguage, setIsNewLanguage] = (0, import_react19.useState)(false);
+  const [showWindow, setShowWindow] = (0, import_react18.useState)(false);
+  const [isNewLanguage, setIsNewLanguage] = (0, import_react18.useState)(false);
   const activeLanguage = languages == null ? void 0 : languages.find((item) => item.active);
   function showModal() {
     onOverlay(true);
@@ -2974,7 +2970,7 @@ function Projects({
     onOverlay(false);
     setShowWindow(false);
   }
-  return /* @__PURE__ */ React.createElement(import_react19.Fragment, null, /* @__PURE__ */ React.createElement(ActiveLanguageButton, {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(ActiveLanguageButton, {
     type: "button",
     onMouseEnter: showModal,
     onMouseLeave: hideModal
@@ -2988,7 +2984,7 @@ function Projects({
       order: item.active ? 0 : 1,
       borderRadius: item.active ? "10px 10px 0 0" : 0
     }
-  }, /* @__PURE__ */ React.createElement(import_react20.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react19.Form, {
     method: "post"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
@@ -2999,7 +2995,7 @@ function Projects({
     type: "submit"
   }, item.title))))), /* @__PURE__ */ React.createElement("fieldset", {
     style: { position: "relative" }
-  }, isNewLanguage ? /* @__PURE__ */ React.createElement(import_react20.Form, {
+  }, isNewLanguage ? /* @__PURE__ */ React.createElement(import_react19.Form, {
     method: "post"
   }, /* @__PURE__ */ React.createElement(LanguagesInput, {
     type: "text",
@@ -3048,7 +3044,7 @@ var Menu = ({
     to: `${link}`,
     className: "nav-link",
     prefetch: "render"
-  }, ({ isActive }) => /* @__PURE__ */ React.createElement(import_react21.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
+  }, ({ isActive }) => /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(NavIcon, {
     src: isActive ? activeIcon : icon,
     alt: title
   }), title)))))), /* @__PURE__ */ React.createElement(HorizontalList, {
@@ -3180,12 +3176,12 @@ var loader3 = async ({ request }) => {
 };
 function ProjectPage() {
   const { user, languages } = (0, import_remix7.useLoaderData)();
-  const [isOverlay, setIsOverlay] = (0, import_react22.useState)(false);
-  return /* @__PURE__ */ import_react22.default.createElement(import_react22.default.Fragment, null, /* @__PURE__ */ import_react22.default.createElement(Menu_default, {
+  const [isOverlay, setIsOverlay] = (0, import_react20.useState)(false);
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Menu_default, {
     user,
     languages,
     onOverlay: setIsOverlay
-  }), /* @__PURE__ */ import_react22.default.createElement(Main, null, /* @__PURE__ */ import_react22.default.createElement(import_remix7.Outlet, null)), /* @__PURE__ */ import_react22.default.createElement(Overlay, {
+  }), /* @__PURE__ */ React.createElement(Main, null, /* @__PURE__ */ React.createElement(import_remix7.Outlet, null)), /* @__PURE__ */ React.createElement(Overlay, {
     active: isOverlay
   }));
 }
@@ -3199,16 +3195,16 @@ __export(skillId_exports, {
   loader: () => loader4
 });
 init_react();
-var import_react37 = require("@remix-run/react");
+var import_react35 = require("@remix-run/react");
 var import_node3 = require("@remix-run/node");
 
 // app/modules/Constructor/index.tsx
 init_react();
-var import_react36 = require("react");
+var import_react34 = require("react");
 
 // app/modules/Constructor/components/SkillInfo.tsx
 init_react();
-var import_react23 = require("react");
+var import_react21 = require("react");
 function SkillInfo({
   title = "",
   actionData,
@@ -3216,14 +3212,14 @@ function SkillInfo({
 }) {
   var _a;
   const { setBasicInfoReady, currentScreen } = useConstructor();
-  const [skillTitle, setSkillTitle] = (0, import_react23.useState)("");
-  const [lineNumber, setLineNumber] = (0, import_react23.useState)(0);
-  (0, import_react23.useEffect)(() => {
+  const [skillTitle, setSkillTitle] = (0, import_react21.useState)("");
+  const [lineNumber, setLineNumber] = (0, import_react21.useState)(0);
+  (0, import_react21.useEffect)(() => {
     if (title) {
       setSkillTitle(title);
     }
   }, []);
-  (0, import_react23.useEffect)(() => {
+  (0, import_react21.useEffect)(() => {
     setBasicInfoReady(!!skillTitle.length);
   }, [skillTitle]);
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
@@ -3284,7 +3280,7 @@ function SkillInfo({
 // app/modules/Constructor/Levels/reducer.ts
 init_react();
 var import_nanoid = require("nanoid");
-var import_react24 = require("react");
+var import_react22 = require("react");
 var createStep = ({ number = 0, chapter = 1 }) => {
   return {
     active: true,
@@ -3418,7 +3414,7 @@ function useConstructorReducer({
   initialState: initialState5 = basicState2,
   reducer: reducer2 = constructorReducer
 } = {}) {
-  const [state, dispatch] = (0, import_react24.useReducer)(reducer2, initialState5);
+  const [state, dispatch] = (0, import_react22.useReducer)(reducer2, initialState5);
   const setup = (steps) => dispatch({ type: "SET_DATA" /* setData */, steps });
   const setStepType = (stepType, id) => dispatch({ type: "SET_STEP_TYPE" /* setStepType */, payload: { stepType, id } });
   const removeStep = (id) => dispatch({ type: "REMOVE_STEP" /* removeStep */, id });
@@ -3483,11 +3479,11 @@ var initialContext = __spreadProps(__spreadValues({}, basicState2), {
 
 // app/modules/Constructor/Levels/index.tsx
 init_react();
-var import_react33 = require("react");
+var import_react31 = require("react");
 
 // app/modules/Constructor/Levels/components/Variants/index.tsx
 init_react();
-var import_react25 = require("react");
+var import_react23 = require("react");
 
 // app/modules/Constructor/Levels/components/MatchingPairs/reducer.ts
 init_react();
@@ -3647,17 +3643,17 @@ function Variants2({ state = initialState }) {
   const initialQuestion = state.question;
   const initialVariants = state.variants;
   const { setStepReady, setAnswer } = useConstructor();
-  const [{ variants }, dispatch] = (0, import_react25.useReducer)(reducer, {
+  const [{ variants }, dispatch] = (0, import_react23.useReducer)(reducer, {
     variants: initialVariants,
     pairs: []
   });
-  const [question, setQuestion] = (0, import_react25.useState)(initialQuestion);
-  (0, import_react25.useEffect)(() => {
+  const [question, setQuestion] = (0, import_react23.useState)(initialQuestion);
+  (0, import_react23.useEffect)(() => {
     if (variants.length === 0) {
       dispatch(variantsSetup(variantsCount));
     }
   }, [variantsCount]);
-  (0, import_react25.useEffect)(() => {
+  (0, import_react23.useEffect)(() => {
     if (variants.filter((variant) => variant.value.length === 0).length) {
       return setStepReady(false, number);
     }
@@ -3672,7 +3668,7 @@ function Variants2({ state = initialState }) {
       setStepReady(false, number);
     }
   }, [variants, question]);
-  return stepType === "Variants" ? /* @__PURE__ */ React.createElement(import_react25.Fragment, null, /* @__PURE__ */ React.createElement("input", {
+  return stepType === "Variants" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `answer${number}`,
     value: answer
@@ -3716,7 +3712,7 @@ function Variants2({ state = initialState }) {
 
 // app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
 init_react();
-var import_react26 = require("react");
+var import_react24 = require("react");
 var initialState2 = {
   variantsCount: 4,
   initialVariants: [],
@@ -3733,14 +3729,14 @@ function MatchingPairs({ state = initialState2 }) {
     initialVariants = []
   } = state;
   const { setStepReady, setAnswer } = useConstructor();
-  const [{ variants, pairs }, dispatch] = (0, import_react26.useReducer)(reducer, {
+  const [{ variants, pairs }, dispatch] = (0, import_react24.useReducer)(reducer, {
     variants: initialVariants,
     pairs: []
   });
-  (0, import_react26.useEffect)(() => {
+  (0, import_react24.useEffect)(() => {
     dispatch(pairsSetup(variantsCount, initialVariants, answer));
   }, []);
-  (0, import_react26.useEffect)(() => {
+  (0, import_react24.useEffect)(() => {
     if (pairs.length === variantsCount / 2) {
       setAnswer(pairs, number);
       setStepReady(true, number);
@@ -3749,13 +3745,15 @@ function MatchingPairs({ state = initialState2 }) {
       setStepReady(false, number);
     }
   }, [pairs.length, pairs]);
-  return stepType === "Pairs" ? /* @__PURE__ */ React.createElement(import_react26.Fragment, null, /* @__PURE__ */ React.createElement("input", {
+  return stepType === "Pairs" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
+    style: { maxWidth: 600, margin: "0 auto" }
+  }, /* @__PURE__ */ React.createElement("input", {
     type: "hidden",
     name: `answer${number}`,
     value: answer
-  }), /* @__PURE__ */ React.createElement("div", {
-    style: { marginBottom: "20px" }
-  }, /* @__PURE__ */ React.createElement("h2", null, "Create and Connect pairs")), /* @__PURE__ */ React.createElement(PairsList, null, variants.map((variant) => /* @__PURE__ */ React.createElement("li", {
+  }), /* @__PURE__ */ React.createElement(LessonTitle2, null, "Connect pairs"), /* @__PURE__ */ React.createElement("div", {
+    style: { marginTop: 30 }
+  }, /* @__PURE__ */ React.createElement(PairsList, null, variants.map((variant) => /* @__PURE__ */ React.createElement("li", {
     key: variant.idx,
     style: { marginBottom: 5 }
   }, /* @__PURE__ */ React.createElement("label", {
@@ -3780,16 +3778,16 @@ function MatchingPairs({ state = initialState2 }) {
     value: variant.value,
     onChange: (e) => dispatch(pairsType(e.target.value, variant.idx)),
     required: true
-  })))), /* @__PURE__ */ React.createElement("button", {
+  })))), /* @__PURE__ */ React.createElement(LessonButton, {
     type: "button",
     onClick: () => dispatch({ type: "ADD_PAIR" }),
-    style: { display: "block", width: "100%" }
-  }, "Add pair"))) : null;
+    active: true
+  }, "Add pair"))))) : null;
 }
 
 // app/modules/Constructor/Levels/components/InsertWords/index.tsx
 init_react();
-var import_react28 = require("react");
+var import_react26 = require("react");
 
 // app/modules/Constructor/Levels/components/InsertWords/Backend.tsx
 init_react();
@@ -3834,14 +3832,19 @@ function Backend({
 
 // app/modules/Constructor/Levels/components/InsertWords/ChooseMissingWords.tsx
 init_react();
-var import_react27 = require("react");
+var import_react25 = require("react");
 function ChooseMissingWords({ words, number }) {
-  const [variants, setVariants] = (0, import_react27.useState)(() => words.length ? [...words] : [""]);
+  const [variants, setVariants] = (0, import_react25.useState)(() => words.length ? [...words] : [""]);
   return /* @__PURE__ */ React.createElement("div", {
     style: { width: "100%" }
   }, /* @__PURE__ */ React.createElement("ul", {
-    style: { listStyleType: "none", padding: 0, margin: 0 }
-  }, words.length === 1 ? /* @__PURE__ */ React.createElement(import_react27.Fragment, null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(VariantItem, {
+    style: {
+      listStyleType: "none",
+      padding: 0,
+      margin: "30px 0",
+      display: words.length > 1 ? "flex" : "block"
+    }
+  }, words.length === 1 ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(VariantItem, {
     type: "button",
     isFocused: false,
     onClick: () => setVariants((prevVars) => [...prevVars, ""])
@@ -3854,7 +3857,7 @@ function ChooseMissingWords({ words, number }) {
     required: true
   }))) : words.map((word, idx) => /* @__PURE__ */ React.createElement("li", {
     key: idx,
-    style: { position: "relative", marginBottom: 8 }
+    style: { position: "relative", marginBottom: 8, marginRight: 16 }
   }, /* @__PURE__ */ React.createElement(VariantItem, {
     type: "button",
     isFocused: false
@@ -3871,18 +3874,18 @@ var initialState3 = {
 function InsertWords2({ state = initialState3 }) {
   const { text, number, answer, stepType } = state;
   const { setStepReady, setAnswer } = useConstructor();
-  const [words, setWords] = (0, import_react28.useState)([]);
-  const [showText, setShowText] = (0, import_react28.useState)(false);
-  const [isChooseVariants, setChooseVariants] = (0, import_react28.useState)(false);
+  const [words, setWords] = (0, import_react26.useState)([]);
+  const [showText, setShowText] = (0, import_react26.useState)(false);
+  const [isChooseVariants, setChooseVariants] = (0, import_react26.useState)(false);
   const ref = useFocus();
   const defaultAnswer = words.map((word) => {
     const { newItem } = doesItemContainSign(word);
     return newItem + " ";
   }).join("");
-  (0, import_react28.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     setStepReady(!!words.length, number);
   }, [words.length]);
-  (0, import_react28.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     if (text) {
       setAnswer(text, number);
       const newWords = text.split(" ").filter((txt) => {
@@ -3903,7 +3906,9 @@ function InsertWords2({ state = initialState3 }) {
     type: "hidden",
     name: `isToChoose${number}`,
     defaultValue: isChooseVariants ? "1" : void 0
-  }), /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(Textarea, {
+  }), /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement("div", {
+    style: { marginTop: 30 }
+  }, /* @__PURE__ */ React.createElement(Textarea, {
     name: `text${number}`,
     placeholder: "Type text",
     value: answer,
@@ -3924,7 +3929,7 @@ function InsertWords2({ state = initialState3 }) {
       }, item);
     }
     if (sign) {
-      return /* @__PURE__ */ React.createElement(import_react28.Fragment, {
+      return /* @__PURE__ */ React.createElement(import_react26.Fragment, {
         key: idx
       }, /* @__PURE__ */ React.createElement(InsertWordsInput, {
         type: "text",
@@ -3947,12 +3952,12 @@ function InsertWords2({ state = initialState3 }) {
     setChooseVariants,
     setShowText,
     isChooseVariants
-  })) : null;
+  }))) : null;
 }
 
 // app/modules/Constructor/Levels/components/Step.tsx
 init_react();
-var import_react29 = __toESM(require("react"));
+var import_react27 = __toESM(require("react"));
 
 // app/modules/Constructor/components/CloseBtn.tsx
 init_react();
@@ -3973,31 +3978,31 @@ var STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
 var Step = ({ data, index, children }) => {
   const { active, chapter, stepType, id, number } = data;
   const { removeStepType, setStepType } = useConstructor();
-  return /* @__PURE__ */ import_react29.default.createElement("section", {
+  return /* @__PURE__ */ import_react27.default.createElement("section", {
     className: `${!active && "visuallyHidden"}`
-  }, /* @__PURE__ */ import_react29.default.createElement("input", {
+  }, /* @__PURE__ */ import_react27.default.createElement("input", {
     type: "hidden",
     name: "step",
     value: index
-  }), /* @__PURE__ */ import_react29.default.createElement("input", {
+  }), /* @__PURE__ */ import_react27.default.createElement("input", {
     type: "hidden",
     name: `chapter`,
     value: chapter
-  }), /* @__PURE__ */ import_react29.default.createElement("input", {
+  }), /* @__PURE__ */ import_react27.default.createElement("input", {
     type: "hidden",
     name: `type${number}`,
     value: stepType
-  }), /* @__PURE__ */ import_react29.default.createElement(Legend, null, stepType ? stepType : "Choose type"), /* @__PURE__ */ import_react29.default.createElement(StepHeader, null, stepType !== "" && /* @__PURE__ */ import_react29.default.createElement(CloseBtn, {
+  }), /* @__PURE__ */ import_react27.default.createElement(Legend, null, stepType ? stepType : "Choose type"), /* @__PURE__ */ import_react27.default.createElement(StepHeader, null, stepType !== "" && /* @__PURE__ */ import_react27.default.createElement(CloseBtn, {
     onClickHandler: () => removeStepType(id)
-  })), /* @__PURE__ */ import_react29.default.createElement(StepContent, null, stepType === "" ? /* @__PURE__ */ import_react29.default.createElement(ChooseStyle, null, STEP_TYPES.map((type, idx) => /* @__PURE__ */ import_react29.default.createElement(StyleButton, {
+  })), /* @__PURE__ */ import_react27.default.createElement(StepContent, null, stepType === "" ? /* @__PURE__ */ import_react27.default.createElement(ChooseStyle, null, STEP_TYPES.map((type, idx) => /* @__PURE__ */ import_react27.default.createElement(StyleButton, {
     type: "button",
     onClick: () => setStepType(type, id),
     key: idx
-  }, type))) : import_react29.default.Children.map(children, (child) => {
+  }, type))) : import_react27.default.Children.map(children, (child) => {
     if (child === null) {
       return;
     }
-    return import_react29.default.cloneElement(child, {
+    return import_react27.default.cloneElement(child, {
       state: data
     });
   })));
@@ -4006,21 +4011,21 @@ var Step_default = Step;
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
 init_react();
-var import_react32 = require("react");
+var import_react30 = require("react");
 
 // app/modules/Constructor/components/Keywords.tsx
 init_react();
-var import_react31 = require("react");
+var import_react29 = require("react");
 
 // app/modules/Constructor/components/Keyword.tsx
 init_react();
-var import_react30 = require("react");
+var import_react28 = require("react");
 var Keyword = ({
   onSet,
   children,
   initiallyActive
 }) => {
-  const [isActive, setIsActive] = (0, import_react30.useState)(initiallyActive);
+  const [isActive, setIsActive] = (0, import_react28.useState)(initiallyActive);
   return /* @__PURE__ */ React.createElement(KeywordTemplate, {
     active: isActive,
     onClick: () => {
@@ -4037,8 +4042,8 @@ function Keywords({
   onSet,
   initialKeywords = []
 }) {
-  const [keywords, setKeywords] = (0, import_react31.useState)(initialKeywords);
-  (0, import_react31.useEffect)(() => {
+  const [keywords, setKeywords] = (0, import_react29.useState)(initialKeywords);
+  (0, import_react29.useEffect)(() => {
     onSet(keywords);
   }, [keywords]);
   return /* @__PURE__ */ React.createElement("div", {
@@ -4073,16 +4078,16 @@ var initialState4 = {
 function QuestionAnswer({ state = initialState4 }) {
   const { question, answer, number, keywords, stepType } = state;
   const { setStepReady, setKeywords, setQuestion, setAnswer } = useConstructor();
-  (0, import_react32.useEffect)(() => {
+  (0, import_react30.useEffect)(() => {
     if (question && answer) {
       return setStepReady(true, number);
     }
     return setStepReady(false, number);
   }, [question, answer]);
-  (0, import_react32.useEffect)(() => {
+  (0, import_react30.useEffect)(() => {
     setKeywords(keywords, number);
   }, []);
-  return stepType === "Question" ? /* @__PURE__ */ React.createElement(import_react32.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
+  return stepType === "Question" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
     style: { padding: "0 25%" }
   }, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Answer the question"), /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", alignItems: "center", margin: "30px 0" }
@@ -4130,7 +4135,7 @@ function QuestionAnswer({ state = initialState4 }) {
 // app/modules/Constructor/Levels/index.tsx
 function Levels() {
   const { steps, setStepsReady, currentScreen } = useConstructor();
-  (0, import_react33.useEffect)(() => {
+  (0, import_react31.useEffect)(() => {
     setStepsReady(!steps.find((step) => step.ready === false));
   }, [steps]);
   return /* @__PURE__ */ React.createElement(ScreenContainer, {
@@ -4145,8 +4150,8 @@ function Levels() {
 
 // app/modules/Constructor/Levels/components/Sidebar.tsx
 init_react();
-var import_react34 = require("@remix-run/react");
-var import_react35 = __toESM(require("react"));
+var import_react32 = require("@remix-run/react");
+var import_react33 = __toESM(require("react"));
 var Sidebar = ({ children }) => {
   const {
     steps,
@@ -4160,37 +4165,37 @@ var Sidebar = ({ children }) => {
     addChapter,
     addStep
   } = useConstructor();
-  const transition = (0, import_react34.useTransition)();
+  const transition = (0, import_react32.useTransition)();
   const submitText = transition.state === "submitting" ? "Saving" : "Save";
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled = stepsReady === false || basicInfoReady === false || submitText !== "Save";
-  return /* @__PURE__ */ import_react35.default.createElement(ConstructorSidebar, null, /* @__PURE__ */ import_react35.default.createElement(SidebarList, null, /* @__PURE__ */ import_react35.default.createElement("li", null, /* @__PURE__ */ import_react35.default.createElement(SidebarBtn, {
+  return /* @__PURE__ */ import_react33.default.createElement(ConstructorSidebar, null, /* @__PURE__ */ import_react33.default.createElement(SidebarList, null, /* @__PURE__ */ import_react33.default.createElement("li", null, /* @__PURE__ */ import_react33.default.createElement(SidebarBtn, {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Skill");
     }
-  }, "Skill Info")), chapters.map((chapter) => /* @__PURE__ */ import_react35.default.createElement("li", {
+  }, "Skill Info")), chapters.map((chapter) => /* @__PURE__ */ import_react33.default.createElement("li", {
     key: `chapter-${chapter}`
-  }, /* @__PURE__ */ import_react35.default.createElement(SidebarBtn, {
+  }, /* @__PURE__ */ import_react33.default.createElement(SidebarBtn, {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Steps");
       setStepActive(steps[steps.length - 1].id);
     }
-  }, "Chapter ", chapter), /* @__PURE__ */ import_react35.default.createElement("ul", null, steps.map((stepsItem, index) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react35.default.createElement("li", {
+  }, "Chapter ", chapter), /* @__PURE__ */ import_react33.default.createElement("ul", null, steps.map((stepsItem, index) => stepsItem.chapter === chapter && /* @__PURE__ */ import_react33.default.createElement("li", {
     key: stepsItem.id
-  }, /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, /* @__PURE__ */ import_react33.default.createElement("button", {
     type: "button",
     onClick: () => {
       changeCurrentScreen("Steps");
       setStepActive(stepsItem.id);
     }
-  }, "Step ", index + 1), index > 0 ? /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, "Step ", index + 1), index > 0 ? /* @__PURE__ */ import_react33.default.createElement("button", {
     type: "button",
     onClick: () => {
       removeStep(stepsItem.id);
     }
-  }, "Remove step") : null)), /* @__PURE__ */ import_react35.default.createElement("li", null, /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, "Remove step") : null)), /* @__PURE__ */ import_react33.default.createElement("li", null, /* @__PURE__ */ import_react33.default.createElement("button", {
     type: "button",
     onClick: () => {
       addStep(chapter);
@@ -4198,7 +4203,7 @@ var Sidebar = ({ children }) => {
         changeCurrentScreen("Steps");
       }
     }
-  }, "Add step"))), /* @__PURE__ */ import_react35.default.createElement("button", {
+  }, "Add step"))), /* @__PURE__ */ import_react33.default.createElement("button", {
     type: "button",
     onClick: () => {
       if (currentScreen !== "Steps") {
@@ -4206,7 +4211,7 @@ var Sidebar = ({ children }) => {
       }
       addChapter();
     }
-  }, "Add chapter")))), children, /* @__PURE__ */ import_react35.default.createElement(FormButton, {
+  }, "Add chapter")))), children, /* @__PURE__ */ import_react33.default.createElement(FormButton, {
     type: "submit",
     active: isSubmitActive,
     disabled: isSubmitDisabled
@@ -4215,10 +4220,10 @@ var Sidebar = ({ children }) => {
 var Sidebar_default = Sidebar;
 
 // app/modules/Constructor/index.tsx
-var ConstructorContext = (0, import_react36.createContext)(initialContext);
+var ConstructorContext = (0, import_react34.createContext)(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
 var useConstructor = () => {
-  const state = (0, import_react36.useContext)(ConstructorContext);
+  const state = (0, import_react34.useContext)(ConstructorContext);
   if (state === void 0) {
     throw new Error("useConstructor must be used within a <Constructor />");
   }
@@ -4231,12 +4236,12 @@ function Constructor({
 }) {
   const state = useConstructorReducer();
   const { currentScreen, setup, changeCurrentScreen } = state;
-  (0, import_react36.useEffect)(() => {
+  (0, import_react34.useEffect)(() => {
     if (data) {
       setup(data.steps);
     }
   }, [data]);
-  (0, import_react36.useEffect)(() => {
+  (0, import_react34.useEffect)(() => {
     var _a;
     if (((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && currentScreen !== "Skill") {
       changeCurrentScreen("Skill");
@@ -4257,7 +4262,7 @@ function Constructor({
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$skillId.tsx
 var import_remix8 = __toESM(require_remix());
 function ErrorBoundary4() {
-  const { skillId } = (0, import_react37.useParams)();
+  const { skillId } = (0, import_react35.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading lesson by the id ${skillId}. Sorry.`);
@@ -4379,8 +4384,8 @@ var loader4 = async ({ request, params }) => {
   return { data, lastAddedSkills };
 };
 function ConstructorEdit() {
-  const actionData = (0, import_react37.useActionData)();
-  const { data, lastAddedSkills } = (0, import_react37.useLoaderData)();
+  const actionData = (0, import_react35.useActionData)();
+  const { data, lastAddedSkills } = (0, import_react35.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Constructor, {
     data,
     lastAddedSkills,
@@ -4653,7 +4658,7 @@ function WeeklyProgress({
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/$language/skills.tsx
-var import_react40 = require("@remix-run/react");
+var import_react38 = require("@remix-run/react");
 
 // app/components/SkillsList.tsx
 init_react();
@@ -4672,7 +4677,7 @@ function Footer2() {
 
 // app/components/LessonItem.tsx
 init_react();
-var import_react39 = require("react");
+var import_react37 = require("react");
 var import_remix10 = __toESM(require_remix());
 
 // app/styles/bin.svg
@@ -4680,9 +4685,9 @@ var bin_default = "/build/_assets/bin-RYGYRSXA.svg";
 
 // app/hooks/useOnClickOutside.ts
 init_react();
-var import_react38 = require("react");
+var import_react36 = require("react");
 function useOnClickOutside(ref, handler) {
-  (0, import_react38.useEffect)(() => {
+  (0, import_react36.useEffect)(() => {
     const listener = (event) => {
       if (!ref.current || ref.current.contains(event.target)) {
         return;
@@ -4706,10 +4711,10 @@ function LessonItem({
   chapters,
   editLink
 }) {
-  const [isOpened, setIsOpened] = (0, import_react39.useState)(false);
+  const [isOpened, setIsOpened] = (0, import_react37.useState)(false);
   const transition = (0, import_remix10.useTransition)();
-  const ref = (0, import_react39.useRef)(null);
-  (0, import_react39.useEffect)(() => {
+  const ref = (0, import_react37.useRef)(null);
+  (0, import_react37.useEffect)(() => {
     if (transition.state === "loading") {
       setIsOpened(false);
     }
@@ -4828,7 +4833,7 @@ var loader6 = async ({ request }) => {
   };
 };
 function SkillsPage() {
-  const { skills, activity, languageTitle } = (0, import_react40.useLoaderData)();
+  const { skills, activity, languageTitle } = (0, import_react38.useLoaderData)();
   return /* @__PURE__ */ React.createElement("section", {
     style: { display: "flex", width: "100%" }
   }, /* @__PURE__ */ React.createElement(SkillsList, {
@@ -4942,17 +4947,17 @@ __export(login_exports, {
 });
 init_react();
 var import_node4 = require("@remix-run/node");
-var import_react42 = require("@remix-run/react");
+var import_react40 = require("@remix-run/react");
 
 // app/components/Login.tsx
 init_react();
-var import_react41 = require("react");
+var import_react39 = require("react");
 var import_remix15 = __toESM(require_remix());
 function Login({ isLogin, setIsLogin, actionData }) {
   var _a;
-  const usernameRef = (0, import_react41.useRef)(null);
-  const passwordRef = (0, import_react41.useRef)(null);
-  (0, import_react41.useEffect)(() => {
+  const usernameRef = (0, import_react39.useRef)(null);
+  const passwordRef = (0, import_react39.useRef)(null);
+  (0, import_react39.useEffect)(() => {
     var _a2, _b, _c, _d;
     if ((_a2 = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a2.username) {
       (_b = usernameRef.current) == null ? void 0 : _b.focus();
@@ -5012,7 +5017,7 @@ function Login({ isLogin, setIsLogin, actionData }) {
 }
 
 // route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
-var import_react43 = require("react");
+var import_react41 = require("react");
 var loader10 = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId)
@@ -5052,9 +5057,9 @@ var meta = () => {
 };
 function LoginPage() {
   var _a;
-  const actionData = (0, import_react42.useActionData)();
-  const transition = (0, import_react42.useTransition)();
-  const [isLogin, setIsLogin] = (0, import_react43.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
+  const actionData = (0, import_react40.useActionData)();
+  const transition = (0, import_react40.useTransition)();
+  const [isLogin, setIsLogin] = (0, import_react41.useState)(actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.loginType) === "login" ? true : !actionData ? true : false);
   const buttonText = transition.state === "submitting" ? "loginning" : "login";
   return /* @__PURE__ */ React.createElement(LoginContainer, null, /* @__PURE__ */ React.createElement(LoginContinerInner, null, /* @__PURE__ */ React.createElement(Login, {
     isLogin,
@@ -5065,7 +5070,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "d8f5f6bd", "entry": { "module": "/build/entry.client-TUHMP6CY.js", "imports": ["/build/_shared/chunk-QANDEPUK.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-CF3RIWOL.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-S5UOBAXF.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-Z7XA3B6W.js", "imports": ["/build/_shared/chunk-JPA5TSFU.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-Y3ZGYQ32.js", "imports": ["/build/_shared/chunk-JPA5TSFU.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-Z7ZSFW56.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-3HDHQAY3.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-L5PSZDLU.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-CVZ2MT3Q.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-ODI2AL4G.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-VEZYLCOJ.js", "imports": ["/build/_shared/chunk-DOKWVPIF.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-QHULRABK.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-ZW3IE72P.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-D8F5F6BD.js" };
+var assets_manifest_default = { "version": "f5cda22c", "entry": { "module": "/build/entry.client-OJ7IFI7Z.js", "imports": ["/build/_shared/chunk-W7C3HT3T.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-4OB4PXDK.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-U5IRR6ZE.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-3NGJH7KS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-WX6SOTWC.js", "imports": ["/build/_shared/chunk-SPPLVHBK.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-DAYX4M2R.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-DY7POTH4.js", "imports": ["/build/_shared/chunk-SPPLVHBK.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-DAYX4M2R.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-Q2QJ6D6A.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-C5MORIJ4.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-3NGJH7KS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-TXPI6EXO.js", "imports": ["/build/_shared/chunk-3KTIE7GW.js", "/build/_shared/chunk-DAYX4M2R.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-3NGJH7KS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-TTGHP27V.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-7DRYLMMP.js", "imports": ["/build/_shared/chunk-3KTIE7GW.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-DAYX4M2R.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-3NGJH7KS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-MFZR4W64.js", "imports": ["/build/_shared/chunk-3KTIE7GW.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-DAYX4M2R.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-FPSTZTJW.js", "/build/_shared/chunk-3NGJH7KS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-F5CDA22C.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

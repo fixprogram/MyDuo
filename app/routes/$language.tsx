@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect } from "@remix-run/node";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Outlet, useLoaderData } from "remix";
 import { Main, Overlay } from "~/components/lib";
 import Menu from "~/components/Menu";
@@ -12,7 +12,7 @@ import { getLastActivity } from "~/models/lesson.server";
 import { updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
-import { getTodayDate, getWeekDay, getYesterdayDay } from "~/utils";
+import { getTodayDate } from "~/utils";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -77,12 +77,12 @@ export default function ProjectPage() {
   const { user, languages } = useLoaderData();
   const [isOverlay, setIsOverlay] = useState(false);
   return (
-    <React.Fragment>
+    <>
       <Menu user={user} languages={languages} onOverlay={setIsOverlay} />
       <Main>
         <Outlet />
       </Main>
       <Overlay active={isOverlay} />
-    </React.Fragment>
+    </>
   );
 }
