@@ -7,7 +7,7 @@ import {
   VariantItem,
 } from "~/modules/Lesson/components/lib";
 import { VariantItemNumber, VariantsItem, VariantsList } from "../lib";
-import Duo from "~/styles/Duo.svg";
+import Duo from "~/styles/duo.svg";
 
 type VariantsScreenProps = {
   question: string;
