@@ -60,6 +60,7 @@ const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   box-sizing: border-box;
   font-size: 19px;
   font-family: "Nunito";
+  margin-top: 30px;
 `;
 
 const InsertWordsInput = styled("input")<InsertWordsInputProps>`

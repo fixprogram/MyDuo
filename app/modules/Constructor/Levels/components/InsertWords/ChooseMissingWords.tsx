@@ -7,6 +7,8 @@ export default function ChooseMissingWords({ words, number }) {
     words.length ? [...words] : [""]
   );
 
+  console.log("words: ", words);
+
   return (
     <div style={{ width: "100%" }}>
       <ul

@@ -13,8 +13,15 @@ export default function InsertWords() {
   const initialUserAnswer = [""];
 
   const checkAnswer = (userAnswer: string[]) => {
-    const { formatted } = doesArrayContainItems(content.answer, userAnswer);
-    if (areArraysEqual(content.answer, formatted)) {
+    const answer = content.text?.split(" ").filter((item, index) => {
+      if (content.answer[0].split(",").find((it) => Number(it) === index)) {
+        return item;
+      }
+    });
+    // const { formatted } = doesArrayContainItems(content.answer, userAnswer);
+    const { formatted } = doesArrayContainItems(answer as string[], userAnswer);
+    // if (areArraysEqual(content.answer, formatted)) {
+    if (areArraysEqual(answer as string[], formatted)) {
       return setStateRight();
     }
     return setStateWrong();
@@ -28,7 +35,9 @@ export default function InsertWords() {
             return true;
           }
         });
-        return isEachFieldContented.length === content.answer.length;
+        return (
+          isEachFieldContented.length === content.answer[0].split(",").length
+        );
       }}
       initialValue={initialUserAnswer}
       checkAnswer={checkAnswer}

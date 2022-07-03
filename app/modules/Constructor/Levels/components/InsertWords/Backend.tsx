@@ -1,14 +1,27 @@
 import { isItemInArray } from "~/utils";
 
+type BackendProps = {
+  showText: Function;
+  setShowText: Function;
+  setChooseVariants: Function;
+  isChooseVariants: boolean;
+  answer: string;
+  indexes: number[];
+  setIndexes: Function;
+};
+
 export default function Backend({
   showText,
   setShowText,
   setChooseVariants,
   isChooseVariants,
   answer,
-  words,
-  setWords,
-}) {
+  setIndexes,
+  indexes,
+  text,
+}: BackendProps) {
+  const words = text ? text.split(" ") : answer.split(" ");
+  // console.log("indexes: ", indexes);
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <h3>Mark words which should be hidden</h3>
@@ -25,25 +38,41 @@ export default function Backend({
       >
         Set variants
       </button>
-      {answer.split(" ").map((item, idx) => {
+      {words.map((item, idx) => {
+        // {answer.split(" ").map((item, idx) => {
         return (
           <span
             style={{
               marginRight: 3,
-              border: words.find((word) => word === item)
+              border: !!indexes.filter((i) => i === idx).length
                 ? "1px solid #78C83D"
                 : "none",
             }}
             key={idx}
             onClick={() => {
-              setWords(() => {
-                if (isItemInArray(words, item)) {
-                  words.splice(words.indexOf(item), 1);
-                  return [...words];
+              setIndexes((prevIndexes) => {
+                if (idx === 0) {
+                  let wasRemoved = false;
+                  prevIndexes.forEach((i, ix) => {
+                    if (i === 0) {
+                      wasRemoved = true;
+                      prevIndexes.splice(ix, 1);
+                    }
+                  });
+
+                  if (wasRemoved) return [...prevIndexes];
+
+                  return [...prevIndexes, idx];
                 }
 
-                return [...words, item];
+                if (isItemInArray(prevIndexes, idx)) {
+                  prevIndexes.splice(prevIndexes.indexOf(idx), 1);
+                  return [...prevIndexes];
+                }
+
+                return [...prevIndexes, idx];
               });
+
               setShowText(true);
             }}
           >

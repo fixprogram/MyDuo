@@ -9,9 +9,16 @@ const continueContent = (content: Step, lessonSteps: Step[]) => {
     return content;
   }
 
-  newContent.difficulty = null;
-  if (newContent?.variants.length && newContent.stepType !== "Pairs") {
+  if (newContent.stepType !== "Pairs") {
+    newContent.difficulty = null;
+  }
+
+  if (newContent?.variants.length || newContent?.isToChoose) {
     newContent.difficulty = "easy";
+  }
+
+  if (content?.difficulty) {
+    newContent.difficulty = content.difficulty;
   }
 
   return newContent;

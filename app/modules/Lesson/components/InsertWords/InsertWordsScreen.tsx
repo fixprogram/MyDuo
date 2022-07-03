@@ -21,7 +21,7 @@ export default function InsertWordsScreen({
   const { content, skillState } = useSkill();
 
   const { isToChoose, variants, answer, difficulty } = content;
-  const initalValues = new Array(answer.length).fill(
+  const initalValues = new Array(answer[0].split(",").length).fill(
     variants && difficulty === "easy" ? " " : ""
   );
 
@@ -31,7 +31,7 @@ export default function InsertWordsScreen({
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
       return;
     }
-    if (values.length !== answer.length) {
+    if (values.length !== answer[0].split(",").length) {
       return;
     }
 

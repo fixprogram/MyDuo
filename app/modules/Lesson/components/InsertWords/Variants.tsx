@@ -1,4 +1,3 @@
-import { Variant } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
 import { useSkill } from "../..";

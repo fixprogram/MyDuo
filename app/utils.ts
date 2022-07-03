@@ -47,7 +47,15 @@ export function validateUsername(username: unknown): username is string {
 }
 
 export const isItemInArray = (arr: string[], item: string) => {
-  return arr.find((arrItem) => arrItem === item);
+  // let isExist = false;
+  // arr.find((arrItem) => {
+  //   if (arrItem === item) {
+  //     isExist = true;
+  //   }
+  // });
+  // return isExist;
+
+  return !!arr.filter((arrItem) => arrItem === item).length;
 };
 
 export const findInArrayById = (arr = [{ id: "" }], id: string) => {

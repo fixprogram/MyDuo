@@ -27,10 +27,14 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
     });
   };
 
+  const words =
+    contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
+
   return isToChoose && difficulty === "easy" ? (
     <PuzzleContainer>
       <PuzzleList>
-        {contentAnswer.map((answer, idx: number) => {
+        {/* {contentAnswer.map((answer, idx: number) => { */}
+        {words.map((answer, idx: number) => {
           const alreadyChoosen = !!values.find((value) => value === answer);
           return (
             <PuzzleItem alreadyChoosen={alreadyChoosen} key={idx}>
