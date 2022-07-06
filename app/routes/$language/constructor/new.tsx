@@ -72,7 +72,11 @@ export const action: ActionFunction = async ({ request, params }) => {
         const text = form.get(`text${index}`) as string;
         const isToChoose = !!form.get(`isToChoose${index}`);
         const variantValues = form.getAll(`variant${index}`);
-        answer = answer.trim().split(" ");
+        // answer = answer.trim().split(" ")
+        answer = answer
+          .trim()
+          .split(",")
+          .sort((a, b) => a - b);
         const variants = variantValues.map((value, idx) => ({
           idx,
           value,

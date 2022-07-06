@@ -1,4 +1,4 @@
-import { Fragment, SyntheticEvent, useEffect, useRef } from "react";
+import { Fragment, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
 import { doesItemContainSign } from "~/utils";
 import { useSkill } from "../..";
@@ -14,7 +14,7 @@ export default function Text({ values, setValues }: TextProps) {
   useEffect(() => {
     // gets rid of focus if our lesson is only one and we solve it wrong
     if (!skillState.formDisabled) {
-      setValues([...new Array(answer[0].split(",").length).fill(" ")]);
+      setValues([...new Array(answer.length).fill(" ")]);
     }
   }, [skillState.formDisabled]);
 
@@ -50,23 +50,17 @@ export default function Text({ values, setValues }: TextProps) {
     });
   };
 
-  let firstInput = 0;
-
-  const indexes = answer[0].split(",");
-
   return (
     <section>
-      {text?.split(" ").map((textItem: string, idx: number) => {
+      {text?.split(" ").map((textItem: string, textItemIndex: number) => {
         const { newItem, sign } = doesItemContainSign(textItem);
-        // if (answer.includes(newItem)) {
-        if (indexes.includes(idx.toString())) {
-          // return answer.map((answerItem: string, index: number) => {
-          return indexes.map((i: string, index: number) => {
-            if (idx !== Number(i)) {
+        if (answer.includes(textItemIndex.toString())) {
+          return answer.map((indexItem: string, index: number) => {
+            if (textItemIndex !== Number(indexItem)) {
               // sets position for inputs
               return null;
             }
-            firstInput = firstInput && index;
+
             return (
               <Fragment key={index}>
                 {difficulty === "easy" && !!variants.length ? (
@@ -95,7 +89,7 @@ export default function Text({ values, setValues }: TextProps) {
                     value={values[index]}
                     onChange={(evt) => handleChange(evt, index)}
                     disabled={skillState.formDisabled}
-                    ref={firstInput === index ? myRef : null}
+                    ref={answer.indexOf(indexItem) === 0 ? myRef : null}
                   />
                 )}
 
@@ -105,7 +99,7 @@ export default function Text({ values, setValues }: TextProps) {
           });
         }
         return (
-          <span style={{ marginRight: 4 }} key={`text${idx}`}>
+          <span style={{ marginRight: 4 }} key={`text${textItemIndex}`}>
             {textItem}
           </span>
         );

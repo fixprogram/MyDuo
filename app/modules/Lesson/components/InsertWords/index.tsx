@@ -35,9 +35,7 @@ export default function InsertWords() {
             return true;
           }
         });
-        return (
-          isEachFieldContented.length === content.answer[0].split(",").length
-        );
+        return isEachFieldContented.length === content.answer.length;
       }}
       initialValue={initialUserAnswer}
       checkAnswer={checkAnswer}

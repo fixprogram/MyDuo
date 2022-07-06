@@ -87,8 +87,6 @@ export default function InsertWords({ state = initialState }) {
     }
   });
 
-  // console.log(indexes);
-
   return stepType === "Insert" ? (
     <fieldset style={{ padding: "0 25%" }}>
       <input

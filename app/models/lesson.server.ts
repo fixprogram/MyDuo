@@ -39,9 +39,6 @@ export async function getLastActivity(request: Request) {
   const today = getTodayDate();
   const lastPracticed = await whenLastPractice(request);
 
-  console.log(today);
-  console.log(lastPracticed);
-
   if (today - lastPracticed > 0) {
     await resetMultipleActivity(request, lastPracticed);
     return lastPracticed;

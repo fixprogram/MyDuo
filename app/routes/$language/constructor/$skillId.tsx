@@ -47,7 +47,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const lessons = form.getAll("step").map((item, index) => {
     const stepType = form.get(`type${index}`);
     let answer: string | string[] = form.get(`answer${index}`) as string;
-    answer = answer.trim().split(" ");
     const returnData = {
       stepType,
       number: index,
@@ -58,6 +57,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       case "Question": {
         const question = form.get(`question${index}`);
         const keywords = form.get(`keywords${index}`) as string;
+        answer = answer.trim().split(" ");
         return {
           ...returnData,
           question,
@@ -74,6 +74,10 @@ export const action: ActionFunction = async ({ request, params }) => {
           value,
           isFocused: false,
         }));
+        answer = answer
+          .trim()
+          .split(",")
+          .sort((a, b) => a - b);
         return {
           ...returnData,
           answer,
@@ -100,7 +104,8 @@ export const action: ActionFunction = async ({ request, params }) => {
         const variants = form.getAll(`variant${index}`) as string[];
         return {
           ...returnData,
-          answer: answer[0].split(","),
+          // answer: answer[0].split(","),
+          answer: answer.split(","),
           variants: variants.map((variant, idx) => ({
             value: variant,
             isFocused: false,

@@ -21,7 +21,6 @@ export default function Backend({
   text,
 }: BackendProps) {
   const words = text ? text.split(" ") : answer.split(" ");
-  // console.log("indexes: ", indexes);
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <h3>Mark words which should be hidden</h3>
