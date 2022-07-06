@@ -18,12 +18,9 @@ export default function QuestionAnswerPractice() {
 
     if (
       doesArrayContainItems(content.keywords, userAnswer.split(" ")).length ===
+        content.keywords.length &&
       content.keywords.length
     ) {
-      if (length < content.answer.length) {
-        return setStateRight();
-      }
-
       return setStateRight();
     }
 
@@ -31,6 +28,8 @@ export default function QuestionAnswerPractice() {
       // if user's response is less than 80% right, then return negative
       return setStateWrong();
     }
+
+    return setStateRight();
   };
 
   return content.stepType === "Question" ? (
