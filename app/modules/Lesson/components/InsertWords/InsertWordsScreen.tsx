@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
 import { useSkill } from "../..";
 import { LessonTitle } from "../lib";
@@ -51,12 +51,14 @@ export default function InsertWordsScreen({
     }
   }, [userAnswer]);
 
-  useEffect(() => {
-    if (skillState.formDisabled) {
-      return;
-    }
+  useLayoutEffect(() => {
+    // if (skillState.formDisabled) {
+    //   return;
+    // }
+    // console.log("Wow");
     setValues(initalValues);
-  }, [difficulty, skillState.formDisabled]);
+    // }, [difficulty, skillState.formDisabled]);
+  }, [difficulty]);
 
   return (
     <>

@@ -6,7 +6,7 @@ import Constructor from "~/modules/Constructor";
 import { Language, Lesson, Skill } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
 import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
-import { getTodayDate } from "~/utils";
+import { doesItemContainSign, getTodayDate } from "~/utils";
 
 export type ActionData = {
   errors?: {
@@ -76,10 +76,11 @@ export const action: ActionFunction = async ({ request, params }) => {
         answer = answer
           .trim()
           .split(",")
-          .sort((a, b) => a - b);
+          .sort((a, b) => Number(a) - Number(b));
         const variants = variantValues.map((value, idx) => ({
           idx,
-          value,
+          // value,
+          value: doesItemContainSign(value as string).newItem,
           isFocused: false,
         }));
         return {

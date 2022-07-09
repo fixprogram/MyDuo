@@ -12,6 +12,7 @@ import {
 } from "./lib";
 import Easier from "~/styles/easier.svg";
 import Harder from "~/styles/harder.svg";
+import { doesItemContainSign } from "~/utils";
 
 export default function Footer({
   checkAnswer = () => {},
@@ -22,7 +23,7 @@ export default function Footer({
   const { skillState, content, continueSkill, setStateWrong, setDifficulty } =
     useSkill();
 
-  const { answer, difficulty } = content;
+  const { answer, text, difficulty } = content;
   const { status, buttonDisabled } = skillState;
 
   const buttonText =
@@ -35,6 +36,16 @@ export default function Footer({
       : status !== "idle"
       ? "Continue"
       : "Check";
+
+  const getFooterText = (text: string | null, answer: string[]) => {
+    if (text && answer.length) {
+      if (answer.length === 1) {
+        return doesItemContainSign(text.split(" ")[Number(answer[0])]).newItem;
+      }
+      return text;
+    }
+    return answer.join(" ");
+  };
 
   const handleContinue = () => {
     if (
@@ -91,7 +102,7 @@ export default function Footer({
               {status === "wrong" ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
             {status === "wrong" && (
-              <LessonFooterText> {answer.join(" ")}</LessonFooterText>
+              <LessonFooterText>{getFooterText(text, answer)}</LessonFooterText>
             )}
           </div>
         </LessonFooterMessage>

@@ -68,6 +68,8 @@ export default function Text({ values, setValues }: TextProps) {
                     type="text"
                     length={newItem.length}
                     disabled={true}
+                    value={values[index]}
+                    style={{ color: "#fff" }}
                   />
                 ) : difficulty === "easy" && isToChoose ? (
                   <InsertWordsInput

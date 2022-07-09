@@ -1550,6 +1550,7 @@ var VariantItem = (0, import_styled3.default)("button")`
   padding: 12px 16px;
   width: 100%;
   transition: background-color 0.1s;
+  outline: none;
   &:hover {
     background-color: ${(props) => props.isFocused ? "#ddf4ff" : props.isDisabled ? "inherit" : "#f7f7f7"};
   }
@@ -1696,7 +1697,7 @@ var Results = import_react6.default.forwardRef((props, ref) => {
 
 // app/modules/Lesson/components/Footer.tsx
 init_react();
-var import_react7 = require("@remix-run/react");
+var import_react9 = require("@remix-run/react");
 
 // app/styles/easier.svg
 var easier_default = "/build/_assets/easier-J6XFH7BL.svg";
@@ -1704,67 +1705,10 @@ var easier_default = "/build/_assets/easier-J6XFH7BL.svg";
 // app/styles/harder.svg
 var harder_default = "/build/_assets/harder-YCUE4ZYE.svg";
 
-// app/modules/Lesson/components/Footer.tsx
-function Footer({
-  checkAnswer = () => {
-  }
-}) {
-  const transition = (0, import_react7.useTransition)();
-  const { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill();
-  const { answer, difficulty } = content;
-  const { status, buttonDisabled } = skillState;
-  const buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check";
-  const handleContinue = () => {
-    if (buttonText === "Saving..." || buttonText === "Saved!" || skillState.buttonDisabled) {
-      return;
-    }
-    if (status === "idle") {
-      return checkAnswer();
-    }
-    continueSkill();
-  };
-  const handleSkip = () => {
-    setStateWrong();
-  };
-  return /* @__PURE__ */ React.createElement(LessonFooter, {
-    status
-  }, /* @__PURE__ */ React.createElement(LessonFooterInner, null, /* @__PURE__ */ React.createElement(LessonButton, {
-    onClick: handleSkip,
-    skip: true,
-    hidden: status !== "idle" || content.stepType === "Pairs"
-  }, "Skip"), difficulty && status === "idle" && /* @__PURE__ */ React.createElement(ChangeDifficultyBtn, {
-    onClick: () => setDifficulty(difficulty === "easy" ? "hard" : "easy")
-  }, /* @__PURE__ */ React.createElement("img", {
-    src: difficulty === "easy" ? harder_default : easier_default,
-    alt: difficulty,
-    height: 19,
-    width: 27,
-    style: { marginRight: 10 }
-  }), /* @__PURE__ */ React.createElement("p", null, "Make ", difficulty === "easy" ? "harder" : "easier")), /* @__PURE__ */ React.createElement(LessonFooterMessage, {
-    status
-  }, (status === "right" || status === "wrong") && /* @__PURE__ */ React.createElement(LessonFooterIcon, {
-    status
-  }), /* @__PURE__ */ React.createElement("div", {
-    style: { marginLeft: 16, width: "calc(100% - 209px)" }
-  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, status === "wrong" ? "Right answer: " : "Great!"), status === "wrong" && /* @__PURE__ */ React.createElement(LessonFooterText, null, " ", answer.join(" ")))), /* @__PURE__ */ React.createElement(LessonButton, {
-    active: !buttonDisabled,
-    stateRight: status === "right",
-    stateWrong: status === "wrong",
-    onClick: handleContinue,
-    disabled: buttonText === "Saving..." || buttonText === "Saved!" || buttonDisabled,
-    style: {
-      marginLeft: status === "results" || content.stepType === "Pairs" ? "auto" : 0
-    }
-  }, buttonText)));
-}
-
-// app/modules/Lesson/components/InsertWords/index.tsx
-init_react();
-
 // app/utils.ts
 init_react();
-var import_react8 = require("@remix-run/react");
-var import_react9 = require("react");
+var import_react7 = require("@remix-run/react");
+var import_react8 = require("react");
 var isItemInArray = (arr, item) => {
   return !!arr.filter((arrItem) => arrItem === item).length;
 };
@@ -1837,6 +1781,72 @@ var getTodayDate = () => {
   const today = new Date();
   return today.getFullYear() + today.getUTCMonth() + today.getDate();
 };
+
+// app/modules/Lesson/components/Footer.tsx
+function Footer({
+  checkAnswer = () => {
+  }
+}) {
+  const transition = (0, import_react9.useTransition)();
+  const { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill();
+  const { answer, text, difficulty } = content;
+  const { status, buttonDisabled } = skillState;
+  const buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check";
+  const getFooterText = (text2, answer2) => {
+    if (text2 && answer2.length) {
+      if (answer2.length === 1) {
+        return doesItemContainSign(text2.split(" ")[Number(answer2[0])]).newItem;
+      }
+      return text2;
+    }
+    return answer2.join(" ");
+  };
+  const handleContinue = () => {
+    if (buttonText === "Saving..." || buttonText === "Saved!" || skillState.buttonDisabled) {
+      return;
+    }
+    if (status === "idle") {
+      return checkAnswer();
+    }
+    continueSkill();
+  };
+  const handleSkip = () => {
+    setStateWrong();
+  };
+  return /* @__PURE__ */ React.createElement(LessonFooter, {
+    status
+  }, /* @__PURE__ */ React.createElement(LessonFooterInner, null, /* @__PURE__ */ React.createElement(LessonButton, {
+    onClick: handleSkip,
+    skip: true,
+    hidden: status !== "idle" || content.stepType === "Pairs"
+  }, "Skip"), difficulty && status === "idle" && /* @__PURE__ */ React.createElement(ChangeDifficultyBtn, {
+    onClick: () => setDifficulty(difficulty === "easy" ? "hard" : "easy")
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: difficulty === "easy" ? harder_default : easier_default,
+    alt: difficulty,
+    height: 19,
+    width: 27,
+    style: { marginRight: 10 }
+  }), /* @__PURE__ */ React.createElement("p", null, "Make ", difficulty === "easy" ? "harder" : "easier")), /* @__PURE__ */ React.createElement(LessonFooterMessage, {
+    status
+  }, (status === "right" || status === "wrong") && /* @__PURE__ */ React.createElement(LessonFooterIcon, {
+    status
+  }), /* @__PURE__ */ React.createElement("div", {
+    style: { marginLeft: 16, width: "calc(100% - 209px)" }
+  }, /* @__PURE__ */ React.createElement(LessonFooterTitle, null, status === "wrong" ? "Right answer: " : "Great!"), status === "wrong" && /* @__PURE__ */ React.createElement(LessonFooterText, null, getFooterText(text, answer)))), /* @__PURE__ */ React.createElement(LessonButton, {
+    active: !buttonDisabled,
+    stateRight: status === "right",
+    stateWrong: status === "wrong",
+    onClick: handleContinue,
+    disabled: buttonText === "Saving..." || buttonText === "Saved!" || buttonDisabled,
+    style: {
+      marginLeft: status === "results" || content.stepType === "Pairs" ? "auto" : 0
+    }
+  }, buttonText)));
+}
+
+// app/modules/Lesson/components/InsertWords/index.tsx
+init_react();
 
 // app/modules/Lesson/components/Lesson.tsx
 init_react();
@@ -2090,7 +2100,7 @@ var VariantsItem3 = (0, import_styled5.default)("li")`
 // app/modules/Lesson/components/InsertWords/Puzzle.tsx
 function Puzzle({ values, setValues }) {
   const { content } = useSkill();
-  const { answer: contentAnswer, difficulty, isToChoose } = content;
+  const { answer: contentAnswer, text, difficulty, isToChoose } = content;
   const selectVariant = (variant) => {
     setValues((prevArray) => {
       const empty = prevArray.find((item) => {
@@ -2107,7 +2117,11 @@ function Puzzle({ values, setValues }) {
       return [...prevArray, variant];
     });
   };
-  const words = contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
+  const indexes = contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
+  const words = indexes.map((idx) => {
+    const textItem = text == null ? void 0 : text.split(" ")[Number(idx)];
+    return doesItemContainSign(textItem).newItem;
+  });
   return isToChoose && difficulty === "easy" ? /* @__PURE__ */ React.createElement(PuzzleContainer, null, /* @__PURE__ */ React.createElement(PuzzleList, null, words.map((answer, idx) => {
     const alreadyChoosen = !!values.find((value) => value === answer);
     return /* @__PURE__ */ React.createElement(PuzzleItem, {
@@ -2216,7 +2230,9 @@ function Text({ values, setValues }) {
         }, difficulty === "easy" && !!variants.length ? /* @__PURE__ */ React.createElement(InsertWordsInput, {
           type: "text",
           length: newItem.length,
-          disabled: true
+          disabled: true,
+          value: values[index],
+          style: { color: "#fff" }
         }) : difficulty === "easy" && isToChoose ? /* @__PURE__ */ React.createElement(InsertWordsInput, {
           type: "text",
           length: newItem.length,
@@ -2274,12 +2290,9 @@ function InsertWordsScreen({
       setValues([...userAnswer]);
     }
   }, [userAnswer]);
-  (0, import_react13.useEffect)(() => {
-    if (skillState.formDisabled) {
-      return;
-    }
+  (0, import_react13.useLayoutEffect)(() => {
     setValues(initalValues);
-  }, [difficulty, skillState.formDisabled]);
+  }, [difficulty]);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(LessonTitle2, null, "Add missing words"), /* @__PURE__ */ React.createElement(InsertWordsTextBlock, null, /* @__PURE__ */ React.createElement(Text, {
     values,
     setValues
@@ -2304,8 +2317,15 @@ function InsertWords() {
         return item;
       }
     });
-    const { formatted } = doesArrayContainItems(answer, userAnswer);
-    if (areArraysEqual(answer, formatted)) {
+    const formattedAnswer = answer == null ? void 0 : answer.map((answerItem) => doesItemContainSign(answerItem).newItem);
+    const { formatted } = doesArrayContainItems(formattedAnswer, userAnswer);
+    if (content.difficulty === "easy" && content.isToChoose) {
+      if (areArraysEqual(formattedAnswer, userAnswer)) {
+        return setStateRight();
+      }
+      return setStateWrong();
+    }
+    if (areArraysEqual(formattedAnswer, formatted)) {
       return setStateRight();
     }
     return setStateWrong();
@@ -4485,10 +4505,10 @@ var action5 = async ({ request, params }) => {
         const text = form.get(`text${index}`);
         const isToChoose = !!form.get(`isToChoose${index}`);
         const variantValues = form.getAll(`variant${index}`);
-        answer = answer.trim().split(",").sort((a, b) => a - b);
+        answer = answer.trim().split(",").sort((a, b) => Number(a) - Number(b));
         const variants = variantValues.map((value, idx) => ({
           idx,
-          value,
+          value: doesItemContainSign(value).newItem,
           isFocused: false
         }));
         return __spreadProps(__spreadValues({}, returnData), {
@@ -5107,7 +5127,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "728915a2", "entry": { "module": "/build/entry.client-ZFFO5RKX.js", "imports": ["/build/_shared/chunk-3MCLHTC4.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-XTVGI7HV.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-TJWXNYK5.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-7QW5HUXS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-TUQQQ2CP.js", "imports": ["/build/_shared/chunk-VD2LDC2V.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WFW4ZYAV.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-QGII3WOW.js", "imports": ["/build/_shared/chunk-VD2LDC2V.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WFW4ZYAV.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-W2LI6YPS.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-W6JOWRJU.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-7QW5HUXS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-4PXXAKY2.js", "imports": ["/build/_shared/chunk-X3P6ANPZ.js", "/build/_shared/chunk-WFW4ZYAV.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-7QW5HUXS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-3WX2BSZL.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-UCAULKIY.js", "imports": ["/build/_shared/chunk-X3P6ANPZ.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WFW4ZYAV.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-7QW5HUXS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-V4DVZBW3.js", "imports": ["/build/_shared/chunk-X3P6ANPZ.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WFW4ZYAV.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-7QW5HUXS.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-728915A2.js" };
+var assets_manifest_default = { "version": "db9879d9", "entry": { "module": "/build/entry.client-N7C4SUI4.js", "imports": ["/build/_shared/chunk-PRIN477Y.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-Z4TNR2WX.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-SUJGRZZA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-DLLT32ZN.js", "imports": ["/build/_shared/chunk-DFWWPPYW.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-43E2QCFZ.js", "imports": ["/build/_shared/chunk-DFWWPPYW.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-5EYCZ74U.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-N7TE2DAZ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-X6XFT4ZS.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-SVUQQRKH.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-L52J6DER.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-IWKG2UCX.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-DB9879D9.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

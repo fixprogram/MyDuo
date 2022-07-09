@@ -1,4 +1,8 @@
-import { areArraysEqual, doesArrayContainItems } from "~/utils";
+import {
+  areArraysEqual,
+  doesArrayContainItems,
+  doesItemContainSign,
+} from "~/utils";
 import { useSkill } from "../..";
 import { Lesson } from "../Lesson";
 import InsertWordsScreen from "./InsertWordsScreen";
@@ -18,10 +22,22 @@ export default function InsertWords() {
         return item;
       }
     });
-    // const { formatted } = doesArrayContainItems(content.answer, userAnswer);
-    const { formatted } = doesArrayContainItems(answer as string[], userAnswer);
-    // if (areArraysEqual(content.answer, formatted)) {
-    if (areArraysEqual(answer as string[], formatted)) {
+    const formattedAnswer = answer?.map(
+      (answerItem) => doesItemContainSign(answerItem).newItem
+    );
+    const { formatted } = doesArrayContainItems(
+      formattedAnswer as string[],
+      userAnswer
+    );
+
+    if (content.difficulty === "easy" && content.isToChoose) {
+      if (areArraysEqual(formattedAnswer as string[], userAnswer)) {
+        return setStateRight();
+      }
+      return setStateWrong();
+    }
+
+    if (areArraysEqual(formattedAnswer as string[], formatted)) {
       return setStateRight();
     }
     return setStateWrong();

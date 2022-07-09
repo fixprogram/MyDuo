@@ -247,6 +247,7 @@ const VariantItem = styled("button")<VariantItemProps>`
   padding: 12px 16px;
   width: 100%;
   transition: background-color 0.1s;
+  outline: none;
   &:hover {
     background-color: ${(props) =>
       props.isFocused ? "#ddf4ff" : props.isDisabled ? "inherit" : "#f7f7f7"};

@@ -1,3 +1,4 @@
+import { doesItemContainSign } from "~/utils";
 import { useSkill } from "../..";
 import { VariantItem } from "../lib";
 import { PuzzleContainer, PuzzleItem, PuzzleList } from "./lib";
@@ -9,7 +10,7 @@ type PuzzleProps = {
 
 export default function Puzzle({ values, setValues }: PuzzleProps) {
   const { content } = useSkill();
-  const { answer: contentAnswer, difficulty, isToChoose } = content;
+  const { answer: contentAnswer, text, difficulty, isToChoose } = content;
   const selectVariant = (variant: string) => {
     setValues((prevArray: string[]) => {
       const empty = prevArray.find((item) => {
@@ -27,8 +28,14 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
     });
   };
 
-  const words =
+  const indexes =
     contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
+
+  const words = indexes.map((idx) => {
+    const textItem = text?.split(" ")[Number(idx)];
+
+    return doesItemContainSign(textItem).newItem;
+  });
 
   return isToChoose && difficulty === "easy" ? (
     <PuzzleContainer>
