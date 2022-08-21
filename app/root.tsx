@@ -2,7 +2,7 @@ import { Links, LiveReload, Outlet, Scripts } from "remix";
 
 function Document({
   children,
-  title = `MyDuo`,
+  title = `Keid`,
 }: {
   children: React.ReactNode;
   title?: string;
