@@ -379,7 +379,7 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/root.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/root.tsx
 var root_exports = {};
 __export(root_exports, {
   ErrorBoundary: () => ErrorBoundary,
@@ -416,7 +416,7 @@ function ErrorBoundary({ error }) {
   }, /* @__PURE__ */ React.createElement("h1", null, "App Error"), /* @__PURE__ */ React.createElement("pre", null, error.message)));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/skill/$title/$chapter.tsx
 var chapter_exports = {};
 __export(chapter_exports, {
   ErrorBoundary: () => ErrorBoundary2,
@@ -2861,7 +2861,7 @@ async function getLastAddedSkill(projectId, neighbors = false) {
   return lastAddedSkill;
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/$chapter.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/skill/$title/$chapter.tsx
 function ErrorBoundary2() {
   const { title, chapter } = (0, import_remix5.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
@@ -2902,7 +2902,7 @@ function LessonScreen() {
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/skill/$title/practice.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/skill/$title/practice.tsx
 var practice_exports = {};
 __export(practice_exports, {
   ErrorBoundary: () => ErrorBoundary3,
@@ -2952,7 +2952,7 @@ function LessonScreen2() {
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language.tsx
 var language_exports = {};
 __export(language_exports, {
   action: () => action3,
@@ -3161,7 +3161,7 @@ async function getLessonsBySkillId(id) {
 // app/styles/index.css
 var styles_default = "/build/_assets/index-N3DJ5BPL.css";
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language.tsx
 var links = () => {
   return [{ rel: "stylesheet", href: styles_default }];
 };
@@ -3221,10 +3221,9 @@ function ProjectPage() {
   }));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$skillId.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/constructor/$skillId.tsx
 var skillId_exports = {};
 __export(skillId_exports, {
-  ErrorBoundary: () => ErrorBoundary4,
   action: () => action4,
   default: () => ConstructorEdit,
   loader: () => loader4
@@ -3342,7 +3341,7 @@ function constructorReducer(state, action10) {
   const { steps, chapters } = state;
   const { type } = action10;
   switch (type) {
-    case "SET_DATA" /* setData */: {
+    case "SETUP" /* setup */: {
       const { steps: steps2 } = action10;
       return __spreadProps(__spreadValues({}, state), {
         steps: steps2
@@ -3450,7 +3449,7 @@ function useConstructorReducer({
   reducer: reducer2 = constructorReducer
 } = {}) {
   const [state, dispatch] = (0, import_react22.useReducer)(reducer2, initialState5);
-  const setup = (steps) => dispatch({ type: "SET_DATA" /* setData */, steps });
+  const setup = (steps) => dispatch({ type: "SETUP" /* setup */, steps });
   const setStepType = (stepType, id) => dispatch({ type: "SET_STEP_TYPE" /* setStepType */, payload: { stepType, id } });
   const removeStep = (id) => dispatch({ type: "REMOVE_STEP" /* removeStep */, id });
   const removeStepType = (id) => dispatch({ type: "REMOVE_STEP_TYPE" /* removeStepType */, id });
@@ -3768,7 +3767,11 @@ function MatchingPairs({ state = initialState2 }) {
     variants: initialVariants,
     pairs: []
   });
+  const isEditing = answer.length;
   (0, import_react24.useEffect)(() => {
+    if (isEditing) {
+      return dispatch(pairsSetup(answer.length, state.variants, answer));
+    }
     dispatch(pairsSetup(variantsCount, initialVariants, answer));
   }, []);
   (0, import_react24.useEffect)(() => {
@@ -3780,6 +3783,7 @@ function MatchingPairs({ state = initialState2 }) {
       setStepReady(false, number);
     }
   }, [pairs.length, pairs]);
+  console.log("Variants: ", variants);
   return stepType === "Pairs" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("fieldset", {
     style: { maxWidth: 600, margin: "0 auto" }
   }, /* @__PURE__ */ React.createElement("input", {
@@ -4102,9 +4106,10 @@ function Keywords({
   (0, import_react29.useEffect)(() => {
     onSet(keywords);
   }, [keywords]);
+  const isEditing = Boolean(Array.isArray(answer));
   return /* @__PURE__ */ React.createElement("div", {
     style: { display: "flex", flexWrap: "wrap" }
-  }, answer.split(" ").map((item, idx) => {
+  }, !isEditing && answer.split(" ").map((item, idx) => {
     if (item.includes(",")) {
       item = item.slice(0, -1);
     }
@@ -4315,14 +4320,8 @@ function Constructor({
   }), /* @__PURE__ */ React.createElement(Levels, null)), /* @__PURE__ */ React.createElement(Sidebar_default, null)));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/$skillId.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/constructor/$skillId.tsx
 var import_remix8 = __toESM(require_remix());
-function ErrorBoundary4() {
-  const { skillId } = (0, import_react35.useParams)();
-  return /* @__PURE__ */ React.createElement("div", {
-    className: "error-container"
-  }, `There was an error loading lesson by the id ${skillId}. Sorry.`);
-}
 var action4 = async ({ request, params }) => {
   const form = await request.formData();
   const title = form.get("title");
@@ -4450,17 +4449,17 @@ function ConstructorEdit() {
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/constructor/new.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/constructor/new.tsx
 var new_exports = {};
 __export(new_exports, {
-  ErrorBoundary: () => ErrorBoundary5,
+  ErrorBoundary: () => ErrorBoundary4,
   action: () => action5,
   default: () => ConstructorNew,
   loader: () => loader5
 });
 init_react();
 var import_remix9 = __toESM(require_remix());
-function ErrorBoundary5() {
+function ErrorBoundary4() {
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, `There was an error loading the constructor. Sorry.`);
@@ -4576,10 +4575,10 @@ function ConstructorNew() {
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/skills.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/skills.tsx
 var skills_exports = {};
 __export(skills_exports, {
-  ErrorBoundary: () => ErrorBoundary6,
+  ErrorBoundary: () => ErrorBoundary5,
   action: () => action6,
   default: () => SkillsPage,
   loader: () => loader6
@@ -4714,7 +4713,7 @@ function WeeklyProgress({
   }, /* @__PURE__ */ React.createElement("title", null, exp, " XP"))))))));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/skills.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/skills.tsx
 var import_react38 = require("@remix-run/react");
 
 // app/components/SkillsList.tsx
@@ -4861,8 +4860,8 @@ function SkillsList({
   }))))), /* @__PURE__ */ React.createElement(Footer2, null));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/$language/skills.tsx
-function ErrorBoundary6() {
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/$language/skills.tsx
+function ErrorBoundary5() {
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
   }, "Issues during loading Skills route");
@@ -4901,17 +4900,17 @@ function SkillsPage() {
   }));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/practice.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/practice.tsx
 var practice_exports2 = {};
 __export(practice_exports2, {
-  ErrorBoundary: () => ErrorBoundary7,
+  ErrorBoundary: () => ErrorBoundary6,
   action: () => action7,
   default: () => LessonScreen3,
   loader: () => loader7
 });
 init_react();
 var import_remix11 = __toESM(require_remix());
-function ErrorBoundary7() {
+function ErrorBoundary6() {
   const { lessonId } = (0, import_remix11.useParams)();
   return /* @__PURE__ */ React.createElement("div", {
     className: "error-container"
@@ -4950,7 +4949,7 @@ function LessonScreen3() {
   });
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/logout.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/logout.tsx
 var logout_exports = {};
 __export(logout_exports, {
   action: () => action8,
@@ -4965,7 +4964,7 @@ var loader8 = async () => {
   return (0, import_remix12.redirect)("/");
 };
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/repeat.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/repeat.tsx
 var repeat_exports = {};
 __export(repeat_exports, {
   default: () => Repeat
@@ -4976,7 +4975,7 @@ function Repeat() {
   return /* @__PURE__ */ React.createElement(import_remix13.Outlet, null);
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/index.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   loader: () => loader9
@@ -4994,7 +4993,7 @@ var loader9 = async ({ request }) => {
   return (0, import_remix14.redirect)(`/${activeLanguageTitle}/skills`);
 };
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/login.tsx
 var login_exports = {};
 __export(login_exports, {
   action: () => action9,
@@ -5073,7 +5072,7 @@ function Login({ isLogin, setIsLogin, actionData }) {
   }, isLogin ? "Login" : "Register"));
 }
 
-// route:/Users/newll/Desktop/MyDuo/app/routes/login.tsx
+// route:/Users/newll/Desktop/Projects/MyDuo/app/routes/login.tsx
 var import_react41 = require("react");
 var loader10 = async ({ request }) => {
   const userId = await getUserId(request);
@@ -5127,7 +5126,7 @@ function LoginPage() {
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
 init_react();
-var assets_manifest_default = { "version": "db9879d9", "entry": { "module": "/build/entry.client-N7C4SUI4.js", "imports": ["/build/_shared/chunk-PRIN477Y.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-Z4TNR2WX.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-SUJGRZZA.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-DLLT32ZN.js", "imports": ["/build/_shared/chunk-DFWWPPYW.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-43E2QCFZ.js", "imports": ["/build/_shared/chunk-DFWWPPYW.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-5EYCZ74U.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-BD67KWZ4.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-N7TE2DAZ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X6KLJBK3.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-X6XFT4ZS.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-SVUQQRKH.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-L52J6DER.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-IWKG2UCX.js", "imports": ["/build/_shared/chunk-Z5OLW26P.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-27LEOYVX.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-LLW3QOJH.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-DB9879D9.js" };
+var assets_manifest_default = { "version": "4d6ac922", "entry": { "module": "/build/entry.client-VLZHPVAU.js", "imports": ["/build/_shared/chunk-LPWDUI2N.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-6PWRV6OY.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-2Q4N3WL2.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-X75QPWFW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-4DZA5KYT.js", "imports": ["/build/_shared/chunk-3ZUOUJA3.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XLWTGDX7.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-TCQNSIIZ.js", "imports": ["/build/_shared/chunk-3ZUOUJA3.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XLWTGDX7.js", "/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-4ZKUQ3LC.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-RDLBYRKD.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-X3TPCJ5E.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-X75QPWFW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-AL7XM25L.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-U2BM4SFO.js", "imports": ["/build/_shared/chunk-BV7W6757.js", "/build/_shared/chunk-XLWTGDX7.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-X75QPWFW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-IX5ALMUB.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-KMRAUA34.js", "imports": ["/build/_shared/chunk-BV7W6757.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XLWTGDX7.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-X75QPWFW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-N33NCAJR.js", "imports": ["/build/_shared/chunk-BV7W6757.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-XLWTGDX7.js", "/build/_shared/chunk-6H6WQFFR.js", "/build/_shared/chunk-2FEXWIKP.js", "/build/_shared/chunk-X75QPWFW.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true } }, "url": "/build/manifest-4D6AC922.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

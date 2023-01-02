@@ -15,12 +15,12 @@ import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 
-export function ErrorBoundary() {
-  const { skillId } = useParams();
-  return (
-    <div className="error-container">{`There was an error loading lesson by the id ${skillId}. Sorry.`}</div>
-  );
-}
+// export function ErrorBoundary() {
+//   const { skillId } = useParams();
+//   return (
+//     <div className="error-container">{`There was an error loading lesson by the id ${skillId}. Sorry.`}</div>
+//   );
+// }
 
 export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
@@ -145,6 +145,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const skill = await prisma.skill.findUnique({
     where: { id: params.skillId },
   });
+
+  // console.log("Skill: ", skill);
+
   if (!skill) {
     throw new Error("lesson not found");
   }
@@ -161,6 +164,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     steps: lessons,
     lineNumber: skill.lineNumber,
   };
+
+  // console.log("Data: ", data);
+
   return { data, lastAddedSkills };
 };
 

@@ -31,6 +31,8 @@ export default function Constructor({
   const state = useConstructorReducer();
   const { currentScreen, setup, changeCurrentScreen } = state;
 
+  // console.warn("Data: ", data);
+
   useEffect(() => {
     if (data) {
       setup(data.steps);

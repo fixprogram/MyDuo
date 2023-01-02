@@ -21,7 +21,7 @@ import { Lesson } from "@prisma/client";
 import { useReducer } from "react";
 
 enum actionTypes {
-  setData = "SET_DATA",
+  setup = "SETUP",
   setStepType = "SET_STEP_TYPE",
   removeStep = "REMOVE_STEP",
   removeStepType = "REMOVE_STEP_TYPE",
@@ -38,7 +38,7 @@ enum actionTypes {
 }
 
 type Action =
-  | { type: actionTypes.setData; steps: Lesson[] }
+  | { type: actionTypes.setup; steps: Lesson[] }
   | { type: actionTypes.setStepType; payload: { stepType: string; id: string } }
   | { type: actionTypes.removeStep; id: string }
   | { type: actionTypes.removeStepType; id: string }
@@ -75,7 +75,7 @@ function constructorReducer(state: State, action: Action): State {
   const { type } = action;
 
   switch (type) {
-    case actionTypes.setData: {
+    case actionTypes.setup: {
       const { steps } = action;
       return {
         ...state,
@@ -196,7 +196,7 @@ function useConstructorReducer({
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const setup = (steps: Lesson[]) =>
-    dispatch({ type: actionTypes.setData, steps });
+    dispatch({ type: actionTypes.setup, steps });
   const setStepType = (stepType: string, id: string) =>
     dispatch({ type: actionTypes.setStepType, payload: { stepType, id } });
   const removeStep = (id: string) =>

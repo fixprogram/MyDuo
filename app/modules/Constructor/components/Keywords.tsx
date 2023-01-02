@@ -17,31 +17,34 @@ export default function Keywords({
     onSet(keywords);
   }, [keywords]);
 
+  const isEditing = Boolean(Array.isArray(answer));
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {answer.split(" ").map((item: string, idx: number) => {
-        if (item.includes(",")) {
-          item = item.slice(0, -1);
-        }
-        return (
-          <Keyword
-            key={idx}
-            onSet={(word: string) =>
-              setKeywords((prevArr: string[]) => {
-                if (isItemInArray(prevArr, item)) {
-                  prevArr.splice(prevArr.indexOf(word), 1);
-                  return [...prevArr];
-                } else {
-                  return [...prevArr, word];
-                }
-              })
-            }
-            initiallyActive={!!keywords.find((keyword) => keyword === item)}
-          >
-            {item}
-          </Keyword>
-        );
-      })}
+      {!isEditing &&
+        answer.split(" ").map((item: string, idx: number) => {
+          if (item.includes(",")) {
+            item = item.slice(0, -1);
+          }
+          return (
+            <Keyword
+              key={idx}
+              onSet={(word: string) =>
+                setKeywords((prevArr: string[]) => {
+                  if (isItemInArray(prevArr, item)) {
+                    prevArr.splice(prevArr.indexOf(word), 1);
+                    return [...prevArr];
+                  } else {
+                    return [...prevArr, word];
+                  }
+                })
+              }
+              initiallyActive={!!keywords.find((keyword) => keyword === item)}
+            >
+              {item}
+            </Keyword>
+          );
+        })}
     </div>
   );
 }
