@@ -227,7 +227,7 @@ var LessonBlockInner = (0, import_styled.default)("div")`
   color: #fff;
   padding: 16px;
   text-align: center;
-  width: 300px;
+  width: 295px;
   box-sizing: border-box;
   border-radius: 15px;
   display: flex;
@@ -800,7 +800,7 @@ var ConstructorMenu = (0, import_styled2.default)("div")`
 var ScreenContainer = (0, import_styled2.default)("section")`
   position: absolute;
   top: 0;
-  width: 100%;
+  width: calc(100% - 60px);
   text-align: center;
   visibility: ${(props) => props.screen !== props.target ? "hidden" : "visible"};
 `;
@@ -944,7 +944,7 @@ function skillReducer(state, action10) {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: continueContent({}, steps)
+        content: continueContent(basicState.content, steps)
       });
     case "RESULTS" /* results */:
       return __spreadProps(__spreadValues({}, state), {
@@ -2514,11 +2514,11 @@ async function getSkills(languageId) {
   });
 }
 async function updateCurrentChapter(skill) {
-  const { title, currentChapter, chapters } = skill;
+  const { currentChapter, chapters, id } = skill;
   const today = getTodayDate();
   return await prisma.skill.update({
     where: {
-      title
+      id
     },
     data: {
       currentChapter: chapters !== currentChapter ? currentChapter + 1 : currentChapter,
@@ -2545,8 +2545,8 @@ async function getLastAddedSkill(projectId, neighbors = false) {
 async function deleteSkillById(id) {
   return await prisma.skill.delete({ where: { id } });
 }
-async function getSkillByTitle(title) {
-  return await prisma.skill.findFirst({ where: { title } });
+async function getSkillByTitle(title, projectId) {
+  return await prisma.skill.findFirst({ where: { title, projectId } });
 }
 
 // route:/Users/newll/Desktop/Projects/MyDuo/app/routes/skill/$title/$chapter.tsx
@@ -2583,24 +2583,31 @@ async function getLessonsBySkillId(id) {
     where: { id: { in: skill.lessonIDs } }
   });
 }
-async function getLessonsForPracticing(activeLanguageId) {
+async function getStepsForPracticing(activeLanguageId) {
   const lessons = await prisma.lesson.findMany({
     where: { languageId: activeLanguageId },
     orderBy: { createdAt: "desc" },
     take: 10
   });
-  return lessons;
+  return getSteps(lessons);
 }
-async function getStepsForChapter(skillTitle, chapter) {
-  const skill = await prisma.skill.findFirst({
-    where: { title: skillTitle },
-    select: { lessonIDs: true }
-  });
+async function getStepsForChapter(skillTitle, chapter, projectId) {
+  const skill = await getSkillByTitle(skillTitle, projectId);
   if (!skill) {
     throw new Error("Skill is not found");
   }
   const lessons = await prisma.lesson.findMany({
     where: { id: { in: skill.lessonIDs }, chapter }
+  });
+  return getSteps(lessons);
+}
+async function getStepsForPracticingSkill(skillTitle, projectId) {
+  const skill = await getSkillByTitle(skillTitle, projectId);
+  if (!skill) {
+    throw new Error("Skill is not found");
+  }
+  const lessons = await prisma.lesson.findMany({
+    where: { id: { in: skill.lessonIDs } }
   });
   return getSteps(lessons);
 }
@@ -2613,22 +2620,29 @@ function ErrorBoundary2() {
   }, `There was an error loading skill with the title ${title} and chapter ${chapter}. Sorry.`);
 }
 var action = async ({ request, params }) => {
-  const language = await getActiveLanguage(request);
+  const activeLanguage = await getActiveLanguage(request);
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const title = params.title;
-  const skill = await getSkillByTitle(title);
+  const skill = await getSkillByTitle(title, activeLanguage.id);
   if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
   }
   await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
-  return (0, import_node2.redirect)(`/${language == null ? void 0 : language.title}/skills`);
+  return (0, import_node2.redirect)(`/${activeLanguage.title}/skills`);
 };
-var loader = async ({ params }) => {
+var loader = async ({ request, params }) => {
+  const activeLanguage = await getActiveLanguage(request);
+  if (!activeLanguage) {
+    throw new Error(`No active language is found`);
+  }
   const title = params.title;
   const chapter = Number(params.chapter);
-  const steps = await getStepsForChapter(title, chapter);
+  const steps = await getStepsForChapter(title, chapter, activeLanguage.id);
   return (0, import_node2.json)({ steps });
 };
 function LessonScreen() {
@@ -2650,38 +2664,38 @@ __export(practice_exports, {
 var import_react23 = require("@remix-run/react");
 var import_node3 = require("@remix-run/node");
 var action2 = async ({ request, params }) => {
-  const language = await getActiveLanguage(request);
+  const activeLanguage = await getActiveLanguage(request);
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const title = params.title;
-  const skill = await prisma.skill.findUnique({
-    where: { title }
-  });
+  const skill = await getSkillByTitle(title, activeLanguage.id);
   if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
   }
   await updateCurrentChapter(skill);
   await increaseTodayExp(request, expData);
-  return (0, import_node3.redirect)(`/${language == null ? void 0 : language.title}/skills`);
+  return (0, import_node3.redirect)(`/${activeLanguage == null ? void 0 : activeLanguage.title}/skills`);
 };
-var loader2 = async ({ params }) => {
-  const skill = await prisma.skill.findUnique({
-    where: { title: params.title }
-  });
+var loader2 = async ({ request, params }) => {
+  const activeLanguage = await getActiveLanguage(request);
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
+  const title = params.title;
+  const skill = await getSkillByTitle(title, activeLanguage.id);
   if (!skill) {
     throw new Response("Skill is not found", { status: 404 });
   }
-  const lessons = await prisma.lesson.findMany({
-    where: { id: { in: skill.lessonIDs } },
-    select: { createdAt: false, updatedAt: false }
-  });
-  console.log("Lessons: ", lessons);
-  return (0, import_node3.json)({ lessons });
+  const steps = await getStepsForPracticingSkill(skill.title, activeLanguage.id);
+  return (0, import_node3.json)({ steps });
 };
 function LessonScreen2() {
-  const { lessons } = (0, import_react23.useLoaderData)();
+  const { steps } = (0, import_react23.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
-    lessons
+    steps
   });
 }
 function CatchBoundary() {
@@ -2882,6 +2896,10 @@ var loader3 = async ({ request }) => {
   if (!activeLanguage) {
     throw new import_node4.Response(`Active language wasn't found`, { status: 404 });
   }
+  const onLanguagePage = request.url.split("/").at(-1) === activeLanguage.title;
+  if (onLanguagePage) {
+    return (0, import_node4.redirect)(`/${activeLanguage.title}/skills`);
+  }
   const lastActive = await getLastActivity(request);
   if (today - lastActive > 1 || lastActive === 0) {
     user = await updateUserStreak(user.id, false, 0);
@@ -2980,7 +2998,7 @@ function SkillInfo({
     style: { width: "100%", maxWidth: "440px", margin: "0 auto" }
   }, /* @__PURE__ */ React.createElement("h2", {
     style: { marginTop: 60 }
-  }, "Skill position"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedSkills.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
+  }, "Position"), /* @__PURE__ */ React.createElement(LessonsBlock, null, lastAddedSkills.map((lastAdded) => /* @__PURE__ */ React.createElement(LessonsContainer, {
     key: lastAdded.id
   }, /* @__PURE__ */ React.createElement(LessonBlock, null, /* @__PURE__ */ React.createElement("button", {
     type: "button",
@@ -3930,6 +3948,9 @@ var Sidebar = ({ children }) => {
     onClick: () => {
       changeCurrentScreen("Steps");
       setStepActive(stepsItem.id);
+    },
+    style: {
+      border: stepsItem.active ? "1px solid" : "none"
     }
   }, "Step ", index + 1), index > 0 ? /* @__PURE__ */ import_react40.default.createElement("button", {
     type: "button",
@@ -4168,16 +4189,17 @@ var action5 = async ({ request, params }) => {
       chapter: Number(stepChapters[index]),
       languageId: activeLanguage.id
     };
+    console.log("Steptype: ", stepType);
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
         const keywords = form.get(`keywords${index}`);
         answer = answer.trim().split(" ");
-        return (0, import_node6.json)(__spreadProps(__spreadValues({}, returnData), {
+        return __spreadProps(__spreadValues({}, returnData), {
           question,
           answer,
           keywords: keywords ? keywords.split(",") : []
-        }));
+        });
       }
       case "Insert": {
         const text = form.get(`text${index}`);
@@ -4189,17 +4211,17 @@ var action5 = async ({ request, params }) => {
           value: doesItemContainSign(value).newItem,
           isFocused: false
         }));
-        return (0, import_node6.json)(__spreadProps(__spreadValues({}, returnData), {
+        return __spreadProps(__spreadValues({}, returnData), {
           answer,
           text: text.trim(),
           isToChoose: variants.length === 0 ? isToChoose : false,
           variants
-        }));
+        });
       }
       case "Variants": {
         const question = form.get(`question${index}`);
         const variants = form.getAll(`variant${index}`);
-        return (0, import_node6.json)(__spreadProps(__spreadValues({}, returnData), {
+        return __spreadProps(__spreadValues({}, returnData), {
           answer,
           question,
           variants: variants.map((variant, idx) => ({
@@ -4207,11 +4229,11 @@ var action5 = async ({ request, params }) => {
             idx: idx + 1,
             isFocused: false
           }))
-        }));
+        });
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`);
-        return (0, import_node6.json)(__spreadProps(__spreadValues({}, returnData), {
+        return __spreadProps(__spreadValues({}, returnData), {
           answer: answer.split(","),
           variants: variants.map((variant, idx) => ({
             value: variant,
@@ -4219,7 +4241,7 @@ var action5 = async ({ request, params }) => {
             isConnected: true,
             idx: idx + 1
           }))
-        }));
+        });
       }
       default: {
         return __spreadProps(__spreadValues({}, returnData), { answer });
@@ -4620,18 +4642,18 @@ var action7 = async ({ request }) => {
 var loader7 = async ({ request }) => {
   const activeLanguage = await getActiveLanguage(request);
   if (!activeLanguage) {
-    return new Error(`No active language has found`);
+    throw new Error(`No active language has found`);
   }
-  const lessons = await getLessonsForPracticing(activeLanguage.id);
-  if (!lessons) {
-    throw new Error("Lessons for practicing are not found");
+  const steps = await getStepsForPracticing(activeLanguage.id);
+  if (steps.length === 0) {
+    throw new Error("Steps for practicing are not found");
   }
-  return (0, import_node8.json)({ lessons });
+  return (0, import_node8.json)({ steps });
 };
 function LessonScreen3() {
-  const { lessons } = (0, import_react48.useLoaderData)();
+  const { steps } = (0, import_react48.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
-    lessons
+    steps
   });
 }
 
@@ -4806,7 +4828,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "c7c556cf", "entry": { "module": "/build/entry.client-WBZ5HYB3.js", "imports": ["/build/_shared/chunk-C55PLZP5.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-5QUVLDFL.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-SZRIPJEN.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-JEBGM6X3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-2MLMVFE3.js", "imports": ["/build/_shared/chunk-IPWTXR5Y.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YP5SQCN4.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-5I46A727.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-KE6HEANA.js", "imports": ["/build/_shared/chunk-IPWTXR5Y.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YP5SQCN4.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-5I46A727.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-EUDZOWLO.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-5I46A727.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-RDLBYRKD.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-WKQ7YV6M.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-JEBGM6X3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-AL7XM25L.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-5FKKXLFG.js", "imports": ["/build/_shared/chunk-55U5XXMH.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YP5SQCN4.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-JEBGM6X3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-7LKY66WD.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-ATQUSJCK.js", "imports": ["/build/_shared/chunk-55U5XXMH.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-YP5SQCN4.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-JEBGM6X3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-MVIGSXJK.js", "imports": ["/build/_shared/chunk-55U5XXMH.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YP5SQCN4.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-JEBGM6X3.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": true } }, "url": "/build/manifest-C7C556CF.js" };
+var assets_manifest_default = { "version": "5ef98574", "entry": { "module": "/build/entry.client-DIXM4D4M.js", "imports": ["/build/_shared/chunk-4G2JW67U.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-3GHAW6Y2.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-XXYCP43G.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-36DU6RZO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-SKTNHVLF.js", "imports": ["/build/_shared/chunk-65WR4EL3.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-4IK6BPTE.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-BWWHPQ6U.js", "imports": ["/build/_shared/chunk-65WR4EL3.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-4IK6BPTE.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-YI3XO7RQ.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-RDLBYRKD.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-WNR7QSOC.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-36DU6RZO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-AL7XM25L.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-2EJ34WME.js", "imports": ["/build/_shared/chunk-ILNOJOP5.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-4IK6BPTE.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-36DU6RZO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/repeat": { "id": "routes/repeat", "parentId": "root", "path": "repeat", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/repeat-6Z5BKEI7.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-HWUQC574.js", "imports": ["/build/_shared/chunk-ILNOJOP5.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-4IK6BPTE.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-36DU6RZO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-WMOGVLLN.js", "imports": ["/build/_shared/chunk-ILNOJOP5.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-4IK6BPTE.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-36DU6RZO.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": true } }, "url": "/build/manifest-5EF98574.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

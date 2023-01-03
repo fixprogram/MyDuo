@@ -35,21 +35,22 @@ export async function getLessonsBySkillId(id: string) {
   });
 }
 
-export async function getLessonsForPracticing(activeLanguageId: string) {
+export async function getStepsForPracticing(activeLanguageId: string) {
   const lessons = await prisma.lesson.findMany({
     where: { languageId: activeLanguageId },
     orderBy: { createdAt: "desc" },
     take: 10,
   });
 
-  return lessons;
+  return getSteps(lessons);
 }
 
-export async function getStepsForChapter(skillTitle: string, chapter: number) {
-  const skill = await prisma.skill.findFirst({
-    where: { title: skillTitle },
-    select: { lessonIDs: true },
-  });
+export async function getStepsForChapter(
+  skillTitle: string,
+  chapter: number,
+  projectId: string
+) {
+  const skill = await getSkillByTitle(skillTitle, projectId);
 
   if (!skill) {
     throw new Error("Skill is not found");
@@ -57,6 +58,23 @@ export async function getStepsForChapter(skillTitle: string, chapter: number) {
 
   const lessons = await prisma.lesson.findMany({
     where: { id: { in: skill.lessonIDs }, chapter },
+  });
+
+  return getSteps(lessons);
+}
+
+export async function getStepsForPracticingSkill(
+  skillTitle: string,
+  projectId: string
+) {
+  const skill = await getSkillByTitle(skillTitle, projectId);
+
+  if (!skill) {
+    throw new Error("Skill is not found");
+  }
+
+  const lessons = await prisma.lesson.findMany({
+    where: { id: { in: skill.lessonIDs } },
   });
 
   return getSteps(lessons);

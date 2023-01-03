@@ -29,7 +29,7 @@ model Language {
 
 model Skill {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  title          String    @unique
+  title          String    
   createdAt      DateTime  @default(now())
   updatedAt      Int
   lessonIDs      String[]
@@ -37,7 +37,7 @@ model Skill {
   currentChapter Int
   level          Int
   Language       Language? @relation(fields: [projectId], references: [id])
-  projectId      String
+  projectId      String    @db.ObjectId
   lineNumber     Int
 }
 

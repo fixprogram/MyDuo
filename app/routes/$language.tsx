@@ -13,7 +13,6 @@ import { getLastActivity, updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
 import { getTodayDate } from "~/utils";
-import { prisma } from "~/db.server";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -52,6 +51,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   if (!activeLanguage) {
     throw new Response(`Active language wasn't found`, { status: 404 });
+  }
+
+  // Check if we just on language page (doesn't exist), then we automatically redirect to skills list
+  const onLanguagePage = request.url.split("/").at(-1) === activeLanguage.title;
+  if (onLanguagePage) {
+    return redirect(`/${activeLanguage.title}/skills`);
   }
 
   const lastActive = await getLastActivity(request);

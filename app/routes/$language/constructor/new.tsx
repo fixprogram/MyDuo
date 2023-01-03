@@ -57,45 +57,44 @@ export const action = async ({ request, params }: ActionArgs) => {
       chapter: Number(stepChapters[index]),
       languageId: activeLanguage.id,
     };
+    console.log("Steptype: ", stepType);
     switch (stepType) {
       case "Question": {
         const question = form.get(`question${index}`);
         const keywords = form.get(`keywords${index}`) as string;
         answer = answer.trim().split(" ");
-        return json({
+        return {
           ...returnData,
           question,
           answer,
           keywords: keywords ? keywords.split(",") : [],
-        });
+        };
       }
       case "Insert": {
         const text = form.get(`text${index}`) as string;
         const isToChoose = !!form.get(`isToChoose${index}`);
         const variantValues = form.getAll(`variant${index}`);
-        // answer = answer.trim().split(" ")
         answer = answer
           .trim()
           .split(",")
           .sort((a, b) => Number(a) - Number(b));
         const variants = variantValues.map((value, idx) => ({
           idx,
-          // value,
           value: doesItemContainSign(value as string).newItem,
           isFocused: false,
         }));
-        return json({
+        return {
           ...returnData,
           answer,
           text: text.trim(),
           isToChoose: variants.length === 0 ? isToChoose : false,
           variants,
-        });
+        };
       }
       case "Variants": {
         const question = form.get(`question${index}`);
         const variants = form.getAll(`variant${index}`);
-        return json({
+        return {
           ...returnData,
           answer,
           question,
@@ -104,11 +103,11 @@ export const action = async ({ request, params }: ActionArgs) => {
             idx: idx + 1,
             isFocused: false,
           })),
-        });
+        };
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`) as string[];
-        return json({
+        return {
           ...returnData,
           answer: answer.split(","),
           variants: variants.map((variant, idx) => ({
@@ -117,7 +116,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             isConnected: true,
             idx: idx + 1,
           })),
-        });
+        };
       }
       default: {
         return { ...returnData, answer };

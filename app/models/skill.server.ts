@@ -23,12 +23,12 @@ export async function getSkills(languageId: string) {
 }
 
 export async function updateCurrentChapter(skill: Skill) {
-  const { title, currentChapter, chapters } = skill;
+  const { currentChapter, chapters, id } = skill;
   const today = getTodayDate();
 
   return await prisma.skill.update({
     where: {
-      title: title,
+      id,
     },
     data: {
       currentChapter:
@@ -62,6 +62,6 @@ export async function deleteSkillById(id: string) {
   return await prisma.skill.delete({ where: { id } });
 }
 
-export async function getSkillByTitle(title: string) {
-  return await prisma.skill.findFirst({ where: { title } });
+export async function getSkillByTitle(title: string, projectId: string) {
+  return await prisma.skill.findFirst({ where: { title, projectId } });
 }

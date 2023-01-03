@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useFocus } from "~/hooks/useFocus";
 import {
   ResultsContainer,
@@ -8,7 +8,14 @@ import {
   ResultsTitle,
 } from "./lib";
 
-export const Results = React.forwardRef<HTMLFormElement>((props, ref) => {
+type Props = {
+  children?: ReactNode;
+  onSubmit: () => void;
+};
+
+export type Ref = HTMLFormElement;
+
+export const Results = React.forwardRef<Ref, Props>((props, ref) => {
   const containerRef = useFocus<HTMLDivElement>();
 
   return (

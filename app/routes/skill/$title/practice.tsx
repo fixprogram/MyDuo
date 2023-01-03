@@ -1,22 +1,25 @@
-import { prisma } from "~/db.server";
 import Lesson from "~/modules/Skill";
 import { getActiveLanguage } from "~/models/language.server";
 import { increaseTodayExp } from "~/models/user.server";
-import { updateCurrentChapter } from "~/models/skill.server";
+import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
 import { useCatch, useLoaderData, useParams } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { ErrorMessage } from "~/components/lib";
+import { getStepsForPracticingSkill } from "~/models/lesson.server";
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const language = await getActiveLanguage(request);
+  const activeLanguage = await getActiveLanguage(request);
+
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
+
   const form = await request.formData();
   const expData = Number(form.get("exp"));
-  const title = params.title;
+  const title = params.title as string;
 
-  const skill = await prisma.skill.findUnique({
-    where: { title },
-  });
+  const skill = await getSkillByTitle(title, activeLanguage.id);
 
   if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
@@ -26,32 +29,36 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   await increaseTodayExp(request, expData);
 
-  return redirect(`/${language?.title}/skills`);
+  return redirect(`/${activeLanguage?.title}/skills`);
 };
 
-export const loader = async ({ params }: LoaderArgs) => {
-  const skill = await prisma.skill.findUnique({
-    where: { title: params.title },
-  });
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const activeLanguage = await getActiveLanguage(request);
+
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
+
+  const title = params.title as string;
+
+  const skill = await getSkillByTitle(title, activeLanguage.id);
 
   if (!skill) {
     throw new Response("Skill is not found", { status: 404 });
   }
 
-  const lessons = await prisma.lesson.findMany({
-    where: { id: { in: skill.lessonIDs } },
-    select: { createdAt: false, updatedAt: false },
-  });
+  const steps = await getStepsForPracticingSkill(
+    skill.title,
+    activeLanguage.id
+  );
 
-  console.log("Lessons: ", lessons);
-
-  return json({ lessons });
+  return json({ steps });
 };
 
 export default function LessonScreen() {
-  const { lessons } = useLoaderData<typeof loader>();
+  const { steps } = useLoaderData<typeof loader>();
 
-  return <Lesson lessons={lessons} />;
+  return <Lesson steps={steps} />;
 }
 
 export function CatchBoundary() {

@@ -52,7 +52,7 @@ const Sidebar: React.FC = ({ children }) => {
             </SidebarBtn>
             <ul>
               {steps.map(
-                (stepsItem: any, index) =>
+                (stepsItem, index) =>
                   stepsItem.chapter === chapter && (
                     <li key={stepsItem.id}>
                       <button
@@ -61,8 +61,10 @@ const Sidebar: React.FC = ({ children }) => {
                           changeCurrentScreen("Steps");
                           setStepActive(stepsItem.id);
                         }}
+                        style={{
+                          border: stepsItem.active ? "1px solid" : "none",
+                        }}
                       >
-                        {/* Step {stepsItem.number + 1} */}
                         Step {index + 1}
                       </button>
                       {index > 0 ? (

@@ -47,7 +47,7 @@ const ConstructorMenu = styled("div")`
 const ScreenContainer = styled("section")<ScreenContainerProps>`
   position: absolute;
   top: 0;
-  width: 100%;
+  width: calc(100% - 60px);
   text-align: center;
   visibility: ${(props) =>
     props.screen !== props.target ? "hidden" : "visible"};

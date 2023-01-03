@@ -122,7 +122,7 @@ const LessonBlockInner = styled("div")`
   color: #fff;
   padding: 16px;
   text-align: center;
-  width: 300px;
+  width: 295px;
   box-sizing: border-box;
   border-radius: 15px;
   display: flex;

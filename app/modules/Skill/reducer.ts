@@ -60,8 +60,6 @@ export const basicState: SkillState = {
     definition: "",
     variants: [],
     isToChoose: false,
-    // createdAt: new Date(),
-    // updatedAt: new Date(),
     chapter: 1,
     languageId: "",
     difficulty: "easy",
@@ -113,7 +111,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: continueContent({}, steps) as Lesson & {
+        content: continueContent(basicState.content, steps) as Lesson & {
           difficulty: "easy" | "hard" | null;
         },
       };

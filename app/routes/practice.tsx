@@ -6,7 +6,7 @@ import { getWeekDay } from "~/utils";
 import { ActionArgs, json, redirect } from "@remix-run/node";
 import type { LoaderArgs } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
-import { getLessonsForPracticing } from "~/models/lesson.server";
+import { getStepsForPracticing } from "~/models/lesson.server";
 import { getActiveLanguage } from "~/models/language.server";
 
 export function ErrorBoundary() {
@@ -46,20 +46,20 @@ export const loader = async ({ request }: LoaderArgs) => {
   const activeLanguage = await getActiveLanguage(request);
 
   if (!activeLanguage) {
-    return new Error(`No active language has found`);
+    throw new Error(`No active language has found`);
   }
 
-  const lessons = await getLessonsForPracticing(activeLanguage.id);
+  const steps = await getStepsForPracticing(activeLanguage.id);
 
-  if (!lessons) {
-    throw new Error("Lessons for practicing are not found");
+  if (steps.length === 0) {
+    throw new Error("Steps for practicing are not found");
   }
 
-  return json({ lessons });
+  return json({ steps });
 };
 
 export default function LessonScreen() {
-  const { lessons } = useLoaderData<typeof loader>();
+  const { steps } = useLoaderData<typeof loader>();
 
-  return <Lesson lessons={lessons} />;
+  return <Lesson steps={steps} />;
 }

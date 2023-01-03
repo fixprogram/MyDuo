@@ -14,12 +14,17 @@ export function ErrorBoundary() {
 }
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const language = await getActiveLanguage(request);
+  const activeLanguage = await getActiveLanguage(request);
+
+  if (!activeLanguage) {
+    throw new Error("No active language found");
+  }
+
   const form = await request.formData();
   const expData = Number(form.get("exp"));
   const title = params.title as string;
 
-  const skill = await getSkillByTitle(title);
+  const skill = await getSkillByTitle(title, activeLanguage.id);
 
   if (!skill) {
     throw new Error(`Skill with this title: ${title} is underfined`);
@@ -29,14 +34,20 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   await increaseTodayExp(request, expData);
 
-  return redirect(`/${language?.title}/skills`);
+  return redirect(`/${activeLanguage.title}/skills`);
 };
 
-export const loader = async ({ params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const activeLanguage = await getActiveLanguage(request);
+
+  if (!activeLanguage) {
+    throw new Error(`No active language is found`);
+  }
+
   const title = params.title as string;
   const chapter = Number(params.chapter as string);
 
-  const steps = await getStepsForChapter(title, chapter);
+  const steps = await getStepsForChapter(title, chapter, activeLanguage.id);
 
   return json({ steps });
 };
