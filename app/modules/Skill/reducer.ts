@@ -33,6 +33,8 @@ enum actionTypes {
   setCheckDisabled = "SET_CHECK_DISABLED",
   updateState = "UPDATE_STATE",
   setDifficulty = "SET_DIFFICULTY",
+  leave = "LEAVE",
+  resetStatus = "RESET_STATUS",
 }
 
 type Action =
@@ -44,7 +46,9 @@ type Action =
   | { type: actionTypes.setStateRight }
   | { type: actionTypes.setStateWrong }
   | { type: actionTypes.setDifficulty; difficulty: "easy" | "hard" | null }
-  | { type: actionTypes.updateState; update: {} };
+  | { type: actionTypes.updateState; update: {} }
+  | { type: actionTypes.leave }
+  | { type: actionTypes.resetStatus };
 
 export const basicState: SkillState = {
   progress: 0,
@@ -137,6 +141,10 @@ function skillReducer(state: SkillState, action: Action): SkillState {
     case actionTypes.setDifficulty:
       const { difficulty } = action;
       return { ...state, content: { ...state.content, difficulty } };
+    case actionTypes.leave:
+      return { ...state, skillState: { ...skillState, status: "leaving" } };
+    case actionTypes.resetStatus:
+      return { ...state, skillState: { ...skillState, status: "idle" } };
     default: {
       throw new Error(`Unsupported action: ${action}`);
     }
@@ -161,6 +169,8 @@ function useSkillReducer({
     dispatch({ type: actionTypes.updateState, update });
   const setDifficulty = (difficulty: "easy" | "hard" | null) =>
     dispatch({ type: actionTypes.setDifficulty, difficulty });
+  const leave = () => dispatch({ type: actionTypes.leave });
+  const resetStatus = () => dispatch({ type: actionTypes.resetStatus });
 
   return {
     content,
@@ -176,6 +186,8 @@ function useSkillReducer({
     setCheckDisabled,
     updateState,
     setDifficulty,
+    leave,
+    resetStatus,
   };
 }
 
@@ -189,6 +201,8 @@ const defaultSkillContextState = {
   setCheckDisabled: () => {},
   updateState: () => {},
   setDifficulty: () => {},
+  leave: () => {},
+  resetStatus: () => {},
 };
 
 export { useSkillReducer, skillReducer, defaultSkillContextState };

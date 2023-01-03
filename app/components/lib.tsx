@@ -251,7 +251,16 @@ const ProgressBar = styled("div")<ProgressProps>`
   }
 `;
 
-const ProgressLeaveLesson = styled(Link)`
+const LeaveLessonButton = styled("button")`
+  margin-right: 21px;
+  height: 16px;
+  margin-top: -3px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: inherit;
+`;
+const LeaveLessonLink = styled(Link)`
   margin-right: 21px;
   height: 16px;
   margin-top: -3px;
@@ -713,7 +722,8 @@ const LinkWithHover = styled("a")`
 export {
   ProgressBarContainer,
   ProgressBar,
-  ProgressLeaveLesson,
+  LeaveLessonButton,
+  LeaveLessonLink,
   HorizontalList,
   ListItem,
   NavLink,

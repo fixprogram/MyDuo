@@ -10,6 +10,8 @@ import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
 import { SkillContextType, Step } from "./types";
+import { Overlay } from "~/components/lib";
+import AreYouSureBlock from "./components/AreYouSureBlock";
 
 const SkillContext = createContext<SkillContextType>(defaultSkillContextState);
 SkillContext.displayName = "SkillContext";
@@ -28,7 +30,7 @@ export default function Skill({ steps }: { steps: Step[] }) {
   const value = useSkillReducer();
   const submit = useSubmit();
 
-  const { setup, skillState, continueSkill } = value;
+  const { setup, skillState, continueSkill, resetStatus } = value;
   const { status } = skillState;
 
   useEffect(() => {
@@ -57,6 +59,16 @@ export default function Skill({ steps }: { steps: Step[] }) {
             <InsertWords />
             <VariantsPractice />
             <Pairs />
+            {status === "leaving" ? (
+              <>
+                <Overlay
+                  active={true}
+                  onClick={resetStatus}
+                  style={{ top: 0, zIndex: 5, pointerEvents: "auto" }}
+                />
+                <AreYouSureBlock />
+              </>
+            ) : null}
           </>
         )}
       </LessonContainer>

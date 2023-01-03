@@ -2,18 +2,26 @@ import CloseIcon from "~/styles/close.svg";
 import {
   ProgressBar,
   ProgressBarContainer,
-  ProgressLeaveLesson,
+  LeaveLessonButton,
+  LeaveLessonLink,
 } from "~/components/lib";
 import { useSkill } from "~/modules/Skill";
 import { BtnCloseImage } from "~/modules/Constructor/components/lib";
 
 const Progress = () => {
-  const { progress } = useSkill();
+  const { progress, leave } = useSkill();
   return (
     <ProgressBarContainer>
-      <ProgressLeaveLesson to="/">
-        <BtnCloseImage src={CloseIcon} alt="Close the skill" />
-      </ProgressLeaveLesson>
+      {progress === 0 ? (
+        <LeaveLessonLink to="/">
+          <BtnCloseImage src={CloseIcon} alt="Close the skill" />
+        </LeaveLessonLink>
+      ) : (
+        <LeaveLessonButton onClick={() => leave()}>
+          <BtnCloseImage src={CloseIcon} alt="Close the skill" />
+        </LeaveLessonButton>
+      )}
+
       <ProgressBar progress={progress} />
     </ProgressBarContainer>
   );

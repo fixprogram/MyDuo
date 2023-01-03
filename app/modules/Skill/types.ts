@@ -26,4 +26,6 @@ export type SkillContextType = Omit<SkillState, "lessonSteps"> & {
   setCheckDisabled: Function;
   updateState: Function;
   setDifficulty: Function;
+  leave: Function;
+  resetStatus: Function;
 };
