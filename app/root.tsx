@@ -1,4 +1,4 @@
-import { Links, LiveReload, Outlet, Scripts } from "remix";
+import { Links, LiveReload, Outlet, Scripts } from "@remix-run/react";
 
 function Document({
   children,

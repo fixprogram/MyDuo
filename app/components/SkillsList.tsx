@@ -1,15 +1,23 @@
-import { Skill } from "@prisma/client";
 import { nanoid } from "nanoid";
 import Footer from "./Footer";
 import LessonItem from "./LessonItem";
 import { LessonsBlock, SkillsLineBlock, SkillsListContainer } from "./lib";
 import PracticeLastAdded from "./PracticeLastAdded";
 
+export type SkillsListItemType = {
+  id: string;
+  title: string;
+  createdAt: string;
+  chapters: number;
+  currentChapter: number;
+  lineNumber: number;
+};
+
 export default function SkillsList({
   skills,
   languageTitle,
 }: {
-  skills: Skill[];
+  skills: SkillsListItemType[];
   languageTitle: string;
 }) {
   const lineNumbers = [

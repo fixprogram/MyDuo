@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "~/db.server";
 import { getUser } from "~/session.server";
 import { getCurrentWeek, getTodayDate, getWeekDay } from "~/utils";
-import { createInitialLanguage } from "./language.server";
+import { createInitialLanguage, whenLastPractice } from "./language.server";
 
 export type { User } from "@prisma/client";
 
@@ -152,4 +152,16 @@ export async function resetMultipleActivity(
       },
     },
   });
+}
+
+export async function getLastActivity(request: Request) {
+  const today = getTodayDate();
+  const lastPracticed = await whenLastPractice(request);
+
+  if (today - lastPracticed > 0) {
+    await resetMultipleActivity(request, lastPracticed);
+    return lastPracticed;
+  }
+
+  return today;
 }

@@ -1,17 +1,15 @@
 import { useEffect, useContext, createContext, createRef } from "react";
-
 import Progress from "~/components/Progress";
 import { useSkillReducer, defaultSkillContextState } from "./reducer";
 import { useSubmit } from "@remix-run/react";
 import { Results } from "./components/Results";
 import Footer from "./components/Footer";
 import { LessonContainer } from "./components/lib";
-import { Lesson as LessonType } from "@prisma/client";
 import InsertWords from "./components/InsertWords";
 import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
-import { SkillContextType } from "./types";
+import { SkillContextType, Step } from "./types";
 
 const SkillContext = createContext<SkillContextType>(defaultSkillContextState);
 SkillContext.displayName = "SkillContext";
@@ -24,7 +22,7 @@ export function useSkill() {
   return context;
 }
 
-export default function Skill({ steps }: { steps: LessonType[] }) {
+export default function Skill({ steps }: { steps: Step[] }) {
   const resultsFormRef = createRef<HTMLFormElement>();
 
   const value = useSkillReducer();

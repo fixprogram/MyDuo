@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Form, useTransition } from "remix";
 import {
   LessonProgress,
   LessonProgressInner,
@@ -15,9 +14,10 @@ import {
 } from "./lib";
 import Bin from "~/styles/bin.svg";
 import useOnClickOutside from "~/hooks/useOnClickOutside";
-import { Skill } from "@prisma/client";
+import { Form, useTransition } from "@remix-run/react";
+import { SkillsListItemType } from "./SkillsList";
 
-type LessonItem = Skill & {
+type LessonItem = SkillsListItemType & {
   editLink: string;
 };
 
@@ -71,6 +71,8 @@ export default function LessonItem({
                   type="submit"
                   disabled={isDisabled}
                   title="Delete skill"
+                  name="_action"
+                  value="Delete skill"
                 >
                   <img src={Bin} alt="delete" width={20} height={20} />
                 </LessonBlockButton>

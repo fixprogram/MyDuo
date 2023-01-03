@@ -9,7 +9,7 @@ import {
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
   LessonTitle,
-} from "~/modules/Lesson/components/lib";
+} from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
 
 const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {

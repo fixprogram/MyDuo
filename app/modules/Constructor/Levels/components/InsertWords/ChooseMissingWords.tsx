@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { VariantItem } from "~/modules/Lesson/components/lib";
+import { VariantItem } from "~/modules/Skill/components/lib";
 import { VariantItemInput } from "../lib";
 
 export default function ChooseMissingWords({ words, number }) {

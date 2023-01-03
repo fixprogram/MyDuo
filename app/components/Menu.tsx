@@ -30,12 +30,14 @@ const MENU = [
   },
 ];
 
+type UserData = Pick<User, "streak" | "wasToday">;
+
 const Menu = ({
-  user,
+  userData,
   languages,
   onOverlay,
 }: {
-  user: User;
+  userData: UserData;
   languages: Language[];
   onOverlay: Function;
 }) => {
@@ -67,7 +69,7 @@ const Menu = ({
         </ListItem>
         <ListItem>
           <img
-            src={user?.wasToday ? streakActive : streak}
+            src={userData.wasToday ? streakActive : streak}
             alt="streak"
             width={25}
             height={30}
@@ -76,10 +78,10 @@ const Menu = ({
           <b
             style={{
               fontFamily: "Nunito",
-              color: user?.wasToday ? "#ff9600" : "#e5e5e5",
+              color: userData.wasToday ? "#ff9600" : "#e5e5e5",
             }}
           >
-            {user?.streak}
+            {userData.streak}
           </b>
         </ListItem>
         <ListItem>

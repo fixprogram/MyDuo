@@ -4,7 +4,7 @@ import { SkillState, Step } from "./types";
 
 // The function returns next stepNumber if there is any
 const continueContent = (content: Step, lessonSteps: Step[]) => {
-  const newContent = lessonSteps.shift(0, 1);
+  const newContent = lessonSteps.shift();
   if (!newContent) {
     return content;
   }
@@ -36,6 +36,7 @@ enum actionTypes {
 }
 
 type Action =
+  // | { type: actionTypes.setup; lessons: Lesson[] }
   | { type: actionTypes.setup; steps: Step[] }
   | { type: actionTypes.continue }
   | { type: actionTypes.results }
@@ -59,8 +60,8 @@ export const basicState: SkillState = {
     definition: "",
     variants: [],
     isToChoose: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    // createdAt: new Date(),
+    // updatedAt: new Date(),
     chapter: 1,
     languageId: "",
     difficulty: "easy",
@@ -152,8 +153,7 @@ function useSkillReducer({
   const { content, progress, skillState, stepNumber, maxSteps } = state;
 
   const continueSkill = () => dispatch({ type: actionTypes.continue });
-  const setup = (steps: Lesson[]) =>
-    dispatch({ type: actionTypes.setup, steps });
+  const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
   const showResults = () => dispatch({ type: actionTypes.results });
   const setStateRight = () => dispatch({ type: actionTypes.setStateRight });
   const setStateWrong = () => dispatch({ type: actionTypes.setStateWrong });

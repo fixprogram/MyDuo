@@ -1,15 +1,12 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect, Response } from "@remix-run/node";
+import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { getActiveLanguage } from "~/models/language.server";
-import {
-  deleteSkillById,
-  deleteLessonsFromSkill,
-  getSkills,
-} from "~/models/lesson.server";
+import { deleteLessonsFromSkill } from "~/models/lesson.server";
 import WeeklyProgress from "~/components/WeeklyProgress";
 import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
-import { Skill, WeeklyActivity } from "@prisma/client";
 import SkillsList from "~/components/SkillsList";
+import { deleteSkillById, getSkills } from "~/models/skill.server";
 
 export function ErrorBoundary() {
   return (
@@ -17,40 +14,45 @@ export function ErrorBoundary() {
   );
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const data = await request.formData();
-  const id = data.get("lessonId") as string;
+  const { _action, ...values } = Object.fromEntries(data);
 
-  if (!id) {
-    throw new Error("Lesson ID wasnt found");
+  if (_action === "Delete skill") {
+    const id = values.id as string;
+    if (!id) {
+      throw new Error("Lesson ID wasnt found");
+    }
+
+    await deleteLessonsFromSkill(id as string);
+    return await deleteSkillById(id);
   }
-
-  await deleteLessonsFromSkill(id as string);
-  return await deleteSkillById(id);
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const activeLanguage = await getActiveLanguage(request);
   const user = await getUser(request);
 
+  if (!user) {
+    return redirect("/login");
+  }
+
   if (!activeLanguage) {
-    throw new Error(`We could not find the active language`);
+    throw new Response(`We could not find the active language`, {
+      status: 404,
+    });
   }
 
   const skills = await getSkills(activeLanguage.id);
-  return {
+  return json({
     skills,
-    activity: user?.weeklyActivity,
+    activity: user.weeklyActivity,
     languageTitle: activeLanguage.title,
-  };
+  });
 };
 
 export default function SkillsPage() {
-  const { skills, activity, languageTitle } = useLoaderData() as {
-    skills: Skill[];
-    activity: WeeklyActivity;
-    languageTitle: string;
-  };
+  const { skills, activity, languageTitle } = useLoaderData<typeof loader>();
 
   return (
     <section style={{ display: "flex", width: "100%" }}>

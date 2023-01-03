@@ -1,11 +1,13 @@
-import { redirect, useLoaderData, useParams } from "remix";
-import type { LoaderFunction, ActionFunction } from "remix";
 import { prisma } from "~/db.server";
-import Lesson from "~/modules/Lesson";
-import { getActiveLanguage } from "~/models/language.server";
+import Lesson from "~/modules/Skill";
 import { getUser } from "~/session.server";
 import { User, WeeklyActivity } from "@prisma/client";
 import { getWeekDay } from "~/utils";
+import { ActionArgs, json, redirect } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import { useLoaderData, useParams } from "@remix-run/react";
+import { getLessonsForPracticing } from "~/models/lesson.server";
+import { getActiveLanguage } from "~/models/language.server";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -14,12 +16,19 @@ export function ErrorBoundary() {
   );
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const expData = Number(form.get("exp"));
-  const user = (await getUser(request)) as User;
-  const newUserActivity = user.weeklyActivity as WeeklyActivity;
-  newUserActivity[`${getWeekDay()}`] = newUserActivity[`${getWeekDay()}`] + 10;
+  const user = await getUser(request);
+
+  if (!user) {
+    return redirect("/login");
+  }
+
+  const today = getWeekDay() as keyof WeeklyActivity;
+
+  const newUserActivity = user.weeklyActivity;
+  newUserActivity[today] = newUserActivity[today] + 10;
 
   await prisma.user.update({
     where: {
@@ -33,21 +42,24 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/`);
 };
 
-export const loader: LoaderFunction = async () => {
-  const lessons = await prisma.lesson.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
+export const loader = async ({ request }: LoaderArgs) => {
+  const activeLanguage = await getActiveLanguage(request);
 
-  if (!lessons) {
-    throw new Error("lesson not found");
+  if (!activeLanguage) {
+    return new Error(`No active language has found`);
   }
 
-  return lessons;
+  const lessons = await getLessonsForPracticing(activeLanguage.id);
+
+  if (!lessons) {
+    throw new Error("Lessons for practicing are not found");
+  }
+
+  return json({ lessons });
 };
 
 export default function LessonScreen() {
-  const steps = useLoaderData();
+  const { lessons } = useLoaderData<typeof loader>();
 
-  return <Lesson steps={steps} />;
+  return <Lesson lessons={lessons} />;
 }

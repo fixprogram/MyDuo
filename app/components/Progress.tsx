@@ -4,7 +4,7 @@ import {
   ProgressBarContainer,
   ProgressLeaveLesson,
 } from "~/components/lib";
-import { useSkill } from "~/modules/Lesson";
+import { useSkill } from "~/modules/Skill";
 import { BtnCloseImage } from "~/modules/Constructor/components/lib";
 
 const Progress = () => {

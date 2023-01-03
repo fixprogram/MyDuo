@@ -2,6 +2,26 @@ import { Skill } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getTodayDate } from "~/utils";
 
+export async function createSkill(data: Skill) {
+  return await prisma.skill.create({ data });
+}
+
+export async function getSkills(languageId: string) {
+  return await prisma.skill.findMany({
+    take: 20,
+    where: { projectId: languageId },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      chapters: true,
+      currentChapter: true,
+      lineNumber: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function updateCurrentChapter(skill: Skill) {
   const { title, currentChapter, chapters } = skill;
   const today = getTodayDate();
@@ -36,4 +56,12 @@ export async function getLastAddedSkill(projectId: string, neighbors = false) {
   }
 
   return lastAddedSkill;
+}
+
+export async function deleteSkillById(id: string) {
+  return await prisma.skill.delete({ where: { id } });
+}
+
+export async function getSkillByTitle(title: string) {
+  return await prisma.skill.findFirst({ where: { title } });
 }

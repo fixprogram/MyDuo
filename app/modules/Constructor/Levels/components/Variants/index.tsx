@@ -12,7 +12,7 @@ import {
   VariantsItem,
   VariantsList,
 } from "~/modules/Constructor/components/lib";
-import { LessonTitle } from "~/modules/Lesson/components/lib";
+import { LessonTitle } from "~/modules/Skill/components/lib";
 
 const initialState = {
   variantsCount: 3,

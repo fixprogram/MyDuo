@@ -2,7 +2,6 @@ import { Lesson } from "@prisma/client";
 
 export type Action =
   | { type: "START" }
-  // | { type: "CHECK_ANSWER"; payload: { answer: string[] } }
   | { type: "CHECK_ANSWER" }
   | { type: "CONTINUE" }
   | { type: "FINISH" }
@@ -17,8 +16,6 @@ export type Action =
 const actionCreator = (dispatch: Function) => ({
   startPractice: () => dispatch({ type: "START" }),
   checkAnswer: () => dispatch({ type: "CHECK_ANSWER" }),
-  // checkAnswer: (answer: string[]) =>
-  //   dispatch({ type: "CHECK_ANSWER", payload: { answer } }),
   continuePractice: () => dispatch({ type: "CONTINUE" }),
   finishPractice: () => dispatch({ type: "FINISH" }),
   showResultsPractice: () => dispatch({ type: "RESULTS" }),

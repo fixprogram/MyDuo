@@ -1,6 +1,6 @@
-import { redirect } from "remix";
 import { getUser } from "~/session.server";
 import { getLanguages } from "~/models/language.server";
+import { redirect } from "@remix-run/node";
 
 export const loader = async ({ request }: { request: Request }) => {
   const user = await getUser(request);

@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { useConstructor } from "~/modules/Constructor";
 import { PairsList } from "~/modules/Constructor/components/lib";
-import { LessonButton, LessonTitle } from "~/modules/Lesson/components/lib";
+import { LessonButton, LessonTitle } from "~/modules/Skill/components/lib";
 import { VariantItemNumber, VariantItemInput } from "../lib";
 import { pairsChoose, pairsConnect, pairsSetup, pairsType } from "./actions";
 import { reducer, Variant } from "./reducer";

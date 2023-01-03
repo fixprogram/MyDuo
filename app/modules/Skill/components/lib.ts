@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 import RightIcon from "~/styles/right.svg";
 import WrongIcon from "~/styles/wrong.svg";
 

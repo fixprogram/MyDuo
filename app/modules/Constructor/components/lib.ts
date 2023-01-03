@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 
 type ScreenContainerProps = {
   screen: string;

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Textarea } from "~/components/lib";
 import { useFocus } from "~/hooks/useFocus";
 import { useConstructor } from "~/modules/Constructor";
-import { LessonTitle } from "~/modules/Lesson/components/lib";
+import { LessonTitle } from "~/modules/Skill/components/lib";
 import { doesItemContainSign, isItemInArray } from "~/utils";
 import { InsertWordsInput, InsertWordsTextBlock } from "../lib";
 import Backend from "./Backend";

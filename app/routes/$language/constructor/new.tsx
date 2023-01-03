@@ -1,5 +1,3 @@
-import { json, redirect, useActionData, useLoaderData, useParams } from "remix";
-import type { ActionFunction, LoaderFunction } from "remix";
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
@@ -7,6 +5,9 @@ import { Language, Lesson, Skill } from "@prisma/client";
 import { createLessons } from "~/models/lesson.server";
 import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
 import { doesItemContainSign, getTodayDate } from "~/utils";
+import { json, redirect } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { useActionData, useLoaderData } from "@remix-run/react";
 
 export type ActionData = {
   errors?: {
@@ -20,7 +21,7 @@ export function ErrorBoundary() {
   );
 }
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
   const title = form.get("title") as string;
@@ -61,12 +62,12 @@ export const action: ActionFunction = async ({ request, params }) => {
         const question = form.get(`question${index}`);
         const keywords = form.get(`keywords${index}`) as string;
         answer = answer.trim().split(" ");
-        return {
+        return json({
           ...returnData,
           question,
           answer,
           keywords: keywords ? keywords.split(",") : [],
-        };
+        });
       }
       case "Insert": {
         const text = form.get(`text${index}`) as string;
@@ -83,18 +84,18 @@ export const action: ActionFunction = async ({ request, params }) => {
           value: doesItemContainSign(value as string).newItem,
           isFocused: false,
         }));
-        return {
+        return json({
           ...returnData,
           answer,
           text: text.trim(),
           isToChoose: variants.length === 0 ? isToChoose : false,
           variants,
-        };
+        });
       }
       case "Variants": {
         const question = form.get(`question${index}`);
         const variants = form.getAll(`variant${index}`);
-        return {
+        return json({
           ...returnData,
           answer,
           question,
@@ -103,11 +104,11 @@ export const action: ActionFunction = async ({ request, params }) => {
             idx: idx + 1,
             isFocused: false,
           })),
-        };
+        });
       }
       case "Pairs": {
         const variants = form.getAll(`variant${index}`) as string[];
-        return {
+        return json({
           ...returnData,
           answer: answer.split(","),
           variants: variants.map((variant, idx) => ({
@@ -116,13 +117,13 @@ export const action: ActionFunction = async ({ request, params }) => {
             isConnected: true,
             idx: idx + 1,
           })),
-        };
+        });
       }
       default: {
         return { ...returnData, answer };
       }
     }
-  }) as Lesson[];
+  });
 
   const createdLessonsIDs = await createLessons(lessons);
   const data = {
@@ -139,19 +140,19 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/skill/${skill.title}/1`);
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const lastAddedSkills = (await getLastAddedSkill(
     activeLanguage.id,
     true
   )) as Skill[];
 
-  return { lastAddedSkills };
+  return json({ lastAddedSkills });
 };
 
 export default function ConstructorNew() {
-  const actionData = useActionData() as ActionData;
-  const { lastAddedSkills } = useLoaderData();
+  const actionData = useActionData<typeof action>();
+  const { lastAddedSkills } = useLoaderData<typeof loader>();
 
   return (
     <Constructor actionData={actionData} lastAddedSkills={lastAddedSkills} />

@@ -1,10 +1,14 @@
 import { Lesson } from "@prisma/client";
 
+export type Step = Omit<Lesson, "createdAt" | "updatedAt"> & {
+  difficulty: "easy" | "hard" | null;
+};
+
 export type SkillState = {
   progress: number;
   stepNumber: number;
-  content: Lesson & { difficulty: "easy" | "hard" | null };
-  lessonSteps: Lesson[];
+  content: Step;
+  lessonSteps: Step[];
   maxSteps: number;
   skillState: {
     status: string;
@@ -22,8 +26,4 @@ export type SkillContextType = Omit<SkillState, "lessonSteps"> & {
   setCheckDisabled: Function;
   updateState: Function;
   setDifficulty: Function;
-};
-
-export type Step = Lesson & {
-  difficulty: "easy" | "hard" | null;
 };

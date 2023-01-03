@@ -1,18 +1,19 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
+import { json, redirect, Response } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import { Outlet, useCatch, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { Outlet, useLoaderData } from "remix";
-import { Main, Overlay } from "~/components/lib";
+import { ErrorMessage, Main, Overlay } from "~/components/lib";
 import Menu from "~/components/Menu";
 import {
   createNewLanguage,
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
-import { getLastActivity } from "~/models/lesson.server";
-import { updateUserStreak } from "~/models/user.server";
+import { getLastActivity, updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
 import { getTodayDate } from "~/utils";
+import { prisma } from "~/db.server";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -32,57 +33,74 @@ export async function action({ request }: { request: Request }) {
   return redirect(`/${project?.title}/skills`);
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   let user = await getUser(request);
-  const languages = await getLanguages(request);
-  const activeLanguage = languages?.find((item) => item.active);
-  const today = getTodayDate();
 
   if (!user) {
     return redirect("/login");
   }
 
+  const userData = { streak: user.streak, wasToday: user.wasToday };
+  const languages = await getLanguages(request);
+
+  if (!languages) {
+    throw new Response("No languages were found", { status: 404 });
+  }
+
+  const activeLanguage = languages.find((item) => item.active);
+  const today = getTodayDate();
+
   if (!activeLanguage) {
-    throw new Error("Active language wasnt found");
+    throw new Response(`Active language wasn't found`, { status: 404 });
   }
 
   const lastActive = await getLastActivity(request);
   if (today - lastActive > 1 || lastActive === 0) {
     user = await updateUserStreak(user.id, false, 0);
-    return { user, languages };
+    return json({ userData, languages });
   }
 
   if (today - lastActive === 1) {
     user = await updateUserStreak(user.id, false, user.streak);
-    return { user, languages };
+    return json({ userData, languages });
   }
 
   if (!user.wasToday && lastActive === today) {
     user = await updateUserStreak(user.id, true, user.streak + 1);
-    return { user, languages };
+    return json({ userData, languages });
   }
 
   if (user.wasToday) {
-    return { user, languages };
+    return json({ userData, languages });
   }
 
-  if (!languages) {
-    throw new Error("languages are not found");
-  }
-
-  return { user, languages };
+  return json({ userData, languages });
 };
 
-export default function ProjectPage() {
-  const { user, languages } = useLoaderData();
+export default function LanguagePage() {
+  const { userData, languages } = useLoaderData<typeof loader>();
   const [isOverlay, setIsOverlay] = useState(false);
   return (
     <>
-      <Menu user={user} languages={languages} onOverlay={setIsOverlay} />
+      <Menu
+        userData={userData}
+        languages={languages}
+        onOverlay={setIsOverlay}
+      />
       <Main>
         <Outlet />
       </Main>
       <Overlay active={isOverlay} />
     </>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 404) {
+    return <ErrorMessage>{caught.statusText}</ErrorMessage>;
+  }
+
+  return new Error("Something went wrong in language route");
 }

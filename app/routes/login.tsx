@@ -1,8 +1,4 @@
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useTransition } from "@remix-run/react";
 import { createUserSession, getUserId } from "~/session.server";
@@ -10,12 +6,6 @@ import { createUser, verifyLogin } from "~/models/user.server";
 import { LoginContainer, LoginContinerInner } from "~/components/lib";
 import { Login } from "~/components/Login";
 import { useState } from "react";
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
-};
 
 export type ActionData = {
   errors?: {
@@ -28,7 +18,7 @@ export type ActionData = {
   };
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const loginType = formData.get("loginType");
   const username = formData.get("username") as string;
@@ -66,6 +56,12 @@ export const meta: MetaFunction = () => {
   return {
     title: "Login",
   };
+};
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const userId = await getUserId(request);
+  if (userId) return redirect("/");
+  return json({});
 };
 
 export default function LoginPage() {

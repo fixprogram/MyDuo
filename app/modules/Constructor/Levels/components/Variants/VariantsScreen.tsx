@@ -5,7 +5,7 @@ import {
   LessonQuestionTriangleContainer,
   LessonTitle,
   VariantItem,
-} from "~/modules/Lesson/components/lib";
+} from "~/modules/Skill/components/lib";
 import { VariantItemNumber, VariantsItem, VariantsList } from "../lib";
 import Duo from "~/styles/duo.svg";
 

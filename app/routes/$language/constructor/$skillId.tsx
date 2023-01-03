@@ -1,6 +1,6 @@
-import { useActionData, useLoaderData, useParams } from "@remix-run/react";
-import { redirect } from "@remix-run/node";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import { json, redirect, Response } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Constructor from "~/modules/Constructor";
 import { Language, Lesson, Skill } from "@prisma/client";
@@ -10,19 +10,11 @@ import {
   getLessonsBySkillId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
-import { json } from "remix";
 import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 
-// export function ErrorBoundary() {
-//   const { skillId } = useParams();
-//   return (
-//     <div className="error-container">{`There was an error loading lesson by the id ${skillId}. Sorry.`}</div>
-//   );
-// }
-
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
   const title = form.get("title") as string;
   const activeLanguage = (await getActiveLanguage(request)) as Language;
@@ -141,22 +133,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/`);
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const skill = await prisma.skill.findUnique({
     where: { id: params.skillId },
   });
 
-  // console.log("Skill: ", skill);
-
   if (!skill) {
-    throw new Error("lesson not found");
+    throw new Response("Skill is not found", { status: 404 });
   }
 
   const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedSkills = (await getLastAddedSkill(
-    activeLanguage.id,
-    true
-  )) as Skill[];
+  const lastAddedSkills = await getLastAddedSkill(activeLanguage.id, true);
 
   const lessons = await getLessonsBySkillId(skill.id);
   const data = {
@@ -164,8 +151,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     steps: lessons,
     lineNumber: skill.lineNumber,
   };
-
-  // console.log("Data: ", data);
 
   return { data, lastAddedSkills };
 };
