@@ -1,7 +1,7 @@
 import Skill from "~/modules/Skill";
 import { getActiveLanguage } from "~/models/language.server";
 import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
-import { increaseTodayExp } from "~/models/user.server";
+import { getTodayTotalXP, increaseTodayExp } from "~/models/user.server";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { getStepsForChapter } from "~/models/lesson.server";
@@ -49,11 +49,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const steps = await getStepsForChapter(title, chapter, activeLanguage.id);
 
-  return json({ steps });
+  const totalXP = await getTodayTotalXP(request);
+
+  return json({ steps, totalXP });
 };
 
 export default function LessonScreen() {
-  const { steps } = useLoaderData<typeof loader>();
+  const { steps, totalXP } = useLoaderData<typeof loader>();
 
-  return <Skill steps={steps} />;
+  return <Skill steps={steps} totalXP={totalXP} />;
 }

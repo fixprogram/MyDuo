@@ -1,12 +1,14 @@
 import React, { ReactNode } from "react";
 import { useFocus } from "~/hooks/useFocus";
 import {
+  ResultsBlock,
   ResultsContainer,
+  ResultsDescription,
   ResultsHiddenForm,
-  ResultsLeftBlock,
-  ResultsSeparateLine,
   ResultsTitle,
 } from "./lib";
+import ResultsImg from "~/styles/results.png";
+import { useSkill } from "..";
 
 type Props = {
   children?: ReactNode;
@@ -16,6 +18,8 @@ type Props = {
 export type Ref = HTMLFormElement;
 
 export const Results = React.forwardRef<Ref, Props>((props, ref) => {
+  const { totalXP } = useSkill();
+
   const containerRef = useFocus<HTMLDivElement>();
 
   return (
@@ -32,13 +36,19 @@ export const Results = React.forwardRef<Ref, Props>((props, ref) => {
         <input type="text" name="exp" value="16" readOnly />
       </ResultsHiddenForm>
 
-      <ResultsLeftBlock>
-        <ResultsTitle>Right answers and mistakes</ResultsTitle>
-      </ResultsLeftBlock>
-
-      <ResultsSeparateLine />
-
-      <ResultsLeftBlock />
+      <ResultsBlock>
+        {/* <ResultsTitle>Right answers and mistakes</ResultsTitle> */}
+        <img src={ResultsImg} width="140" alt="Results picture" />
+        <ResultsTitle>You've earned {totalXP + 10} XP today</ResultsTitle>
+        <span>
+          <ResultsDescription>Practice Complete!</ResultsDescription>
+          <ResultsDescription
+            style={{ color: "#ffc800", fontWeight: "700", marginLeft: "10px" }}
+          >
+            +10 XP
+          </ResultsDescription>
+        </span>
+      </ResultsBlock>
     </ResultsContainer>
   );
 });

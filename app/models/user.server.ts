@@ -170,3 +170,20 @@ export async function getLastActivity(request: Request) {
 
   return today;
 }
+
+export async function getTodayTotalXP(request: Request) {
+  const today = getWeekDay() as keyof WeeklyActivity;
+  let user = await getUser(request);
+  if (!user) throw new Error("User is undefined");
+
+  const data = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      weeklyActivity: true,
+    },
+  });
+
+  if (!data) throw new Error("No weekly activity was found in getTodayTotalXP");
+
+  return data.weeklyActivity[today];
+}

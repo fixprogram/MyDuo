@@ -1,6 +1,6 @@
 import Lesson from "~/modules/Skill";
 import { getActiveLanguage } from "~/models/language.server";
-import { increaseTodayExp } from "~/models/user.server";
+import { getTodayTotalXP, increaseTodayExp } from "~/models/user.server";
 import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
 import { useCatch, useLoaderData, useParams } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
@@ -52,13 +52,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     activeLanguage.id
   );
 
-  return json({ steps });
+  const totalXP = await getTodayTotalXP(request);
+
+  return json({ steps, totalXP });
 };
 
 export default function LessonScreen() {
-  const { steps } = useLoaderData<typeof loader>();
+  const { steps, totalXP } = useLoaderData<typeof loader>();
 
-  return <Lesson steps={steps} />;
+  return <Lesson steps={steps} totalXP={totalXP} />;
 }
 
 export function CatchBoundary() {

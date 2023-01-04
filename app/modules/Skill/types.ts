@@ -15,6 +15,7 @@ export type SkillState = {
     formDisabled: boolean;
     buttonDisabled: boolean;
   };
+  totalXP: number;
 };
 
 export type SkillContextType = Omit<SkillState, "lessonSteps"> & {

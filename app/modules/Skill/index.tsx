@@ -24,7 +24,13 @@ export function useSkill() {
   return context;
 }
 
-export default function Skill({ steps }: { steps: Step[] }) {
+export default function Skill({
+  steps,
+  totalXP,
+}: {
+  steps: Step[];
+  totalXP: number;
+}) {
   const resultsFormRef = createRef<HTMLFormElement>();
 
   const value = useSkillReducer();
@@ -34,7 +40,7 @@ export default function Skill({ steps }: { steps: Step[] }) {
   const { status } = skillState;
 
   useEffect(() => {
-    setup(steps); // Once the data is loaded, we set the it in reducer
+    setup(steps, totalXP); // Once the data is loaded, we set the it in reducer
   }, []);
 
   const onContinue = () => {

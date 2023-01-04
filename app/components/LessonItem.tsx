@@ -40,7 +40,7 @@ export default function LessonItem({
   useOnClickOutside(ref, () => setIsOpened(false));
 
   const isDisabled = transition.state !== "idle";
-  const exp = ((currentChapter / chapters) * 100).toString();
+  const exp = (currentChapter / chapters) * 100;
   const skillLink = `/skill/${title}/${
     currentChapter / chapters === 1 ? "practice" : currentChapter + 1
   }`;
@@ -48,6 +48,8 @@ export default function LessonItem({
   function toggleMenu() {
     setIsOpened(!isOpened);
   }
+
+  const startButtonMessage = exp < 100 ? "Start +16 XP" : "Practice +16 XP";
 
   return (
     <LessonsContainer>
@@ -80,7 +82,9 @@ export default function LessonItem({
             </div>
             {/* If the skill is 100% done, then we just repeat all lessons from it */}
             {/* Otherwise we study lessons only from next chapter */}
-            <LessonBlockLink to={skillLink}>Start +16 XP</LessonBlockLink>
+            <LessonBlockLink to={skillLink}>
+              {startButtonMessage}
+            </LessonBlockLink>
           </LessonBlockInner>
         </LessonBlockMenu>
       </LessonBlock>

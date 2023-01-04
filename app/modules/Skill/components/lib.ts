@@ -357,18 +357,30 @@ const ResultsHiddenForm = styled(Form)`
 `;
 
 const ResultsTitle = styled("h2")`
-  margin: 0;
+  margin: 25px 0;
+  font-family: "Nunito";
+  font-size: 24px;
+  font-weight: 800;
+  color: #3c3c3c;
+`;
+
+const ResultsDescription = styled("span")`
+  font-size: 19px;
+  line-height: 1.4;
+  color: #777;
   font-family: "Nunito";
 `;
 
-const ResultsLeftBlock = styled("div")`
+const ResultsBlock = styled("div")`
   padding: 50px 100px;
-  width: calc(50% - 1px);
-`;
-
-const ResultsSeparateLine = styled("div")`
-  width: 4px;
-  background-color: #e5e5e5;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
 `;
 
 const PairsList = styled("ul")`
@@ -410,8 +422,8 @@ export {
   ResultsContainer,
   ResultsHiddenForm,
   ResultsTitle,
-  ResultsLeftBlock,
-  ResultsSeparateLine,
+  ResultsDescription,
+  ResultsBlock,
   ChangeDifficultyBtn,
   PairsList,
   PairsItem,

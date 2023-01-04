@@ -19,7 +19,7 @@ type OverlayProps = {
 };
 
 type LessonProgressProps = {
-  exp: string;
+  exp: number;
 };
 
 type LessonBlockMenuProps = {
@@ -675,6 +675,7 @@ const ExpProgressBlock = styled("section")`
   border-radius: 16px;
   margin: 0 24px 24px;
   padding: 24px;
+  position: fixed;
 `;
 
 const ExpProgressTitle = styled("h2")`

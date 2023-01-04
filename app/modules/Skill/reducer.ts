@@ -38,8 +38,7 @@ enum actionTypes {
 }
 
 type Action =
-  // | { type: actionTypes.setup; lessons: Lesson[] }
-  | { type: actionTypes.setup; steps: Step[] }
+  | { type: actionTypes.setup; steps: Step[]; totalXP: number }
   | { type: actionTypes.continue }
   | { type: actionTypes.results }
   | { type: actionTypes.setCheckDisabled; disabled: boolean }
@@ -71,6 +70,7 @@ export const basicState: SkillState = {
   lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
   skillState: { status: "idle", formDisabled: false, buttonDisabled: true },
+  totalXP: 0,
 };
 
 function skillReducer(state: SkillState, action: Action): SkillState {
@@ -109,7 +109,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         },
       };
     case actionTypes.setup: // Initial action to set data right after loading component
-      const { steps } = action;
+      const { steps, totalXP } = action;
       return {
         ...basicState,
         stepNumber: 1,
@@ -118,6 +118,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         content: continueContent(basicState.content, steps) as Lesson & {
           difficulty: "easy" | "hard" | null;
         },
+        totalXP,
       };
     case actionTypes.results:
       return {
@@ -156,10 +157,12 @@ function useSkillReducer({
   reducer = skillReducer,
 } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { content, progress, skillState, stepNumber, maxSteps } = state;
+  const { content, progress, skillState, stepNumber, maxSteps, totalXP } =
+    state;
 
   const continueSkill = () => dispatch({ type: actionTypes.continue });
-  const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
+  const setup = (steps: Step[], totalXP: number) =>
+    dispatch({ type: actionTypes.setup, steps, totalXP });
   const showResults = () => dispatch({ type: actionTypes.results });
   const setStateRight = () => dispatch({ type: actionTypes.setStateRight });
   const setStateWrong = () => dispatch({ type: actionTypes.setStateWrong });
@@ -178,6 +181,7 @@ function useSkillReducer({
     skillState,
     stepNumber,
     maxSteps,
+    totalXP,
     continueSkill,
     setup,
     showResults,

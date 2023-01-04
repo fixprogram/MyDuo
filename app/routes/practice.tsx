@@ -8,6 +8,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { getStepsForPracticing } from "~/models/lesson.server";
 import { getActiveLanguage } from "~/models/language.server";
+import { getTodayTotalXP } from "~/models/user.server";
 
 export function ErrorBoundary() {
   const { lessonId } = useParams();
@@ -55,11 +56,13 @@ export const loader = async ({ request }: LoaderArgs) => {
     throw new Error("Steps for practicing are not found");
   }
 
-  return json({ steps });
+  const totalXP = await getTodayTotalXP(request);
+
+  return json({ steps, totalXP });
 };
 
 export default function LessonScreen() {
-  const { steps } = useLoaderData<typeof loader>();
+  const { steps, totalXP } = useLoaderData<typeof loader>();
 
-  return <Lesson steps={steps} />;
+  return <Lesson steps={steps} totalXP={totalXP} />;
 }

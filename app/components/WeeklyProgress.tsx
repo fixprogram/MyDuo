@@ -51,7 +51,7 @@ export default function WeeklyProgress({
   }));
 
   return (
-    <div>
+    <div style={{ position: "relative", display: "flex", flexGrow: "1" }}>
       <ExpProgressBlock>
         <ExpProgressTitle>XP Progress</ExpProgressTitle>
         <svg direction="ltr" height="220" width="340">

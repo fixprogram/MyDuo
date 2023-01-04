@@ -731,6 +731,7 @@ var ExpProgressBlock = (0, import_styled.default)("section")`
   border-radius: 16px;
   margin: 0 24px 24px;
   padding: 24px;
+  position: fixed;
 `;
 var ExpProgressTitle = (0, import_styled.default)("h2")`
   color: #3c3c3c;
@@ -919,7 +920,8 @@ var basicState = {
   },
   lessonSteps: [],
   maxSteps: 0,
-  skillState: { status: "idle", formDisabled: false, buttonDisabled: true }
+  skillState: { status: "idle", formDisabled: false, buttonDisabled: true },
+  totalXP: 0
 };
 function skillReducer(state, action10) {
   const { content, stepNumber, maxSteps, lessonSteps, skillState } = state;
@@ -953,12 +955,13 @@ function skillReducer(state, action10) {
         })
       });
     case "SETUP" /* setup */:
-      const { steps } = action10;
+      const { steps, totalXP } = action10;
       return __spreadProps(__spreadValues({}, basicState), {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: continueContent(basicState.content, steps)
+        content: continueContent(basicState.content, steps),
+        totalXP
       });
     case "RESULTS" /* results */:
       return __spreadProps(__spreadValues({}, state), {
@@ -994,9 +997,9 @@ function useSkillReducer({
   reducer: reducer2 = skillReducer
 } = {}) {
   const [state, dispatch] = (0, import_react6.useReducer)(reducer2, initialState5);
-  const { content, progress, skillState, stepNumber, maxSteps } = state;
+  const { content, progress, skillState, stepNumber, maxSteps, totalXP } = state;
   const continueSkill = () => dispatch({ type: "CONTINUE" /* continue */ });
-  const setup = (steps) => dispatch({ type: "SETUP" /* setup */, steps });
+  const setup = (steps, totalXP2) => dispatch({ type: "SETUP" /* setup */, steps, totalXP: totalXP2 });
   const showResults = () => dispatch({ type: "RESULTS" /* results */ });
   const setStateRight = () => dispatch({ type: "SET_STATE_RIGHT" /* setStateRight */ });
   const setStateWrong = () => dispatch({ type: "SET_STATE_WRONG" /* setStateWrong */ });
@@ -1011,6 +1014,7 @@ function useSkillReducer({
     skillState,
     stepNumber,
     maxSteps,
+    totalXP,
     continueSkill,
     setup,
     showResults,
@@ -1351,16 +1355,28 @@ var ResultsHiddenForm = (0, import_styled3.default)(import_react9.Form)`
   left: -1000px;
 `;
 var ResultsTitle = (0, import_styled3.default)("h2")`
-  margin: 0;
+  margin: 25px 0;
+  font-family: "Nunito";
+  font-size: 24px;
+  font-weight: 800;
+  color: #3c3c3c;
+`;
+var ResultsDescription = (0, import_styled3.default)("span")`
+  font-size: 19px;
+  line-height: 1.4;
+  color: #777;
   font-family: "Nunito";
 `;
-var ResultsLeftBlock = (0, import_styled3.default)("div")`
+var ResultsBlock = (0, import_styled3.default)("div")`
   padding: 50px 100px;
-  width: calc(50% - 1px);
-`;
-var ResultsSeparateLine = (0, import_styled3.default)("div")`
-  width: 4px;
-  background-color: #e5e5e5;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
 `;
 var PairsList2 = (0, import_styled3.default)("ul")`
   display: flex;
@@ -1376,8 +1392,12 @@ var PairsItem = (0, import_styled3.default)("li")`
   width: 48%;
 `;
 
+// app/styles/results.png
+var results_default = "/build/_assets/results-IW73HFOZ.png";
+
 // app/modules/Skill/components/Results.tsx
 var Results = import_react10.default.forwardRef((props, ref) => {
+  const { totalXP } = useSkill();
   const containerRef = useFocus();
   return /* @__PURE__ */ import_react10.default.createElement(ResultsContainer, {
     ref: containerRef,
@@ -1395,7 +1415,13 @@ var Results = import_react10.default.forwardRef((props, ref) => {
     name: "exp",
     value: "16",
     readOnly: true
-  })), /* @__PURE__ */ import_react10.default.createElement(ResultsLeftBlock, null, /* @__PURE__ */ import_react10.default.createElement(ResultsTitle, null, "Right answers and mistakes")), /* @__PURE__ */ import_react10.default.createElement(ResultsSeparateLine, null), /* @__PURE__ */ import_react10.default.createElement(ResultsLeftBlock, null));
+  })), /* @__PURE__ */ import_react10.default.createElement(ResultsBlock, null, /* @__PURE__ */ import_react10.default.createElement("img", {
+    src: results_default,
+    width: "140",
+    alt: "Results picture"
+  }), /* @__PURE__ */ import_react10.default.createElement(ResultsTitle, null, "You've earned ", totalXP + 10, " XP today"), /* @__PURE__ */ import_react10.default.createElement("span", null, /* @__PURE__ */ import_react10.default.createElement(ResultsDescription, null, "Practice Complete!"), /* @__PURE__ */ import_react10.default.createElement(ResultsDescription, {
+    style: { color: "#ffc800", fontWeight: "700", marginLeft: "10px" }
+  }, "+10 XP"))));
 });
 
 // app/modules/Skill/components/Footer.tsx
@@ -2111,11 +2137,10 @@ var duo_default = "/build/_assets/duo-4STWGEJ4.svg";
 
 // app/modules/Skill/components/QuestionAnswer/QuestionAnswerScreen.tsx
 function QuestionAnswerScreen({
-  question,
   userAnswer,
   setUserAnswer
 }) {
-  const { skillState } = useSkill();
+  const { skillState, content } = useSkill();
   const myRef = (0, import_react19.useRef)(null);
   (0, import_react19.useEffect)(() => {
     if (skillState.status === "idle") {
@@ -2135,14 +2160,19 @@ function QuestionAnswerScreen({
     style: { marginBottom: -50 }
   }), /* @__PURE__ */ React.createElement("div", {
     style: { position: "relative" }
-  }, /* @__PURE__ */ React.createElement(LessonQuestion, null, question), /* @__PURE__ */ React.createElement(LessonQuestionTriangleContainer, null, /* @__PURE__ */ React.createElement(LessonQuestionTriangle, null)))), /* @__PURE__ */ React.createElement(Textarea, {
+  }, /* @__PURE__ */ React.createElement(LessonQuestion, null, content.question), /* @__PURE__ */ React.createElement(LessonQuestionTriangleContainer, null, /* @__PURE__ */ React.createElement(LessonQuestionTriangle, null)))), /* @__PURE__ */ React.createElement(Textarea, {
     id: "answer",
     name: "answer",
     placeholder: "Enter your answer",
     value: userAnswer,
     onChange: (e) => setUserAnswer(e.target.value),
     disabled: skillState.formDisabled,
-    ref: myRef
+    ref: myRef,
+    onKeyDown: (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+      }
+    }
   })));
 }
 
@@ -2165,9 +2195,7 @@ function QuestionAnswerPractice() {
   return content.stepType === "Question" ? /* @__PURE__ */ React.createElement(Lesson, {
     checkAnswer,
     disabledCondition: (userAnswer) => userAnswer.length > 0
-  }, /* @__PURE__ */ React.createElement(QuestionAnswerScreen, {
-    question: content.question
-  })) : null;
+  }, /* @__PURE__ */ React.createElement(QuestionAnswerScreen, null)) : null;
 }
 
 // app/modules/Constructor/Levels/components/Variants/VariantsScreen.tsx
@@ -2342,14 +2370,17 @@ function useSkill() {
   }
   return context;
 }
-function Skill({ steps }) {
+function Skill({
+  steps,
+  totalXP
+}) {
   const resultsFormRef = (0, import_react21.createRef)();
   const value = useSkillReducer();
   const submit = (0, import_react22.useSubmit)();
   const { setup, skillState, continueSkill, resetStatus } = value;
   const { status } = skillState;
   (0, import_react21.useEffect)(() => {
-    setup(steps);
+    setup(steps, totalXP);
   }, []);
   const onContinue = () => {
     if (status === "results") {
@@ -2488,6 +2519,21 @@ async function getLastActivity(request) {
     return lastPracticed;
   }
   return today;
+}
+async function getTodayTotalXP(request) {
+  const today = getWeekDay();
+  let user = await getUser(request);
+  if (!user)
+    throw new Error("User is undefined");
+  const data = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      weeklyActivity: true
+    }
+  });
+  if (!data)
+    throw new Error("No weekly activity was found in getTodayTotalXP");
+  return data.weeklyActivity[today];
 }
 
 // app/session.server.ts
@@ -2780,12 +2826,14 @@ var loader = async ({ request, params }) => {
   const title = params.title;
   const chapter = Number(params.chapter);
   const steps = await getStepsForChapter(title, chapter, activeLanguage.id);
-  return (0, import_node2.json)({ steps });
+  const totalXP = await getTodayTotalXP(request);
+  return (0, import_node2.json)({ steps, totalXP });
 };
 function LessonScreen() {
-  const { steps } = (0, import_react23.useLoaderData)();
+  const { steps, totalXP } = (0, import_react23.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
-    steps
+    steps,
+    totalXP
   });
 }
 
@@ -2827,12 +2875,14 @@ var loader2 = async ({ request, params }) => {
     throw new Response("Skill is not found", { status: 404 });
   }
   const steps = await getStepsForPracticingSkill(skill.title, activeLanguage.id);
-  return (0, import_node3.json)({ steps });
+  const totalXP = await getTodayTotalXP(request);
+  return (0, import_node3.json)({ steps, totalXP });
 };
 function LessonScreen2() {
-  const { steps } = (0, import_react24.useLoaderData)();
+  const { steps, totalXP } = (0, import_react24.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
-    steps
+    steps,
+    totalXP
   });
 }
 function CatchBoundary() {
@@ -4463,7 +4513,9 @@ function WeeklyProgress({
     y: maxActivity && activity[day] / EXP_VALUES[4].val * 150,
     exp: activity[day]
   }));
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(ExpProgressBlock, null, /* @__PURE__ */ React.createElement(ExpProgressTitle, null, "XP Progress"), /* @__PURE__ */ React.createElement("svg", {
+  return /* @__PURE__ */ React.createElement("div", {
+    style: { position: "relative", display: "flex", flexGrow: "1" }
+  }, /* @__PURE__ */ React.createElement(ExpProgressBlock, null, /* @__PURE__ */ React.createElement(ExpProgressTitle, null, "XP Progress"), /* @__PURE__ */ React.createElement("svg", {
     direction: "ltr",
     height: "220",
     width: "340"
@@ -4610,11 +4662,12 @@ function LessonItem({
   }, [transition.state]);
   useOnClickOutside(ref, () => setIsOpened(false));
   const isDisabled = transition.state !== "idle";
-  const exp = (currentChapter / chapters * 100).toString();
+  const exp = currentChapter / chapters * 100;
   const skillLink = `/skill/${title}/${currentChapter / chapters === 1 ? "practice" : currentChapter + 1}`;
   function toggleMenu() {
     setIsOpened(!isOpened);
   }
+  const startButtonMessage = exp < 100 ? "Start +16 XP" : "Practice +16 XP";
   return /* @__PURE__ */ React.createElement(LessonsContainer, null, /* @__PURE__ */ React.createElement(LessonBlock, {
     ref
   }, /* @__PURE__ */ React.createElement("button", {
@@ -4648,7 +4701,7 @@ function LessonItem({
     height: 20
   })))), /* @__PURE__ */ React.createElement(LessonBlockLink, {
     to: skillLink
-  }, "Start +16 XP")))));
+  }, startButtonMessage)))));
 }
 
 // app/styles/practice_last_added.svg
@@ -4786,12 +4839,14 @@ var loader7 = async ({ request }) => {
   if (steps.length === 0) {
     throw new Error("Steps for practicing are not found");
   }
-  return (0, import_node8.json)({ steps });
+  const totalXP = await getTodayTotalXP(request);
+  return (0, import_node8.json)({ steps, totalXP });
 };
 function LessonScreen3() {
-  const { steps } = (0, import_react49.useLoaderData)();
+  const { steps, totalXP } = (0, import_react49.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Skill, {
-    steps
+    steps,
+    totalXP
   });
 }
 
@@ -4956,7 +5011,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "1d786210", "entry": { "module": "/build/entry.client-2XBQHGUL.js", "imports": ["/build/_shared/chunk-4I6FUSNR.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-64BYSEQC.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-7KXONNSH.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-FZMCA4RX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-NHYFVSIY.js", "imports": ["/build/_shared/chunk-CXTLOAZU.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YM6GYNSL.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-2JNSTEL7.js", "imports": ["/build/_shared/chunk-CXTLOAZU.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YM6GYNSL.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-ELARNOKD.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-RDLBYRKD.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-3BQIZL4U.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-FZMCA4RX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-AL7XM25L.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-RG4SWW2U.js", "imports": ["/build/_shared/chunk-4P5BO7V4.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-YM6GYNSL.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-FZMCA4RX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-XC7P4DSL.js", "imports": ["/build/_shared/chunk-4P5BO7V4.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-YM6GYNSL.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-FZMCA4RX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-QMZTSF4O.js", "imports": ["/build/_shared/chunk-4P5BO7V4.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-YM6GYNSL.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-FZMCA4RX.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": true } }, "url": "/build/manifest-1D786210.js" };
+var assets_manifest_default = { "version": "ae182746", "entry": { "module": "/build/entry.client-45OAAF5J.js", "imports": ["/build/_shared/chunk-KZAWO74C.js", "/build/_shared/chunk-6BO74FWO.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-IEW54MEM.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language": { "id": "routes/$language", "parentId": "root", "path": ":language", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language-KXII35YJ.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-P7M3VW2R.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": false }, "routes/$language/constructor/$skillId": { "id": "routes/$language/constructor/$skillId", "parentId": "routes/$language", "path": "constructor/:skillId", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/$skillId-VOTOBZ7A.js", "imports": ["/build/_shared/chunk-GAB4M5DE.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-BHUI3U4S.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/$language/constructor/new": { "id": "routes/$language/constructor/new", "parentId": "routes/$language", "path": "constructor/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/constructor/new-BN26CKKL.js", "imports": ["/build/_shared/chunk-GAB4M5DE.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-BHUI3U4S.js", "/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/$language/skills": { "id": "routes/$language/skills", "parentId": "routes/$language", "path": "skills", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/$language/skills-5OA2NFDX.js", "imports": ["/build/_shared/chunk-QPM6IN7H.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-RDLBYRKD.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-QWGP527N.js", "imports": ["/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-P7M3VW2R.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-AL7XM25L.js", "imports": void 0, "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/practice": { "id": "routes/practice", "parentId": "root", "path": "practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/practice-L3DXY62J.js", "imports": ["/build/_shared/chunk-TBGBJLYJ.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-NHLHEKQA.js", "/build/_shared/chunk-BHUI3U4S.js", "/build/_shared/chunk-ME5PAYV3.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-P7M3VW2R.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/$chapter": { "id": "routes/skill/$title/$chapter", "parentId": "root", "path": "skill/:title/:chapter", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/$chapter-XVOHPWHB.js", "imports": ["/build/_shared/chunk-TBGBJLYJ.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-BHUI3U4S.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-P7M3VW2R.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/skill/$title/practice": { "id": "routes/skill/$title/practice", "parentId": "root", "path": "skill/:title/practice", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/skill/$title/practice-LZWTJUWS.js", "imports": ["/build/_shared/chunk-TBGBJLYJ.js", "/build/_shared/chunk-DFG4XZEI.js", "/build/_shared/chunk-BHUI3U4S.js", "/build/_shared/chunk-5I46A727.js", "/build/_shared/chunk-HGHGZEQA.js", "/build/_shared/chunk-WD3XVBPK.js", "/build/_shared/chunk-P7M3VW2R.js"], "hasAction": true, "hasLoader": true, "hasCatchBoundary": true, "hasErrorBoundary": true } }, "url": "/build/manifest-AE182746.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };
