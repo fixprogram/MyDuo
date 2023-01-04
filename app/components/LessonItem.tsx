@@ -66,7 +66,7 @@ export default function LessonItem({
             <div style={{ display: "flex" }}>
               <LessonBlockLink to={editLink}>Edit</LessonBlockLink>
               <Form method="post">
-                <input type="hidden" name="lessonId" value={id} />
+                <input type="hidden" name="id" value={id} />
                 <LessonBlockButton
                   type="submit"
                   disabled={isDisabled}

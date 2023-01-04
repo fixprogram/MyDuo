@@ -19,9 +19,10 @@ export const action = async ({ request }: ActionArgs) => {
   const { _action, ...values } = Object.fromEntries(data);
 
   if (_action === "Delete skill") {
+    console.log("values: ", values);
     const id = values.id as string;
     if (!id) {
-      throw new Error("Lesson ID wasnt found");
+      throw new Error("Skill id wasn't found");
     }
 
     await deleteLessonsFromSkill(id as string);

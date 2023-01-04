@@ -86,8 +86,13 @@ export async function verifyLogin(
 
 export async function increaseTodayExp(request: Request, value: number) {
   const today = getWeekDay() as keyof WeeklyActivity;
-  const user = await getUser(request);
+  let user = await getUser(request);
   if (!user) throw new Error("User is undefined");
+
+  if (!user.wasToday) {
+    user = await updateUserStreak(user.id, true, user.streak + 1);
+  }
+
   return await prisma.user.update({
     where: { id: user.id },
     data: {
