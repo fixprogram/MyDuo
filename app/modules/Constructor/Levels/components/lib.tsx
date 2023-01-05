@@ -44,6 +44,14 @@ const StyleButton = styled("button")`
   border: none;
   cursor: pointer;
   font-family: "Nunito";
+  transition: color 0.2s;
+  &:hover {
+    color: #1cb0f6;
+  }
+  &:active {
+    color: #1cb0f6;
+    filter: brightness(1.1);
+  }
 `;
 
 const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`

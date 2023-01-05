@@ -13,7 +13,7 @@ export async function getSkills(languageId: string) {
     select: {
       id: true,
       title: true,
-      createdAt: true,
+      // createdAt: true,
       chapters: true,
       currentChapter: true,
       lineNumber: true,

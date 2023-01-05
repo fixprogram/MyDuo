@@ -11,6 +11,7 @@ type PuzzleProps = {
 export default function Puzzle({ values, setValues }: PuzzleProps) {
   const { content } = useSkill();
   const { answer: contentAnswer, text, difficulty, isToChoose } = content;
+  const insertText = text as string;
   const selectVariant = (variant: string) => {
     setValues((prevArray: string[]) => {
       const empty = prevArray.find((item) => {
@@ -32,7 +33,7 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
     contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
 
   const words = indexes.map((idx) => {
-    const textItem = text?.split(" ")[Number(idx)];
+    const textItem = insertText.split(" ")[Number(idx)];
 
     return doesItemContainSign(textItem).newItem;
   });

@@ -2,7 +2,7 @@ import Skill from "~/modules/Skill";
 import { getActiveLanguage } from "~/models/language.server";
 import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
 import { getTodayTotalXP, increaseTodayExp } from "~/models/user.server";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { getStepsForChapter } from "~/models/lesson.server";
 

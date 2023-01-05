@@ -58,7 +58,7 @@ type Action =
       payload: { isReady: boolean; number: number };
     }
   | { type: actionTypes.setAnswer; payload: { answer: string; number: number } }
-  | { type: actionTypes.changeCurrentScreen; currentScreen: string }
+  | { type: actionTypes.changeCurrentScreen; currentScreen: "Skill" | "Steps" }
   | { type: actionTypes.setBasicInfoReady; isReady: boolean }
   | { type: actionTypes.setStepsReady; isReady: boolean };
 

@@ -37,7 +37,7 @@ export default function QuestionAnswerPractice() {
       checkAnswer={checkAnswer}
       disabledCondition={(userAnswer: string) => userAnswer.length > 0}
     >
-      <QuestionAnswerScreen />
+      <QuestionAnswerScreen userAnswer={""} setUserAnswer={() => {}} />
     </Lesson>
   ) : null;
 }

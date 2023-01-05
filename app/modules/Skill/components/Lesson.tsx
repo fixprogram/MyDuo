@@ -8,7 +8,7 @@ type LessonProps = {
   initialValue?: string | string[];
   checkAnswer: Function;
   disabledCondition: Function | null;
-  keyDownHandle?: (event: React.KeyboardEvent, callback?: Function) => void;
+  keyDownHandle?: Function;
 };
 
 export const Lesson: React.FC<LessonProps> = ({

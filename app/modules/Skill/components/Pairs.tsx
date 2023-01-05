@@ -40,7 +40,11 @@ export default function Pairs() {
       disabledCondition={null}
       checkAnswer={checkAnswer}
     >
-      <PairsScreen variants={variants} />
+      <PairsScreen
+        userAnswer={[""]}
+        checkAnswer={() => {}}
+        variants={variants}
+      />
     </Lesson>
   ) : null;
 }

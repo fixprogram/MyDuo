@@ -1,4 +1,3 @@
-import { Lesson } from "@prisma/client";
 import { useReducer } from "react";
 import { SkillState, Step } from "./types";
 
@@ -115,9 +114,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: continueContent(basicState.content, steps) as Lesson & {
-          difficulty: "easy" | "hard" | null;
-        },
+        content: continueContent(basicState.content, steps) as Step,
         totalXP,
       };
     case actionTypes.results:

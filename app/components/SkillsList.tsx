@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import Footer from "./Footer";
+import Footer from "~/modules/Common/components/Footer";
 import LessonItem from "./LessonItem";
 import { LessonsBlock, SkillsLineBlock, SkillsListContainer } from "./lib";
 import PracticeLastAdded from "./PracticeLastAdded";
@@ -7,7 +7,6 @@ import PracticeLastAdded from "./PracticeLastAdded";
 export type SkillsListItemType = {
   id: string;
   title: string;
-  createdAt: string;
   chapters: number;
   currentChapter: number;
   lineNumber: number;

@@ -42,7 +42,7 @@ export default function SkillInfo({
       <input type="hidden" name="lineNumber" value={lineNumber} />
 
       <Legend>Skill info</Legend>
-      <LessonProgress exp={"0"} style={{ margin: "40px auto 0 auto" }} />
+      <LessonProgress exp={0} style={{ margin: "40px auto 0 auto" }} />
       <LessonTitleInput
         type="text"
         name="title"
@@ -67,10 +67,9 @@ export default function SkillInfo({
                 <LessonBlock>
                   <button type="button" aria-labelledby={lastAdded.title}>
                     <LessonProgress
-                      exp={(
-                        (lastAdded.currentChapter / lastAdded.chapters) *
-                        100
-                      ).toString()}
+                      exp={
+                        (lastAdded.currentChapter / lastAdded.chapters) * 100
+                      }
                     >
                       <LessonProgressInner />
                     </LessonProgress>
@@ -87,7 +86,7 @@ export default function SkillInfo({
                     aria-labelledby={"121"}
                     onClick={() => setLineNumber(lastAddedSkills[0].lineNumber)}
                   >
-                    <LessonProgress exp={"0"} style={{ fontSize: "39px" }}>
+                    <LessonProgress exp={0} style={{ fontSize: "39px" }}>
                       {lastAddedSkills[0].lineNumber === lineNumber ? (
                         <LessonProgressInner />
                       ) : (
@@ -108,7 +107,7 @@ export default function SkillInfo({
               aria-labelledby={"121"}
               onClick={() => setLineNumber(lastAddedSkills[0].lineNumber + 1)}
             >
-              <LessonProgress exp={"0"} style={{ fontSize: "39px" }}>
+              <LessonProgress exp={0} style={{ fontSize: "39px" }}>
                 {lastAddedSkills[0].lineNumber + 1 === lineNumber ? (
                   <LessonProgressInner />
                 ) : (

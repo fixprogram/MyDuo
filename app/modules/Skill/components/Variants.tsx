@@ -6,6 +6,8 @@ export default function VariantsPractice() {
   const { content, setStateRight, setStateWrong } = useSkill();
   const { question, variants, stepType } = content;
 
+  const lessonQuestion = question as string;
+
   const checkAnswer = (userAnswer: string) => {
     if (userAnswer === content.answer[0]) {
       return setStateRight();
@@ -31,7 +33,12 @@ export default function VariantsPractice() {
       checkAnswer={checkAnswer}
       keyDownHandle={handleOnKeyDown}
     >
-      <VariantsScreen question={question} variants={variants} />
+      <VariantsScreen
+        userAnswer={""}
+        setUserAnswer={() => {}}
+        question={lessonQuestion}
+        variants={variants}
+      />
     </Lesson>
   ) : null;
 }

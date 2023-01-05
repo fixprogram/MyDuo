@@ -14,36 +14,42 @@ export type InsertWordsType = {
 
 export default function InsertWords() {
   const { content, setStateRight, setStateWrong } = useSkill();
+  const { answer, stepType, text, difficulty, isToChoose } = content;
+
+  if (!text) {
+    return null;
+  }
+
   const initialUserAnswer = [""];
 
   const checkAnswer = (userAnswer: string[]) => {
-    const answer = content.text?.split(" ").filter((item, index) => {
-      if (content.answer[0].split(",").find((it) => Number(it) === index)) {
+    const arrayOfAnswers = text.split(" ").filter((item, index) => {
+      if (answer[0].split(",").find((it) => Number(it) === index)) {
         return item;
       }
     });
-    const formattedAnswer = answer?.map(
+    const formattedArrayOfAnswers = arrayOfAnswers.map(
       (answerItem) => doesItemContainSign(answerItem).newItem
     );
     const { formatted } = doesArrayContainItems(
-      formattedAnswer as string[],
+      formattedArrayOfAnswers as string[],
       userAnswer
     );
 
-    if (content.difficulty === "easy" && content.isToChoose) {
-      if (areArraysEqual(formattedAnswer as string[], userAnswer)) {
+    if (difficulty === "easy" && isToChoose) {
+      if (areArraysEqual(formattedArrayOfAnswers as string[], userAnswer)) {
         return setStateRight();
       }
       return setStateWrong();
     }
 
-    if (areArraysEqual(formattedAnswer as string[], formatted)) {
+    if (areArraysEqual(formattedArrayOfAnswers as string[], formatted)) {
       return setStateRight();
     }
     return setStateWrong();
   };
 
-  return content.stepType === "Insert" ? (
+  return stepType === "Insert" ? (
     <Lesson
       disabledCondition={(userAnswer: string[]) => {
         const isEachFieldContented = userAnswer.filter((uA) => {
@@ -51,12 +57,16 @@ export default function InsertWords() {
             return true;
           }
         });
-        return isEachFieldContented.length === content.answer.length;
+        return isEachFieldContented.length === answer.length;
       }}
       initialValue={initialUserAnswer}
       checkAnswer={checkAnswer}
     >
-      <InsertWordsScreen />
+      <InsertWordsScreen
+        userAnswer={[""]}
+        setUserAnswer={() => {}}
+        keyDownCheck={() => {}}
+      />
     </Lesson>
   ) : null;
 }

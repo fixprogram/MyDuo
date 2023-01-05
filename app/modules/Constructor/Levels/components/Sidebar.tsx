@@ -35,6 +35,7 @@ const Sidebar: React.FC = ({ children }) => {
             onClick={() => {
               changeCurrentScreen("Skill");
             }}
+            style={{ color: currentScreen === "Skill" ? "#1cb0f6" : "#3c3c3c" }}
           >
             Skill Info
           </SidebarBtn>
@@ -47,8 +48,11 @@ const Sidebar: React.FC = ({ children }) => {
                 changeCurrentScreen("Steps");
                 setStepActive(steps[steps.length - 1].id);
               }}
+              style={{
+                color: currentScreen === "Steps" ? "#ce82ff" : "#3c3c3c",
+              }}
             >
-              Chapter {chapter}
+              Lesson {chapter}
             </SidebarBtn>
             <ul>
               {steps.map(

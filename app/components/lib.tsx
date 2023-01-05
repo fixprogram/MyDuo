@@ -473,10 +473,9 @@ const LoginInput = styled("input")`
 `;
 
 const LoginButton = styled("button")`
-  margin-top: 20px;
   width: 100%;
   letter-spacing: 0.8px;
-  font: 600 15px "Nunito";
+  font: 700 15px "Nunito";
   padding: 0 16px;
   height: 50px;
   color: white;
@@ -486,6 +485,15 @@ const LoginButton = styled("button")`
   cursor: pointer;
   text-transform: uppercase;
   background-color: #1cb0f6;
+  transition: filter 0.2s;
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    margin-top: 4px;
+    border: none;
+    height: 46px;
+  }
 `;
 
 const LoginToggle = styled("label")`
@@ -493,12 +501,12 @@ const LoginToggle = styled("label")`
   top: 0;
   right: 0;
   letter-spacing: 0.8px;
-  font: 600 15px "Nunito";
+  font: 700 15px "Nunito";
   line-height: 1.2;
   padding: 0 16px;
   height: 50px;
   color: #1cb0f6;
-  border: 1px solid #e5e5e5;
+  border: 2px solid #e5e5e5;
   border-bottom: 4px solid #e5e5e5;
   border-radius: 16px;
   cursor: pointer;
@@ -507,6 +515,14 @@ const LoginToggle = styled("label")`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  transition: filter 0.2s;
+  &:hover {
+    filter: brightness(0.9);
+  }
+  &:active {
+    border-bottom-width: 2px;
+  }
 `;
 
 const MenuContainer = styled("div")`
@@ -669,37 +685,6 @@ const ErrorMessage = styled("p")`
   color: #ea2b2b;
 `;
 
-const ExpProgressBlock = styled("section")`
-  background: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 16px;
-  margin: 0 24px 24px;
-  padding: 24px;
-  position: fixed;
-`;
-
-const ExpProgressTitle = styled("h2")`
-  color: #3c3c3c;
-  font-size: 24px;
-  line-height: 26px;
-  margin: 0 0 25px;
-  font-family: Nunito;
-  font-weight: 700;
-`;
-
-const FooterLine = styled("hr")`
-  border: 0;
-  border-top: 2px solid #e5e5e5;
-  margin: 0 0 48px;
-`;
-
-const FooterText = styled("p")`
-  text-align: center;
-  color: #afafaf;
-  font-family: Nunito;
-  margin: 0;
-`;
-
 const SkillsListContainer = styled("section")`
   width: 65%;
   padding: 0 30px;
@@ -712,12 +697,6 @@ const SkillsLineBlock = styled("div")`
   width: 100%;
   max-width: 440px;
   margin: 0 auto 38px auto;
-`;
-
-const LinkWithHover = styled("a")`
-  &:hover {
-    filter: brightness(1.3);
-  }
 `;
 
 export {
@@ -774,11 +753,6 @@ export {
   PracticeLastAddedContainer,
   PracticeLastAddedLink,
   ErrorMessage,
-  ExpProgressBlock,
-  ExpProgressTitle,
-  FooterLine,
-  FooterText,
   SkillsListContainer,
   SkillsLineBlock,
-  LinkWithHover,
 };

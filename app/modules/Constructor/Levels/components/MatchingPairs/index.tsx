@@ -105,6 +105,10 @@ export default function MatchingPairs({ state = initialState }) {
               type="button"
               onClick={() => dispatch({ type: "ADD_PAIR" })}
               active={true}
+              style={{
+                backgroundColor: "#1cb0f6",
+                borderBottomColor: "#1899d6",
+              }}
             >
               Add pair
             </LessonButton>

@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { useFocus } from "~/hooks/useFocus";
 import {
   ResultsBlock,
   ResultsContainer,
@@ -9,6 +8,7 @@ import {
 } from "./lib";
 import ResultsImg from "~/styles/results.png";
 import { useSkill } from "..";
+import { useFocus } from "~/hooks/useFocus";
 
 type Props = {
   children?: ReactNode;

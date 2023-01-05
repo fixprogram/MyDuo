@@ -1,7 +1,7 @@
 import { useEffect, useContext, createContext, createRef } from "react";
 import Progress from "~/components/Progress";
 import { useSkillReducer, defaultSkillContextState } from "./reducer";
-import { useSubmit } from "@remix-run/react";
+// import { useSubmit } from "@remix-run/react";
 import { Results } from "./components/Results";
 import Footer from "./components/Footer";
 import { LessonContainer } from "./components/lib";
@@ -12,8 +12,12 @@ import VariantsPractice from "./components/Variants";
 import { SkillContextType, Step } from "./types";
 import { Overlay } from "~/components/lib";
 import AreYouSureBlock from "./components/AreYouSureBlock";
+import { useSubmit } from "@remix-run/react";
+// import Progress from "./components/Progress";
 
-const SkillContext = createContext<SkillContextType>(defaultSkillContextState);
+export const SkillContext = createContext<SkillContextType>(
+  defaultSkillContextState
+);
 SkillContext.displayName = "SkillContext";
 
 export function useSkill() {

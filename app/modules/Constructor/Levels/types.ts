@@ -16,7 +16,7 @@ export type Step = {
 
 export type State = {
   chapters: number[];
-  currentScreen: string;
+  currentScreen: "Skill" | "Steps";
   steps: Step[];
   basicInfoReady: boolean;
   stepsReady: boolean;
