@@ -98,7 +98,7 @@ export async function whenLastPractice(request: Request) {
   const languages = (await getLanguages(request)) as Language[];
   const lastUpdatedSkill = await prisma.skill.findFirst({
     where: {
-      projectId: { in: languages.map(({ id }) => id) },
+      languageId: { in: languages.map(({ id }) => id) },
     },
     select: { updatedAt: true },
     orderBy: { updatedAt: "desc" },

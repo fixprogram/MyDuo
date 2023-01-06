@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import Sidebar from "./Sidebar";
 
 type InsertWordsTextBlockProps = {
   showText?: boolean;
@@ -12,6 +13,10 @@ type VariantItemNumberProps = {
 type InsertWordsInputProps = {
   length: number;
   isToChoose?: boolean;
+};
+
+type SidebarBtnProps = {
+  isActive: boolean;
 };
 
 const StepContent = styled("div")`
@@ -160,15 +165,24 @@ const SidebarList = styled("ul")`
   margin-bottom: auto;
 `;
 
-const SidebarBtn = styled("button")`
+const SidebarBtn = styled("button")<SidebarBtnProps>`
   color: #3c3c3c;
   display: block;
   font-size: 16px;
   font-weight: 700;
   overflow: hidden;
-  padding: 15px 20px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background: ${(props) => (props.isActive ? "#dadada" : "inherit")};
+  border-radius: 16px;
+  width: 100%;
+  text-align: left;
+  padding: 13px 20px;
+  transition: background 0.07s;
+  margin-bottom: 2px;
+  &:hover {
+    background: #dadada;
+  }
 `;
 
 export {

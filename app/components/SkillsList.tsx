@@ -7,8 +7,8 @@ import PracticeLastAdded from "./PracticeLastAdded";
 export type SkillsListItemType = {
   id: string;
   title: string;
-  chapters: number;
-  currentChapter: number;
+  lessonsAmount: number;
+  currentLesson: number;
   lineNumber: number;
 };
 

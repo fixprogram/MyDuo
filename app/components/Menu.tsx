@@ -63,7 +63,7 @@ const Menu = ({
           ))}
         </HorizontalList>
       </nav>
-      <HorizontalList style={{ width: "40%" }}>
+      <HorizontalList>
         <ListItem>
           <Projects languages={languages} onOverlay={onOverlay} />
         </ListItem>

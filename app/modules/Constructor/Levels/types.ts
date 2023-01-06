@@ -1,25 +1,41 @@
 import { Variant } from "./components/MatchingPairs/reducer";
 
+export type Lesson = {
+  id: string;
+};
+
+export type StepOptions = {
+  question?: string;
+  keywords?: string[];
+  text?: string;
+  variants?: Variant[];
+  isToChoose?: boolean;
+  definition?: string;
+};
+
 export type Step = {
-  question: string | null;
+  // question: string | null;
   id: string;
   answer: string | string[];
   number: number;
-  keywords: string[];
+  // keywords: string[];
   stepType: string;
   ready?: boolean;
-  text?: string | null;
-  variants: Variant[] | [];
-  chapter: number;
-  active: boolean;
+  // text?: string | null;
+  // variants: Variant[] | [];
+  parentLessonId: string;
+  // active: boolean;
+  options: StepOptions;
 };
 
 export type State = {
-  chapters: number[];
+  lessons: Lesson[];
   currentScreen: "Skill" | "Steps";
   steps: Step[];
   basicInfoReady: boolean;
   stepsReady: boolean;
+  activeStepId: string;
+  activeLessonId: string;
 };
 
 export type FieldsetType = {
@@ -43,10 +59,11 @@ export type ContextType = State & {
   setQuestion: Function;
   setAnswer: Function;
   setKeywords: Function;
-  addChapter: Function;
+  addLesson: Function;
   addStep: Function;
   setStepReady: Function;
   changeCurrentScreen: Function;
   setBasicInfoReady: Function;
   setStepsReady: Function;
+  setLessonActive: Function;
 };

@@ -1,4 +1,5 @@
 import { isItemInArray } from "~/utils";
+import { WordsItem, WordsList } from "./lib";
 
 type BackendProps = {
   showText: Function;
@@ -7,7 +8,8 @@ type BackendProps = {
   isChooseVariants: boolean;
   answer: string;
   indexes: number[];
-  setIndexes: Function;
+  setIndexes: (indexes: number[]) => void;
+  text: string;
 };
 
 export default function Backend({
@@ -21,9 +23,57 @@ export default function Backend({
   text,
 }: BackendProps) {
   const words = text ? text.split(" ") : answer.split(" ");
+
+  //  ---------
+  //  Filter words from dots, commas etc
+  //  ---------
+
   return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
-      <h3>Mark words which should be hidden</h3>
+    <div style={{ padding: 30 }}>
+      <WordsList>
+        <li>
+          <b>Choose words to be hidden: </b>
+        </li>
+        {words.map((item, idx) => {
+          // {answer.split(" ").map((item, idx) => {
+          const isActive = !!indexes.find((i) => i === idx);
+          return (
+            <WordsItem
+              isActive={isActive}
+              key={idx}
+              onClick={() => {
+                setIndexes((prevIndexes) => {
+                  if (idx === 0) {
+                    let wasRemoved = false;
+                    prevIndexes.forEach((i, ix) => {
+                      if (i === 0) {
+                        wasRemoved = true;
+                        prevIndexes.splice(ix, 1);
+                      }
+                    });
+
+                    if (wasRemoved) return [...prevIndexes];
+
+                    return [...prevIndexes, idx];
+                  }
+
+                  if (isItemInArray(prevIndexes, idx)) {
+                    prevIndexes.splice(prevIndexes.indexOf(idx), 1);
+                    return [...prevIndexes];
+                  }
+
+                  return [...prevIndexes, idx];
+                });
+
+                setShowText(true);
+              }}
+            >
+              {item}
+            </WordsItem>
+          );
+        })}
+      </WordsList>
+
       <button
         type="button"
         style={{ display: showText ? "block" : "none" }}
@@ -37,48 +87,6 @@ export default function Backend({
       >
         Set variants
       </button>
-      {words.map((item, idx) => {
-        // {answer.split(" ").map((item, idx) => {
-        return (
-          <span
-            style={{
-              marginRight: 3,
-              border: !!indexes.filter((i) => i === idx).length
-                ? "1px solid #78C83D"
-                : "none",
-            }}
-            key={idx}
-            onClick={() => {
-              setIndexes((prevIndexes) => {
-                if (idx === 0) {
-                  let wasRemoved = false;
-                  prevIndexes.forEach((i, ix) => {
-                    if (i === 0) {
-                      wasRemoved = true;
-                      prevIndexes.splice(ix, 1);
-                    }
-                  });
-
-                  if (wasRemoved) return [...prevIndexes];
-
-                  return [...prevIndexes, idx];
-                }
-
-                if (isItemInArray(prevIndexes, idx)) {
-                  prevIndexes.splice(prevIndexes.indexOf(idx), 1);
-                  return [...prevIndexes];
-                }
-
-                return [...prevIndexes, idx];
-              });
-
-              setShowText(true);
-            }}
-          >
-            {item}
-          </span>
-        );
-      })}
     </div>
   );
 }

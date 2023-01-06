@@ -1,24 +1,38 @@
-import type { Step, State } from "./types";
 import { nanoid } from "nanoid";
+import type { Step, State } from "./types";
 
-const createStep = ({ number = 0, chapter = 1 }) => {
+import { useReducer } from "react";
+
+const getBasicState = (): State => {
+  const lessonId = nanoid();
+  const step = createStep({ number: 0, parentLessonId: lessonId });
   return {
-    active: true,
-    question: "",
-    id: nanoid(),
-    answer: "",
-    number,
-    keywords: [],
-    stepType: "",
-    ready: false,
-    text: "",
-    variants: [],
-    chapter,
+    lessons: [{ id: lessonId }],
+    currentScreen: "Skill",
+    steps: [step],
+    basicInfoReady: false,
+    stepsReady: false,
+    activeStepId: step.id,
+    activeLessonId: lessonId,
   };
 };
 
-import { Lesson } from "@prisma/client";
-import { useReducer } from "react";
+const createStep = ({ number = 0, parentLessonId = "qwerty" }): Step => {
+  return {
+    // active: true,
+    // question: "",
+    id: nanoid(),
+    answer: "",
+    number,
+    // keywords: [],
+    stepType: "",
+    ready: false,
+    // text: "",
+    // variants: [],
+    parentLessonId,
+    options: {},
+  };
+};
 
 enum actionTypes {
   setup = "SETUP",
@@ -29,18 +43,19 @@ enum actionTypes {
   setQuestion = "SET_QUESTION",
   setKeywords = "SET_KEYWORDS",
   setAnswer = "SET_ANSWER",
-  addChapter = "ADD_CHAPTER",
+  addLesson = "ADD_LESSON",
   addStep = "ADD_STEP",
   setStepReady = "SET_STEP_READY",
   changeCurrentScreen = "CHANGE_CURRENT_SCREEN",
   setBasicInfoReady = "SET_BASIC_INFO_READY",
   setStepsReady = "SET_STEPS_READY",
+  setLessonActive = "SET_LESSON_ACTIVE",
 }
 
 type Action =
-  | { type: actionTypes.setup; steps: Lesson[] }
+  | { type: actionTypes.setup; steps: Step[] }
   | { type: actionTypes.setStepType; payload: { stepType: string; id: string } }
-  | { type: actionTypes.removeStep; id: string }
+  | { type: actionTypes.removeStep }
   | { type: actionTypes.removeStepType; id: string }
   | { type: actionTypes.setStepActive; id: string }
   | {
@@ -51,8 +66,8 @@ type Action =
       type: actionTypes.setKeywords;
       payload: { keywords: string[]; number: number };
     }
-  | { type: actionTypes.addChapter }
-  | { type: actionTypes.addStep; chapter: number }
+  | { type: actionTypes.addLesson }
+  | { type: actionTypes.addStep }
   | {
       type: actionTypes.setStepReady;
       payload: { isReady: boolean; number: number };
@@ -60,18 +75,13 @@ type Action =
   | { type: actionTypes.setAnswer; payload: { answer: string; number: number } }
   | { type: actionTypes.changeCurrentScreen; currentScreen: "Skill" | "Steps" }
   | { type: actionTypes.setBasicInfoReady; isReady: boolean }
-  | { type: actionTypes.setStepsReady; isReady: boolean };
+  | { type: actionTypes.setStepsReady; isReady: boolean }
+  | { type: actionTypes.setLessonActive; id: string };
 
-export const basicState = {
-  chapters: [1],
-  currentScreen: "Skill",
-  steps: [createStep({})],
-  basicInfoReady: false,
-  stepsReady: false,
-} as State;
+export const basicState = getBasicState();
 
 function constructorReducer(state: State, action: Action): State {
-  const { steps, chapters } = state;
+  const { steps, lessons, activeStepId, activeLessonId } = state;
   const { type } = action;
 
   switch (type) {
@@ -128,7 +138,7 @@ function constructorReducer(state: State, action: Action): State {
     case actionTypes.setQuestion: {
       const { question, number } = action.payload;
       let newSteps = steps;
-      newSteps[number].question = question;
+      newSteps[number].options.question = question;
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.setAnswer: {
@@ -140,41 +150,63 @@ function constructorReducer(state: State, action: Action): State {
     case actionTypes.setKeywords: {
       let { keywords, number } = action.payload;
       let newSteps = steps;
-      newSteps[number].keywords = keywords;
+      newSteps[number].options.keywords = keywords;
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.addStep: {
-      const { chapter } = action;
-      const newSteps = steps.map((step) => ({ ...step, active: false }));
+      // const { parentLessonId } = action;
+      const newStep = createStep({
+        number: steps.length,
+        parentLessonId: activeLessonId,
+      });
+      // const newSteps = steps.map((step) => ({ ...step }));
       return {
         ...state,
-        steps: [...newSteps, createStep({ number: steps.length, chapter })],
+        steps: [...steps, newStep],
+        activeStepId: newStep.id,
       };
     }
     case actionTypes.removeStep: {
-      const newSteps = steps
-        .filter((item: Step) => action.id !== item.id)
-        .map((item: Step, i: number) => ({ ...item, number: i }));
+      const newSteps = steps;
+      const removeIdx = newSteps.indexOf(
+        newSteps.find((step) => step.id === activeStepId) as Step
+      );
+      newSteps.splice(removeIdx, 1);
+      // const newSteps = steps
+      //   .filter((item: Step) => action.id !== item.id)
+      //   .map((item: Step, i: number) => ({ ...item, number: i }));
+      const lastStep = newSteps.at(-1) as Step;
       return {
         ...state,
         steps: [...newSteps],
+        activeStepId: lastStep.id,
       };
     }
-    case actionTypes.addChapter: {
-      const newChapter = chapters.length + 1;
+    case actionTypes.addLesson: {
+      const lessonId = nanoid();
+      const newLesson = {
+        id: lessonId,
+      };
+      const newStep = createStep({
+        number: steps.length,
+        parentLessonId: lessonId,
+      });
       const newSteps = steps.map((step) => ({ ...step, active: false }));
       return {
         ...state,
-        chapters: [...chapters, newChapter],
-        steps: [
-          ...newSteps,
-          createStep({ number: steps.length, chapter: newChapter }),
-        ],
+        lessons: [...lessons, newLesson],
+        steps: [...newSteps, newStep],
+        activeLessonId: lessonId,
+        activeStepId: newStep.id,
       };
     }
     case actionTypes.changeCurrentScreen: {
       const { currentScreen } = action;
       return { ...state, currentScreen };
+    }
+    case actionTypes.setLessonActive: {
+      const { id } = action;
+      return { ...state, activeLessonId: id };
     }
     case actionTypes.setBasicInfoReady: {
       const { isReady } = action;
@@ -195,12 +227,10 @@ function useConstructorReducer({
 } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setup = (steps: Lesson[]) =>
-    dispatch({ type: actionTypes.setup, steps });
+  const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
   const setStepType = (stepType: string, id: string) =>
     dispatch({ type: actionTypes.setStepType, payload: { stepType, id } });
-  const removeStep = (id: string) =>
-    dispatch({ type: actionTypes.removeStep, id });
+  const removeStep = () => dispatch({ type: actionTypes.removeStep });
   const removeStepType = (id: string) =>
     dispatch({ type: actionTypes.removeStepType, id });
   const setStepActive = (id: string) =>
@@ -209,19 +239,20 @@ function useConstructorReducer({
     dispatch({ type: actionTypes.setQuestion, payload: { question, number } });
   const setKeywords = (keywords: string[], number: number) =>
     dispatch({ type: actionTypes.setKeywords, payload: { keywords, number } });
-  const addChapter = () => dispatch({ type: actionTypes.addChapter });
-  const addStep = (chapter: number) =>
-    dispatch({ type: actionTypes.addStep, chapter });
+  const addLesson = () => dispatch({ type: actionTypes.addLesson });
+  const addStep = () => dispatch({ type: actionTypes.addStep });
   const setStepReady = (isReady: boolean, number: number) =>
     dispatch({ type: actionTypes.setStepReady, payload: { isReady, number } });
   const setAnswer = (answer: string, number: number) =>
     dispatch({ type: actionTypes.setAnswer, payload: { answer, number } });
-  const changeCurrentScreen = (currentScreen: string) =>
+  const changeCurrentScreen = (currentScreen: "Skill" | "Steps") =>
     dispatch({ type: actionTypes.changeCurrentScreen, currentScreen });
   const setBasicInfoReady = (isReady: boolean) =>
     dispatch({ type: actionTypes.setBasicInfoReady, isReady });
   const setStepsReady = (isReady: boolean) =>
     dispatch({ type: actionTypes.setStepsReady, isReady });
+  const setLessonActive = (id: string) =>
+    dispatch({ type: actionTypes.setLessonActive, id });
 
   return {
     ...state,
@@ -233,31 +264,33 @@ function useConstructorReducer({
     setQuestion,
     setAnswer,
     setKeywords,
-    addChapter,
+    addLesson,
     addStep,
     setStepReady,
     changeCurrentScreen,
     setBasicInfoReady,
     setStepsReady,
+    setLessonActive,
   };
 }
 
 const initialContext = {
   ...basicState,
   setStepType: (stepType: string, id: string) => {},
-  setup: (steps: Lesson[]) => {},
-  removeStep: (id: string) => {},
+  setup: (steps: Step[]) => {},
+  removeStep: () => {},
   removeStepType: (id: string) => {},
   setStepActive: (id: string) => {},
   setQuestion: (question: string, number: number) => {},
   setAnswer: (answer: string | string[], number: number) => {},
   setKeywords: (keywords: string[], number: number) => {},
-  addChapter: () => {},
-  addStep: (chapter: number) => {},
+  addLesson: () => {},
+  addStep: () => {},
   setStepReady: (isReady: boolean, number: number) => {},
-  changeCurrentScreen: (currentScreen: string) => {},
+  changeCurrentScreen: (currentScreen: "Skill" | "Steps") => {},
   setBasicInfoReady: (isReady: boolean) => {},
   setStepsReady: (isReady: boolean) => {},
+  setLessonActive: (id: string) => {},
 };
 
 export { useConstructorReducer, constructorReducer, initialContext };

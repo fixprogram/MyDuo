@@ -1,22 +1,21 @@
-import React, { ReactElement } from "react";
+import React, { Fragment, ReactElement } from "react";
 import { Legend } from "~/components/lib";
+import { STEP_TYPES } from "~/constants";
 import { useConstructor } from "../..";
 import CloseBtn from "../../components/CloseBtn";
 import { Step as StepType } from "../types";
 import { StepHeader, StepContent, ChooseStyle, StyleButton } from "./lib";
 
-const STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
-
 type StepProps = { data: StepType; index: number };
 
 const Step: React.FC<StepProps> = ({ data, index, children }) => {
-  const { active, chapter, stepType, id, number } = data;
-  const { removeStepType, setStepType } = useConstructor();
+  const { parentLessonId, stepType, id, number } = data;
+  const { activeStepId, removeStepType, setStepType } = useConstructor();
 
   return (
-    <section className={`${!active && "visuallyHidden"}`}>
+    <section className={`${activeStepId !== id && "visuallyHidden"}`}>
       <input type="hidden" name="step" value={index} />
-      <input type="hidden" name={`chapter`} value={chapter} />
+      <input type="hidden" name={`parentLessonId`} value={parentLessonId} />
       <input type="hidden" name={`type${number}`} value={stepType} />
       <Legend>{stepType ? stepType : "Choose type"}</Legend>
       <StepHeader>
@@ -25,8 +24,9 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
         )}
       </StepHeader>
 
-      <StepContent>
-        {stepType === "" ? (
+      {/* <StepContent> */}
+      {stepType === "" ? (
+        <StepContent>
           <ChooseStyle>
             {STEP_TYPES.map((type, idx) => (
               <StyleButton
@@ -38,17 +38,23 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
               </StyleButton>
             ))}
           </ChooseStyle>
-        ) : (
-          React.Children.map(children, (child) => {
+        </StepContent>
+      ) : (
+        <Fragment>
+          {/* <StepContent> */}
+          {React.Children.map(children, (child) => {
             if (child === null) {
               return;
             }
             return React.cloneElement(child as ReactElement, {
               state: data,
             });
-          })
-        )}
-      </StepContent>
+          })}
+          {/* </StepContent>
+          <h2>Step settings</h2> */}
+        </Fragment>
+      )}
+      {/* </StepContent> */}
     </section>
   );
 };

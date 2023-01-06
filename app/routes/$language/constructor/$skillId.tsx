@@ -3,14 +3,18 @@ import { json, redirect, Response } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Constructor from "~/modules/Constructor";
-import { Language, Lesson, Skill } from "@prisma/client";
+import { Language, Step, Skill } from "@prisma/client";
 import {
-  createLessons,
+  createSteps,
   deleteLessonsFromSkill,
   getLessonsBySkillId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
-import { checkTitleUnique, getLastAddedSkill } from "~/models/skill.server";
+import {
+  checkTitleUnique,
+  getLastAddedSkill,
+  getLastAddedSkills,
+} from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 
@@ -36,101 +40,103 @@ export const action = async ({ request, params }: ActionArgs) => {
     }
   }
 
-  const lessons = form.getAll("step").map((item, index) => {
-    const stepType = form.get(`type${index}`);
-    let answer: string | string[] = form.get(`answer${index}`) as string;
-    const returnData = {
-      stepType,
-      number: index,
-      chapter: Number(stepChapters[index]),
-      languageId: activeLanguage.id,
-    };
-    switch (stepType) {
-      case "Question": {
-        const question = form.get(`question${index}`);
-        const keywords = form.get(`keywords${index}`) as string;
-        answer = answer.trim().split(" ");
-        return {
-          ...returnData,
-          question,
-          answer,
-          keywords: keywords ? keywords.split(",") : [],
-        };
-      }
-      case "Insert": {
-        const text = form.get(`text${index}`) as string;
-        const isToChoose = !!form.get(`isToChoose${index}`);
-        const variantValues = form.getAll(`variant${index}`);
-        const variants = variantValues.map((value, idx) => ({
-          idx,
-          value,
-          isFocused: false,
-        }));
-        answer = answer
-          .trim()
-          .split(",")
-          .sort((a, b) => a - b);
-        return {
-          ...returnData,
-          answer,
-          text: text.trim(),
-          isToChoose: variants.length === 0 ? isToChoose : false,
-          variants,
-        };
-      }
-      case "Variants": {
-        const question = form.get(`question${index}`);
-        const variants = form.getAll(`variant${index}`);
-        return {
-          ...returnData,
-          answer,
-          question,
-          variants: variants.map((variant, idx) => ({
-            value: variant,
-            idx: idx + 1,
-            isFocused: false,
-          })),
-        };
-      }
-      case "Pairs": {
-        const variants = form.getAll(`variant${index}`) as string[];
-        return {
-          ...returnData,
-          // answer: answer[0].split(","),
-          answer: answer.split(","),
-          variants: variants.map((variant, idx) => ({
-            value: variant,
-            isFocused: false,
-            isConnected: true,
-            idx: idx + 1,
-          })),
-        };
-      }
-      default: {
-        return { ...returnData, answer };
-      }
-    }
-  }) as Lesson[];
+  // const lessons = form.getAll("step").map((item, index) => {
+  //   const stepType = form.get(`type${index}`);
+  //   let answer: string | string[] = form.get(`answer${index}`) as string;
+  //   const returnData = {
+  //     stepType,
+  //     number: index,
+  //     chapter: Number(stepChapters[index]),
+  //     languageId: activeLanguage.id,
+  //   };
+  //   switch (stepType) {
+  //     case "Question": {
+  //       const question = form.get(`question${index}`);
+  //       const keywords = form.get(`keywords${index}`) as string;
+  //       answer = answer.trim().split(" ");
+  //       return {
+  //         ...returnData,
+  //         question,
+  //         answer,
+  //         keywords: keywords ? keywords.split(",") : [],
+  //       };
+  //     }
+  //     case "Insert": {
+  //       const text = form.get(`text${index}`) as string;
+  //       const isToChoose = !!form.get(`isToChoose${index}`);
+  //       const variantValues = form.getAll(`variant${index}`);
+  //       const variants = variantValues.map((value, idx) => ({
+  //         idx,
+  //         value,
+  //         isFocused: false,
+  //       }));
+  //       answer = answer
+  //         .trim()
+  //         .split(",")
+  //         .sort((a, b) => a - b);
+  //       return {
+  //         ...returnData,
+  //         answer,
+  //         text: text.trim(),
+  //         isToChoose: variants.length === 0 ? isToChoose : false,
+  //         variants,
+  //       };
+  //     }
+  //     case "Variants": {
+  //       const question = form.get(`question${index}`);
+  //       const variants = form.getAll(`variant${index}`);
+  //       return {
+  //         ...returnData,
+  //         answer,
+  //         question,
+  //         variants: variants.map((variant, idx) => ({
+  //           value: variant,
+  //           idx: idx + 1,
+  //           isFocused: false,
+  //         })),
+  //       };
+  //     }
+  //     case "Pairs": {
+  //       const variants = form.getAll(`variant${index}`) as string[];
+  //       return {
+  //         ...returnData,
+  //         // answer: answer[0].split(","),
+  //         answer: answer.split(","),
+  //         variants: variants.map((variant, idx) => ({
+  //           value: variant,
+  //           isFocused: false,
+  //           isConnected: true,
+  //           idx: idx + 1,
+  //         })),
+  //       };
+  //     }
+  //     default: {
+  //       return { ...returnData, answer };
+  //     }
+  //   }
+  // }) as Step[];
 
-  await deleteLessonsFromSkill(params.skillId as string);
+  // const lessons = [];
 
-  const createdLessonsIDs = await createLessons(lessons);
-  const data = {
-    title,
-    lessonIDs: createdLessonsIDs,
-    chapters: Number(stepChapters[stepChapters.length - 1]),
-    currentChapter: 0,
-    level: 0,
-    projectId: activeLanguage?.id,
-    updatedAt: getTodayDate(),
-  };
+  // await deleteLessonsFromSkill(params.skillId as string);
 
-  await prisma.skill.update({
-    where: { id: params.skillId },
-    data: { ...data },
-  });
+  // const createdLessonsIDs = await createSteps(lessons);
+  // const data = {
+  //   title,
+  //   lessonIDs: createdLessonsIDs,
+  //   chapters: Number(stepChapters[stepChapters.length - 1]),
+  //   currentChapter: 0,
+  //   level: 0,
+  //   languageId: activeLanguage?.id,
+  //   updatedAt: getTodayDate(),
+  // };
 
-  return redirect(`/`);
+  // await prisma.skill.update({
+  //   where: { id: params.skillId },
+  //   data: { ...data },
+  // });
+
+  // return redirect(`/`);
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -143,7 +149,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedSkills = await getLastAddedSkill(activeLanguage.id, true);
+  const lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
 
   const lessons = await getLessonsBySkillId(skill.id);
   const data = {

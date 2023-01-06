@@ -12,16 +12,28 @@ import {
 } from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
 
-const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
-  question: "",
+const initialState: Omit<
+  Step,
+  "id" | "variants" | "parentLessonId" | "active" | "chapter"
+> = {
+  // const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
+  // question: "",
   answer: "",
   number: 0,
-  keywords: [""],
+  // keywords: [""],
   stepType: "",
+  options: {
+    question: "",
+    keywords: [""],
+  },
 };
 
 export default function QuestionAnswer({ state = initialState }) {
-  const { question, answer, number, keywords, stepType } = state;
+  const { options, answer, number, stepType } = state;
+  const { question, keywords } = options as {
+    question: string;
+    keywords: string[];
+  };
   const { setStepReady, setKeywords, setQuestion, setAnswer } =
     useConstructor();
 

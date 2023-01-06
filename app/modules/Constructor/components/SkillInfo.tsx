@@ -58,7 +58,7 @@ export default function SkillInfo({
         </ErrorMessage>
       )}
 
-      {lastAddedSkills.length > 0 && (
+      {lastAddedSkills?.length > 0 && (
         <div style={{ width: "100%", maxWidth: "440px", margin: "0 auto" }}>
           <h2 style={{ marginTop: 60 }}>Position</h2>
           <LessonsBlock>
@@ -68,7 +68,8 @@ export default function SkillInfo({
                   <button type="button" aria-labelledby={lastAdded.title}>
                     <LessonProgress
                       exp={
-                        (lastAdded.currentChapter / lastAdded.chapters) * 100
+                        (lastAdded.currentLesson / lastAdded.lessonsAmount) *
+                        100
                       }
                     >
                       <LessonProgressInner />

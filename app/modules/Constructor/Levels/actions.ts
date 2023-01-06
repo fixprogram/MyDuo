@@ -33,7 +33,7 @@ const actionCreator = (dispatch: Function) => ({
     dispatch({ type: "SET_DATA", payload: { steps } }),
   setQuestion: (question: string, number: number): Action =>
     dispatch({ type: "SET_QUESTION", payload: { question, number } }),
-  addChapter: () => dispatch({ type: "ADD_CHAPTER" }),
+  addLesson: () => dispatch({ type: "ADD_CHAPTER" }),
   setStepActive: (id: string) =>
     dispatch({ type: "SET_STEP_ACTIVE", payload: { id } }),
   changeCurrentScreen: (currentScreen: string) =>

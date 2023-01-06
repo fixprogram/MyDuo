@@ -1,21 +1,23 @@
 import { useTransition } from "@remix-run/react";
-import React from "react";
 import { FormButton } from "~/components/lib";
 import { useConstructor } from "../..";
 import { ConstructorSidebar } from "../../components/lib";
 import { SidebarBtn, SidebarList } from "./lib";
 
-const Sidebar: React.FC = ({ children }) => {
+const Sidebar = () => {
   const {
     steps,
     currentScreen,
-    chapters,
-    changeCurrentScreen,
+    lessons,
     stepsReady,
     basicInfoReady,
+    activeLessonId,
+    activeStepId,
+    changeCurrentScreen,
     setStepActive,
+    setLessonActive,
     removeStep,
-    addChapter,
+    addLesson,
     addStep,
   } = useConstructor();
 
@@ -26,6 +28,10 @@ const Sidebar: React.FC = ({ children }) => {
   const isSubmitDisabled =
     stepsReady === false || basicInfoReady === false || submitText !== "Save";
 
+  const lessonSteps = steps.filter(
+    (step) => step.parentLessonId === activeLessonId
+  );
+
   return (
     <ConstructorSidebar>
       <SidebarList>
@@ -35,85 +41,83 @@ const Sidebar: React.FC = ({ children }) => {
             onClick={() => {
               changeCurrentScreen("Skill");
             }}
-            style={{ color: currentScreen === "Skill" ? "#1cb0f6" : "#3c3c3c" }}
+            isActive={currentScreen === "Skill"}
           >
             Skill Info
           </SidebarBtn>
         </li>
-        {chapters.map((chapter) => (
-          <li key={`chapter-${chapter}`}>
+        {lessons.map((lesson, idx) => (
+          <li key={lesson.id}>
             <SidebarBtn
               type="button"
               onClick={() => {
                 changeCurrentScreen("Steps");
-                setStepActive(steps[steps.length - 1].id);
+                setLessonActive(lesson.id);
               }}
-              style={{
-                color: currentScreen === "Steps" ? "#ce82ff" : "#3c3c3c",
-              }}
+              isActive={
+                lesson.id === activeLessonId && currentScreen === "Steps"
+              }
             >
-              Lesson {chapter}
+              Lesson {idx + 1}
             </SidebarBtn>
-            <ul>
-              {steps.map(
-                (stepsItem, index) =>
-                  stepsItem.chapter === chapter && (
-                    <li key={stepsItem.id}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          changeCurrentScreen("Steps");
-                          setStepActive(stepsItem.id);
-                        }}
-                        style={{
-                          border: stepsItem.active ? "1px solid" : "none",
-                        }}
-                      >
-                        Step {index + 1}
-                      </button>
-                      {index > 0 ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            removeStep(stepsItem.id);
-                          }}
-                        >
-                          Remove step
-                        </button>
-                      ) : null}
-                    </li>
-                  )
-              )}
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    addStep(chapter);
-                    if (currentScreen !== "Steps") {
-                      changeCurrentScreen("Steps");
-                    }
-                  }}
-                >
-                  Add step
-                </button>
-              </li>
-            </ul>
+          </li>
+        ))}
+
+        <button
+          type="button"
+          onClick={() => {
+            if (currentScreen !== "Steps") {
+              changeCurrentScreen("Steps");
+            }
+            addLesson();
+          }}
+        >
+          Add lesson
+        </button>
+      </SidebarList>
+
+      <SidebarList>
+        {lessonSteps.map((step, index) => (
+          <li key={step.id}>
             <button
               type="button"
               onClick={() => {
-                if (currentScreen !== "Steps") {
-                  changeCurrentScreen("Steps");
-                }
-                addChapter();
+                changeCurrentScreen("Steps");
+                setStepActive(step.id);
+              }}
+              style={{
+                color:
+                  step.id === activeStepId && currentScreen === "Steps"
+                    ? "#1cb0f6"
+                    : "#3c3c3c",
               }}
             >
-              Add chapter
+              Step {index + 1}
             </button>
+            {lessonSteps.length > 1 ? (
+              <button
+                type="button"
+                onClick={() => {
+                  removeStep();
+                }}
+              >
+                Remove step
+              </button>
+            ) : null}
           </li>
         ))}
+        <button
+          type="button"
+          onClick={() => {
+            addStep();
+            if (currentScreen !== "Steps") {
+              changeCurrentScreen("Steps");
+            }
+          }}
+        >
+          Add step
+        </button>
       </SidebarList>
-
-      {children}
 
       <FormButton
         type="submit"

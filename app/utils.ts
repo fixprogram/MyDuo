@@ -46,7 +46,7 @@ export function validateUsername(username: unknown): username is string {
   return typeof username === "string" && username.length > 3;
 }
 
-export const isItemInArray = (arr: string[], item: string) => {
+export const isItemInArray = <T>(arr: Array<T>, item: T) => {
   // let isExist = false;
   // arr.find((arrItem) => {
   //   if (arrItem === item) {

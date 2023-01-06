@@ -60,7 +60,7 @@ const ConstructorSidebar = styled("section")`
   padding-bottom: 71px;
   position: relative;
   background-color: #fff;
-  border: 2px solid #e5e5e5;
+  // border: 2px solid #e5e5e5;
   border-radius: 16px;
   margin: 0 24px 24px;
   padding: 24px;

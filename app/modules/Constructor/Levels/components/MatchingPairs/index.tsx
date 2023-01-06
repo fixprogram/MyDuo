@@ -12,6 +12,7 @@ const initialState = {
   number: 0,
   answer: [],
   stepType: "",
+  options: {},
 };
 
 export default function MatchingPairs({ state = initialState }) {
@@ -19,6 +20,7 @@ export default function MatchingPairs({ state = initialState }) {
     number,
     answer,
     stepType,
+    options,
     variantsCount = 4,
     initialVariants = [],
   } = state;
@@ -35,7 +37,8 @@ export default function MatchingPairs({ state = initialState }) {
   useEffect(() => {
     if (isEditing) {
       // return console.log("123");
-      return dispatch(pairsSetup(answer.length, state.variants, answer));
+      return dispatch(pairsSetup(answer.length, options.variants, answer));
+      // return dispatch(pairsSetup(answer.length, state.variants, answer));
     }
     dispatch(pairsSetup(variantsCount, initialVariants, answer as string[]));
   }, []);
