@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { isItemInArray } from "~/utils";
+import { cleanWordFromSigns, isItemInArray } from "~/utils";
 import { SettingsContainer, Button, WordsItem, WordsList } from "./lib";
 
 type BackendProps = {
@@ -13,6 +13,14 @@ type BackendProps = {
   text: string;
 };
 
+function getWordsOutOfText(text: string) {
+  const wordsWithPossibleSigns = text.split(" ");
+  const words = wordsWithPossibleSigns.map(
+    (word) => cleanWordFromSigns(word).newWord
+  );
+  return words;
+}
+
 export default function Settings({
   isEditingText,
   setEditingText,
@@ -23,11 +31,54 @@ export default function Settings({
   indexes,
   text,
 }: BackendProps) {
-  const words = text ? text.split(" ") : answer.split(" ");
+  const words: string[] = text ? getWordsOutOfText(text) : [];
+  // if (text) {
+  //   text.split(" ").forEach((textItem) => {
+  //     words.push(doesItemContainSign(textItem).newItem);
+  //   });
+  // }
+  // if(answer) {
+  //   JSON.parse(answer).forEach(answerItem => {
+  //     words.push(answerItem)
+  //   })
+  // }
+
+  // ? text.split(" ")
+  // : JSON.parse(answer ? answer : "[]");
+  // const words: string[] = text
+  //   ? text.split(" ")
+  //   : JSON.parse(answer ? answer : "[]");
 
   //  ---------
   //  Filter words from dots, commas etc
   //  ---------
+
+  function handleOnWordClick(wordIndex: number) {
+    setIndexes((prevIndexes: number[]) => {
+      if (wordIndex === 0) {
+        let wasRemoved = false;
+        prevIndexes.forEach((prevIndex, ix) => {
+          if (prevIndex === 0) {
+            wasRemoved = true;
+            prevIndexes.splice(ix, 1);
+          }
+        });
+
+        if (wasRemoved) return [...prevIndexes];
+
+        return [...prevIndexes, wordIndex];
+      }
+
+      if (isItemInArray(prevIndexes, wordIndex)) {
+        prevIndexes.splice(prevIndexes.indexOf(wordIndex), 1);
+        return [...prevIndexes];
+      }
+
+      return [...prevIndexes, wordIndex];
+    });
+
+    setEditingText(false);
+  }
 
   return (
     <SettingsContainer>
@@ -45,32 +96,7 @@ export default function Settings({
             <WordsItem
               isActive={isActive}
               key={wordIndex}
-              onClick={() => {
-                setIndexes((prevIndexes: number[]) => {
-                  if (wordIndex === 0) {
-                    let wasRemoved = false;
-                    prevIndexes.forEach((prevIndex, ix) => {
-                      if (prevIndex === 0) {
-                        wasRemoved = true;
-                        prevIndexes.splice(ix, 1);
-                      }
-                    });
-
-                    if (wasRemoved) return [...prevIndexes];
-
-                    return [...prevIndexes, wordIndex];
-                  }
-
-                  if (isItemInArray(prevIndexes, wordIndex)) {
-                    prevIndexes.splice(prevIndexes.indexOf(wordIndex), 1);
-                    return [...prevIndexes];
-                  }
-
-                  return [...prevIndexes, wordIndex];
-                });
-
-                setEditingText(false);
-              }}
+              onClick={() => handleOnWordClick(wordIndex)}
             >
               {word}
             </WordsItem>
@@ -86,12 +112,14 @@ export default function Settings({
         >
           Edit text
         </Button>
-        <Button
+
+        {/** Try to generate variants right in Skill module instead on manually puting them */}
+        {/* <Button
           type="button"
           onClick={() => setChooseVariants(!isChooseVariants)}
         >
           Set variants
-        </Button>
+        </Button> */}
       </div>
     </SettingsContainer>
   );

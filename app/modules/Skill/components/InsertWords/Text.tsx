@@ -1,6 +1,6 @@
 import { Fragment, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
-import { doesItemContainSign } from "~/utils";
+import { cleanWordFromSigns } from "~/utils";
 import { useSkill } from "../..";
 
 type TextProps = {
@@ -20,16 +20,25 @@ export default function Text({ values, setValues }: TextProps) {
     }
   }, [skillState.formDisabled]);
 
-  const myRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (skillState.status === "idle" && !isToChoose && !variants?.length) {
       const timeout = setTimeout(() => {
-        myRef.current?.focus();
+        inputRef.current?.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
   }, [skillState.status]);
+
+  useEffect(() => {
+    if (difficulty === "hard") {
+      const timeout = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [difficulty]);
 
   const handleChange = (evt: SyntheticEvent, index: number) => {
     const target = evt.target as HTMLInputElement;
@@ -52,10 +61,12 @@ export default function Text({ values, setValues }: TextProps) {
     });
   };
 
+  console.log("Values: ", values);
+
   return (
     <section>
       {text?.split(" ").map((textItem: string, textItemIndex: number) => {
-        const { newItem, sign } = doesItemContainSign(textItem);
+        const { newWord, sign } = cleanWordFromSigns(textItem);
         if (correctIndexes.filter((item) => item === textItemIndex).length) {
           return correctIndexes.map((indexItem: string, index: number) => {
             if (textItemIndex !== Number(indexItem)) {
@@ -68,7 +79,7 @@ export default function Text({ values, setValues }: TextProps) {
                 {difficulty === "easy" && correctIndexes.length === 1 ? (
                   <InsertWordsInput
                     type="text"
-                    length={newItem.length}
+                    length={newWord.length}
                     disabled={true}
                     value={values[index]}
                     style={{ color: "#fff" }}
@@ -76,7 +87,7 @@ export default function Text({ values, setValues }: TextProps) {
                 ) : difficulty === "easy" && correctIndexes.length > 1 ? (
                   <InsertWordsInput
                     type="text"
-                    length={newItem.length}
+                    length={newWord.length}
                     value={values[index]}
                     onClick={(evt) => {
                       handleInputClick(evt, index);
@@ -89,11 +100,13 @@ export default function Text({ values, setValues }: TextProps) {
                     type="text"
                     id={`input${0}`}
                     isToChoose={isToChoose as boolean}
-                    length={newItem.length}
+                    length={newWord.length}
                     value={values[index]}
                     onChange={(evt) => handleChange(evt, index)}
                     disabled={skillState.formDisabled}
-                    ref={correctIndexes.indexOf(indexItem) === 0 ? myRef : null}
+                    ref={
+                      correctIndexes.indexOf(indexItem) === 0 ? inputRef : null
+                    }
                   />
                 )}
 

@@ -12,7 +12,7 @@ import {
 } from "./lib";
 import Easier from "~/styles/easier.svg";
 import Harder from "~/styles/harder.svg";
-import { doesItemContainSign } from "~/utils";
+import { cleanWordFromSigns } from "~/utils";
 
 export default function Footer({
   checkAnswer = () => {},
@@ -47,7 +47,7 @@ export default function Footer({
     }
     if (text && answer.length) {
       if (answer.length === 1) {
-        return doesItemContainSign(text.split(" ")[Number(answer[0])]).newItem;
+        return cleanWordFromSigns(text.split(" ")[Number(answer[0])]).newWord;
       }
       return text;
     }

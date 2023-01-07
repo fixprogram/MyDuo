@@ -17,7 +17,7 @@ export type SkillState = {
   lessonSteps: PracticeStepType[];
   maxSteps: number;
   skillState: {
-    status: string;
+    status: "idle" | "leaving" | "wrong" | "right" | "results";
     formDisabled: boolean;
     buttonDisabled: boolean;
   };

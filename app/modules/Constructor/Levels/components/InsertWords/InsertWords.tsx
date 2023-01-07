@@ -3,26 +3,13 @@ import { Textarea } from "~/components/lib";
 import { useFocus } from "~/hooks/useFocus";
 import { useConstructor } from "~/modules/Constructor";
 import { LessonTitle } from "~/modules/Skill/components/lib";
-import { doesItemContainSign, isItemInArray } from "~/utils";
+import { cleanWordFromSigns, isItemInArray } from "~/utils";
 import { InsertWordsInput, InsertWordsTextBlock, StepContent } from "../lib";
 import Settings from "./Settings";
 import ChooseMissingWords from "./ChooseMissingWords";
 import { Step } from "../../types";
 
-// const initialState = {
-//   // text: "",
-//   number: 0,
-//   answer: "",
-//   stepType: "",
-//   id: "",
-//   options: {
-//     text: "",
-//   },
-// };
-
 export default function InsertWords() {
-  // export default function InsertWords({ state = initialState }) {
-  // const { options, id, stepType } = state;
   const { steps, activeStepId } = useConstructor();
 
   const activeStep = steps.find((step) => step.id === activeStepId) as Step;
@@ -45,12 +32,6 @@ export default function InsertWords() {
 
   useEffect(() => {
     if (options.text) {
-      // setAnswer(text, id);
-
-      // const newWords = text.split(" ").filter((txt) => {
-      //   const { newItem } = doesItemContainSign(txt);
-      //   return isItemInArray(answer.split(" "), newItem);
-      // });
       setEditingText(false);
     }
 
@@ -71,29 +52,13 @@ export default function InsertWords() {
     <Fragment>
       <StepContent>
         <fieldset style={{ padding: "0 25%" }}>
-          {/* <input
-            type="hidden"
-            name={`answer${number}`}
-            defaultValue={indexes.join(",")}
-          />
-          <input
-            type="hidden"
-            name={`isToChoose${number}`}
-            defaultValue={isChooseVariants ? "1" : undefined}
-          /> */}
-
           <LessonTitle>Add missing words</LessonTitle>
 
           <div style={{ marginTop: 30 }}>
             <Textarea
-              // name={`text${number}`}
               placeholder="Type text and choose words which should be hidden"
               value={options.text}
-              // value={state.answer}
-              onChange={(evt) => {
-                setStepOptions({ text: evt.target.value });
-                // setAnswer(evt.target.value, id);
-              }}
+              onChange={(evt) => setStepOptions({ text: evt.target.value })}
               ref={ref}
               required
             />
@@ -103,11 +68,11 @@ export default function InsertWords() {
               style={{ marginTop: -176 }}
             >
               {words.map((item, idx) => {
-                const { newItem, sign } = doesItemContainSign(item);
+                const { newWord, sign } = cleanWordFromSigns(item);
 
                 if (!isItemInArray(indexes, idx)) {
                   return (
-                    <span style={{ marginRight: 3 }} key={idx}>
+                    <span style={{ marginRight: 7 }} key={idx}>
                       {item}
                     </span>
                   );
@@ -116,8 +81,8 @@ export default function InsertWords() {
                 if (sign) {
                   return (
                     <Fragment key={idx}>
-                      <InsertWordsInput type="text" length={newItem.length} />
-                      <span>{sign}</span>
+                      <InsertWordsInput type="text" length={newWord.length} />
+                      <span style={{ marginRight: 7 }}>{sign}</span>
                     </Fragment>
                   );
                 }
@@ -126,7 +91,7 @@ export default function InsertWords() {
                   <InsertWordsInput
                     type="text"
                     key={idx}
-                    length={newItem.length}
+                    length={newWord.length}
                   />
                 );
               })}

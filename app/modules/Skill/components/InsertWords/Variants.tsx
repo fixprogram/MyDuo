@@ -72,7 +72,11 @@ export default function Variants({
             <VariantItemNumber isFocused={variant === values[0]}>
               {idx + 1}
             </VariantItemNumber>
-            <VariantItem type="button" isFocused={variant === values[0]}>
+            <VariantItem
+              type="button"
+              isFocused={variant === values[0]}
+              disabled={skillState.status !== "idle"}
+            >
               {variant}
             </VariantItem>
           </VariantsItem>

@@ -9,7 +9,7 @@ import InsertWords from "./components/InsertWords";
 import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
-import { SkillContextType, Step } from "./types";
+import { PracticeStepType, SkillContextType } from "./types";
 import { Overlay } from "~/components/lib";
 import AreYouSureBlock from "./components/AreYouSureBlock";
 import { useSubmit } from "@remix-run/react";
@@ -32,7 +32,7 @@ export default function Skill({
   steps,
   totalXP,
 }: {
-  steps: Step[];
+  steps: PracticeStepType[];
   totalXP: number;
 }) {
   const resultsFormRef = createRef<HTMLFormElement>();

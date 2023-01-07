@@ -635,6 +635,7 @@ const Overlay = styled("div")<OverlayProps>`
   right: 0;
   top: 71px;
   transition: opacity 0.3s;
+  z-index: 3;
 `;
 
 const Logout = styled("button")`

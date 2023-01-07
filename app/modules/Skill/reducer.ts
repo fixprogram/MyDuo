@@ -11,19 +11,21 @@ const continueContent = (
     return content;
   }
 
-  const { variants, isToChoose } = newContent.options;
+  // const { variants, isToChoose } = newContent.options;
 
-  if (newContent.stepType !== "Pairs") {
+  newContent.difficulty = content.difficulty ? content.difficulty : "easy"; // Take by default difficulty from previous step
+
+  if (newContent.stepType === "Pairs") {
     newContent.difficulty = null;
   }
 
-  if (variants?.length || isToChoose) {
-    newContent.difficulty = "easy";
-  }
+  // if (variants?.length || isToChoose) {
+  //   newContent.difficulty = "easy";
+  // }
 
-  if (content.difficulty) {
-    newContent.difficulty = content.difficulty;
-  }
+  // if (content.difficulty) {
+  //   newContent.difficulty = content.difficulty;
+  // }
 
   return newContent;
 };
@@ -80,7 +82,7 @@ export const basicState: SkillState = {
 
 function skillReducer(state: SkillState, action: Action): SkillState {
   const { content, stepNumber, maxSteps, lessonSteps, skillState } = state;
-  const positiveState = {
+  const positiveState: SkillState = {
     ...state,
     progress: stepNumber / maxSteps,
     skillState: {
@@ -89,7 +91,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
       buttonDisabled: false,
     },
   };
-  const negativeState = {
+  const negativeState: SkillState = {
     ...state,
     lessonSteps: [...lessonSteps, content],
     stepNumber: stepNumber - 1,

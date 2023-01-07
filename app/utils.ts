@@ -54,35 +54,35 @@ export const findInArrayById = (arr = [{ id: "" }], id: string) => {
   return arr.find((arrItem) => (arrItem.id = id));
 };
 
-export const doesItemContainSign = (item: string) => {
-  const newItem = item.split("").slice(0, -1).join("");
-  switch (item.slice(-1)) {
+export const cleanWordFromSigns = (word: string) => {
+  const newWord = word.split("").slice(0, -1).join("");
+  switch (word.slice(-1)) {
     case ",": {
       return {
-        newItem,
+        newWord,
         sign: ",",
       };
     }
     case ".": {
       return {
-        newItem,
+        newWord,
         sign: ".",
       };
     }
     case "?": {
       return {
-        newItem,
+        newWord,
         sign: "?",
       };
     }
     case "!": {
       return {
-        newItem,
+        newWord,
         sign: "!",
       };
     }
     default: {
-      return { newItem: item, sign: "" };
+      return { newWord: word, sign: "" };
     }
   }
 };

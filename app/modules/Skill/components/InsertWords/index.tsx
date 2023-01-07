@@ -1,8 +1,4 @@
-import {
-  areArraysEqual,
-  doesArrayContainItems,
-  doesItemContainSign,
-} from "~/utils";
+import { areArraysEqual, cleanWordFromSigns } from "~/utils";
 import { useSkill } from "../..";
 import { Lesson } from "../Lesson";
 import InsertWordsScreen from "./InsertWordsScreen";
@@ -24,17 +20,16 @@ export default function InsertWords() {
   }
   const checkAnswer = (userAnswer: string[]) => {
     const correctAnswer = text
-      .split(" ")
+      .split(" ") // split text on array of words
       .filter(
+        // get only those words which indexes we have in the answer
         (item, index) => correctIndexes.filter((idx) => idx === index).length
-      );
+      )
+      // clean words from punctuation marks
+      .map((item) => cleanWordFromSigns(item).newWord.toLowerCase());
 
     const formattedUserAnswer = userAnswer.map(
-      (answerItem) => doesItemContainSign(answerItem.trim()).newItem
-    );
-    const { formatted } = doesArrayContainItems(
-      formattedUserAnswer,
-      correctAnswer
+      (answerItem) => cleanWordFromSigns(answerItem.trim()).newWord
     );
 
     if (difficulty === "easy") {

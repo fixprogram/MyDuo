@@ -698,6 +698,7 @@ var import_react3 = require("@emotion/react"), import_styled = __toESM(require("
   right: 0;
   top: 71px;
   transition: opacity 0.3s;
+  z-index: 3;
 `, Logout = (0, import_styled.default)("button")`
   border: none;
   cursor: pointer;
@@ -869,10 +870,7 @@ var import_jsx_dev_runtime3 = require("react/jsx-dev-runtime"), Progress = () =>
 // app/modules/Skill/reducer.ts
 var import_react6 = require("react"), continueContent = (content, lessonSteps) => {
   let newContent = lessonSteps.shift();
-  if (!newContent)
-    return content;
-  let { variants, isToChoose } = newContent.options;
-  return newContent.stepType !== "Pairs" && (newContent.difficulty = null), ((variants == null ? void 0 : variants.length) || isToChoose) && (newContent.difficulty = "easy"), content.difficulty && (newContent.difficulty = content.difficulty), newContent;
+  return newContent ? (newContent.difficulty = content.difficulty ? content.difficulty : "easy", newContent.stepType === "Pairs" && (newContent.difficulty = null), newContent) : content;
 };
 var basicState = {
   progress: 0,
@@ -1410,31 +1408,31 @@ var harder_default = "/build/_assets/harder-YCUE4ZYE.svg";
 // app/utils.ts
 var import_react11 = require("@remix-run/react"), import_react12 = require("react");
 var isItemInArray = (arr, item) => !!arr.filter((arrItem) => arrItem === item).length;
-var doesItemContainSign = (item) => {
-  let newItem = item.split("").slice(0, -1).join("");
-  switch (item.slice(-1)) {
+var cleanWordFromSigns = (word) => {
+  let newWord = word.split("").slice(0, -1).join("");
+  switch (word.slice(-1)) {
     case ",":
       return {
-        newItem,
+        newWord,
         sign: ","
       };
     case ".":
       return {
-        newItem,
+        newWord,
         sign: "."
       };
     case "?":
       return {
-        newItem,
+        newWord,
         sign: "?"
       };
     case "!":
       return {
-        newItem,
+        newWord,
         sign: "!"
       };
     default:
-      return { newItem: item, sign: "" };
+      return { newWord: word, sign: "" };
   }
 }, doesArrayContainItems = (items, arr) => {
   let filtered = arr.filter(
@@ -1474,7 +1472,7 @@ function Footer({
   checkAnswer = () => {
   }
 }) {
-  let transition = (0, import_react13.useTransition)(), { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill(), { answer, options, difficulty, stepType } = content, { text } = options, { status, buttonDisabled } = skillState, buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check", getFooterText = (text2, answer2) => stepType === "Insert" ? answer2.length === 1 ? text2 == null ? void 0 : text2.split(" ")[answer2[0]] : text2 : text2 && answer2.length ? answer2.length === 1 ? doesItemContainSign(text2.split(" ")[Number(answer2[0])]).newItem : text2 : answer2.join(" "), handleContinue = () => {
+  let transition = (0, import_react13.useTransition)(), { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill(), { answer, options, difficulty, stepType } = content, { text } = options, { status, buttonDisabled } = skillState, buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check", getFooterText = (text2, answer2) => stepType === "Insert" ? answer2.length === 1 ? text2 == null ? void 0 : text2.split(" ")[answer2[0]] : text2 : text2 && answer2.length ? answer2.length === 1 ? cleanWordFromSigns(text2.split(" ")[Number(answer2[0])]).newWord : text2 : answer2.join(" "), handleContinue = () => {
     if (!(buttonText === "Saving..." || buttonText === "Saved!" || skillState.buttonDisabled)) {
       if (status === "idle")
         return checkAnswer();
@@ -1840,11 +1838,11 @@ var import_styled5 = __toESM(require("@emotion/styled")), PuzzleContainer = (0, 
 // app/modules/Skill/components/InsertWords/Puzzle.tsx
 var import_jsx_dev_runtime7 = require("react/jsx-dev-runtime");
 function Puzzle({ values, setValues }) {
-  let { content } = useSkill(), { answer: contentAnswer, difficulty, options } = content, { text } = options, insertText = text, selectVariant = (variant) => {
+  let { content } = useSkill(), { answer: contentAnswer, options } = content, { text } = options, insertText = text, selectVariant = (variant) => {
     setValues((prevArray) => {
-      let empty = prevArray.find((item) => {
+      let empty = prevArray.find((item, idx) => {
         if (item === " " || item.length === 0 || !item)
-          return item;
+          return { item, idx };
       }), inx = prevArray.indexOf(empty);
       if (inx.toString() && inx !== -1) {
         let newArr = prevArray;
@@ -1854,7 +1852,7 @@ function Puzzle({ values, setValues }) {
     });
   }, words = (contentAnswer.length === 1, contentAnswer).map((idx) => {
     let textItem = insertText.split(" ")[Number(idx)];
-    return doesItemContainSign(textItem).newItem;
+    return cleanWordFromSigns(textItem).newWord;
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(PuzzleContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(PuzzleList, { children: words.map((answer, idx) => {
     let alreadyChoosen = !!values.find((value) => value === answer);
@@ -1871,13 +1869,13 @@ function Puzzle({ values, setValues }) {
       !1,
       {
         fileName: "app/modules/Skill/components/InsertWords/Puzzle.tsx",
-        lineNumber: 51,
+        lineNumber: 50,
         columnNumber: 15
       },
       this
     ) }, idx, !1, {
       fileName: "app/modules/Skill/components/InsertWords/Puzzle.tsx",
-      lineNumber: 50,
+      lineNumber: 49,
       columnNumber: 13
     }, this);
   }) }, void 0, !1, {
@@ -1930,11 +1928,23 @@ function Variants({
           lineNumber: 72,
           columnNumber: 13
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(VariantItem, { type: "button", isFocused: variant === values[0], children: variant }, void 0, !1, {
-          fileName: "app/modules/Skill/components/InsertWords/Variants.tsx",
-          lineNumber: 75,
-          columnNumber: 13
-        }, this)
+        /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(
+          VariantItem,
+          {
+            type: "button",
+            isFocused: variant === values[0],
+            disabled: skillState.status !== "idle",
+            children: variant
+          },
+          void 0,
+          !1,
+          {
+            fileName: "app/modules/Skill/components/InsertWords/Variants.tsx",
+            lineNumber: 75,
+            columnNumber: 13
+          },
+          this
+        )
       ] }, idx, !0, {
         fileName: "app/modules/Skill/components/InsertWords/Variants.tsx",
         lineNumber: 71,
@@ -1964,16 +1974,24 @@ function Text({ values, setValues }) {
   (0, import_react16.useEffect)(() => {
     skillState.formDisabled || setValues([...new Array(correctIndexes.length).fill("")]);
   }, [skillState.formDisabled]);
-  let myRef = (0, import_react16.useRef)(null);
+  let inputRef = (0, import_react16.useRef)(null);
   (0, import_react16.useEffect)(() => {
     if (skillState.status === "idle" && !isToChoose && !(variants != null && variants.length)) {
       let timeout = setTimeout(() => {
         var _a;
-        (_a = myRef.current) == null || _a.focus();
+        (_a = inputRef.current) == null || _a.focus();
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [skillState.status]);
+  }, [skillState.status]), (0, import_react16.useEffect)(() => {
+    if (difficulty === "hard") {
+      let timeout = setTimeout(() => {
+        var _a;
+        (_a = inputRef.current) == null || _a.focus();
+      }, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [difficulty]);
   let handleChange = (evt, index) => {
     let target = evt.target;
     setValues((prevArray) => {
@@ -1984,14 +2002,14 @@ function Text({ values, setValues }) {
     let target = evt.target;
     target.value === " " || target.value.length === 0 || (target.blur(), setValues((prevArray) => (prevArray[index] = " ", [...prevArray])));
   };
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("section", { children: text == null ? void 0 : text.split(" ").map((textItem, textItemIndex) => {
-    let { newItem, sign } = doesItemContainSign(textItem);
+  return console.log("Values: ", values), /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("section", { children: text == null ? void 0 : text.split(" ").map((textItem, textItemIndex) => {
+    let { newWord, sign } = cleanWordFromSigns(textItem);
     return correctIndexes.filter((item) => item === textItemIndex).length ? correctIndexes.map((indexItem, index) => textItemIndex !== Number(indexItem) ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(import_react16.Fragment, { children: [
       difficulty === "easy" && correctIndexes.length === 1 ? /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
         InsertWordsInput,
         {
           type: "text",
-          length: newItem.length,
+          length: newWord.length,
           disabled: !0,
           value: values[index],
           style: { color: "#fff" }
@@ -2000,7 +2018,7 @@ function Text({ values, setValues }) {
         !1,
         {
           fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-          lineNumber: 69,
+          lineNumber: 80,
           columnNumber: 19
         },
         this
@@ -2008,7 +2026,7 @@ function Text({ values, setValues }) {
         InsertWordsInput,
         {
           type: "text",
-          length: newItem.length,
+          length: newWord.length,
           value: values[index],
           onClick: (evt) => {
             handleInputClick(evt, index);
@@ -2020,7 +2038,7 @@ function Text({ values, setValues }) {
         !1,
         {
           fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-          lineNumber: 77,
+          lineNumber: 88,
           columnNumber: 19
         },
         this
@@ -2030,38 +2048,38 @@ function Text({ values, setValues }) {
           type: "text",
           id: `input${0}`,
           isToChoose,
-          length: newItem.length,
+          length: newWord.length,
           value: values[index],
           onChange: (evt) => handleChange(evt, index),
           disabled: skillState.formDisabled,
-          ref: correctIndexes.indexOf(indexItem) === 0 ? myRef : null
+          ref: correctIndexes.indexOf(indexItem) === 0 ? inputRef : null
         },
         void 0,
         !1,
         {
           fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-          lineNumber: 88,
+          lineNumber: 99,
           columnNumber: 19
         },
         this
       ),
       /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("span", { style: { marginRight: 4 }, children: sign }, void 0, !1, {
         fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-        lineNumber: 100,
+        lineNumber: 113,
         columnNumber: 17
       }, this)
     ] }, index, !0, {
       fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-      lineNumber: 67,
+      lineNumber: 78,
       columnNumber: 15
     }, this)) : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("span", { style: { marginRight: 4 }, children: textItem }, `text${textItemIndex}`, !1, {
       fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-      lineNumber: 106,
+      lineNumber: 119,
       columnNumber: 11
     }, this);
   }) }, void 0, !1, {
     fileName: "app/modules/Skill/components/InsertWords/Text.tsx",
-    lineNumber: 56,
+    lineNumber: 67,
     columnNumber: 5
   }, this);
 }
@@ -2142,11 +2160,8 @@ function InsertWords() {
       checkAnswer: (userAnswer) => {
         let correctAnswer = text.split(" ").filter(
           (item, index) => correctIndexes.filter((idx) => idx === index).length
-        ), formattedUserAnswer = userAnswer.map(
-          (answerItem) => doesItemContainSign(answerItem.trim()).newItem
-        ), { formatted } = doesArrayContainItems(
-          formattedUserAnswer,
-          correctAnswer
+        ).map((item) => cleanWordFromSigns(item).newWord.toLowerCase()), formattedUserAnswer = userAnswer.map(
+          (answerItem) => cleanWordFromSigns(answerItem.trim()).newWord
         );
         return difficulty === "easy" ? areArraysEqual(formattedUserAnswer, correctAnswer) ? setStateRight() : setStateWrong() : areArraysEqual(formattedUserAnswer, correctAnswer) ? setStateRight() : setStateWrong();
       },
@@ -2163,7 +2178,7 @@ function InsertWords() {
         !1,
         {
           fileName: "app/modules/Skill/components/InsertWords/index.tsx",
-          lineNumber: 66,
+          lineNumber: 61,
           columnNumber: 7
         },
         this
@@ -2173,7 +2188,7 @@ function InsertWords() {
     !1,
     {
       fileName: "app/modules/Skill/components/InsertWords/index.tsx",
-      lineNumber: 54,
+      lineNumber: 49,
       columnNumber: 5
     },
     this
@@ -4323,7 +4338,7 @@ function Variants2({ state = initialState }) {
   }, this) : null;
 }
 
-// app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
+// app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx
 var import_react32 = require("react");
 var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), initialState2 = {
   variantsCount: 4,
@@ -4353,12 +4368,12 @@ function MatchingPairs({ state = initialState2 }) {
     pairs.length === variantsCount / 2 && (setAnswer(pairs, number), setStepReady(!0, number)), pairs.length !== variantsCount / 2 && setStepReady(!1, number);
   }, [pairs.length, pairs]), console.log("Variants: ", variants), stepType === "Pairs" ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_jsx_dev_runtime27.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("fieldset", { style: { maxWidth: 600, margin: "0 auto" }, children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("input", { type: "hidden", name: `answer${number}`, value: answer }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
       lineNumber: 63,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(LessonTitle2, { children: "Connect pairs" }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
       lineNumber: 65,
       columnNumber: 9
     }, this),
@@ -4384,7 +4399,7 @@ function MatchingPairs({ state = initialState2 }) {
           void 0,
           !1,
           {
-            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
             lineNumber: 72,
             columnNumber: 19
           },
@@ -4403,18 +4418,18 @@ function MatchingPairs({ state = initialState2 }) {
           void 0,
           !1,
           {
-            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
             lineNumber: 94,
             columnNumber: 19
           },
           this
         )
       ] }, void 0, !0, {
-        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
         lineNumber: 71,
         columnNumber: 17
       }, this) }, variant.idx, !1, {
-        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
         lineNumber: 70,
         columnNumber: 15
       }, this)),
@@ -4433,31 +4448,34 @@ function MatchingPairs({ state = initialState2 }) {
         void 0,
         !1,
         {
-          fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+          fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
           lineNumber: 107,
           columnNumber: 13
         },
         this
       )
     ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
       lineNumber: 68,
       columnNumber: 11
     }, this) }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
       lineNumber: 67,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
     lineNumber: 62,
     columnNumber: 7
   }, this) }, void 0, !1, {
-    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/index.tsx",
+    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
     lineNumber: 61,
     columnNumber: 5
   }, this) : null;
 }
+
+// app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
+var MatchingPairs_default = MatchingPairs;
 
 // app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
 var import_react34 = require("react");
@@ -4531,6 +4549,11 @@ var import_styled7 = __toESM(require("@emotion/styled")), WordsList = (0, import
 
 // app/modules/Constructor/Levels/components/InsertWords/Settings.tsx
 var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime");
+function getWordsOutOfText(text) {
+  return text.split(" ").map(
+    (word) => cleanWordFromSigns(word).newWord
+  );
+}
 function Settings({
   isEditingText,
   setEditingText,
@@ -4541,7 +4564,18 @@ function Settings({
   indexes,
   text
 }) {
-  let words = text ? text.split(" ") : answer.split(" ");
+  let words = text ? getWordsOutOfText(text) : [];
+  function handleOnWordClick(wordIndex) {
+    setIndexes((prevIndexes) => {
+      if (wordIndex === 0) {
+        let wasRemoved = !1;
+        return prevIndexes.forEach((prevIndex, ix) => {
+          prevIndex === 0 && (wasRemoved = !0, prevIndexes.splice(ix, 1));
+        }), wasRemoved ? [...prevIndexes] : [...prevIndexes, wordIndex];
+      }
+      return isItemInArray(prevIndexes, wordIndex) ? (prevIndexes.splice(prevIndexes.indexOf(wordIndex), 1), [...prevIndexes]) : [...prevIndexes, wordIndex];
+    }), setEditingText(!1);
+  }
   return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(SettingsContainer, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(WordsList, { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("b", { style: { display: "block", padding: "4px 0" }, children: [
@@ -4549,11 +4583,11 @@ function Settings({
         " "
       ] }, void 0, !0, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-        lineNumber: 36,
+        lineNumber: 87,
         columnNumber: 11
       }, this) }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-        lineNumber: 35,
+        lineNumber: 86,
         columnNumber: 9
       }, this),
       words.map((word, wordIndex) => {
@@ -4563,24 +4597,14 @@ function Settings({
           WordsItem,
           {
             isActive,
-            onClick: () => {
-              setIndexes((prevIndexes) => {
-                if (wordIndex === 0) {
-                  let wasRemoved = !1;
-                  return prevIndexes.forEach((prevIndex, ix) => {
-                    prevIndex === 0 && (wasRemoved = !0, prevIndexes.splice(ix, 1));
-                  }), wasRemoved ? [...prevIndexes] : [...prevIndexes, wordIndex];
-                }
-                return isItemInArray(prevIndexes, wordIndex) ? (prevIndexes.splice(prevIndexes.indexOf(wordIndex), 1), [...prevIndexes]) : [...prevIndexes, wordIndex];
-              }), setEditingText(!1);
-            },
+            onClick: () => handleOnWordClick(wordIndex),
             children: word
           },
           wordIndex,
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-            lineNumber: 45,
+            lineNumber: 96,
             columnNumber: 13
           },
           this
@@ -4588,51 +4612,33 @@ function Settings({
       })
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-      lineNumber: 34,
+      lineNumber: 85,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { style: { display: "flex", alignItems: "end", marginTop: "auto" }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
-        Button,
-        {
-          type: "button",
-          onClick: () => setEditingText(!0),
-          disabled: isEditingText,
-          children: "Edit text"
-        },
-        void 0,
-        !1,
-        {
-          fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-          lineNumber: 82,
-          columnNumber: 9
-        },
-        this
-      ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
-        Button,
-        {
-          type: "button",
-          onClick: () => setChooseVariants(!isChooseVariants),
-          children: "Set variants"
-        },
-        void 0,
-        !1,
-        {
-          fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-          lineNumber: 89,
-          columnNumber: 9
-        },
-        this
-      )
-    ] }, void 0, !0, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { style: { display: "flex", alignItems: "end", marginTop: "auto" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
+      Button,
+      {
+        type: "button",
+        onClick: () => setEditingText(!0),
+        disabled: isEditingText,
+        children: "Edit text"
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
+        lineNumber: 108,
+        columnNumber: 9
+      },
+      this
+    ) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-      lineNumber: 81,
+      lineNumber: 107,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-    lineNumber: 33,
+    lineNumber: 84,
     columnNumber: 5
   }, this);
 }
@@ -4752,7 +4758,7 @@ function InsertWords2() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(LessonTitle2, { children: "Add missing words" }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 85,
+        lineNumber: 55,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { style: { marginTop: 30 }, children: [
@@ -4761,9 +4767,7 @@ function InsertWords2() {
           {
             placeholder: "Type text and choose words which should be hidden",
             value: options.text,
-            onChange: (evt) => {
-              setStepOptions({ text: evt.target.value });
-            },
+            onChange: (evt) => setStepOptions({ text: evt.target.value }),
             ref,
             required: !0
           },
@@ -4771,7 +4775,7 @@ function InsertWords2() {
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-            lineNumber: 88,
+            lineNumber: 58,
             columnNumber: 13
           },
           this
@@ -4783,45 +4787,45 @@ function InsertWords2() {
             style: { marginTop: -176 },
             children: [
               words.map((item, idx) => {
-                let { newItem, sign } = doesItemContainSign(item);
+                let { newWord, sign } = cleanWordFromSigns(item);
                 return isItemInArray(indexes, idx) ? sign ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react34.Fragment, { children: [
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(InsertWordsInput, { type: "text", length: newItem.length }, void 0, !1, {
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(InsertWordsInput, { type: "text", length: newWord.length }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 119,
+                    lineNumber: 84,
                     columnNumber: 23
                   }, this),
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { children: sign }, void 0, !1, {
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: sign }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 120,
+                    lineNumber: 85,
                     columnNumber: 23
                   }, this)
                 ] }, idx, !0, {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                  lineNumber: 118,
+                  lineNumber: 83,
                   columnNumber: 21
                 }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
                   InsertWordsInput,
                   {
                     type: "text",
-                    length: newItem.length
+                    length: newWord.length
                   },
                   idx,
                   !1,
                   {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 126,
+                    lineNumber: 91,
                     columnNumber: 19
                   },
                   this
-                ) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 3 }, children: item }, idx, !1, {
+                ) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: item }, idx, !1, {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                  lineNumber: 110,
+                  lineNumber: 75,
                   columnNumber: 21
                 }, this);
               }),
               isChooseVariants && !isEditingText && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ChooseMissingWords, { words: filteredWords }, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                lineNumber: 135,
+                lineNumber: 100,
                 columnNumber: 17
               }, this)
             ]
@@ -4830,23 +4834,23 @@ function InsertWords2() {
           !0,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-            lineNumber: 101,
+            lineNumber: 66,
             columnNumber: 13
           },
           this
         )
       ] }, void 0, !0, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 87,
+        lineNumber: 57,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-      lineNumber: 73,
+      lineNumber: 54,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-      lineNumber: 72,
+      lineNumber: 53,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4865,14 +4869,14 @@ function InsertWords2() {
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 143,
+        lineNumber: 108,
         columnNumber: 7
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-    lineNumber: 71,
+    lineNumber: 52,
     columnNumber: 5
   }, this) : null;
 }
@@ -4960,7 +4964,7 @@ var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime"), Step = ({ data,
   }, this);
 }, Step_default = Step;
 
-// app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
+// app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
 var import_react38 = require("react");
 
 // app/modules/Constructor/components/Keywords.tsx
@@ -5028,7 +5032,7 @@ function Keywords({
   }, this);
 }
 
-// app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
+// app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
 var import_jsx_dev_runtime35 = require("react/jsx-dev-runtime"), initialState3 = {
   answer: "",
   number: 0,
@@ -5045,7 +5049,7 @@ function QuestionAnswer({ state = initialState3 }) {
   }, []), stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(import_jsx_dev_runtime35.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(LessonTitle2, { children: "Answer the question" }, void 0, !1, {
-        fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+        fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
         lineNumber: 54,
         columnNumber: 9
       }, this),
@@ -5055,7 +5059,7 @@ function QuestionAnswer({ state = initialState3 }) {
           style: { display: "flex", alignItems: "center", margin: "30px 0" },
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("img", { src: duo_default, alt: "Duo", height: 150, style: { marginBottom: -50 } }, void 0, !1, {
-              fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+              fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
               lineNumber: 58,
               columnNumber: 11
             }, this),
@@ -5064,7 +5068,6 @@ function QuestionAnswer({ state = initialState3 }) {
                 "input",
                 {
                   type: "text",
-                  name: `question${number}`,
                   placeholder: "Set question",
                   style: {
                     border: "none",
@@ -5078,27 +5081,27 @@ function QuestionAnswer({ state = initialState3 }) {
                 void 0,
                 !1,
                 {
-                  fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+                  fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
                   lineNumber: 61,
                   columnNumber: 15
                 },
                 this
               ) }, void 0, !1, {
-                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
                 lineNumber: 60,
                 columnNumber: 13
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(LessonQuestionTriangleContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(LessonQuestionTriangle, {}, void 0, !1, {
-                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
                 lineNumber: 76,
                 columnNumber: 15
               }, this) }, void 0, !1, {
-                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+                fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
                 lineNumber: 75,
                 columnNumber: 13
               }, this)
             ] }, void 0, !0, {
-              fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+              fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
               lineNumber: 59,
               columnNumber: 11
             }, this)
@@ -5107,7 +5110,7 @@ function QuestionAnswer({ state = initialState3 }) {
         void 0,
         !0,
         {
-          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
           lineNumber: 55,
           columnNumber: 9
         },
@@ -5116,7 +5119,6 @@ function QuestionAnswer({ state = initialState3 }) {
       /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
         Textarea,
         {
-          name: `answer${number}`,
           placeholder: "Type answer",
           value: answer,
           onChange: (evt) => setAnswer(evt.target.value, number),
@@ -5125,20 +5127,20 @@ function QuestionAnswer({ state = initialState3 }) {
         void 0,
         !1,
         {
-          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
           lineNumber: 81,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
       lineNumber: 53,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(TextareaLabel, { htmlFor: `keywords${number}`, children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(LabelText, { children: "Choose keywords" }, void 0, !1, {
-        fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+        fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
         lineNumber: 90,
         columnNumber: 9
       }, this),
@@ -5152,7 +5154,7 @@ function QuestionAnswer({ state = initialState3 }) {
         void 0,
         !1,
         {
-          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
           lineNumber: 91,
           columnNumber: 9
         },
@@ -5165,31 +5167,32 @@ function QuestionAnswer({ state = initialState3 }) {
           id: `keywords${number}`,
           name: `keywords${number}`,
           placeholder: "Type keywords",
-          value: keywords.map(
-            (keyword) => doesItemContainSign(keyword).newItem
-          ),
+          value: keywords.map((keyword) => cleanWordFromSigns(keyword).newWord),
           readOnly: !0
         },
         void 0,
         !1,
         {
-          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+          fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
           lineNumber: 97,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+      fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
       lineNumber: 89,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx",
+    fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
     lineNumber: 52,
     columnNumber: 5
   }, this) : null;
 }
+
+// app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
+var QuestionAnswer_default = QuestionAnswer;
 
 // app/modules/Constructor/Levels/index.tsx
 var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
@@ -5198,7 +5201,7 @@ function Levels() {
   return (0, import_react39.useEffect)(() => {
     setStepsReady(!steps.find((step) => step.ready === !1));
   }, [steps]), /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(ScreenContainer, { screen: currentScreen, target: "Steps", children: steps.map((data, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Step_default, { data, index: idx, children: [
-    data.stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(QuestionAnswer, {}, void 0, !1, {
+    data.stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(QuestionAnswer_default, {}, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/index.tsx",
       lineNumber: 21,
       columnNumber: 43
@@ -5213,7 +5216,7 @@ function Levels() {
       lineNumber: 23,
       columnNumber: 43
     }, this) : null,
-    data.stepType === "Pairs" ? /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(MatchingPairs, {}, void 0, !1, {
+    data.stepType === "Pairs" ? /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(MatchingPairs_default, {}, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/index.tsx",
       lineNumber: 24,
       columnNumber: 40
@@ -6532,7 +6535,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "c5869cd5", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-BHYBOHAQ.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-EVK4D543.js", "/build/_shared/chunk-SCH6YYCK.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-JIVBMCUH.js", imports: ["/build/_shared/chunk-47WXCAPT.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-KFCVHV22.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-XENGYOAA.js", imports: ["/build/_shared/chunk-47WXCAPT.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-KFCVHV22.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-AGBIVY7C.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-2Q67KBEU.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-SCH6YYCK.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-I3YCJMCD.js", imports: ["/build/_shared/chunk-K2S6SIZN.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-KFCVHV22.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-EVK4D543.js", "/build/_shared/chunk-SCH6YYCK.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-FJP2UKXF.js", imports: ["/build/_shared/chunk-K2S6SIZN.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-KFCVHV22.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-EVK4D543.js", "/build/_shared/chunk-SCH6YYCK.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-7QKQWUI4.js", imports: ["/build/_shared/chunk-K2S6SIZN.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-KFCVHV22.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-EVK4D543.js", "/build/_shared/chunk-SCH6YYCK.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-C5869CD5.js" };
+var assets_manifest_default = { version: "ca85263b", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-QZBPNSOL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-THVIHBEM.js", imports: ["/build/_shared/chunk-UELTH43K.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-JBDDH3K5.js", imports: ["/build/_shared/chunk-UELTH43K.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-T6MD6TWD.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-ZE5X4RUP.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-4MDKYEDG.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-3JEBH7J5.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-HJOTL7LJ.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-CA85263B.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
