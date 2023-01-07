@@ -1,7 +1,9 @@
 import { useTransition } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { FormButton } from "~/components/lib";
 import { useConstructor } from "../..";
 import { ConstructorSidebar } from "../../components/lib";
+import { Step } from "../types";
 import { SidebarBtn, SidebarList } from "./lib";
 
 const Sidebar = () => {
@@ -78,7 +80,7 @@ const Sidebar = () => {
 
       <SidebarList>
         {lessonSteps.map((step, index) => (
-          <li key={step.id}>
+          <li key={step.id} style={{ display: "flex" }}>
             <button
               type="button"
               onClick={() => {
@@ -94,14 +96,14 @@ const Sidebar = () => {
             >
               Step {index + 1}
             </button>
-            {lessonSteps.length > 1 ? (
+            {lessonSteps.length > 1 && step.id === activeStepId ? (
               <button
                 type="button"
                 onClick={() => {
                   removeStep();
                 }}
               >
-                Remove step
+                x
               </button>
             ) : null}
           </li>

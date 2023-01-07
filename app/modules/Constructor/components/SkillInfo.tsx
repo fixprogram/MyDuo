@@ -24,9 +24,16 @@ export default function SkillInfo({
   title: string | undefined;
   actionData: ActionData;
 }) {
-  const { setBasicInfoReady, currentScreen } = useConstructor();
-  const [skillTitle, setSkillTitle] = useState("");
-  const [lineNumber, setLineNumber] = useState(0);
+  const {
+    setBasicInfoReady,
+    currentScreen,
+    skillTitle,
+    skillLineNumber,
+    setSkillTitle,
+    setSkillLineNumber,
+  } = useConstructor();
+  // const [skillTitle, setSkillTitle] = useState("");
+  // const [lineNumber, setLineNumber] = useState(0);
   useEffect(() => {
     if (title) {
       setSkillTitle(title);
@@ -38,9 +45,8 @@ export default function SkillInfo({
 
   return (
     <ScreenContainer screen={currentScreen} target="Skill">
-      <input type="hidden" name="formType" value="repeat" />
-      <input type="hidden" name="lineNumber" value={lineNumber} />
-
+      {/* <input type="hidden" name="formType" value="repeat" /> */}
+      <input type="hidden" name="lineNumber" value={skillLineNumber} />
       <Legend>Skill info</Legend>
       <LessonProgress exp={0} style={{ margin: "40px auto 0 auto" }} />
       <LessonTitleInput
@@ -62,19 +68,16 @@ export default function SkillInfo({
         <div style={{ width: "100%", maxWidth: "440px", margin: "0 auto" }}>
           <h2 style={{ marginTop: 60 }}>Position</h2>
           <LessonsBlock>
-            {lastAddedSkills.map((lastAdded: Skill) => (
-              <LessonsContainer key={lastAdded.id}>
+            {lastAddedSkills.map((skill) => (
+              <LessonsContainer key={skill.id}>
                 <LessonBlock>
-                  <button type="button" aria-labelledby={lastAdded.title}>
+                  <button type="button" aria-labelledby={skill.title}>
                     <LessonProgress
-                      exp={
-                        (lastAdded.currentLesson / lastAdded.lessonsAmount) *
-                        100
-                      }
+                      exp={(skill.currentLesson / skill.stepIDs.length) * 100}
                     >
                       <LessonProgressInner />
                     </LessonProgress>
-                    <LessonTitle>{lastAdded.title}</LessonTitle>
+                    <LessonTitle>{skill.title}</LessonTitle>
                   </button>
                 </LessonBlock>
               </LessonsContainer>
@@ -85,10 +88,12 @@ export default function SkillInfo({
                   <button
                     type="button"
                     aria-labelledby={"121"}
-                    onClick={() => setLineNumber(lastAddedSkills[0].lineNumber)}
+                    onClick={() =>
+                      setSkillLineNumber(lastAddedSkills[0].lineNumber)
+                    }
                   >
                     <LessonProgress exp={0} style={{ fontSize: "39px" }}>
-                      {lastAddedSkills[0].lineNumber === lineNumber ? (
+                      {lastAddedSkills[0].lineNumber === skillLineNumber ? (
                         <LessonProgressInner />
                       ) : (
                         "+"
@@ -106,10 +111,12 @@ export default function SkillInfo({
             <button
               type="button"
               aria-labelledby={"121"}
-              onClick={() => setLineNumber(lastAddedSkills[0].lineNumber + 1)}
+              onClick={() =>
+                setSkillLineNumber(lastAddedSkills[0].lineNumber + 1)
+              }
             >
               <LessonProgress exp={0} style={{ fontSize: "39px" }}>
-                {lastAddedSkills[0].lineNumber + 1 === lineNumber ? (
+                {lastAddedSkills[0].lineNumber + 1 === skillLineNumber ? (
                   <LessonProgressInner />
                 ) : (
                   "+"

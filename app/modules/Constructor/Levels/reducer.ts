@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import type { Step, State } from "./types";
+import type { Step, State, StepOptions } from "./types";
 
 import { useReducer } from "react";
 
@@ -14,6 +14,8 @@ const getBasicState = (): State => {
     stepsReady: false,
     activeStepId: step.id,
     activeLessonId: lessonId,
+    skillTitle: "",
+    skillLineNumber: 0,
   };
 };
 
@@ -50,6 +52,9 @@ enum actionTypes {
   setBasicInfoReady = "SET_BASIC_INFO_READY",
   setStepsReady = "SET_STEPS_READY",
   setLessonActive = "SET_LESSON_ACTIVE",
+  setSkillTitle = "SET_SKILL_TITLE",
+  setSkillLineNumber = "SET_SKILL_LINE_NUMBER",
+  setStepOptions = "SET_STEP_OPTIONS",
 }
 
 type Action =
@@ -70,13 +75,16 @@ type Action =
   | { type: actionTypes.addStep }
   | {
       type: actionTypes.setStepReady;
-      payload: { isReady: boolean; number: number };
+      payload: { isReady: boolean; stepId: string };
     }
-  | { type: actionTypes.setAnswer; payload: { answer: string; number: number } }
+  | { type: actionTypes.setAnswer; payload: { answer: string; stepId: string } }
   | { type: actionTypes.changeCurrentScreen; currentScreen: "Skill" | "Steps" }
   | { type: actionTypes.setBasicInfoReady; isReady: boolean }
   | { type: actionTypes.setStepsReady; isReady: boolean }
-  | { type: actionTypes.setLessonActive; id: string };
+  | { type: actionTypes.setLessonActive; id: string }
+  | { type: actionTypes.setSkillTitle; title: string }
+  | { type: actionTypes.setSkillLineNumber; lineNumber: number }
+  | { type: actionTypes.setStepOptions; options: StepOptions };
 
 export const basicState = getBasicState();
 
@@ -117,23 +125,21 @@ function constructorReducer(state: State, action: Action): State {
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.setStepReady: {
-      const { isReady, number } = action.payload;
-      const newSteps = steps;
-      newSteps[number].ready = isReady;
+      const { isReady, stepId } = action.payload;
+      const newSteps = steps.map((step) => {
+        if (step.id === stepId) {
+          return { ...step, ready: isReady };
+        }
+        return { ...step };
+      });
+      // newSteps[number].ready = isReady;
       return {
         ...state,
         steps: [...newSteps],
       };
     }
     case actionTypes.setStepActive: {
-      const { id } = action;
-      const newSteps = steps.map((step) => {
-        if (step.id === id) {
-          return { ...step, active: true };
-        }
-        return { ...step, active: false };
-      });
-      return { ...state, steps: [...newSteps] };
+      return { ...state, activeStepId: action.id };
     }
     case actionTypes.setQuestion: {
       const { question, number } = action.payload;
@@ -142,9 +148,14 @@ function constructorReducer(state: State, action: Action): State {
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.setAnswer: {
-      const { answer, number } = action.payload;
-      let newSteps = steps;
-      newSteps[number].answer = answer;
+      const { answer, stepId } = action.payload;
+      const newSteps = steps.map((step) => {
+        if (step.id === stepId) {
+          return { ...step, answer };
+        }
+        return { ...step };
+      });
+      // newSteps[number].answer = answer;
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.setKeywords: {
@@ -216,6 +227,21 @@ function constructorReducer(state: State, action: Action): State {
       const { isReady } = action;
       return { ...state, stepsReady: isReady };
     }
+    case actionTypes.setSkillTitle: {
+      return { ...state, skillTitle: action.title };
+    }
+    case actionTypes.setSkillLineNumber: {
+      return { ...state, skillLineNumber: action.lineNumber };
+    }
+    case actionTypes.setStepOptions: {
+      const newSteps = steps.map((step) => {
+        if (step.id === activeStepId) {
+          return { ...step, options: action.options };
+        }
+        return { ...step };
+      });
+      return { ...state, steps: [...newSteps] };
+    }
     default:
       throw new Error(`We don't know this action type: ${type}`);
   }
@@ -241,10 +267,10 @@ function useConstructorReducer({
     dispatch({ type: actionTypes.setKeywords, payload: { keywords, number } });
   const addLesson = () => dispatch({ type: actionTypes.addLesson });
   const addStep = () => dispatch({ type: actionTypes.addStep });
-  const setStepReady = (isReady: boolean, number: number) =>
-    dispatch({ type: actionTypes.setStepReady, payload: { isReady, number } });
-  const setAnswer = (answer: string, number: number) =>
-    dispatch({ type: actionTypes.setAnswer, payload: { answer, number } });
+  const setStepReady = (isReady: boolean, stepId: string) =>
+    dispatch({ type: actionTypes.setStepReady, payload: { isReady, stepId } });
+  const setAnswer = (answer: string, stepId: string) =>
+    dispatch({ type: actionTypes.setAnswer, payload: { answer, stepId } });
   const changeCurrentScreen = (currentScreen: "Skill" | "Steps") =>
     dispatch({ type: actionTypes.changeCurrentScreen, currentScreen });
   const setBasicInfoReady = (isReady: boolean) =>
@@ -253,6 +279,12 @@ function useConstructorReducer({
     dispatch({ type: actionTypes.setStepsReady, isReady });
   const setLessonActive = (id: string) =>
     dispatch({ type: actionTypes.setLessonActive, id });
+  const setSkillTitle = (title: string) =>
+    dispatch({ type: actionTypes.setSkillTitle, title });
+  const setSkillLineNumber = (lineNumber: number) =>
+    dispatch({ type: actionTypes.setSkillLineNumber, lineNumber });
+  const setStepOptions = (options: StepOptions) =>
+    dispatch({ type: actionTypes.setStepOptions, options });
 
   return {
     ...state,
@@ -271,6 +303,9 @@ function useConstructorReducer({
     setBasicInfoReady,
     setStepsReady,
     setLessonActive,
+    setSkillTitle,
+    setSkillLineNumber,
+    setStepOptions,
   };
 }
 
@@ -282,15 +317,18 @@ const initialContext = {
   removeStepType: (id: string) => {},
   setStepActive: (id: string) => {},
   setQuestion: (question: string, number: number) => {},
-  setAnswer: (answer: string | string[], number: number) => {},
+  setAnswer: (answer: string, stepId: string) => {},
   setKeywords: (keywords: string[], number: number) => {},
   addLesson: () => {},
   addStep: () => {},
-  setStepReady: (isReady: boolean, number: number) => {},
+  setStepReady: (isReady: boolean, stepId: string) => {},
   changeCurrentScreen: (currentScreen: "Skill" | "Steps") => {},
   setBasicInfoReady: (isReady: boolean) => {},
   setStepsReady: (isReady: boolean) => {},
   setLessonActive: (id: string) => {},
+  setSkillTitle: (title: string) => {},
+  setSkillLineNumber: (lineNumber: number) => {},
+  setStepOptions: (options: StepOptions) => {},
 };
 
 export { useConstructorReducer, constructorReducer, initialContext };

@@ -23,7 +23,8 @@ export default function Footer({
   const { skillState, content, continueSkill, setStateWrong, setDifficulty } =
     useSkill();
 
-  const { answer, text, difficulty } = content;
+  const { answer, options, difficulty, stepType } = content;
+  const { text } = options;
   const { status, buttonDisabled } = skillState;
 
   const buttonText =
@@ -38,6 +39,12 @@ export default function Footer({
       : "Check";
 
   const getFooterText = (text: string | null, answer: string[]) => {
+    if (stepType === "Insert") {
+      if (answer.length === 1) {
+        return text?.split(" ")[answer[0]];
+      }
+      return text;
+    }
     if (text && answer.length) {
       if (answer.length === 1) {
         return doesItemContainSign(text.split(" ")[Number(answer[0])]).newItem;

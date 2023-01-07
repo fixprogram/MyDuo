@@ -1,16 +1,25 @@
-import { Step as StepType, Skill } from "@prisma/client";
+import { Step, Skill } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { Step } from "~/modules/Skill/types";
+import { StepOptions } from "~/modules/Constructor/Levels/types";
+import { PracticeStepType } from "~/modules/Skill/types";
 import { getSkillByTitle } from "./skill.server";
 
-function getSteps(steps: StepType[]): Step[] {
-  return steps.map(({ createdAt, updatedAt, ...rest }) => ({
+type UnformattedStepType = Omit<PracticeStepType, "difficulty" | "options"> & {
+  options: string | null;
+};
+
+function formatSteps(steps: UnformattedStepType[]) {
+  return steps.map(({ answer, options, ...rest }) => ({
     ...rest,
     difficulty: null,
+    answer: JSON.parse(answer) as string,
+    options: options
+      ? (JSON.parse(options) as StepOptions)
+      : ({} as StepOptions),
   }));
 }
 
-export async function createSteps(data: StepType[]) {
+export async function createSteps(data: Step[]) {
   const batch = await prisma.step.createMany({ data });
   const IDs = await prisma.step.findMany({
     select: { id: true },
@@ -40,14 +49,14 @@ export async function getStepsForPracticing(activeLanguageId: string) {
     where: { languageId: activeLanguageId },
     orderBy: { createdAt: "desc" },
     take: 10,
+    select: { answer: true, stepType: true, options: true },
   });
 
-  return getSteps(steps);
+  return formatSteps(steps);
 }
 
-export async function getStepsForChapter(
+export async function getStepsForLesson(
   skillTitle: string,
-  chapter: number,
   languageId: string
 ) {
   const skill = await getSkillByTitle(skillTitle, languageId);
@@ -58,9 +67,10 @@ export async function getStepsForChapter(
 
   const steps = await prisma.step.findMany({
     where: { id: { in: skill.stepIDs } },
+    select: { answer: true, stepType: true, options: true },
   });
 
-  return getSteps(steps);
+  return formatSteps(steps);
 }
 
 export async function getStepsForPracticingSkill(
@@ -75,7 +85,8 @@ export async function getStepsForPracticingSkill(
 
   const steps = await prisma.step.findMany({
     where: { id: { in: skill.stepIDs } },
+    select: { answer: true, stepType: true, options: true },
   });
 
-  return getSteps(steps);
+  return formatSteps(steps);
 }

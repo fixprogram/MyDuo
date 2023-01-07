@@ -1,7 +1,7 @@
 import { prisma } from "~/db.server";
 import { getActiveLanguage } from "~/models/language.server";
 import Constructor from "~/modules/Constructor";
-import { Language, Skill } from "@prisma/client";
+import { Language, Skill, Step } from "@prisma/client";
 import { createSteps } from "~/models/lesson.server";
 import {
   checkTitleUnique,
@@ -30,11 +30,17 @@ export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
 
   const { ...values } = Object.fromEntries(form);
-  console.log("values: ", values);
 
-  const title = form.get("title") as string;
+  const stepsData = JSON.parse(values.steps as string) as Step[];
+  const skillData = JSON.parse(values.skillData as string);
+  console.log("steps data: ", stepsData);
+  console.log("Skill data: ", skillData);
 
-  let lineNumber = form.get("lineNumber") as string;
+  const { skillTitle, skillLineNumber } = skillData;
+  // const title = form.get("title") as string;
+
+  let lineNumber = skillLineNumber;
+  // let lineNumber = form.get("lineNumber") as string;
   const lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
   if (lastAddedSkill) {
     lineNumber =
@@ -43,9 +49,9 @@ export const action = async ({ request, params }: ActionArgs) => {
         : lineNumber;
   }
 
-  const skillLessonIDs = form.getAll("parentLessonId") as string[];
+  // const skillLessonIDs = form.getAll("parentLessonId") as string[];
 
-  const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
+  const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
 
   if (isTitleUnique) {
     return json<ActionData>(
@@ -159,19 +165,20 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   // const steps = [];
 
-  // const createdLessonsIDs = await createSteps(steps);
-  // const data = {
-  //   title,
-  //   lessonIDs: createdLessonsIDs,
-  //   lessonsAmount: Number(skillLessonIDs[skillLessonIDs.length - 1]),
-  //   currentLesson: 0,
-  //   level: 0,
-  //   languageId: activeLanguage?.id,
-  //   updatedAt: getTodayDate(),
-  //   lineNumber: Number(lineNumber),
-  // };
-  // const skill = await prisma.skill.create({ data });
-  // return redirect(`/skill/${skill.title}/1`);
+  const createdStepIDs = await createSteps(stepsData);
+  const data = {
+    title: skillTitle,
+    stepIDs: createdStepIDs,
+    // lessonsAmount: stepsData.le,
+    // lessonsAmount: Number(skillLessonIDs[skillLessonIDs.length - 1]),
+    currentLesson: 0,
+    level: 0,
+    languageId: activeLanguage?.id,
+    updatedAt: getTodayDate(),
+    lineNumber: Number(lineNumber),
+  };
+  const skill = await prisma.skill.create({ data });
+  return redirect(`/skill/${skill.title}/1`);
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -181,7 +188,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ lastAddedSkills });
 };
 
-export default function ConstructorNew() {
+export default function New() {
   const actionData = useActionData<typeof action>();
   const { lastAddedSkills } = useLoaderData<typeof loader>();
 

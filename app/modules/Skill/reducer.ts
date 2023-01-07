@@ -1,22 +1,27 @@
 import { useReducer } from "react";
-import { SkillState, Step } from "./types";
+import { SkillState, PracticeStepType } from "./types";
 
 // The function returns next stepNumber if there is any
-const continueContent = (content: Step, lessonSteps: Step[]) => {
+const continueContent = (
+  content: PracticeStepType,
+  lessonSteps: PracticeStepType[]
+) => {
   const newContent = lessonSteps.shift();
   if (!newContent) {
     return content;
   }
 
+  const { variants, isToChoose } = newContent.options;
+
   if (newContent.stepType !== "Pairs") {
     newContent.difficulty = null;
   }
 
-  if (newContent?.variants.length || newContent?.isToChoose) {
+  if (variants?.length || isToChoose) {
     newContent.difficulty = "easy";
   }
 
-  if (content?.difficulty) {
+  if (content.difficulty) {
     newContent.difficulty = content.difficulty;
   }
 
@@ -37,7 +42,7 @@ enum actionTypes {
 }
 
 type Action =
-  | { type: actionTypes.setup; steps: Step[]; totalXP: number }
+  | { type: actionTypes.setup; steps: PracticeStepType[]; totalXP: number }
   | { type: actionTypes.continue }
   | { type: actionTypes.results }
   | { type: actionTypes.setCheckDisabled; disabled: boolean }
@@ -52,19 +57,20 @@ export const basicState: SkillState = {
   progress: 0,
   stepNumber: 0,
   content: {
-    id: "",
-    number: 0,
-    answer: [""],
+    // id: "",
+    // number: 0,
+    answer: "",
     stepType: "",
-    question: "",
-    text: "",
-    keywords: [""],
-    definition: "",
-    variants: [],
-    isToChoose: false,
-    chapter: 1,
-    languageId: "",
+    // question: "",
+    // text: "",
+    // keywords: [""],
+    // definition: "",
+    // variants: [],
+    // isToChoose: false,
+    // chapter: 1,
+    // languageId: "",
     difficulty: "easy",
+    options: {},
   },
   lessonSteps: [], // Array of all steps
   maxSteps: 0, // Max steps
@@ -114,7 +120,7 @@ function skillReducer(state: SkillState, action: Action): SkillState {
         stepNumber: 1,
         lessonSteps: steps,
         maxSteps: steps.length,
-        content: continueContent(basicState.content, steps) as Step,
+        content: continueContent(basicState.content, steps) as PracticeStepType,
         totalXP,
       };
     case actionTypes.results:
@@ -158,7 +164,7 @@ function useSkillReducer({
     state;
 
   const continueSkill = () => dispatch({ type: actionTypes.continue });
-  const setup = (steps: Step[], totalXP: number) =>
+  const setup = (steps: PracticeStepType[], totalXP: number) =>
     dispatch({ type: actionTypes.setup, steps, totalXP });
   const showResults = () => dispatch({ type: actionTypes.results });
   const setStateRight = () => dispatch({ type: actionTypes.setStateRight });

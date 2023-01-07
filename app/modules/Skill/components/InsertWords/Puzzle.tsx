@@ -10,7 +10,10 @@ type PuzzleProps = {
 
 export default function Puzzle({ values, setValues }: PuzzleProps) {
   const { content } = useSkill();
-  const { answer: contentAnswer, text, difficulty, isToChoose } = content;
+  const { answer: contentAnswer, difficulty, options } = content;
+  // const { answer: contentAnswer, text, difficulty, isToChoose } = content;
+  const { text } = options;
+
   const insertText = text as string;
   const selectVariant = (variant: string) => {
     setValues((prevArray: string[]) => {
@@ -29,8 +32,7 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
     });
   };
 
-  const indexes =
-    contentAnswer.length === 1 ? contentAnswer[0].split(",") : contentAnswer;
+  const indexes = contentAnswer.length === 1 ? contentAnswer : contentAnswer;
 
   const words = indexes.map((idx) => {
     const textItem = insertText.split(" ")[Number(idx)];
@@ -38,7 +40,7 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
     return doesItemContainSign(textItem).newItem;
   });
 
-  return isToChoose && difficulty === "easy" ? (
+  return (
     <PuzzleContainer>
       <PuzzleList>
         {/* {contentAnswer.map((answer, idx: number) => { */}
@@ -59,5 +61,5 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
         })}
       </PuzzleList>
     </PuzzleContainer>
-  ) : null;
+  );
 }

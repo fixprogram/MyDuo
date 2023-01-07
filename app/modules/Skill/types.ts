@@ -1,14 +1,20 @@
-import { Lesson } from "@prisma/client";
+import { Step } from "@prisma/client";
+import { StepOptions } from "../Constructor/Levels/types";
 
-export type Step = Omit<Lesson, "createdAt" | "updatedAt"> & {
+// export type Step = Omit<Lesson, "createdAt" | "updatedAt"> & {
+//   difficulty: "easy" | "hard" | null;
+// };
+
+export type PracticeStepType = Pick<Step, "answer" | "stepType"> & {
   difficulty: "easy" | "hard" | null;
+  options: StepOptions;
 };
 
 export type SkillState = {
   progress: number;
   stepNumber: number;
-  content: Step;
-  lessonSteps: Step[];
+  content: PracticeStepType;
+  lessonSteps: PracticeStepType[];
   maxSteps: number;
   skillState: {
     status: string;

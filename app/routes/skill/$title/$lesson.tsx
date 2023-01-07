@@ -4,12 +4,12 @@ import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
 import { getTodayTotalXP, increaseTodayExp } from "~/models/user.server";
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
-import { getStepsForChapter } from "~/models/lesson.server";
+import { getStepsForLesson } from "~/models/lesson.server";
 
 export function ErrorBoundary() {
-  const { title, chapter } = useParams();
+  const { title, lesson } = useParams();
   return (
-    <div className="error-container">{`There was an error loading skill with the title ${title} and chapter ${chapter}. Sorry.`}</div>
+    <div className="error-container">{`There was an error loading skill with the title ${title} and lesson ${lesson}. Sorry.`}</div>
   );
 }
 
@@ -45,9 +45,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   const title = params.title as string;
-  const chapter = Number(params.chapter as string);
+  // const lesson = Number(params.lesson as string);
 
-  const steps = await getStepsForChapter(title, chapter, activeLanguage.id);
+  const steps = await getStepsForLesson(title, activeLanguage.id);
 
   const totalXP = await getTodayTotalXP(request);
 

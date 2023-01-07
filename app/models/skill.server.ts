@@ -14,7 +14,8 @@ export async function getSkills(languageId: string) {
       id: true,
       title: true,
       // createdAt: true,
-      lessonsAmount: true,
+      // lessonsAmount: true,
+      stepIDs: true,
       currentLesson: true,
       lineNumber: true,
     },
@@ -23,7 +24,7 @@ export async function getSkills(languageId: string) {
 }
 
 export async function updateCurrentChapter(skill: Skill) {
-  const { currentLesson, lessonsAmount, id } = skill;
+  const { currentLesson, stepIDs, id } = skill;
   const today = getTodayDate();
 
   return await prisma.skill.update({
@@ -32,7 +33,7 @@ export async function updateCurrentChapter(skill: Skill) {
     },
     data: {
       currentLesson:
-        lessonsAmount !== currentLesson ? currentLesson + 1 : currentLesson,
+        stepIDs.length !== currentLesson ? currentLesson + 1 : currentLesson,
       updatedAt: today,
     },
   });
@@ -50,7 +51,8 @@ export async function getLastAddedSkill(languageId: string) {
     select: {
       lineNumber: true,
       currentLesson: true,
-      lessonsAmount: true,
+      stepIDs: true,
+      // lessonsAmount: true,
       title: true,
       id: true,
     },
@@ -66,7 +68,8 @@ export async function getLastAddedSkills(languageId: string) {
     select: {
       lineNumber: true,
       currentLesson: true,
-      lessonsAmount: true,
+      stepIDs: true,
+      // lessonsAmount: true,
       title: true,
       id: true,
     },

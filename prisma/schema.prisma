@@ -33,7 +33,7 @@ model Skill {
   createdAt      DateTime  @default(now())
   updatedAt      Int
   stepIDs        String[]
-  lessonsAmount  Int
+  // lessonsAmount  Int
   currentLesson  Int
   level          Int
   Language       Language? @relation(fields: [languageId], references: [id])
@@ -45,11 +45,11 @@ model Step {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  number            Int
+  // number            Int
   stepType          String
   // question          String?
   // text              String?
-  answer            String[]
+  answer            String
   // keywords          String[]
   // definition         String?
   // variants          Variant[]

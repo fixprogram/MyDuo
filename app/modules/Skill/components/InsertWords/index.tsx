@@ -14,36 +14,37 @@ export type InsertWordsType = {
 
 export default function InsertWords() {
   const { content, setStateRight, setStateWrong } = useSkill();
-  const { answer, stepType, text, difficulty, isToChoose } = content;
+  const { answer: correctIndexes, stepType, difficulty, options } = content;
+  const { text } = options;
+
+  const initialUserAnswer = [""];
 
   if (!text) {
     return null;
   }
-
-  const initialUserAnswer = [""];
-
   const checkAnswer = (userAnswer: string[]) => {
-    const arrayOfAnswers = text.split(" ").filter((item, index) => {
-      if (answer[0].split(",").find((it) => Number(it) === index)) {
-        return item;
-      }
-    });
-    const formattedArrayOfAnswers = arrayOfAnswers.map(
-      (answerItem) => doesItemContainSign(answerItem).newItem
+    const correctAnswer = text
+      .split(" ")
+      .filter(
+        (item, index) => correctIndexes.filter((idx) => idx === index).length
+      );
+
+    const formattedUserAnswer = userAnswer.map(
+      (answerItem) => doesItemContainSign(answerItem.trim()).newItem
     );
     const { formatted } = doesArrayContainItems(
-      formattedArrayOfAnswers as string[],
-      userAnswer
+      formattedUserAnswer,
+      correctAnswer
     );
 
-    if (difficulty === "easy" && isToChoose) {
-      if (areArraysEqual(formattedArrayOfAnswers as string[], userAnswer)) {
+    if (difficulty === "easy") {
+      if (areArraysEqual(formattedUserAnswer, correctAnswer)) {
         return setStateRight();
       }
       return setStateWrong();
     }
 
-    if (areArraysEqual(formattedArrayOfAnswers as string[], formatted)) {
+    if (areArraysEqual(formattedUserAnswer, correctAnswer)) {
       return setStateRight();
     }
     return setStateWrong();
@@ -57,7 +58,7 @@ export default function InsertWords() {
             return true;
           }
         });
-        return isEachFieldContented.length === answer.length;
+        return isEachFieldContented.length === correctIndexes.length;
       }}
       initialValue={initialUserAnswer}
       checkAnswer={checkAnswer}

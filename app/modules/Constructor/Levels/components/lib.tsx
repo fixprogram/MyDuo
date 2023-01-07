@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Sidebar from "./Sidebar";
 
 type InsertWordsTextBlockProps = {
-  showText?: boolean;
+  isEditingText?: boolean;
 };
 
 type VariantItemNumberProps = {
@@ -19,6 +19,12 @@ type SidebarBtnProps = {
   isActive: boolean;
 };
 
+const StepContainer = styled("section")`
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 const StepContent = styled("div")`
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
@@ -30,7 +36,6 @@ const StepContent = styled("div")`
 const StepHeader = styled("div")`
   display: flex;
   justify-content: space-between;
-  margin-top: 70px;
   position: relative;
 `;
 
@@ -66,7 +71,7 @@ const InsertWordsTextBlock = styled("div")<InsertWordsTextBlockProps>`
   padding: 10px 0;
   background-color: #fff;
   position: relative;
-  z-index: ${(props) => (props.showText ? "2" : "0")};
+  z-index: ${(props) => (props.isEditingText ? "0" : "2")};
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -80,7 +85,7 @@ const InsertWordsInput = styled("input")<InsertWordsInputProps>`
   border: none;
   font-size: 19px;
   margin: 0 7px;
-  width: ${(props) => props.length * 13}px;
+  width: ${(props) => props.length * 13 + 5}px;
   border-bottom: 2px solid #afafaf;
   cursor: ${(props) => (props.isToChoose ? "pointer" : "text")};
   caret-color: #1caff6;
@@ -186,6 +191,7 @@ const SidebarBtn = styled("button")<SidebarBtnProps>`
 `;
 
 export {
+  StepContainer,
   StepHeader,
   StepContent,
   ChooseStyle,

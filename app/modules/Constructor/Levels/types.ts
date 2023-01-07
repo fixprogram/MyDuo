@@ -16,7 +16,7 @@ export type StepOptions = {
 export type Step = {
   // question: string | null;
   id: string;
-  answer: string | string[];
+  answer: string;
   number: number;
   // keywords: string[];
   stepType: string;
@@ -36,11 +36,13 @@ export type State = {
   stepsReady: boolean;
   activeStepId: string;
   activeLessonId: string;
+  skillTitle: string;
+  skillLineNumber: number;
 };
 
 export type FieldsetType = {
   number: number;
-  answer: string | string[];
+  answer: string;
   setAnswer: Function;
   setReady: Function;
 };
@@ -66,4 +68,6 @@ export type ContextType = State & {
   setBasicInfoReady: Function;
   setStepsReady: Function;
   setLessonActive: Function;
+  setSkillTitle: Function;
+  setSkillLineNumber: Function;
 };

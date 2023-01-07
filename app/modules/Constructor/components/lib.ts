@@ -20,6 +20,7 @@ const ConstructorFormInner = styled("section")`
   flex-grow: 1;
   position: relative;
   padding-left: 30px;
+  margin-bottom: 24px;
 `;
 
 const LessonTitleInput = styled("input")`
@@ -48,6 +49,7 @@ const ScreenContainer = styled("section")<ScreenContainerProps>`
   position: absolute;
   top: 0;
   width: calc(100% - 60px);
+  height: 100%;
   text-align: center;
   visibility: ${(props) =>
     props.screen !== props.target ? "hidden" : "visible"};

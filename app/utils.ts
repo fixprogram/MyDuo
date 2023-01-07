@@ -47,14 +47,6 @@ export function validateUsername(username: unknown): username is string {
 }
 
 export const isItemInArray = <T>(arr: Array<T>, item: T) => {
-  // let isExist = false;
-  // arr.find((arrItem) => {
-  //   if (arrItem === item) {
-  //     isExist = true;
-  //   }
-  // });
-  // return isExist;
-
   return !!arr.filter((arrItem) => arrItem === item).length;
 };
 
@@ -143,7 +135,10 @@ export const areArraysEqual = (arr1: string[], arr2: string[]) => {
   if (arr1.length !== arr2.length) {
     false;
   }
-  const filtered = arr1.filter((arr1Item, idx) => arr1Item === arr2[idx]);
+  console.log("Are arrays equeal: ", { arr1, arr2 });
+  const filtered = arr1.filter(
+    (arr1Item, idx) => arr1Item.toLowerCase() === arr2[idx].toLowerCase()
+  );
   return filtered.length === arr1.length;
 };
 

@@ -4,7 +4,13 @@ import { STEP_TYPES } from "~/constants";
 import { useConstructor } from "../..";
 import CloseBtn from "../../components/CloseBtn";
 import { Step as StepType } from "../types";
-import { StepHeader, StepContent, ChooseStyle, StyleButton } from "./lib";
+import {
+  StepHeader,
+  StepContent,
+  ChooseStyle,
+  StyleButton,
+  StepContainer,
+} from "./lib";
 
 type StepProps = { data: StepType; index: number };
 
@@ -13,10 +19,10 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
   const { activeStepId, removeStepType, setStepType } = useConstructor();
 
   return (
-    <section className={`${activeStepId !== id && "visuallyHidden"}`}>
-      <input type="hidden" name="step" value={index} />
-      <input type="hidden" name={`parentLessonId`} value={parentLessonId} />
-      <input type="hidden" name={`type${number}`} value={stepType} />
+    <StepContainer className={`${activeStepId !== id && "visuallyHidden"}`}>
+      {/* <input type="hidden" name="stepsAmount" value={index} />
+      <input type="hidden" name={`parentLessonId`} value={parentLessonId} /> */}
+      {/* <input type="hidden" name={`type${number}`} value={stepType} /> */}
       <Legend>{stepType ? stepType : "Choose type"}</Legend>
       <StepHeader>
         {stepType !== "" && (
@@ -55,7 +61,7 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
         </Fragment>
       )}
       {/* </StepContent> */}
-    </section>
+    </StepContainer>
   );
 };
 

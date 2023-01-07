@@ -24,8 +24,8 @@ type LessonItem = SkillsListItemType & {
 export default function LessonItem({
   id,
   title,
-  currentChapter,
-  chapters,
+  currentLesson,
+  stepIDs,
   editLink,
 }: LessonItem) {
   const [isOpened, setIsOpened] = useState(false);
@@ -40,9 +40,9 @@ export default function LessonItem({
   useOnClickOutside(ref, () => setIsOpened(false));
 
   const isDisabled = transition.state !== "idle";
-  const exp = (currentChapter / chapters) * 100;
+  const exp = (currentLesson / stepIDs.length) * 100;
   const skillLink = `/skill/${title}/${
-    currentChapter / chapters === 1 ? "practice" : currentChapter + 1
+    currentLesson / stepIDs.length === 1 ? "practice" : currentLesson + 1
   }`;
 
   function toggleMenu() {

@@ -10,6 +10,25 @@ type VariantsProps = {
   keyDownCheck: Function;
 };
 
+function generateVariants(text: string, answer: string) {
+  const variants = [];
+
+  const words = text.split(" ");
+
+  const rightAnswer = words[answer[0]];
+  words.splice(answer[0], 1);
+
+  variants.push(rightAnswer);
+
+  if (words.length === 0) {
+    return variants;
+  }
+
+  // if(words.length <= 2) {
+  return [...variants, ...words];
+  // }
+}
+
 export default function Variants({
   values,
   setValues,
@@ -17,7 +36,10 @@ export default function Variants({
 }: VariantsProps) {
   const myRef = useRef<HTMLDivElement>(null);
   const { content, skillState } = useSkill();
-  const { variants, difficulty } = content;
+  const { options, answer } = content;
+  const { text } = options;
+
+  const variants = generateVariants(text, answer);
 
   useEffect(() => {
     if (skillState.status === "idle") {
@@ -28,34 +50,34 @@ export default function Variants({
     }
   }, [skillState.status]);
 
-  const KeyDownHandler = (e: KeyboardEvent) => {
-    variants.forEach((variant, idx) => {
+  const keyDownHandler = (e: KeyboardEvent) => {
+    variants?.forEach((variant, idx) => {
       if (Number(e.key) === idx + 1) {
-        setValues([variant.value]);
+        setValues([variant]);
       }
     });
   };
 
-  return variants && difficulty === "easy" ? (
+  return (
     <VariantsContainer
       tabIndex={0}
       ref={myRef}
       onKeyDown={(e) =>
-        keyDownCheck(e, (e: KeyboardEvent) => KeyDownHandler(e))
+        keyDownCheck(e, (e: KeyboardEvent) => keyDownHandler(e))
       }
     >
       <VariantsList>
-        {variants.map(({ value }, idx: number) => (
-          <VariantsItem key={idx} onClick={() => setValues([value])}>
-            <VariantItemNumber isFocused={value === values[0]}>
+        {variants.map((variant: string, idx: number) => (
+          <VariantsItem key={idx} onClick={() => setValues([variant])}>
+            <VariantItemNumber isFocused={variant === values[0]}>
               {idx + 1}
             </VariantItemNumber>
-            <VariantItem type="button" isFocused={value === values[0]}>
-              {value}
+            <VariantItem type="button" isFocused={variant === values[0]}>
+              {variant}
             </VariantItem>
           </VariantsItem>
         ))}
       </VariantsList>
     </VariantsContainer>
-  ) : null;
+  );
 }

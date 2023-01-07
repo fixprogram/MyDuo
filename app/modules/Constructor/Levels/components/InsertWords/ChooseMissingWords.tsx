@@ -2,7 +2,7 @@ import { useState } from "react";
 import { VariantItem } from "~/modules/Skill/components/lib";
 import { VariantItemInput } from "../lib";
 
-export default function ChooseMissingWords({ words, number }) {
+export default function ChooseMissingWords({ words }) {
   const [variants, setVariants] = useState(() =>
     words.length ? [...words] : [""]
   );
@@ -15,6 +15,7 @@ export default function ChooseMissingWords({ words, number }) {
           padding: 0,
           margin: "30px 0",
           display: words.length > 1 ? "flex" : "block",
+          flexWrap: "wrap",
         }}
       >
         {words.length === 1 ? (
@@ -32,7 +33,7 @@ export default function ChooseMissingWords({ words, number }) {
               <VariantItemInput
                 key={`insertwordvariant${idx}`}
                 type="text"
-                name={`variant${number}`}
+                // name={`variant${number}`}
                 placeholder="type variant"
                 defaultValue={variant}
                 required

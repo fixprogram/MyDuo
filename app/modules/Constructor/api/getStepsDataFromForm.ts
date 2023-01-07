@@ -1,7 +1,13 @@
+import { doesItemContainSign } from "~/utils";
+
 export function getStepsDataFromForm(data) {
-  const steps = data.map((item, index) => {
-    const stepType = form.get(`type${index}`);
-    let answer: string | string[] = form.get(`answer${index}`) as string;
+  const { stepsAmount } = data;
+  const stepsData = [];
+
+  for (let i = 0; i <= stepsAmount; i++) {
+    const stepType = data[`type${i}`];
+    let answer: string | string[] = data[`answer${i}`] as string;
+
     const returnData = {
       stepType,
       number: index,
@@ -11,10 +17,10 @@ export function getStepsDataFromForm(data) {
     };
     switch (stepType) {
       case "Question": {
-        const question = form.get(`question${index}`);
-        const keywords = form.get(`keywords${index}`) as string;
+        const question = data[`question${i}`];
+        const keywords = data[`keywords${i}`] as string;
         answer = answer.trim().split(" ");
-        return {
+        return stepsData.push({
           ...returnData,
           // question,
           answer,
@@ -23,12 +29,12 @@ export function getStepsDataFromForm(data) {
             keywords: keywords ? keywords.split(",") : [],
             question,
           }),
-        };
+        });
       }
       case "Insert": {
-        const text = form.get(`text${index}`) as string;
-        const isToChoose = !!form.get(`isToChoose${index}`);
-        const variantValues = form.getAll(`variant${index}`);
+        const text = data[`text${i}`] as string;
+        const isToChoose = !!data[`isToChoose${i}`];
+        const variantValues = form.getAll(`variant${i}`);
         answer = answer
           .trim()
           .split(",")
@@ -38,7 +44,7 @@ export function getStepsDataFromForm(data) {
           value: doesItemContainSign(value as string).newItem,
           isFocused: false,
         }));
-        return {
+        return stepsData.push({
           ...returnData,
           answer,
           // text: text.trim(),
@@ -49,12 +55,12 @@ export function getStepsDataFromForm(data) {
             isToChoose: variants.length === 0 ? isToChoose : false,
             variants,
           }),
-        };
+        });
       }
       case "Variants": {
-        const question = form.get(`question${index}`);
-        const variants = form.getAll(`variant${index}`);
-        return {
+        const question = data[`question${i}`];
+        const variants = form.getAll(`variant${i}`);
+        return stepsData.push({
           ...returnData,
           answer,
           // question,
@@ -71,11 +77,11 @@ export function getStepsDataFromForm(data) {
               isFocused: false,
             })),
           }),
-        };
+        });
       }
       case "Pairs": {
-        const variants = form.getAll(`variant${index}`) as string[];
-        return {
+        const variants = form.getAll(`variant${i}`) as string[];
+        stepsData.push({
           ...returnData,
           answer: answer.split(","),
           // variants: variants.map((variant, idx) => ({
@@ -92,13 +98,13 @@ export function getStepsDataFromForm(data) {
               idx: idx + 1,
             })),
           }),
-        };
+        });
       }
       default: {
         return { ...returnData, answer };
       }
     }
-  });
+  }
 
-  return steps;
+  return stepsData;
 }

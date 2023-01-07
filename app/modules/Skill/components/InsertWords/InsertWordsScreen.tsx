@@ -20,7 +20,11 @@ export default function InsertWordsScreen({
 }: InsertWordsScreenProps) {
   const { content, skillState } = useSkill();
 
-  const { isToChoose, variants, answer, difficulty } = content;
+  const { options, answer, difficulty } = content;
+  // const { isToChoose, variants, answer, difficulty } = content;
+
+  const { variants, isToChoose } = options;
+
   // const initalValues = new Array(answer[0].split(",").length).fill(
   //   variants && difficulty === "easy" ? " " : ""
   // );
@@ -29,6 +33,7 @@ export default function InsertWordsScreen({
   );
 
   const [values, setValues] = useState(initalValues);
+  // console.log("Valuessss: ", values);
 
   useEffect(() => {
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
@@ -67,13 +72,17 @@ export default function InsertWordsScreen({
       <InsertWordsTextBlock>
         <Text values={values} setValues={setValues} />
 
-        <Variants
-          values={values}
-          setValues={setValues}
-          keyDownCheck={keyDownCheck}
-        />
+        {difficulty === "easy" && answer.length === 1 ? (
+          <Variants
+            values={values}
+            setValues={setValues}
+            keyDownCheck={keyDownCheck}
+          />
+        ) : null}
 
-        <Puzzle values={values} setValues={setValues} />
+        {difficulty === "easy" && answer.length > 1 ? (
+          <Puzzle values={values} setValues={setValues} />
+        ) : null}
       </InsertWordsTextBlock>
     </>
   );
