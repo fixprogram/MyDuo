@@ -15,13 +15,15 @@ export default function InsertWords() {
   const activeStep = steps.find((step) => step.id === activeStepId) as Step;
   const { answer, id, stepType, options } = activeStep;
 
-  const defaultIndexes = answer ? answer[0]?.split(",") : [];
+  const defaultIndexes: number[] = answer ? JSON.parse(answer) : [];
+  // const defaultIndexes = answer ? answer[0]?.split(",") : [];
   const { setStepReady, setAnswer, setStepOptions } = useConstructor();
   const [isEditingText, setEditingText] = useState(true);
   const [isChooseVariants, setChooseVariants] = useState(false);
+  // Indexes of choosen words
   const [indexes, setIndexes] = useState(
     defaultIndexes.map((item) => Number(item))
-  ); // Indexes of choosen words
+  );
 
   const ref = useFocus<HTMLTextAreaElement>();
 
@@ -39,6 +41,8 @@ export default function InsertWords() {
       return prevIndexes.map((prevIndex) => Number(prevIndex));
     });
   }, []);
+
+  console.log("Answer: ", answer);
 
   const words = options.text ? options.text.split(" ") : answer.split(" ");
   const filteredWords = words.filter((word, idx) => {
@@ -104,10 +108,8 @@ export default function InsertWords() {
         </fieldset>
       </StepContent>
 
-      {/* {state.answer.length > 0 && ( */}
       <Settings
-        text={options.text}
-        // answer={answer}
+        text={options.text as string}
         answer={answer}
         indexes={indexes}
         setIndexes={setIndexes}
@@ -116,7 +118,6 @@ export default function InsertWords() {
         setEditingText={setEditingText}
         isChooseVariants={isChooseVariants}
       />
-      {/* )} */}
     </Fragment>
   ) : null;
 }

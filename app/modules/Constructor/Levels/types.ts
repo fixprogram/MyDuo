@@ -17,7 +17,7 @@ export type Step = {
   // question: string | null;
   id: string;
   answer: string;
-  number: number;
+  // number: number;
   // keywords: string[];
   stepType: string;
   ready?: boolean;

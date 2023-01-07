@@ -1,12 +1,12 @@
 import { json, redirect, Response } from "@remix-run/node";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { getActiveLanguage } from "~/models/language.server";
-import { deleteLessonsFromSkill } from "~/models/lesson.server";
 import WeeklyProgress from "~/modules/Common/components/WeeklyProgress/WeeklyProgress";
 import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
 import SkillsList from "~/components/SkillsList";
 import { deleteSkillById, getSkills } from "~/models/skill.server";
+import { deleteStepsFromSkill } from "~/models/lesson.server";
 
 export function ErrorBoundary() {
   return (
@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionArgs) => {
       throw new Error("Skill id wasn't found");
     }
 
-    await deleteLessonsFromSkill(id as string);
+    await deleteStepsFromSkill(id);
     return await deleteSkillById(id);
   }
 };

@@ -67,15 +67,17 @@ export async function getLastAddedSkills(languageId: string) {
     orderBy: { createdAt: "desc" },
     select: {
       lineNumber: true,
-      currentLesson: true,
-      stepIDs: true,
-      // lessonsAmount: true,
-      title: true,
-      id: true,
     },
   });
   return await prisma.skill.findMany({
     where: { languageId, lineNumber: lastAddedSkill?.lineNumber },
+    select: {
+      lineNumber: true,
+      currentLesson: true,
+      stepIDs: true,
+      title: true,
+      id: true,
+    },
   });
 }
 

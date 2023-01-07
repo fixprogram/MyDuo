@@ -1,9 +1,7 @@
 import { useTransition } from "@remix-run/react";
-import { useEffect, useState } from "react";
 import { FormButton } from "~/components/lib";
 import { useConstructor } from "../..";
 import { ConstructorSidebar } from "../../components/lib";
-import { Step } from "../types";
 import { SidebarBtn, SidebarList } from "./lib";
 
 const Sidebar = () => {

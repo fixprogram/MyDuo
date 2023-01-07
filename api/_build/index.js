@@ -3090,15 +3090,18 @@ async function getLastAddedSkills(languageId) {
     where: { languageId },
     orderBy: { createdAt: "desc" },
     select: {
+      lineNumber: !0
+    }
+  });
+  return await prisma.skill.findMany({
+    where: { languageId, lineNumber: lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber },
+    select: {
       lineNumber: !0,
       currentLesson: !0,
       stepIDs: !0,
       title: !0,
       id: !0
     }
-  });
-  return await prisma.skill.findMany({
-    where: { languageId, lineNumber: lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber }
   });
 }
 async function deleteSkillById(id) {
@@ -3128,16 +3131,28 @@ async function createSteps(data) {
     take: batch.count
   })).map((idItem) => idItem.id);
 }
-async function deleteLessonsFromSkill(skillId) {
-  let skill = await prisma.skill.findUnique({ where: { id: skillId } });
+async function deleteStepsFromSkill(skillId) {
+  let skill = await prisma.skill.findUnique({
+    where: { id: skillId },
+    select: { stepIDs: !0 }
+  });
+  if (!skill)
+    throw new Error("Skill was not found when deleting steps from it");
   return await prisma.step.deleteMany({
-    where: { id: { in: skill == null ? void 0 : skill.stepIDs } }
+    where: { id: { in: skill.stepIDs } }
   });
 }
-async function getLessonsBySkillId(id) {
+async function getStepsBySkillId(id) {
   let skill = await prisma.skill.findUnique({ where: { id } });
   return await prisma.step.findMany({
-    where: { id: { in: skill.stepIDs } }
+    where: { id: { in: skill.stepIDs } },
+    select: {
+      answer: !0,
+      stepType: !0,
+      options: !0,
+      id: !0,
+      parentLessonId: !0
+    }
   });
 }
 async function getStepsForPracticing(activeLanguageId) {
@@ -3155,9 +3170,20 @@ async function getStepsForLesson(skillTitle, languageId) {
     throw new Error("Skill is not found");
   let steps = await prisma.step.findMany({
     where: { id: { in: skill.stepIDs } },
-    select: { answer: !0, stepType: !0, options: !0 }
+    select: {
+      answer: !0,
+      stepType: !0,
+      options: !0,
+      parentLessonId: !0
+    }
+  }), uniqueLessons = [];
+  steps.forEach((step) => {
+    uniqueLessons.indexOf(step.parentLessonId) === -1 && uniqueLessons.push(step.parentLessonId);
   });
-  return formatSteps(steps);
+  let currentLessonId = uniqueLessons[skill.currentLesson], filteredSteps = steps.filter(
+    (step) => step.parentLessonId === currentLessonId
+  );
+  return formatSteps(filteredSteps);
 }
 async function getStepsForPracticingSkill(skillTitle, languageId) {
   let skill = await getSkillByTitle(skillTitle, languageId);
@@ -3863,7 +3889,7 @@ function SkillInfo({
 
 // app/modules/Constructor/Levels/reducer.ts
 var import_nanoid = require("nanoid"), import_react30 = require("react"), getBasicState = () => {
-  let lessonId = (0, import_nanoid.nanoid)(), step = createStep({ number: 0, parentLessonId: lessonId });
+  let lessonId = (0, import_nanoid.nanoid)(), step = createStep(lessonId);
   return {
     lessons: [{ id: lessonId }],
     currentScreen: "Skill",
@@ -3875,10 +3901,9 @@ var import_nanoid = require("nanoid"), import_react30 = require("react"), getBas
     skillTitle: "",
     skillLineNumber: 0
   };
-}, createStep = ({ number = 0, parentLessonId = "qwerty" }) => ({
+}, createStep = (parentLessonId = "qwerty") => ({
   id: (0, import_nanoid.nanoid)(),
   answer: "",
-  number,
   stepType: "",
   ready: !1,
   parentLessonId,
@@ -3889,10 +3914,15 @@ function constructorReducer(state, action10) {
   let { steps, lessons, activeStepId, activeLessonId } = state, { type } = action10;
   switch (type) {
     case "SETUP" /* setup */: {
-      let { steps: steps2 } = action10;
-      return {
+      let { steps: steps2 } = action10, firstStep = steps2[0], uniqueLessons = [];
+      return steps2.forEach((step) => {
+        uniqueLessons.indexOf({ id: step.parentLessonId }) !== -1 || uniqueLessons.push({ id: step.parentLessonId });
+      }), {
         ...state,
-        steps: steps2
+        steps: steps2,
+        activeLessonId: firstStep.parentLessonId,
+        activeStepId: firstStep.id,
+        lessons: uniqueLessons
       };
     }
     case "SET_STEP_TYPE" /* setStepType */: {
@@ -3933,10 +3963,7 @@ function constructorReducer(state, action10) {
       return newSteps[number].options.keywords = keywords, { ...state, steps: [...newSteps] };
     }
     case "ADD_STEP" /* addStep */: {
-      let newStep = createStep({
-        number: steps.length,
-        parentLessonId: activeLessonId
-      });
+      let newStep = createStep(activeLessonId);
       return {
         ...state,
         steps: [...steps, newStep],
@@ -3958,10 +3985,7 @@ function constructorReducer(state, action10) {
     case "ADD_LESSON" /* addLesson */: {
       let lessonId = (0, import_nanoid.nanoid)(), newLesson = {
         id: lessonId
-      }, newStep = createStep({
-        number: steps.length,
-        parentLessonId: lessonId
-      }), newSteps = steps.map((step) => ({ ...step, active: !1 }));
+      }, newStep = createStep(lessonId), newSteps = steps.map((step) => ({ ...step }));
       return {
         ...state,
         lessons: [...lessons, newLesson],
@@ -3975,8 +3999,14 @@ function constructorReducer(state, action10) {
       return { ...state, currentScreen };
     }
     case "SET_LESSON_ACTIVE" /* setLessonActive */: {
-      let { id } = action10;
-      return { ...state, activeLessonId: id };
+      let { id } = action10, firstLessonStep = steps.find(
+        (step) => step.parentLessonId === id
+      );
+      return {
+        ...state,
+        activeLessonId: id,
+        activeStepId: firstLessonStep.id
+      };
     }
     case "SET_BASIC_INFO_READY" /* setBasicInfoReady */: {
       let { isReady } = action10;
@@ -4741,15 +4771,14 @@ function ChooseMissingWords({ words }) {
 // app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
 var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 function InsertWords2() {
-  var _a;
-  let { steps, activeStepId } = useConstructor(), activeStep = steps.find((step) => step.id === activeStepId), { answer, id, stepType, options } = activeStep, defaultIndexes = answer ? (_a = answer[0]) == null ? void 0 : _a.split(",") : [], { setStepReady, setAnswer, setStepOptions } = useConstructor(), [isEditingText, setEditingText] = (0, import_react34.useState)(!0), [isChooseVariants, setChooseVariants] = (0, import_react34.useState)(!1), [indexes, setIndexes] = (0, import_react34.useState)(
+  let { steps, activeStepId } = useConstructor(), activeStep = steps.find((step) => step.id === activeStepId), { answer, id, stepType, options } = activeStep, defaultIndexes = answer ? JSON.parse(answer) : [], { setStepReady, setAnswer, setStepOptions } = useConstructor(), [isEditingText, setEditingText] = (0, import_react34.useState)(!0), [isChooseVariants, setChooseVariants] = (0, import_react34.useState)(!1), [indexes, setIndexes] = (0, import_react34.useState)(
     defaultIndexes.map((item) => Number(item))
   ), ref = useFocus();
   (0, import_react34.useEffect)(() => {
     setAnswer(JSON.stringify(indexes), id), setStepReady(!!indexes.length, id);
   }, [indexes.length]), (0, import_react34.useEffect)(() => {
     options.text && setEditingText(!1), setIndexes((prevIndexes) => prevIndexes.map((prevIndex) => Number(prevIndex)));
-  }, []);
+  }, []), console.log("Answer: ", answer);
   let words = options.text ? options.text.split(" ") : answer.split(" "), filteredWords = words.filter((word, idx) => {
     if (indexes.find((index) => Number(index) === idx))
       return word;
@@ -4758,7 +4787,7 @@ function InsertWords2() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(LessonTitle2, { children: "Add missing words" }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 55,
+        lineNumber: 59,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { style: { marginTop: 30 }, children: [
@@ -4775,7 +4804,7 @@ function InsertWords2() {
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-            lineNumber: 58,
+            lineNumber: 62,
             columnNumber: 13
           },
           this
@@ -4791,17 +4820,17 @@ function InsertWords2() {
                 return isItemInArray(indexes, idx) ? sign ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react34.Fragment, { children: [
                   /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(InsertWordsInput, { type: "text", length: newWord.length }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 84,
+                    lineNumber: 88,
                     columnNumber: 23
                   }, this),
                   /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: sign }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 85,
+                    lineNumber: 89,
                     columnNumber: 23
                   }, this)
                 ] }, idx, !0, {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                  lineNumber: 83,
+                  lineNumber: 87,
                   columnNumber: 21
                 }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
                   InsertWordsInput,
@@ -4813,19 +4842,19 @@ function InsertWords2() {
                   !1,
                   {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                    lineNumber: 91,
+                    lineNumber: 95,
                     columnNumber: 19
                   },
                   this
                 ) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: item }, idx, !1, {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                  lineNumber: 75,
+                  lineNumber: 79,
                   columnNumber: 21
                 }, this);
               }),
               isChooseVariants && !isEditingText && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ChooseMissingWords, { words: filteredWords }, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-                lineNumber: 100,
+                lineNumber: 104,
                 columnNumber: 17
               }, this)
             ]
@@ -4834,23 +4863,23 @@ function InsertWords2() {
           !0,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-            lineNumber: 66,
+            lineNumber: 70,
             columnNumber: 13
           },
           this
         )
       ] }, void 0, !0, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 57,
+        lineNumber: 61,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-      lineNumber: 54,
+      lineNumber: 58,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-      lineNumber: 53,
+      lineNumber: 57,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4869,14 +4898,14 @@ function InsertWords2() {
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-        lineNumber: 108,
+        lineNumber: 111,
         columnNumber: 7
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
-    lineNumber: 52,
+    lineNumber: 56,
     columnNumber: 5
   }, this) : null;
 }
@@ -5268,13 +5297,13 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 41,
+          lineNumber: 39,
           columnNumber: 11
         },
         this
       ) }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 40,
+        lineNumber: 38,
         columnNumber: 9
       }, this),
       lessons.map((lesson, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
@@ -5294,13 +5323,13 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !0,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 53,
+          lineNumber: 51,
           columnNumber: 13
         },
         this
       ) }, lesson.id, !1, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 52,
+        lineNumber: 50,
         columnNumber: 11
       }, this)),
       /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
@@ -5316,14 +5345,14 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 68,
+          lineNumber: 66,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-      lineNumber: 39,
+      lineNumber: 37,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(SidebarList, { children: [
@@ -5347,7 +5376,7 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
           !0,
           {
             fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-            lineNumber: 84,
+            lineNumber: 82,
             columnNumber: 13
           },
           this
@@ -5365,14 +5394,14 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-            lineNumber: 100,
+            lineNumber: 98,
             columnNumber: 15
           },
           this
         ) : null
       ] }, step.id, !0, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 83,
+        lineNumber: 81,
         columnNumber: 11
       }, this)),
       /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
@@ -5388,14 +5417,14 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 111,
+          lineNumber: 109,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-      lineNumber: 81,
+      lineNumber: 79,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
@@ -5410,14 +5439,14 @@ var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), Sidebar = () =>
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 124,
+        lineNumber: 122,
         columnNumber: 7
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-    lineNumber: 38,
+    lineNumber: 36,
     columnNumber: 5
   }, this);
 }, Sidebar_default = Sidebar;
@@ -5452,12 +5481,10 @@ function Constructor({
   }, [actionData]);
   function onHandleSubmit(e) {
     e.preventDefault();
-    let formattedSteps = steps.map(
-      ({ number, ready, id, options, ...rest }) => ({
-        ...rest,
-        options: JSON.stringify(options)
-      })
-    );
+    let formattedSteps = steps.map(({ ready, id, options, ...rest }) => ({
+      ...rest,
+      options: JSON.stringify(options)
+    }));
     fetcher.submit(
       {
         steps: JSON.stringify(formattedSteps),
@@ -5491,24 +5518,24 @@ function Constructor({
             !1,
             {
               fileName: "app/modules/Constructor/index.tsx",
-              lineNumber: 89,
+              lineNumber: 87,
               columnNumber: 11
             },
             this
           ),
           /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Levels, {}, void 0, !1, {
             fileName: "app/modules/Constructor/index.tsx",
-            lineNumber: 94,
+            lineNumber: 92,
             columnNumber: 11
           }, this)
         ] }, void 0, !0, {
           fileName: "app/modules/Constructor/index.tsx",
-          lineNumber: 88,
+          lineNumber: 86,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Sidebar_default, {}, void 0, !1, {
           fileName: "app/modules/Constructor/index.tsx",
-          lineNumber: 96,
+          lineNumber: 94,
           columnNumber: 9
         }, this)
       ]
@@ -5517,41 +5544,54 @@ function Constructor({
     !0,
     {
       fileName: "app/modules/Constructor/index.tsx",
-      lineNumber: 76,
+      lineNumber: 74,
       columnNumber: 7
     },
     this
   ) }, void 0, !1, {
     fileName: "app/modules/Constructor/index.tsx",
-    lineNumber: 75,
+    lineNumber: 73,
     columnNumber: 5
   }, this);
 }
 
 // app/routes/$language/constructor/$skillId.tsx
 var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime"), action4 = async ({ request, params }) => {
-  let form = await request.formData(), title = form.get("title"), activeLanguage = await getActiveLanguage(request), stepChapters = form.getAll("chapter"), skill = await prisma.skill.findUnique({
-    where: { id: params.skillId }
-  });
-  if (title !== skill.title && await checkTitleUnique(activeLanguage.id, title))
-    return (0, import_node5.json)(
-      {
-        errors: { title: "Title isn't unique" }
-      },
-      { status: 400 }
-    );
+  let form = await request.formData(), activeLanguage = await getActiveLanguage(request), { ...values } = Object.fromEntries(form), stepsData = JSON.parse(values.steps), skillData = JSON.parse(values.skillData), { skillTitle, skillLineNumber } = skillData, lineNumber = skillLineNumber, lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
+  lastAddedSkill && (lineNumber = lineNumber === "0" ? ((lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber) + 1).toString() : lineNumber), await deleteStepsFromSkill(params.skillId);
+  let createdStepIDs = await createSteps(stepsData), data = {
+    title: skillTitle,
+    stepIDs: createdStepIDs,
+    currentLesson: 0,
+    level: 0,
+    languageId: activeLanguage == null ? void 0 : activeLanguage.id,
+    updatedAt: getTodayDate(),
+    lineNumber: Number(lineNumber)
+  };
+  return await prisma.skill.update({
+    where: { id: params.skillId },
+    data: { ...data }
+  }), (0, import_node5.redirect)("/");
 }, loader4 = async ({ request, params }) => {
   let skill = await prisma.skill.findUnique({
     where: { id: params.skillId }
   });
   if (!skill)
     throw new import_node5.Response("Skill is not found", { status: 404 });
-  let activeLanguage = await getActiveLanguage(request), lastAddedSkills = await getLastAddedSkills(activeLanguage.id), lessons = await getLessonsBySkillId(skill.id);
-  return { data: {
+  let activeLanguage = await getActiveLanguage(request), lastAddedSkills = await getLastAddedSkills(activeLanguage.id), steps = await getStepsBySkillId(skill.id), data = {
     title: skill.title,
-    steps: lessons,
+    steps: steps.map((step) => {
+      let options = JSON.parse(
+        step.options ? step.options : "{}"
+      );
+      return {
+        ...step,
+        options
+      };
+    }),
     lineNumber: skill.lineNumber
-  }, lastAddedSkills };
+  };
+  return (0, import_node5.json)({ data, lastAddedSkills });
 };
 function ConstructorEdit() {
   let actionData = (0, import_react43.useActionData)(), { data, lastAddedSkills } = (0, import_react43.useLoaderData)();
@@ -5566,7 +5606,7 @@ function ConstructorEdit() {
     !1,
     {
       fileName: "app/routes/$language/constructor/$skillId.tsx",
-      lineNumber: 169,
+      lineNumber: 109,
       columnNumber: 5
     },
     this
@@ -5590,9 +5630,7 @@ function ErrorBoundary4() {
   }, this);
 }
 var action5 = async ({ request, params }) => {
-  let activeLanguage = await getActiveLanguage(request), form = await request.formData(), { ...values } = Object.fromEntries(form), stepsData = JSON.parse(values.steps), skillData = JSON.parse(values.skillData);
-  console.log("steps data: ", stepsData), console.log("Skill data: ", skillData);
-  let { skillTitle, skillLineNumber } = skillData, lineNumber = skillLineNumber, lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
+  let activeLanguage = await getActiveLanguage(request), form = await request.formData(), { ...values } = Object.fromEntries(form), stepsData = JSON.parse(values.steps), skillData = JSON.parse(values.skillData), { skillTitle, skillLineNumber } = skillData, lineNumber = skillLineNumber, lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
   if (lastAddedSkill && (lineNumber = lineNumber === "0" ? ((lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber) + 1).toString() : lineNumber), await checkTitleUnique(activeLanguage.id, skillTitle))
     return (0, import_node6.json)(
       {
@@ -5618,7 +5656,7 @@ function New() {
   let actionData = (0, import_react44.useActionData)(), { lastAddedSkills } = (0, import_react44.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(Constructor, { actionData: {} }, void 0, !1, {
     fileName: "app/routes/$language/constructor/new.tsx",
-    lineNumber: 196,
+    lineNumber: 84,
     columnNumber: 5
   }, this);
 }
@@ -6246,7 +6284,7 @@ var action6 = async ({ request }) => {
     let id = values.id;
     if (!id)
       throw new Error("Skill id wasn't found");
-    return await deleteLessonsFromSkill(id), await deleteSkillById(id);
+    return await deleteStepsFromSkill(id), await deleteSkillById(id);
   }
 }, loader6 = async ({ request }) => {
   let activeLanguage = await getActiveLanguage(request), user = await getUser(request);
@@ -6535,7 +6573,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "ca85263b", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-QZBPNSOL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-THVIHBEM.js", imports: ["/build/_shared/chunk-UELTH43K.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-JBDDH3K5.js", imports: ["/build/_shared/chunk-UELTH43K.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-T6MD6TWD.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-ZE5X4RUP.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-4MDKYEDG.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-3JEBH7J5.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-HJOTL7LJ.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-CA85263B.js" };
+var assets_manifest_default = { version: "243c5670", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-QZBPNSOL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-QDQ66YKD.js", imports: ["/build/_shared/chunk-PCU7OSVR.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-PJCHVIBT.js", imports: ["/build/_shared/chunk-PCU7OSVR.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-636XNQQU.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-ZE5X4RUP.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-4MDKYEDG.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-3JEBH7J5.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-HJOTL7LJ.js", imports: ["/build/_shared/chunk-X7RXRK33.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-JYSMPTPI.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-L6BTDX3U.js", "/build/_shared/chunk-XJPA4KKN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-243C5670.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

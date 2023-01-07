@@ -30,17 +30,32 @@ export async function createSteps(data: Step[]) {
   return IDs.map((idItem) => idItem.id);
 }
 
-export async function deleteLessonsFromSkill(skillId: string) {
-  const skill = await prisma.skill.findUnique({ where: { id: skillId } });
+export async function deleteStepsFromSkill(skillId: string) {
+  const skill = await prisma.skill.findUnique({
+    where: { id: skillId },
+    select: { stepIDs: true },
+  });
+
+  if (!skill) {
+    throw new Error("Skill was not found when deleting steps from it");
+  }
+
   return await prisma.step.deleteMany({
-    where: { id: { in: skill?.stepIDs } },
+    where: { id: { in: skill.stepIDs } },
   });
 }
 
-export async function getLessonsBySkillId(id: string) {
+export async function getStepsBySkillId(id: string) {
   const skill = (await prisma.skill.findUnique({ where: { id } })) as Skill;
   return await prisma.step.findMany({
     where: { id: { in: skill.stepIDs } },
+    select: {
+      answer: true,
+      stepType: true,
+      options: true,
+      id: true,
+      parentLessonId: true,
+    },
   });
 }
 
@@ -67,10 +82,28 @@ export async function getStepsForLesson(
 
   const steps = await prisma.step.findMany({
     where: { id: { in: skill.stepIDs } },
-    select: { answer: true, stepType: true, options: true },
+    select: {
+      answer: true,
+      stepType: true,
+      options: true,
+      parentLessonId: true,
+    },
   });
 
-  return formatSteps(steps);
+  // We don't have a list of lessons in a skill (yet maybe), so we have logic for finding it out
+  const uniqueLessons: string[] = [];
+  steps.forEach((step) => {
+    if (uniqueLessons.indexOf(step.parentLessonId) === -1) {
+      uniqueLessons.push(step.parentLessonId);
+    }
+  });
+
+  const currentLessonId = uniqueLessons[skill.currentLesson];
+  const filteredSteps = steps.filter(
+    (step) => step.parentLessonId === currentLessonId
+  );
+
+  return formatSteps(filteredSteps);
 }
 
 export async function getStepsForPracticingSkill(

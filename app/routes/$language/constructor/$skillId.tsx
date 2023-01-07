@@ -6,8 +6,8 @@ import Constructor from "~/modules/Constructor";
 import { Language, Step, Skill } from "@prisma/client";
 import {
   createSteps,
-  deleteLessonsFromSkill,
-  getLessonsBySkillId,
+  deleteStepsFromSkill,
+  getStepsBySkillId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
 import {
@@ -17,126 +17,58 @@ import {
 } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
+import { StepOptions } from "~/modules/Constructor/Levels/types";
 
 export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
-  const title = form.get("title") as string;
   const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const stepChapters = form.getAll("chapter") as string[];
-  const skill = (await prisma.skill.findUnique({
-    where: { id: params.skillId },
-  })) as Skill;
+  const { ...values } = Object.fromEntries(form);
 
-  if (title !== skill.title) {
-    const isTitleUnique = await checkTitleUnique(activeLanguage.id, title);
+  const stepsData = JSON.parse(values.steps as string) as Step[];
+  const skillData = JSON.parse(values.skillData as string);
 
-    if (isTitleUnique) {
-      return json<ActionData>(
-        {
-          errors: { title: "Title isn't unique" },
-        },
-        { status: 400 }
-      );
-    }
+  const { skillTitle, skillLineNumber } = skillData;
+
+  let lineNumber = skillLineNumber;
+  const lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
+  if (lastAddedSkill) {
+    lineNumber =
+      lineNumber === "0"
+        ? (lastAddedSkill?.lineNumber + 1).toString()
+        : lineNumber;
   }
 
-  // const lessons = form.getAll("step").map((item, index) => {
-  //   const stepType = form.get(`type${index}`);
-  //   let answer: string | string[] = form.get(`answer${index}`) as string;
-  //   const returnData = {
-  //     stepType,
-  //     number: index,
-  //     chapter: Number(stepChapters[index]),
-  //     languageId: activeLanguage.id,
-  //   };
-  //   switch (stepType) {
-  //     case "Question": {
-  //       const question = form.get(`question${index}`);
-  //       const keywords = form.get(`keywords${index}`) as string;
-  //       answer = answer.trim().split(" ");
-  //       return {
-  //         ...returnData,
-  //         question,
-  //         answer,
-  //         keywords: keywords ? keywords.split(",") : [],
-  //       };
-  //     }
-  //     case "Insert": {
-  //       const text = form.get(`text${index}`) as string;
-  //       const isToChoose = !!form.get(`isToChoose${index}`);
-  //       const variantValues = form.getAll(`variant${index}`);
-  //       const variants = variantValues.map((value, idx) => ({
-  //         idx,
-  //         value,
-  //         isFocused: false,
-  //       }));
-  //       answer = answer
-  //         .trim()
-  //         .split(",")
-  //         .sort((a, b) => a - b);
-  //       return {
-  //         ...returnData,
-  //         answer,
-  //         text: text.trim(),
-  //         isToChoose: variants.length === 0 ? isToChoose : false,
-  //         variants,
-  //       };
-  //     }
-  //     case "Variants": {
-  //       const question = form.get(`question${index}`);
-  //       const variants = form.getAll(`variant${index}`);
-  //       return {
-  //         ...returnData,
-  //         answer,
-  //         question,
-  //         variants: variants.map((variant, idx) => ({
-  //           value: variant,
-  //           idx: idx + 1,
-  //           isFocused: false,
-  //         })),
-  //       };
-  //     }
-  //     case "Pairs": {
-  //       const variants = form.getAll(`variant${index}`) as string[];
-  //       return {
-  //         ...returnData,
-  //         // answer: answer[0].split(","),
-  //         answer: answer.split(","),
-  //         variants: variants.map((variant, idx) => ({
-  //           value: variant,
-  //           isFocused: false,
-  //           isConnected: true,
-  //           idx: idx + 1,
-  //         })),
-  //       };
-  //     }
-  //     default: {
-  //       return { ...returnData, answer };
-  //     }
-  //   }
-  // }) as Step[];
+  // const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
 
-  // const lessons = [];
+  // console.log()
+  // if (isTitleUnique) {
+  //   return json<ActionData>(
+  //     {
+  //       errors: { title: "Title isn't unique" },
+  //     },
+  //     { status: 400 }
+  //   );
+  // }
 
-  // await deleteLessonsFromSkill(params.skillId as string);
+  await deleteStepsFromSkill(params.skillId as string);
 
-  // const createdLessonsIDs = await createSteps(lessons);
-  // const data = {
-  //   title,
-  //   lessonIDs: createdLessonsIDs,
-  //   chapters: Number(stepChapters[stepChapters.length - 1]),
-  //   currentChapter: 0,
-  //   level: 0,
-  //   languageId: activeLanguage?.id,
-  //   updatedAt: getTodayDate(),
-  // };
+  const createdStepIDs = await createSteps(stepsData);
+  const data = {
+    title: skillTitle,
+    stepIDs: createdStepIDs,
+    currentLesson: 0,
+    level: 0,
+    languageId: activeLanguage?.id,
+    updatedAt: getTodayDate(),
+    lineNumber: Number(lineNumber),
+  };
 
-  // await prisma.skill.update({
-  //   where: { id: params.skillId },
-  //   data: { ...data },
-  // });
+  await prisma.skill.update({
+    where: { id: params.skillId },
+    data: { ...data },
+  });
 
-  // return redirect(`/`);
+  return redirect(`/`);
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -151,19 +83,27 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
 
-  const lessons = await getLessonsBySkillId(skill.id);
+  const steps = await getStepsBySkillId(skill.id);
   const data = {
     title: skill.title,
-    steps: lessons,
+    steps: steps.map((step) => {
+      const options: StepOptions = JSON.parse(
+        step.options ? step.options : "{}"
+      );
+      return {
+        ...step,
+        options,
+      };
+    }),
     lineNumber: skill.lineNumber,
   };
 
-  return { data, lastAddedSkills };
+  return json({ data, lastAddedSkills });
 };
 
 export default function ConstructorEdit() {
   const actionData = useActionData() as ActionData;
-  const { data, lastAddedSkills } = useLoaderData();
+  const { data, lastAddedSkills } = useLoaderData<typeof loader>();
 
   return (
     <Constructor

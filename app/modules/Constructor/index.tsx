@@ -1,13 +1,13 @@
-import { createContext, Fragment, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import SkillInfo from "./components/SkillInfo";
 import { initialContext, useConstructorReducer } from "./Levels/reducer";
-import { ConstructorForm, ConstructorFormInner } from "./components/lib";
+import { ConstructorFormInner } from "./components/lib";
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
 import { ConstructorData } from "./Levels/types";
-import { Skill } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
+import { ConstructorSkillData } from "./types";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -25,7 +25,7 @@ export default function Constructor({
   actionData,
   lastAddedSkills,
 }: {
-  lastAddedSkills?: Skill[];
+  lastAddedSkills?: ConstructorSkillData[];
   data?: ConstructorData;
   actionData: ActionData;
 }) {
@@ -55,12 +55,10 @@ export default function Constructor({
   function onHandleSubmit(e) {
     e.preventDefault();
 
-    const formattedSteps = steps.map(
-      ({ number, ready, id, options, ...rest }) => ({
-        ...rest,
-        options: JSON.stringify(options),
-      })
-    );
+    const formattedSteps = steps.map(({ ready, id, options, ...rest }) => ({
+      ...rest,
+      options: JSON.stringify(options),
+    }));
 
     fetcher.submit(
       {

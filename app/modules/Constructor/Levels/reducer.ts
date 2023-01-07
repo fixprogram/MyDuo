@@ -1,11 +1,11 @@
 import { nanoid } from "nanoid";
-import type { Step, State, StepOptions } from "./types";
+import type { Step, State, StepOptions, Lesson } from "./types";
 
 import { useReducer } from "react";
 
 const getBasicState = (): State => {
   const lessonId = nanoid();
-  const step = createStep({ number: 0, parentLessonId: lessonId });
+  const step = createStep(lessonId);
   return {
     lessons: [{ id: lessonId }],
     currentScreen: "Skill",
@@ -19,18 +19,12 @@ const getBasicState = (): State => {
   };
 };
 
-const createStep = ({ number = 0, parentLessonId = "qwerty" }): Step => {
+const createStep = (parentLessonId = "qwerty"): Step => {
   return {
-    // active: true,
-    // question: "",
     id: nanoid(),
     answer: "",
-    number,
-    // keywords: [],
     stepType: "",
     ready: false,
-    // text: "",
-    // variants: [],
     parentLessonId,
     options: {},
   };
@@ -95,9 +89,22 @@ function constructorReducer(state: State, action: Action): State {
   switch (type) {
     case actionTypes.setup: {
       const { steps } = action;
+      const firstStep = steps[0];
+      const uniqueLessons: Lesson[] = [];
+      steps.forEach((step) => {
+        const isIdInTheList =
+          uniqueLessons.indexOf({ id: step.parentLessonId }) !== -1;
+        if (!isIdInTheList) {
+          uniqueLessons.push({ id: step.parentLessonId });
+        }
+      });
+
       return {
         ...state,
         steps,
+        activeLessonId: firstStep.parentLessonId,
+        activeStepId: firstStep.id,
+        lessons: uniqueLessons,
       };
     }
     case actionTypes.setStepType: {
@@ -132,7 +139,6 @@ function constructorReducer(state: State, action: Action): State {
         }
         return { ...step };
       });
-      // newSteps[number].ready = isReady;
       return {
         ...state,
         steps: [...newSteps],
@@ -155,7 +161,6 @@ function constructorReducer(state: State, action: Action): State {
         }
         return { ...step };
       });
-      // newSteps[number].answer = answer;
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.setKeywords: {
@@ -165,12 +170,7 @@ function constructorReducer(state: State, action: Action): State {
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.addStep: {
-      // const { parentLessonId } = action;
-      const newStep = createStep({
-        number: steps.length,
-        parentLessonId: activeLessonId,
-      });
-      // const newSteps = steps.map((step) => ({ ...step }));
+      const newStep = createStep(activeLessonId);
       return {
         ...state,
         steps: [...steps, newStep],
@@ -183,9 +183,6 @@ function constructorReducer(state: State, action: Action): State {
         newSteps.find((step) => step.id === activeStepId) as Step
       );
       newSteps.splice(removeIdx, 1);
-      // const newSteps = steps
-      //   .filter((item: Step) => action.id !== item.id)
-      //   .map((item: Step, i: number) => ({ ...item, number: i }));
       const lastStep = newSteps.at(-1) as Step;
       return {
         ...state,
@@ -198,11 +195,8 @@ function constructorReducer(state: State, action: Action): State {
       const newLesson = {
         id: lessonId,
       };
-      const newStep = createStep({
-        number: steps.length,
-        parentLessonId: lessonId,
-      });
-      const newSteps = steps.map((step) => ({ ...step, active: false }));
+      const newStep = createStep(lessonId);
+      const newSteps = steps.map((step) => ({ ...step }));
       return {
         ...state,
         lessons: [...lessons, newLesson],
@@ -217,7 +211,14 @@ function constructorReducer(state: State, action: Action): State {
     }
     case actionTypes.setLessonActive: {
       const { id } = action;
-      return { ...state, activeLessonId: id };
+      const firstLessonStep = steps.find(
+        (step) => step.parentLessonId === id
+      ) as Step;
+      return {
+        ...state,
+        activeLessonId: id,
+        activeStepId: firstLessonStep.id,
+      };
     }
     case actionTypes.setBasicInfoReady: {
       const { isReady } = action;
