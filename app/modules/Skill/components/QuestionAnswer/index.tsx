@@ -1,33 +1,39 @@
 import { useSkill } from "../..";
-import { doesArrayContainItems } from "~/utils";
+import { cleanWordFromSigns, doesArrayContainItems } from "~/utils";
 import QuestionAnswerScreen from "./QuestionAnswerScreen";
 import { Lesson } from "../Lesson";
 
 export default function QuestionAnswerPractice() {
   const { content, setStateWrong, setStateRight } = useSkill();
+  const { answer: correctAnswer, options } = content;
+  const { keywords } = options;
 
   const checkAnswer = (userAnswer: string) => {
-    const { state, length } = doesArrayContainItems(
-      content.answer,
-      userAnswer.split(" ")
-    );
+    if (keywords?.length) {
+      const userAnswerArray = userAnswer
+        .split(" ")
+        .map((word) => cleanWordFromSigns(word).newWord);
+      const correctKeywordsAmount = doesArrayContainItems(
+        keywords,
+        userAnswerArray
+      ).length;
 
-    if (!state) {
+      if (correctKeywordsAmount === keywords.length) {
+        return setStateRight();
+      }
+    }
+
+    const isAnswerRight =
+      correctAnswer.toLowerCase() === userAnswer.toLowerCase();
+
+    if (!isAnswerRight) {
       return setStateWrong();
     }
 
-    if (
-      doesArrayContainItems(content.keywords, userAnswer.split(" ")).length ===
-        content.keywords.length &&
-      content.keywords.length
-    ) {
-      return setStateRight();
-    }
-
-    if (length < content.answer.length * 0.8) {
-      // if user's response is less than 80% right, then return negative
-      return setStateWrong();
-    }
+    // if (length < content.answer.length * 0.8) {
+    //   // if user's response is less than 80% right, then return negative
+    //   return setStateWrong();
+    // }
 
     return setStateRight();
   };

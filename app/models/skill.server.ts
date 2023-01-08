@@ -14,7 +14,7 @@ export async function getSkills(languageId: string) {
       id: true,
       title: true,
       // createdAt: true,
-      // lessonsAmount: true,
+      lessonsAmount: true,
       stepIDs: true,
       currentLesson: true,
       lineNumber: true,

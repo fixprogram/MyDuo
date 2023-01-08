@@ -32,6 +32,13 @@ const Sidebar = () => {
     (step) => step.parentLessonId === activeLessonId
   );
 
+  // const uniqueLessons: string[] = [];
+  // steps.forEach((step) => {
+  //   if (uniqueLessons.indexOf(step.parentLessonId) === -1) {
+  //     uniqueLessons.push(step.parentLessonId);
+  //   }
+  // });
+
   return (
     <ConstructorSidebar>
       <SidebarList>
@@ -94,7 +101,7 @@ const Sidebar = () => {
             >
               Step {index + 1}
             </button>
-            {lessonSteps.length > 1 && step.id === activeStepId ? (
+            {lessons.length > 1 && step.id === activeStepId ? (
               <button
                 type="button"
                 onClick={() => {

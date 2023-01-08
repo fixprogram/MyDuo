@@ -32,12 +32,12 @@ export default function InsertWords() {
       (answerItem) => cleanWordFromSigns(answerItem.trim()).newWord
     );
 
-    if (difficulty === "easy") {
-      if (areArraysEqual(formattedUserAnswer, correctAnswer)) {
-        return setStateRight();
-      }
-      return setStateWrong();
-    }
+    // if (difficulty === "easy") {
+    //   if (areArraysEqual(formattedUserAnswer, correctAnswer)) {
+    //     return setStateRight();
+    //   }
+    //   return setStateWrong();
+    // }
 
     if (areArraysEqual(formattedUserAnswer, correctAnswer)) {
       return setStateRight();

@@ -11,7 +11,6 @@ import { Step } from "../../types";
 
 export default function InsertWords() {
   const { steps, activeStepId } = useConstructor();
-
   const activeStep = steps.find((step) => step.id === activeStepId) as Step;
   const { answer, id, stepType, options } = activeStep;
 
@@ -41,8 +40,6 @@ export default function InsertWords() {
       return prevIndexes.map((prevIndex) => Number(prevIndex));
     });
   }, []);
-
-  console.log("Answer: ", answer);
 
   const words = options.text ? options.text.split(" ") : answer.split(" ");
   const filteredWords = words.filter((word, idx) => {

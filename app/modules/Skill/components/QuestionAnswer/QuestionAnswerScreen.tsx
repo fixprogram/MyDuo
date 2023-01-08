@@ -40,7 +40,7 @@ export default function QuestionAnswerScreen({
         >
           <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} />
           <div style={{ position: "relative" }}>
-            <LessonQuestion>{content.question}</LessonQuestion>
+            <LessonQuestion>{content.options.question}</LessonQuestion>
             <LessonQuestionTriangleContainer>
               <LessonQuestionTriangle />
             </LessonQuestionTriangleContainer>

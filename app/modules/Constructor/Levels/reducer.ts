@@ -1,5 +1,11 @@
 import { nanoid } from "nanoid";
-import type { Step, State, StepOptions, Lesson } from "./types";
+import type {
+  Step,
+  State,
+  StepOptions,
+  Lesson,
+  ConstructorData,
+} from "./types";
 
 import { useReducer } from "react";
 
@@ -52,8 +58,12 @@ enum actionTypes {
 }
 
 type Action =
-  | { type: actionTypes.setup; steps: Step[] }
-  | { type: actionTypes.setStepType; payload: { stepType: string; id: string } }
+  | { type: actionTypes.setup; data: ConstructorData }
+  // | { type: actionTypes.setup; steps: Step[] }
+  | {
+      type: actionTypes.setStepType;
+      payload: { stepType: string; id: string };
+    }
   | { type: actionTypes.removeStep }
   | { type: actionTypes.removeStepType; id: string }
   | { type: actionTypes.setStepActive; id: string }
@@ -88,16 +98,19 @@ function constructorReducer(state: State, action: Action): State {
 
   switch (type) {
     case actionTypes.setup: {
-      const { steps } = action;
+      const { steps, title } = action.data;
       const firstStep = steps[0];
       const uniqueLessons: Lesson[] = [];
       steps.forEach((step) => {
-        const isIdInTheList =
-          uniqueLessons.indexOf({ id: step.parentLessonId }) !== -1;
+        const isIdInTheList = Boolean(
+          uniqueLessons.find((lesson) => lesson.id === step.parentLessonId)
+        );
         if (!isIdInTheList) {
           uniqueLessons.push({ id: step.parentLessonId });
         }
       });
+
+      // console.log("Unique lessons: ", uniqueLessons);
 
       return {
         ...state,
@@ -105,12 +118,19 @@ function constructorReducer(state: State, action: Action): State {
         activeLessonId: firstStep.parentLessonId,
         activeStepId: firstStep.id,
         lessons: uniqueLessons,
+        skillTitle: title,
       };
     }
     case actionTypes.setStepType: {
       const { stepType, id } = action.payload;
+      let options = {};
+      switch (stepType) {
+        case "Question": {
+          options = { question: "", keywords: [] };
+        }
+      }
       const newSteps = steps.map((step: Step) =>
-        step.id === id ? { ...step, stepType: stepType } : { ...step }
+        step.id === id ? { ...step, stepType: stepType, options } : { ...step }
       );
       return { ...state, steps: [...newSteps] };
     }
@@ -157,7 +177,11 @@ function constructorReducer(state: State, action: Action): State {
       const { answer, stepId } = action.payload;
       const newSteps = steps.map((step) => {
         if (step.id === stepId) {
-          return { ...step, answer };
+          return {
+            ...step,
+            answer,
+            // answer: typeof answer === "string" ? answer.trim() : answer,
+          };
         }
         return { ...step };
       });
@@ -254,7 +278,9 @@ function useConstructorReducer({
 } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
+  const setup = (data: ConstructorData) =>
+    dispatch({ type: actionTypes.setup, data });
+  // const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
   const setStepType = (stepType: string, id: string) =>
     dispatch({ type: actionTypes.setStepType, payload: { stepType, id } });
   const removeStep = () => dispatch({ type: actionTypes.removeStep });
@@ -313,7 +339,8 @@ function useConstructorReducer({
 const initialContext = {
   ...basicState,
   setStepType: (stepType: string, id: string) => {},
-  setup: (steps: Step[]) => {},
+  setup: (data: ConstructorData) => {},
+  // setup: (steps: Step[]) => {},
   removeStep: () => {},
   removeStepType: (id: string) => {},
   setStepActive: (id: string) => {},

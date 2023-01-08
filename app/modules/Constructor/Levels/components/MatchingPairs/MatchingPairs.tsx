@@ -55,7 +55,7 @@ export default function MatchingPairs({ state = initialState }) {
     }
   }, [pairs.length, pairs]);
 
-  console.log("Variants: ", variants);
+  // console.log("Variants: ", variants);
 
   return stepType === "Pairs" ? (
     <>

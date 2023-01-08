@@ -55,13 +55,30 @@ export const action = async ({ request, params }: ActionArgs) => {
       { status: 400 }
     );
   }
-  const createdStepIDs = await createSteps(stepsData);
+
+  const createdStepIDs = await createSteps(
+    stepsData.map((step) => ({ ...step, languageId: activeLanguage.id }))
+  );
+
+  const uniqueLessons: string[] = [];
+  stepsData.map((step) => {
+    if (
+      !Boolean(
+        uniqueLessons.find((lessonId) => lessonId === step.parentLessonId)
+      )
+    ) {
+      uniqueLessons.push(step.parentLessonId);
+    }
+  });
+  const lessonsAmount = uniqueLessons.length;
+
   const data = {
     title: skillTitle,
     stepIDs: createdStepIDs,
     currentLesson: 0,
+    lessonsAmount,
     level: 0,
-    languageId: activeLanguage?.id,
+    languageId: activeLanguage.id,
     updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber),
   };

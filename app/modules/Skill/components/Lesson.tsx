@@ -37,7 +37,7 @@ export const Lesson: React.FC<LessonProps> = ({
 
   const onKeyDownHandle = (event: React.KeyboardEvent, callback?: Function) => {
     if (callback) {
-      callback(event);
+      return callback(event);
     }
     if (keyDownHandle) {
       keyDownHandle(event, setUserAnswer);

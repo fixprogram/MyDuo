@@ -11,7 +11,7 @@ type VariantsProps = {
 };
 
 function generateVariants(text: string, answer: string) {
-  const variants = [];
+  const variants: string[] = [];
 
   const words = text.split(" ");
 
@@ -37,7 +37,7 @@ export default function Variants({
   const myRef = useRef<HTMLDivElement>(null);
   const { content, skillState } = useSkill();
   const { options, answer } = content;
-  const { text } = options;
+  const { text } = options as { text: string };
 
   const variants = generateVariants(text, answer);
 
@@ -51,7 +51,7 @@ export default function Variants({
   }, [skillState.status]);
 
   const keyDownHandler = (e: KeyboardEvent) => {
-    variants?.forEach((variant, idx) => {
+    variants.forEach((variant, idx) => {
       if (Number(e.key) === idx + 1) {
         setValues([variant]);
       }

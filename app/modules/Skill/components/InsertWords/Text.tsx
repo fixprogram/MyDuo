@@ -61,7 +61,7 @@ export default function Text({ values, setValues }: TextProps) {
     });
   };
 
-  console.log("Values: ", values);
+  // console.log("Values: ", values);
 
   return (
     <section>

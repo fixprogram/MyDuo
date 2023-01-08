@@ -8,11 +8,25 @@ type UnformattedStepType = Omit<PracticeStepType, "difficulty" | "options"> & {
   options: string | null;
 };
 
+function formatStepAnswer(stepType: string, answer: string) {
+  switch (stepType) {
+    case "Insert": {
+      return JSON.parse(answer) as string;
+    }
+    case "Question": {
+      return answer;
+    }
+    default: {
+      return answer;
+    }
+  }
+}
+
 function formatSteps(steps: UnformattedStepType[]) {
   return steps.map(({ answer, options, ...rest }) => ({
     ...rest,
     difficulty: null,
-    answer: JSON.parse(answer) as string,
+    answer: formatStepAnswer(rest.stepType, answer),
     options: options
       ? (JSON.parse(options) as StepOptions)
       : ({} as StepOptions),

@@ -45,6 +45,9 @@ export default function Footer({
       }
       return text;
     }
+    if (stepType === "Question") {
+      return answer;
+    }
     if (text && answer.length) {
       if (answer.length === 1) {
         return cleanWordFromSigns(text.split(" ")[Number(answer[0])]).newWord;

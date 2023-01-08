@@ -33,6 +33,7 @@ model Skill {
   createdAt      DateTime  @default(now())
   updatedAt      Int
   stepIDs        String[]
+  lessonsAmount  Int
   currentLesson  Int
   level          Int
   Language       Language? @relation(fields: [languageId], references: [id])

@@ -34,11 +34,11 @@ export default function SkillInfo({
   } = useConstructor();
   // const [skillTitle, setSkillTitle] = useState("");
   // const [lineNumber, setLineNumber] = useState(0);
-  useEffect(() => {
-    if (title) {
-      setSkillTitle(title);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (title) {
+  //     setSkillTitle(title);
+  //   }
+  // }, []);
   useEffect(() => {
     setBasicInfoReady(!!skillTitle.length);
   }, [skillTitle]);

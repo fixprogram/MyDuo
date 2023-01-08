@@ -135,7 +135,7 @@ export const areArraysEqual = (arr1: string[], arr2: string[]) => {
   if (arr1.length !== arr2.length) {
     false;
   }
-  console.log("Are arrays equeal: ", { arr1, arr2 });
+  // console.log("Are arrays equeal: ", { arr1, arr2 });
   const filtered = arr1.filter(
     (arr1Item, idx) => arr1Item.toLowerCase() === arr2[idx].toLowerCase()
   );

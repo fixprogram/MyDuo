@@ -28,6 +28,8 @@ export type Step = {
   options: StepOptions;
 };
 
+// export type TypeOfStep = "Pairs" | "Question" | "Insert" | "Variants" | "";
+
 export type State = {
   lessons: Lesson[];
   currentScreen: "Skill" | "Steps";

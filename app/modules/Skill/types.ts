@@ -12,10 +12,10 @@ export type PracticeStepType = Pick<Step, "answer" | "stepType"> & {
 
 export type SkillState = {
   progress: number;
-  stepNumber: number;
   content: PracticeStepType;
   lessonSteps: PracticeStepType[];
-  maxSteps: number;
+  stepsAmount: number;
+  completedStepsAmount: number;
   skillState: {
     status: "idle" | "leaving" | "wrong" | "right" | "results";
     formDisabled: boolean;
@@ -24,7 +24,10 @@ export type SkillState = {
   totalXP: number;
 };
 
-export type SkillContextType = Omit<SkillState, "lessonSteps"> & {
+export type SkillContextType = Omit<
+  SkillState,
+  "lessonSteps" | "stepsAmount" | "completedStepsAmount"
+> & {
   setup: Function;
   continueSkill: Function;
   showResults: Function;

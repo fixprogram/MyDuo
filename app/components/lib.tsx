@@ -654,6 +654,11 @@ const Logout = styled("button")`
 `;
 
 const PracticeLastAddedContainer = styled("div")`
+  display: flex;
+  align-items: flex-end;
+`;
+
+const PracticeLastAddedWrapper = styled("div")`
   height: 72px;
   width: 72px;
   border-radius: 50%;
@@ -752,6 +757,7 @@ export {
   LessonBlockMenuTriangleContent,
   LoginTitle,
   PracticeLastAddedContainer,
+  PracticeLastAddedWrapper,
   PracticeLastAddedLink,
   ErrorMessage,
   SkillsListContainer,

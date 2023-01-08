@@ -9,7 +9,8 @@ import Step from "./components/Step";
 import QuestionAnswer from "./components/QuestionAnswer";
 
 export default function Levels() {
-  const { steps, setStepsReady, currentScreen } = useConstructor();
+  const { steps, setStepsReady, currentScreen, activeStepId } =
+    useConstructor();
   useEffect(() => {
     setStepsReady(!steps.find((step: StepType) => step.ready === false));
   }, [steps]);
@@ -18,10 +19,26 @@ export default function Levels() {
     <ScreenContainer screen={currentScreen} target="Steps">
       {steps.map((data: StepType, idx: number) => (
         <Step data={data} index={idx} key={data.id}>
-          {data.stepType === "Question" ? <QuestionAnswer /> : null}
-          {data.stepType === "Insert" ? <InsertWords /> : null}
-          {data.stepType === "Variants" ? <Variants /> : null}
-          {data.stepType === "Pairs" ? <MatchingPairs /> : null}
+          {data.stepType === "Question" && data.id === activeStepId ? (
+            <QuestionAnswer />
+          ) : null}
+          {data.stepType === "Insert" && data.id === activeStepId ? (
+            <InsertWords />
+          ) : null}
+          {data.stepType === "Variants" && data.id === activeStepId ? (
+            <Variants />
+          ) : null}
+          {data.stepType === "Pairs" && data.id === activeStepId ? (
+            <MatchingPairs />
+          ) : null}
+
+          {/* {
+            const activeStep = ...
+
+            const Component = activeStep.stepType 
+            
+            return Component
+          } */}
         </Step>
       ))}
     </ScreenContainer>

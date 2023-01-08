@@ -7,7 +7,7 @@ import PracticeLastAdded from "./PracticeLastAdded";
 export type SkillsListItemType = {
   id: string;
   title: string;
-  stepIDs: string[];
+  lessonsAmount: number;
   currentLesson: number;
   lineNumber: number;
 };
@@ -26,9 +26,7 @@ export default function SkillsList({
   return (
     <SkillsListContainer>
       <div style={{ display: "flex", flexGrow: 1 }}>
-        <div style={{ display: "flex", alignItems: "flex-end" }}>
-          {skills.length > 0 && <PracticeLastAdded />}
-        </div>
+        {skills.length > 0 && <PracticeLastAdded />}
         <SkillsLineBlock>
           {lineNumbers.map((lineNumber) => (
             <LessonsBlock key={nanoid()}>

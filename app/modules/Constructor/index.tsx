@@ -42,7 +42,7 @@ export default function Constructor({
 
   useEffect(() => {
     if (data) {
-      setup(data.steps);
+      setup(data);
     }
   }, [data]);
 
@@ -52,7 +52,7 @@ export default function Constructor({
     }
   }, [actionData]);
 
-  function onHandleSubmit(e) {
+  function onHandleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formattedSteps = steps.map(({ ready, id, options, ...rest }) => ({
@@ -86,6 +86,7 @@ export default function Constructor({
         <ConstructorFormInner>
           <SkillInfo
             title={data?.title}
+            // title={skillTitle}
             actionData={actionData}
             lastAddedSkills={lastAddedSkills}
           />

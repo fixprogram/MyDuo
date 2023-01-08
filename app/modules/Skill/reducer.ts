@@ -6,6 +6,8 @@ const continueContent = (
   content: PracticeStepType,
   lessonSteps: PracticeStepType[]
 ) => {
+  console.log("Continuing: ", lessonSteps);
+
   const newContent = lessonSteps.shift();
   if (!newContent) {
     return content;
@@ -57,34 +59,29 @@ type Action =
 
 export const basicState: SkillState = {
   progress: 0,
-  stepNumber: 0,
   content: {
-    // id: "",
-    // number: 0,
     answer: "",
     stepType: "",
-    // question: "",
-    // text: "",
-    // keywords: [""],
-    // definition: "",
-    // variants: [],
-    // isToChoose: false,
-    // chapter: 1,
-    // languageId: "",
     difficulty: "easy",
     options: {},
   },
   lessonSteps: [], // Array of all steps
-  maxSteps: 0, // Max steps
+  stepsAmount: 0, // Amount of steps from setup. We don't count steps, in which user makes a mistake
+  completedStepsAmount: 0, // Amount of completed steps
   skillState: { status: "idle", formDisabled: false, buttonDisabled: true },
   totalXP: 0,
 };
 
 function skillReducer(state: SkillState, action: Action): SkillState {
-  const { content, stepNumber, maxSteps, lessonSteps, skillState } = state;
+  const {
+    content,
+    stepsAmount,
+    completedStepsAmount,
+    lessonSteps,
+    skillState,
+  } = state;
   const positiveState: SkillState = {
     ...state,
-    progress: stepNumber / maxSteps,
     skillState: {
       status: "right",
       formDisabled: true,
@@ -94,7 +91,6 @@ function skillReducer(state: SkillState, action: Action): SkillState {
   const negativeState: SkillState = {
     ...state,
     lessonSteps: [...lessonSteps, content],
-    stepNumber: stepNumber - 1,
     skillState: {
       status: "wrong",
       formDisabled: true,
@@ -103,10 +99,9 @@ function skillReducer(state: SkillState, action: Action): SkillState {
   };
   switch (action.type) {
     case actionTypes.continue:
-      const isResults = stepNumber === maxSteps;
+      const isResults = lessonSteps.length === 0;
       return {
         ...state,
-        stepNumber: stepNumber + 1,
         content: continueContent(content, lessonSteps),
         skillState: {
           ...skillState,
@@ -119,20 +114,25 @@ function skillReducer(state: SkillState, action: Action): SkillState {
       const { steps, totalXP } = action;
       return {
         ...basicState,
-        stepNumber: 1,
         lessonSteps: steps,
-        maxSteps: steps.length,
+        stepsAmount: steps.length,
         content: continueContent(basicState.content, steps) as PracticeStepType,
         totalXP,
       };
     case actionTypes.results:
       return {
         ...state,
-        stepNumber: stepNumber + 1,
         skillState: { ...skillState, status: "results" },
       };
-    case actionTypes.setStateRight:
-      return positiveState;
+    case actionTypes.setStateRight: {
+      const newCompletedStepsAmount = completedStepsAmount + 1;
+      return {
+        ...positiveState,
+        completedStepsAmount: newCompletedStepsAmount,
+        progress: newCompletedStepsAmount / stepsAmount,
+      };
+    }
+
     case actionTypes.setStateWrong:
       return negativeState;
     case actionTypes.setCheckDisabled:
@@ -162,8 +162,7 @@ function useSkillReducer({
   reducer = skillReducer,
 } = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { content, progress, skillState, stepNumber, maxSteps, totalXP } =
-    state;
+  const { content, progress, skillState, stepsAmount, totalXP } = state;
 
   const continueSkill = () => dispatch({ type: actionTypes.continue });
   const setup = (steps: PracticeStepType[], totalXP: number) =>
@@ -184,8 +183,6 @@ function useSkillReducer({
     content,
     progress,
     skillState,
-    stepNumber,
-    maxSteps,
     totalXP,
     continueSkill,
     setup,

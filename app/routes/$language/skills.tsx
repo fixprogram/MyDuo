@@ -18,8 +18,9 @@ export const action = async ({ request }: ActionArgs) => {
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
 
+  // Add popup to these funcitonality so the user thinks twice before deleting
   if (_action === "Delete skill") {
-    console.log("values: ", values);
+    // console.log("values: ", values);
     const id = values.id as string;
     if (!id) {
       throw new Error("Skill id wasn't found");

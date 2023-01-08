@@ -3,25 +3,26 @@ import { json, redirect, Response } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import Constructor from "~/modules/Constructor";
-import { Language, Step, Skill } from "@prisma/client";
+import { Language, Step } from "@prisma/client";
 import {
   createSteps,
   deleteStepsFromSkill,
   getStepsBySkillId,
 } from "~/models/lesson.server";
 import { ActionData } from "./new";
-import {
-  checkTitleUnique,
-  getLastAddedSkill,
-  getLastAddedSkills,
-} from "~/models/skill.server";
+import { getLastAddedSkill, getLastAddedSkills } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
 import { StepOptions } from "~/modules/Constructor/Levels/types";
 
 export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
-  const activeLanguage = (await getActiveLanguage(request)) as Language;
+  const activeLanguage = await getActiveLanguage(request);
+
+  if (!activeLanguage) {
+    throw new Error("Active language is not found in editting the skill");
+  }
+
   const { ...values } = Object.fromEntries(form);
 
   const stepsData = JSON.parse(values.steps as string) as Step[];
@@ -58,7 +59,6 @@ export const action = async ({ request, params }: ActionArgs) => {
     stepIDs: createdStepIDs,
     currentLesson: 0,
     level: 0,
-    languageId: activeLanguage?.id,
     updatedAt: getTodayDate(),
     lineNumber: Number(lineNumber),
   };
@@ -68,7 +68,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     data: { ...data },
   });
 
-  return redirect(`/`);
+  return redirect(`/${activeLanguage.title}/skills`);
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {

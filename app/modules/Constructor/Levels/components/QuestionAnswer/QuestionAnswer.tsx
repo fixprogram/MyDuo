@@ -11,98 +11,115 @@ import {
   LessonTitle,
 } from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
+import Settings from "./Settings";
+import { StepContent } from "../lib";
 
 const initialState: Omit<
   Step,
-  "id" | "variants" | "parentLessonId" | "active" | "chapter"
+  "variants" | "parentLessonId" | "active" | "chapter"
 > = {
   // const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
   // question: "",
   answer: "",
-  number: 0,
+  // number: 0,
   // keywords: [""],
+  id: "",
   stepType: "",
   options: {
     question: "",
-    keywords: [""],
+    keywords: [],
   },
 };
 
 export default function QuestionAnswer({ state = initialState }) {
-  const { options, answer, number, stepType } = state;
-  const { question, keywords } = options as {
+  const { options, answer, id, stepType } = state;
+  const { question } = options as {
     question: string;
-    keywords: string[];
   };
-  const { setStepReady, setKeywords, setQuestion, setAnswer } =
-    useConstructor();
+  const { setStepReady, setStepOptions, setAnswer } = useConstructor();
 
   useEffect(() => {
     if (question && answer) {
-      return setStepReady(true, number);
+      return setStepReady(true, id);
     }
-    return setStepReady(false, number);
+    return setStepReady(false, id);
   }, [question, answer]);
 
-  useEffect(() => {
-    setKeywords(keywords, number);
-  }, []);
+  // useEffect(() => {
+  //   setKeywords(keywords ? keywords : []);
+  // }, []);
+
+  function setQuestion(event: React.ChangeEvent<HTMLInputElement>) {
+    const target = event.target as HTMLInputElement;
+    setStepOptions({ ...options, question: target.value });
+  }
+
+  // function setKeywords(keywords: string[]) {
+  //   setStepOptions({ ...options, keywords });
+  // }
 
   return stepType === "Question" ? (
     <>
-      <fieldset style={{ padding: "0 25%" }}>
-        <LessonTitle>Answer the question</LessonTitle>
-        <div
-          style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
-        >
-          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} />
-          <div style={{ position: "relative" }}>
-            <LessonQuestion>
-              <input
+      <StepContent>
+        <fieldset style={{ padding: "0 25%" }}>
+          <LessonTitle>Answer the question</LessonTitle>
+          <div
+            style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
+          >
+            <img
+              src={Duo}
+              alt="Duo"
+              height={150}
+              style={{ marginBottom: -50 }}
+            />
+            <div style={{ position: "relative" }}>
+              <LessonQuestion>
+                <Textarea
+                  type="text"
+                  placeholder="Set question"
+                  style={{
+                    border: "none",
+                    backgroundColor: "inherit",
+                    width: "100%",
+                    padding: 0,
+                    minHeight: 0,
+                    letterSpacing: 0,
+                  }}
+                  value={question === null ? "" : question}
+                  onChange={setQuestion}
+                  // onChange={(evt) => setQuestion(evt.target.value, id)}
+                  autoFocus={true}
+                  required
+                />
+                {/* <input
                 type="text"
-                // name={`question${number}`}
                 placeholder="Set question"
                 style={{
                   border: "none",
                   width: "100%",
                 }}
                 value={question === null ? "" : question}
-                onChange={(evt) => setQuestion(evt.target.value, number)}
+                onChange={setQuestion}
+                // onChange={(evt) => setQuestion(evt.target.value, id)}
                 autoFocus={true}
                 required
-              />
-            </LessonQuestion>
-            <LessonQuestionTriangleContainer>
-              <LessonQuestionTriangle />
-            </LessonQuestionTriangleContainer>
+              /> */}
+              </LessonQuestion>
+              <LessonQuestionTriangleContainer>
+                <LessonQuestionTriangle />
+              </LessonQuestionTriangleContainer>
+            </div>
           </div>
-        </div>
 
-        <Textarea
-          // name={`answer${number}`}
-          placeholder="Type answer"
-          value={answer}
-          onChange={(evt) => setAnswer(evt.target.value, number)}
-          required
-        />
-      </fieldset>
-      <TextareaLabel htmlFor={`keywords${number}`}>
-        <LabelText>Choose keywords</LabelText>
-        <Keywords
-          answer={answer as string}
-          initialKeywords={keywords}
-          onSet={(kwords: string[]) => setKeywords(kwords, number)}
-        />
-
-        <input
-          type="hidden"
-          id={`keywords${number}`}
-          name={`keywords${number}`}
-          placeholder="Type keywords"
-          value={keywords.map((keyword) => cleanWordFromSigns(keyword).newWord)}
-          readOnly
-        />
-      </TextareaLabel>
+          <Textarea
+            placeholder="Type answer"
+            value={answer}
+            onChange={(evt) => setAnswer(evt.target.value, id)}
+            required
+          />
+        </fieldset>
+      </StepContent>
+      <Settings answer={answer} options={options} />
     </>
   ) : null;
 }

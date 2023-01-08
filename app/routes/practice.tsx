@@ -52,6 +52,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const steps = await getStepsForPracticing(activeLanguage.id);
 
+  console.log("Steps: ", steps);
+
   if (steps.length === 0) {
     throw new Error("Steps for practicing are not found");
   }
@@ -61,7 +63,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ steps, totalXP });
 };
 
-export default function LessonScreen() {
+export default function Practice() {
   const { steps, totalXP } = useLoaderData<typeof loader>();
 
   return <Lesson steps={steps} totalXP={totalXP} />;
