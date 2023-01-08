@@ -1,6 +1,4 @@
 import { Links, LiveReload, Outlet, Scripts } from "@remix-run/react";
-import LogRocket from "logrocket";
-LogRocket.init("wuhqsy/my-duo");
 
 function Document({
   children,
