@@ -181,7 +181,7 @@ __export(practice_exports, {
 });
 
 // app/modules/Skill/index.tsx
-var import_react21 = require("react");
+var import_react20 = require("react");
 
 // app/styles/close.svg
 var close_default = "/build/_assets/close-D2E3HOMK.svg";
@@ -510,7 +510,7 @@ var import_react3 = require("@emotion/react"), import_styled = __toESM(require("
   justify-content: center;
   align-items: center;
   &:hover {
-    opacity: 0.85;
+    opacity: ${(props) => props.isDisabled ? 1 : 0.85};
   }
 `, Main = (0, import_styled.default)("main")`
   padding: 24px 10% 0;
@@ -725,6 +725,7 @@ var import_react3 = require("@emotion/react"), import_styled = __toESM(require("
   margin-bottom: 54px;
   bottom: 24px;
   background-color: #fff;
+  transition: filter 0.1s ease;
   &:hover {
     filter: brightness(0.9);
   }
@@ -755,12 +756,7 @@ var import_react3 = require("@emotion/react"), import_styled = __toESM(require("
 `;
 
 // app/modules/Constructor/components/lib.ts
-var import_styled2 = __toESM(require("@emotion/styled")), import_react5 = require("@remix-run/react"), ConstructorForm = (0, import_styled2.default)(import_react5.Form)`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  height: calc(100vh - 95px);
-`, ConstructorFormInner = (0, import_styled2.default)("section")`
+var import_styled2 = __toESM(require("@emotion/styled")), ConstructorFormInner = (0, import_styled2.default)("section")`
   max-width: 70%;
   display: flex;
   flex-direction: column;
@@ -835,6 +831,15 @@ var import_styled2 = __toESM(require("@emotion/styled")), import_react5 = requir
   justify-content: space-evenly;
   max-width: 600px;
   margin: 0 auto;
+`, SkillPositionContainer = (0, import_styled2.default)("div")`
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+`, SettingsContainer = (0, import_styled2.default)("div")`
+  padding: 30px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 // app/components/Progress.tsx
@@ -871,7 +876,7 @@ var import_jsx_dev_runtime3 = require("react/jsx-dev-runtime"), Progress = () =>
 }, Progress_default = Progress;
 
 // app/modules/Skill/reducer.ts
-var import_react6 = require("react"), continueContent = (content, lessonSteps) => {
+var import_react5 = require("react"), continueContent = (content, lessonSteps) => {
   console.log("Continuing: ", lessonSteps);
   let newContent = lessonSteps.shift();
   return newContent ? (newContent.difficulty = content.difficulty ? content.difficulty : "easy", newContent.stepType === "Pairs" && (newContent.difficulty = null), newContent) : content;
@@ -971,10 +976,10 @@ function skillReducer(state, action10) {
   }
 }
 function useSkillReducer({
-  initialState: initialState4 = basicState,
+  initialState: initialState3 = basicState,
   reducer: reducer2 = skillReducer
 } = {}) {
-  let [state, dispatch] = (0, import_react6.useReducer)(reducer2, initialState4), { content, progress, skillState, stepsAmount, totalXP } = state;
+  let [state, dispatch] = (0, import_react5.useReducer)(reducer2, initialState3), { content, progress, skillState, stepsAmount, totalXP } = state;
   return {
     content,
     progress,
@@ -1017,10 +1022,10 @@ var defaultSkillContextState = {
 };
 
 // app/modules/Skill/components/Results.tsx
-var import_react10 = __toESM(require("react"));
+var import_react9 = __toESM(require("react"));
 
 // app/modules/Skill/components/lib.ts
-var import_react7 = require("@emotion/react"), import_styled3 = __toESM(require("@emotion/styled")), import_react8 = require("@remix-run/react");
+var import_react6 = require("@emotion/react"), import_styled3 = __toESM(require("@emotion/styled")), import_react7 = require("@remix-run/react");
 
 // app/styles/right.svg
 var right_default = "/build/_assets/right-SZKSLJM7.svg";
@@ -1113,7 +1118,7 @@ var LessonContainer = (0, import_styled3.default)("section")`
   &:hover {
     filter: brightness(1.2);
   }
-`, LessonAppear = import_react7.keyframes`
+`, LessonAppear = import_react6.keyframes`
   0% {
     opacity: 0;
     transform: translateX(150px)
@@ -1240,7 +1245,7 @@ var LessonContainer = (0, import_styled3.default)("section")`
   transform: rotate(45deg);
   transform-origin: top left;
   width: 14.14427px;
-`, messageIconAppear = import_react7.keyframes`
+`, messageIconAppear = import_react6.keyframes`
 
   50% {
     transform: scale(1.1)
@@ -1273,7 +1278,7 @@ var LessonContainer = (0, import_styled3.default)("section")`
   height: calc(100vh - 140px);
   justify-content: center;
   outline: none;
-`, ResultsHiddenForm = (0, import_styled3.default)(import_react8.Form)`
+`, ResultsHiddenForm = (0, import_styled3.default)(import_react7.Form)`
   position: absolute;
   width: 1px;
   height: 1px;
@@ -1317,16 +1322,16 @@ var LessonContainer = (0, import_styled3.default)("section")`
 var results_default = "/build/_assets/results-IW73HFOZ.png";
 
 // app/hooks/useFocus.ts
-var import_react9 = require("react"), useFocus = (dependency) => {
-  let ref = (0, import_react9.useRef)(null);
-  return (0, import_react9.useEffect)(() => {
+var import_react8 = require("react"), useFocus = (dependency) => {
+  let ref = (0, import_react8.useRef)(null);
+  return (0, import_react8.useEffect)(() => {
     var _a;
     return (_a = ref.current) == null ? void 0 : _a.focus();
   }, [dependency]), ref;
 };
 
 // app/modules/Skill/components/Results.tsx
-var import_jsx_dev_runtime4 = require("react/jsx-dev-runtime"), Results = import_react10.default.forwardRef((props, ref) => {
+var import_jsx_dev_runtime4 = require("react/jsx-dev-runtime"), Results = import_react9.default.forwardRef((props, ref) => {
   let { totalXP } = useSkill(), containerRef = useFocus();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
     ResultsContainer,
@@ -1406,7 +1411,7 @@ var import_jsx_dev_runtime4 = require("react/jsx-dev-runtime"), Results = import
 });
 
 // app/modules/Skill/components/Footer.tsx
-var import_react13 = require("@remix-run/react");
+var import_react12 = require("@remix-run/react");
 
 // app/styles/easier.svg
 var easier_default = "/build/_assets/easier-J6XFH7BL.svg";
@@ -1415,7 +1420,7 @@ var easier_default = "/build/_assets/easier-J6XFH7BL.svg";
 var harder_default = "/build/_assets/harder-YCUE4ZYE.svg";
 
 // app/utils.ts
-var import_react11 = require("@remix-run/react"), import_react12 = require("react");
+var import_react10 = require("@remix-run/react"), import_react11 = require("react");
 var isItemInArray = (arr, item) => !!arr.filter((arrItem) => arrItem === item).length;
 var cleanWordFromSigns = (word) => {
   let newWord = word.split("").slice(0, -1).join("");
@@ -1481,7 +1486,7 @@ function Footer({
   checkAnswer = () => {
   }
 }) {
-  let transition = (0, import_react13.useTransition)(), { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill(), { answer, options, difficulty, stepType } = content, { text } = options, { status, buttonDisabled } = skillState, buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check", getFooterText = (text2, answer2) => stepType === "Insert" ? answer2.length === 1 ? text2 == null ? void 0 : text2.split(" ")[answer2[0]] : text2 : stepType === "Question" ? answer2 : text2 && answer2.length ? answer2.length === 1 ? cleanWordFromSigns(text2.split(" ")[Number(answer2[0])]).newWord : text2 : answer2.join(" "), handleContinue = () => {
+  let transition = (0, import_react12.useTransition)(), { skillState, content, continueSkill, setStateWrong, setDifficulty } = useSkill(), { answer, options, difficulty, stepType } = content, { text } = options, { status, buttonDisabled } = skillState, buttonText = transition.state === "submitting" ? "Saving..." : transition.state === "loading" ? "Saved!" : status === "right" ? "Next" : status !== "idle" ? "Continue" : "Check", getFooterText = (text2, answer2) => stepType === "Insert" ? answer2.length === 1 ? text2 == null ? void 0 : text2.split(" ")[answer2[0]] : text2 : stepType === "Question" || stepType === "Variants" ? answer2 : text2 && answer2.length ? answer2.length === 1 ? cleanWordFromSigns(text2.split(" ")[Number(answer2[0])]).newWord : text2 : answer2.join(" "), handleContinue = () => {
     if (!(buttonText === "Saving..." || buttonText === "Saved!" || skillState.buttonDisabled)) {
       if (status === "idle")
         return checkAnswer();
@@ -1611,7 +1616,7 @@ function Footer({
 }
 
 // app/modules/Skill/components/Lesson.tsx
-var import_react14 = __toESM(require("react"));
+var import_react13 = __toESM(require("react"));
 var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime"), Lesson = ({
   initialValue = "",
   disabledCondition,
@@ -1620,8 +1625,8 @@ var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime"), Lesson = ({
   children,
   ...props
 }) => {
-  let { skillState, continueSkill, setCheckDisabled } = useSkill(), { status, formDisabled, buttonDisabled } = skillState, [userAnswer, setUserAnswer] = (0, import_react14.useState)(initialValue), lessonRef = useFocus(status);
-  (0, import_react14.useEffect)(() => {
+  let { skillState, continueSkill, setCheckDisabled } = useSkill(), { status, formDisabled, buttonDisabled } = skillState, [userAnswer, setUserAnswer] = (0, import_react13.useState)(initialValue), lessonRef = useFocus(status);
+  (0, import_react13.useEffect)(() => {
     if (disabledCondition !== null)
       return disabledCondition(userAnswer) ? setCheckDisabled(!1) : setCheckDisabled(!0);
   }, [userAnswer]);
@@ -1631,7 +1636,7 @@ var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime"), Lesson = ({
     if (keyDownHandle && keyDownHandle(event, setUserAnswer), !(event.key !== "Enter" || buttonDisabled))
       return event.preventDefault(), status === "idle" ? checkAnswer(userAnswer) : continueSkill();
   };
-  return (0, import_react14.useEffect)(() => {
+  return (0, import_react13.useEffect)(() => {
     !formDisabled && setUserAnswer && setUserAnswer(initialValue);
   }, [formDisabled]), /* @__PURE__ */ (0, import_jsx_dev_runtime6.jsxDEV)(
     "div",
@@ -1646,7 +1651,7 @@ var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime"), Lesson = ({
         outline: "none"
       },
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime6.jsxDEV)(LessonBody, { children: import_react14.default.Children.map(children, (child) => import_react14.default.cloneElement(child, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime6.jsxDEV)(LessonBody, { children: import_react13.default.Children.map(children, (child) => import_react13.default.cloneElement(child, {
           userAnswer,
           setUserAnswer,
           keyDownCheck: onKeyDownHandle,
@@ -1676,7 +1681,7 @@ var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime"), Lesson = ({
 };
 
 // app/modules/Skill/components/InsertWords/InsertWordsScreen.tsx
-var import_react17 = require("react");
+var import_react16 = require("react");
 
 // app/modules/Constructor/Levels/components/lib.tsx
 var import_styled4 = __toESM(require("@emotion/styled")), StepContainer = (0, import_styled4.default)("section")`
@@ -1713,6 +1718,46 @@ var import_styled4 = __toESM(require("@emotion/styled")), StepContainer = (0, im
   &:active {
     color: #1cb0f6;
     filter: brightness(1.1);
+  }
+`, Button = (0, import_styled4.default)("button")`
+  border: 0 solid transparent;
+  background-color: #1cb0f6;
+  color: #fff;
+  border-color: white;
+  border-width: 0;
+  border-bottom-width: 4px;
+  border-bottom-color: #1899d6;
+  height: 50px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: "Nunito";
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  border-radius: 15px;
+  padding: 0 20px;
+  display: flex;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.2s;
+  margin-right: 10px;
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    border-bottom-width: 0;
+    margin-top: 4px;
+    height: 46px;
+  }
+  &:disabled {
+    background-color: #e5e5e5;
+    color: #afafaf;
+    border: 2px solid #e5e5e5;
+    cursor: default;
+    &:hover {
+      filter: none;
+    }
   }
 `, InsertWordsTextBlock = (0, import_styled4.default)("div")`
   min-height: 170px;
@@ -1901,7 +1946,7 @@ function Puzzle({ values, setValues }) {
 }
 
 // app/modules/Skill/components/InsertWords/Variants.tsx
-var import_react15 = require("react");
+var import_react14 = require("react");
 var import_jsx_dev_runtime8 = require("react/jsx-dev-runtime");
 function generateVariants(text, answer) {
   let variants = [], words = text.split(" "), rightAnswer = words[answer[0]];
@@ -1912,8 +1957,8 @@ function Variants({
   setValues,
   keyDownCheck
 }) {
-  let myRef = (0, import_react15.useRef)(null), { content, skillState } = useSkill(), { options, answer } = content, { text } = options, variants = generateVariants(text, answer);
-  (0, import_react15.useEffect)(() => {
+  let myRef = (0, import_react14.useRef)(null), { content, skillState } = useSkill(), { options, answer } = content, { text } = options, variants = generateVariants(text, answer);
+  (0, import_react14.useEffect)(() => {
     if (skillState.status === "idle") {
       let timeout = setTimeout(() => {
         var _a;
@@ -1978,15 +2023,15 @@ function Variants({
 }
 
 // app/modules/Skill/components/InsertWords/Text.tsx
-var import_react16 = require("react");
+var import_react15 = require("react");
 var import_jsx_dev_runtime9 = require("react/jsx-dev-runtime");
 function Text({ values, setValues }) {
   let { content, skillState } = useSkill(), { options, answer: correctIndexes, difficulty } = content, { text, variants, isToChoose } = options;
-  (0, import_react16.useEffect)(() => {
+  (0, import_react15.useEffect)(() => {
     skillState.formDisabled || setValues([...new Array(correctIndexes.length).fill("")]);
   }, [skillState.formDisabled]);
-  let inputRef = (0, import_react16.useRef)(null);
-  (0, import_react16.useEffect)(() => {
+  let inputRef = (0, import_react15.useRef)(null);
+  (0, import_react15.useEffect)(() => {
     if (skillState.status === "idle" && !isToChoose && !(variants != null && variants.length)) {
       let timeout = setTimeout(() => {
         var _a;
@@ -1994,7 +2039,7 @@ function Text({ values, setValues }) {
       }, 10);
       return () => clearTimeout(timeout);
     }
-  }, [skillState.status]), (0, import_react16.useEffect)(() => {
+  }, [skillState.status]), (0, import_react15.useEffect)(() => {
     if (difficulty === "hard") {
       let timeout = setTimeout(() => {
         var _a;
@@ -2015,7 +2060,7 @@ function Text({ values, setValues }) {
   };
   return /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("section", { children: text == null ? void 0 : text.split(" ").map((textItem, textItemIndex) => {
     let { newWord, sign } = cleanWordFromSigns(textItem);
-    return correctIndexes.filter((item) => item === textItemIndex).length ? correctIndexes.map((indexItem, index) => textItemIndex !== Number(indexItem) ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(import_react16.Fragment, { children: [
+    return correctIndexes.filter((item) => item === textItemIndex).length ? correctIndexes.map((indexItem, index) => textItemIndex !== Number(indexItem) ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(import_react15.Fragment, { children: [
       difficulty === "easy" && correctIndexes.length === 1 ? /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
         InsertWordsInput,
         {
@@ -2104,12 +2149,12 @@ function InsertWordsScreen({
 }) {
   let { content, skillState } = useSkill(), { options, answer, difficulty } = content, { variants, isToChoose } = options, initalValues = new Array(answer.length).fill(
     variants && difficulty === "easy" ? " " : ""
-  ), [values, setValues] = (0, import_react17.useState)(initalValues);
-  return (0, import_react17.useEffect)(() => {
+  ), [values, setValues] = (0, import_react16.useState)(initalValues);
+  return (0, import_react16.useEffect)(() => {
     areArraysEqual(userAnswer, values) && !isToChoose || values.length === answer.length && setUserAnswer(values);
-  }, [values]), (0, import_react17.useEffect)(() => {
+  }, [values]), (0, import_react16.useEffect)(() => {
     isToChoose || userAnswer[0].length && setValues([...userAnswer]);
-  }, [userAnswer]), (0, import_react17.useLayoutEffect)(() => {
+  }, [userAnswer]), (0, import_react16.useLayoutEffect)(() => {
     setValues(initalValues);
   }, [difficulty]), /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(import_jsx_dev_runtime10.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(LessonTitle2, { children: "Add missing words" }, void 0, !1, {
@@ -2207,14 +2252,14 @@ function InsertWords() {
 }
 
 // app/modules/Skill/components/PairsScreen.tsx
-var import_react18 = require("react");
+var import_react17 = require("react");
 var import_jsx_dev_runtime12 = require("react/jsx-dev-runtime");
 function PairsScreen({
   variants,
   checkAnswer,
   userAnswer
 }) {
-  let [activeIdx, setActiveIdx] = (0, import_react18.useState)(-1), isVariantDisabled = (idx) => !!userAnswer.find((answerItem) => answerItem.includes((idx + 1).toString()));
+  let [activeIdx, setActiveIdx] = (0, import_react17.useState)(-1), isVariantDisabled = (idx) => !!userAnswer.find((answerItem) => answerItem.includes((idx + 1).toString()));
   return /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(import_jsx_dev_runtime12.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(LessonTitle2, { children: "Connect pairs" }, void 0, !1, {
       fileName: "app/modules/Skill/components/PairsScreen.tsx",
@@ -2321,7 +2366,7 @@ function Pairs() {
 }
 
 // app/modules/Skill/components/QuestionAnswer/QuestionAnswerScreen.tsx
-var import_react19 = require("react");
+var import_react18 = require("react");
 
 // app/styles/duo.svg
 var duo_default = "/build/_assets/duo-4STWGEJ4.svg";
@@ -2332,8 +2377,8 @@ function QuestionAnswerScreen({
   userAnswer,
   setUserAnswer
 }) {
-  let { skillState, content } = useSkill(), myRef = (0, import_react19.useRef)(null);
-  return (0, import_react19.useEffect)(() => {
+  let { skillState, content } = useSkill(), myRef = (0, import_react18.useRef)(null);
+  return (0, import_react18.useEffect)(() => {
     if (skillState.status === "idle") {
       let timeout = setTimeout(() => {
         var _a;
@@ -2424,9 +2469,9 @@ function QuestionAnswerScreen({
   }, this);
 }
 
-// app/modules/Skill/components/QuestionAnswer/index.tsx
+// app/modules/Skill/components/QuestionAnswer/QuestionAnswer.tsx
 var import_jsx_dev_runtime15 = require("react/jsx-dev-runtime");
-function QuestionAnswerPractice() {
+function QuestionAnswer() {
   let { content, setStateWrong, setStateRight } = useSkill(), { answer: correctAnswer, options } = content, { keywords } = options, checkAnswer = (userAnswer) => {
     if (keywords != null && keywords.length) {
       let userAnswerArray = userAnswer.split(" ").map((word) => cleanWordFromSigns(word).newWord);
@@ -2436,7 +2481,7 @@ function QuestionAnswerPractice() {
       ).length === keywords.length)
         return setStateRight();
     }
-    return correctAnswer.toLowerCase() === userAnswer.toLowerCase() ? setStateRight() : setStateWrong();
+    return console.log({ correctAnswer, userAnswer }), correctAnswer.toLowerCase() === userAnswer.toLowerCase() ? setStateRight() : setStateWrong();
   };
   return content.stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
     Lesson,
@@ -2445,21 +2490,24 @@ function QuestionAnswerPractice() {
       disabledCondition: (userAnswer) => userAnswer.length > 0,
       children: /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(QuestionAnswerScreen, { userAnswer: "", setUserAnswer: () => {
       } }, void 0, !1, {
-        fileName: "app/modules/Skill/components/QuestionAnswer/index.tsx",
-        lineNumber: 46,
+        fileName: "app/modules/Skill/components/QuestionAnswer/QuestionAnswer.tsx",
+        lineNumber: 48,
         columnNumber: 7
       }, this)
     },
     void 0,
     !1,
     {
-      fileName: "app/modules/Skill/components/QuestionAnswer/index.tsx",
-      lineNumber: 42,
+      fileName: "app/modules/Skill/components/QuestionAnswer/QuestionAnswer.tsx",
+      lineNumber: 44,
       columnNumber: 5
     },
     this
   ) : null;
 }
+
+// app/modules/Skill/components/QuestionAnswer/index.tsx
+var QuestionAnswer_default = QuestionAnswer;
 
 // app/modules/Constructor/Levels/components/Variants/VariantsScreen.tsx
 var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime");
@@ -2552,12 +2600,12 @@ function VariantsScreen({
 // app/modules/Skill/components/Variants.tsx
 var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
 function VariantsPractice() {
-  let { content, setStateRight, setStateWrong } = useSkill(), { question, variants, stepType } = content;
+  let { content, setStateRight, setStateWrong } = useSkill(), { options, stepType, answer } = content, { question, variants } = options;
   return stepType === "Variants" ? /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
     Lesson,
     {
       disabledCondition: (userAnswer) => userAnswer.length,
-      checkAnswer: (userAnswer) => userAnswer === content.answer[0] ? setStateRight() : setStateWrong(),
+      checkAnswer: (userAnswer) => (console.log({ answer, userAnswer }), userAnswer === answer ? setStateRight() : setStateWrong()),
       keyDownHandle: (e, setUserAnswer) => {
         if (e.key === "1")
           return setUserAnswer(variants[0].value);
@@ -2579,7 +2627,7 @@ function VariantsPractice() {
         !1,
         {
           fileName: "app/modules/Skill/components/Variants.tsx",
-          lineNumber: 36,
+          lineNumber: 42,
           columnNumber: 7
         },
         this
@@ -2589,7 +2637,7 @@ function VariantsPractice() {
     !1,
     {
       fileName: "app/modules/Skill/components/Variants.tsx",
-      lineNumber: 31,
+      lineNumber: 37,
       columnNumber: 5
     },
     this
@@ -2597,7 +2645,7 @@ function VariantsPractice() {
 }
 
 // app/modules/Skill/components/AreYouSureBlock/lib.tsx
-var import_styled6 = __toESM(require("@emotion/styled")), import_react20 = require("@remix-run/react"), Wrapper = (0, import_styled6.default)("div")`
+var import_styled6 = __toESM(require("@emotion/styled")), import_react19 = require("@remix-run/react"), Wrapper = (0, import_styled6.default)("div")`
   background: #fff;
   bottom: 0;
   left: 0;
@@ -2629,7 +2677,7 @@ var import_styled6 = __toESM(require("@emotion/styled")), import_react20 = requi
   padding: 0;
   color: #777;
   font-family: "Nunito";
-`, QuitButton = (0, import_styled6.default)(import_react20.Link)`
+`, QuitButton = (0, import_styled6.default)(import_react19.Link)`
   border: 0 solid transparent;
   background-color: #1cb0f6;
   color: #fff;
@@ -2727,12 +2775,12 @@ function AreYouSureBlock() {
 var AreYouSureBlock_default = AreYouSureBlock;
 
 // app/modules/Skill/index.tsx
-var import_react22 = require("@remix-run/react"), import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), SkillContext = (0, import_react21.createContext)(
+var import_react21 = require("@remix-run/react"), import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), SkillContext = (0, import_react20.createContext)(
   defaultSkillContextState
 );
 SkillContext.displayName = "SkillContext";
 function useSkill() {
-  let context = (0, import_react21.useContext)(SkillContext);
+  let context = (0, import_react20.useContext)(SkillContext);
   if (context === void 0)
     throw new Error("useSkill must be used within a <Lesson />");
   return context;
@@ -2741,8 +2789,8 @@ function Skill({
   steps,
   totalXP
 }) {
-  let resultsFormRef = (0, import_react21.createRef)(), value = useSkillReducer(), submit = (0, import_react22.useSubmit)(), { setup, skillState, continueSkill, resetStatus } = value, { status } = skillState;
-  (0, import_react21.useEffect)(() => {
+  let resultsFormRef = (0, import_react20.createRef)(), value = useSkillReducer(), submit = (0, import_react21.useSubmit)(), { setup, skillState, continueSkill, resetStatus } = value, { status } = skillState;
+  (0, import_react20.useEffect)(() => {
     setup(steps, totalXP);
   }, []);
   let onContinue = () => status === "results" ? submit(resultsFormRef.current, { replace: !0 }) : continueSkill();
@@ -2767,7 +2815,7 @@ function Skill({
       lineNumber: 65,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(QuestionAnswerPractice, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(QuestionAnswer_default, {}, void 0, !1, {
       fileName: "app/modules/Skill/index.tsx",
       lineNumber: 66,
       columnNumber: 13
@@ -3120,6 +3168,18 @@ async function getLastAddedSkills(languageId) {
     }
   });
 }
+async function getAmountOfSkillsOnTheLastRow(languageId) {
+  let lastAddedSkill = await prisma.skill.findFirst({
+    where: { languageId },
+    orderBy: { createdAt: "desc" },
+    select: {
+      lineNumber: !0
+    }
+  });
+  return lastAddedSkill ? { count: await prisma.skill.count({
+    where: { languageId, lineNumber: lastAddedSkill.lineNumber }
+  }), lastLineNumber: lastAddedSkill.lineNumber } : null;
+}
 async function deleteSkillById(id) {
   return await prisma.skill.delete({ where: { id } });
 }
@@ -3128,7 +3188,7 @@ async function getSkillByTitle(title, languageId) {
 }
 
 // app/routes/skill/$title/practice.tsx
-var import_react23 = require("@remix-run/react"), import_node2 = require("@remix-run/node");
+var import_react22 = require("@remix-run/react"), import_node2 = require("@remix-run/node");
 
 // app/models/lesson.server.ts
 function formatStepAnswer(stepType, answer) {
@@ -3245,27 +3305,27 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), action = async 
   return (0, import_node2.json)({ steps, totalXP });
 };
 function LessonScreen() {
-  let { steps, totalXP } = (0, import_react23.useLoaderData)();
+  let { steps, totalXP } = (0, import_react22.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(Skill, { steps, totalXP }, void 0, !1, {
     fileName: "app/routes/skill/$title/practice.tsx",
-    lineNumber: 68,
+    lineNumber: 63,
     columnNumber: 10
   }, this);
 }
 function CatchBoundary() {
-  let caught = (0, import_react23.useCatch)();
+  let caught = (0, import_react22.useCatch)();
   if (caught.status === 404)
     return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(ErrorMessage, { children: caught.statusText }, void 0, !1, {
       fileName: "app/routes/skill/$title/practice.tsx",
-      lineNumber: 75,
+      lineNumber: 70,
       columnNumber: 12
     }, this);
 }
 function ErrorBoundary2() {
-  let { title } = (0, import_react23.useParams)();
+  let { title } = (0, import_react22.useParams)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "error-container", children: `There was an error loading skill by the title ${title}. Sorry.` }, void 0, !1, {
     fileName: "app/routes/skill/$title/practice.tsx",
-    lineNumber: 82,
+    lineNumber: 77,
     columnNumber: 5
   }, this);
 }
@@ -3278,10 +3338,10 @@ __export(lesson_exports, {
   default: () => LessonScreen2,
   loader: () => loader2
 });
-var import_react24 = require("@remix-run/react"), import_node3 = require("@remix-run/node");
+var import_react23 = require("@remix-run/react"), import_node3 = require("@remix-run/node");
 var import_jsx_dev_runtime21 = require("react/jsx-dev-runtime");
 function ErrorBoundary3() {
-  let { title, lesson } = (0, import_react24.useParams)();
+  let { title, lesson } = (0, import_react23.useParams)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "error-container", children: `There was an error loading skill with the title ${title} and lesson ${lesson}. Sorry.` }, void 0, !1, {
     fileName: "app/routes/skill/$title/$lesson.tsx",
     lineNumber: 12,
@@ -3304,7 +3364,7 @@ var action2 = async ({ request, params }) => {
   return (0, import_node3.json)({ steps, totalXP });
 };
 function LessonScreen2() {
-  let { steps, totalXP } = (0, import_react24.useLoaderData)();
+  let { steps, totalXP } = (0, import_react23.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(Skill, { steps, totalXP }, void 0, !1, {
     fileName: "app/routes/skill/$title/$lesson.tsx",
     lineNumber: 60,
@@ -3321,7 +3381,7 @@ __export(language_exports, {
   links: () => links,
   loader: () => loader3
 });
-var import_node4 = require("@remix-run/node"), import_react27 = require("@remix-run/react"), import_react28 = require("react");
+var import_node4 = require("@remix-run/node"), import_react26 = require("@remix-run/react"), import_react27 = require("react");
 
 // app/styles/study.svg
 var study_default = "/build/_assets/study-IVNP72CR.svg";
@@ -3342,13 +3402,13 @@ var streak_active_default = "/build/_assets/streak-active-KWRZ6YVX.svg";
 var shop_active_default = "/build/_assets/shop-active-TP5GEMDP.svg";
 
 // app/components/Projects.tsx
-var import_react25 = require("react"), import_react26 = require("@remix-run/react");
+var import_react24 = require("react"), import_react25 = require("@remix-run/react");
 var import_jsx_dev_runtime22 = require("react/jsx-dev-runtime");
 function Projects({
   onOverlay,
   languages
 }) {
-  let [showWindow, setShowWindow] = (0, import_react25.useState)(!1), [isNewLanguage, setIsNewLanguage] = (0, import_react25.useState)(!1), activeLanguage = languages == null ? void 0 : languages.find((item) => item.active);
+  let [showWindow, setShowWindow] = (0, import_react24.useState)(!1), [isNewLanguage, setIsNewLanguage] = (0, import_react24.useState)(!1), activeLanguage = languages == null ? void 0 : languages.find((item) => item.active);
   function showModal() {
     onOverlay(!0), setShowWindow(!0);
   }
@@ -3387,7 +3447,7 @@ function Projects({
                 order: item.active ? 0 : 1,
                 borderRadius: item.active ? "10px 10px 0 0" : 0
               },
-              children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_react26.Form, { method: "post", children: [
+              children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_react25.Form, { method: "post", children: [
                 /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("input", { type: "hidden", name: "id", value: item.id, readOnly: !0 }, void 0, !1, {
                   fileName: "app/components/Projects.tsx",
                   lineNumber: 65,
@@ -3417,7 +3477,7 @@ function Projects({
             lineNumber: 52,
             columnNumber: 13
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("fieldset", { style: { position: "relative" }, children: isNewLanguage ? /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_react26.Form, { method: "post", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("fieldset", { style: { position: "relative" }, children: isNewLanguage ? /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_react25.Form, { method: "post", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
               LanguagesInput,
               {
@@ -3518,7 +3578,7 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), MENU = [
     {
       to: `${link}`,
       className: "nav-link",
-      prefetch: "render",
+      prefetch: "intent",
       children: ({ isActive }) => /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(NavIcon, { src: isActive ? activeIcon : icon, alt: title }, void 0, !1, {
           fileName: "app/components/Menu.tsx",
@@ -3654,7 +3714,7 @@ var loader3 = async ({ request }) => {
   return today - lastActive > 1 || lastActive === 0 ? (user = await updateUserStreak(user.id, !1, 0), (0, import_node4.json)({ userData, languages })) : today - lastActive === 1 ? (user = await updateUserStreak(user.id, !1, user.streak), (0, import_node4.json)({ userData, languages })) : !user.wasToday && lastActive === today ? (user = await updateUserStreak(user.id, !0, user.streak + 1), (0, import_node4.json)({ userData, languages })) : user.wasToday ? (0, import_node4.json)({ userData, languages }) : (0, import_node4.json)({ userData, languages });
 };
 function LanguagePage() {
-  let { userData, languages } = (0, import_react27.useLoaderData)(), [isOverlay, setIsOverlay] = (0, import_react28.useState)(!1);
+  let { userData, languages } = (0, import_react26.useLoaderData)(), [isOverlay, setIsOverlay] = (0, import_react27.useState)(!1);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(import_jsx_dev_runtime24.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
       Menu_default,
@@ -3672,7 +3732,7 @@ function LanguagePage() {
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(Main, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(import_react27.Outlet, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(Main, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(import_react26.Outlet, {}, void 0, !1, {
       fileName: "app/routes/$language.tsx",
       lineNumber: 96,
       columnNumber: 9
@@ -3693,7 +3753,7 @@ function LanguagePage() {
   }, this);
 }
 function CatchBoundary2() {
-  let caught = (0, import_react27.useCatch)();
+  let caught = (0, import_react26.useCatch)();
   return caught.status === 404 ? /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(ErrorMessage, { children: caught.statusText }, void 0, !1, {
     fileName: "app/routes/$language.tsx",
     lineNumber: 107,
@@ -3708,44 +3768,31 @@ __export(skillId_exports, {
   default: () => ConstructorEdit,
   loader: () => loader4
 });
-var import_react41 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
+var import_react39 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
 
 // app/modules/Constructor/index.tsx
-var import_react39 = require("react");
+var import_react37 = require("react");
 
 // app/modules/Constructor/components/SkillInfo.tsx
-var import_react29 = require("react");
+var import_react28 = require("react");
 var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
 function SkillInfo({
-  title = "",
-  actionData,
-  lastAddedSkills = []
+  isEditingSkill,
+  actionData
 }) {
   var _a;
-  let {
-    setBasicInfoReady,
-    currentScreen,
-    skillTitle,
-    skillLineNumber,
-    setSkillTitle,
-    setSkillLineNumber
-  } = useConstructor();
-  return (0, import_react29.useEffect)(() => {
-    setBasicInfoReady(!!skillTitle.length);
+  let { setBasicInfoReady, currentScreen, skillTitle, setSkillTitle } = useConstructor();
+  return (0, import_react28.useEffect)(() => {
+    setBasicInfoReady(Boolean(skillTitle.length));
   }, [skillTitle]), /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(ScreenContainer, { screen: currentScreen, target: "Skill", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("input", { type: "hidden", name: "lineNumber", value: skillLineNumber }, void 0, !1, {
-      fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-      lineNumber: 49,
-      columnNumber: 7
-    }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(Legend, { children: "Skill info" }, void 0, !1, {
       fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-      lineNumber: 50,
+      lineNumber: 24,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgress, { exp: 0, style: { margin: "40px auto 0 auto" } }, void 0, !1, {
       fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-      lineNumber: 51,
+      lineNumber: 25,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
@@ -3757,162 +3804,31 @@ function SkillInfo({
         value: skillTitle,
         onChange: (e) => setSkillTitle(e.target.value),
         required: !0,
-        autoFocus: !0
+        autoFocus: !isEditingSkill && !0
       },
       void 0,
       !1,
       {
         fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-        lineNumber: 52,
+        lineNumber: 26,
         columnNumber: 7
       },
       this
     ),
     ((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(ErrorMessage, { role: "alert", id: "title-error", children: actionData.errors.title }, void 0, !1, {
       fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-      lineNumber: 62,
-      columnNumber: 9
-    }, this),
-    (lastAddedSkills == null ? void 0 : lastAddedSkills.length) > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { style: { width: "100%", maxWidth: "440px", margin: "0 auto" }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("h2", { style: { marginTop: 60 }, children: "Position" }, void 0, !1, {
-        fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-        lineNumber: 69,
-        columnNumber: 11
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonsBlock, { children: [
-        lastAddedSkills.map((skill) => /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonsContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonBlock, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("button", { type: "button", "aria-labelledby": skill.title, children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-            LessonProgress,
-            {
-              exp: skill.currentLesson / skill.stepIDs.length * 100,
-              children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgressInner, {}, void 0, !1, {
-                fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-                lineNumber: 78,
-                columnNumber: 23
-              }, this)
-            },
-            void 0,
-            !1,
-            {
-              fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-              lineNumber: 75,
-              columnNumber: 21
-            },
-            this
-          ),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonTitle, { children: skill.title }, void 0, !1, {
-            fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-            lineNumber: 80,
-            columnNumber: 21
-          }, this)
-        ] }, void 0, !0, {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 74,
-          columnNumber: 19
-        }, this) }, void 0, !1, {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 73,
-          columnNumber: 17
-        }, this) }, skill.id, !1, {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 72,
-          columnNumber: 15
-        }, this)),
-        lastAddedSkills.length < 3 && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonsContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonBlock, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-          "button",
-          {
-            type: "button",
-            "aria-labelledby": "121",
-            onClick: () => setSkillLineNumber(lastAddedSkills[0].lineNumber),
-            children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgress, { exp: 0, style: { fontSize: "39px" }, children: lastAddedSkills[0].lineNumber === skillLineNumber ? /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgressInner, {}, void 0, !1, {
-                fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-                lineNumber: 97,
-                columnNumber: 25
-              }, this) : "+" }, void 0, !1, {
-                fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-                lineNumber: 95,
-                columnNumber: 21
-              }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonTitle, { children: skillTitle.length ? skillTitle : "Skill title" }, void 0, !1, {
-                fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-                lineNumber: 102,
-                columnNumber: 21
-              }, this)
-            ]
-          },
-          void 0,
-          !0,
-          {
-            fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-            lineNumber: 88,
-            columnNumber: 19
-          },
-          this
-        ) }, void 0, !1, {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 87,
-          columnNumber: 17
-        }, this) }, "312dsdf", !1, {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 86,
-          columnNumber: 15
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-        lineNumber: 70,
-        columnNumber: 11
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonBlock, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-        "button",
-        {
-          type: "button",
-          "aria-labelledby": "121",
-          onClick: () => setSkillLineNumber(lastAddedSkills[0].lineNumber + 1),
-          children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgress, { exp: 0, style: { fontSize: "39px" }, children: lastAddedSkills[0].lineNumber + 1 === skillLineNumber ? /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonProgressInner, {}, void 0, !1, {
-              fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-              lineNumber: 120,
-              columnNumber: 19
-            }, this) : "+" }, void 0, !1, {
-              fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-              lineNumber: 118,
-              columnNumber: 15
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(LessonTitle, { children: skillTitle.length ? skillTitle : "Skill title" }, void 0, !1, {
-              fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-              lineNumber: 125,
-              columnNumber: 15
-            }, this)
-          ]
-        },
-        void 0,
-        !0,
-        {
-          fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-          lineNumber: 111,
-          columnNumber: 13
-        },
-        this
-      ) }, void 0, !1, {
-        fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-        lineNumber: 110,
-        columnNumber: 11
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-      lineNumber: 68,
+      lineNumber: 36,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/components/SkillInfo.tsx",
-    lineNumber: 47,
+    lineNumber: 23,
     columnNumber: 5
   }, this);
 }
 
 // app/modules/Constructor/Levels/reducer.ts
-var import_nanoid = require("nanoid"), import_react30 = require("react"), getBasicState = () => {
+var import_nanoid = require("nanoid"), import_react29 = require("react"), getBasicState = () => {
   let lessonId = (0, import_nanoid.nanoid)(), step = createStep(lessonId);
   return {
     lessons: [{ id: lessonId }],
@@ -3925,7 +3841,7 @@ var import_nanoid = require("nanoid"), import_react30 = require("react"), getBas
     skillTitle: "",
     skillLineNumber: 0
   };
-}, createStep = (parentLessonId = "qwerty") => ({
+}, createStep = (parentLessonId) => ({
   id: (0, import_nanoid.nanoid)(),
   answer: "",
   stepType: "",
@@ -3955,19 +3871,25 @@ function constructorReducer(state, action10) {
     case "SET_STEP_TYPE" /* setStepType */: {
       let { stepType, id } = action10.payload, options = {};
       switch (stepType) {
-        case "Question":
+        case "Question": {
           options = { question: "", keywords: [] };
+          break;
+        }
+        case "Variants": {
+          options = { question: "", variants: [] };
+          break;
+        }
       }
       let newSteps = steps.map(
         (step) => step.id === id ? { ...step, stepType, options } : { ...step }
       );
-      return { ...state, steps: [...newSteps] };
+      return console.log({ newSteps }), { ...state, steps: [...newSteps] };
     }
     case "REMOVE_STEP_TYPE" /* removeStepType */: {
       let { id } = action10, newSteps = steps.map((step) => step.id === id ? {
         ...step,
         stepType: "",
-        keywords: [],
+        options: {},
         answer: "",
         ready: !1
       } : { ...step });
@@ -4064,10 +3986,10 @@ function constructorReducer(state, action10) {
   }
 }
 function useConstructorReducer({
-  initialState: initialState4 = basicState2,
+  initialState: initialState3 = basicState2,
   reducer: reducer2 = constructorReducer
 } = {}) {
-  let [state, dispatch] = (0, import_react30.useReducer)(reducer2, initialState4);
+  let [state, dispatch] = (0, import_react29.useReducer)(reducer2, initialState3);
   return {
     ...state,
     setStepType: (stepType, id) => dispatch({ type: "SET_STEP_TYPE" /* setStepType */, payload: { stepType, id } }),
@@ -4131,10 +4053,10 @@ var initialContext = {
 };
 
 // app/modules/Constructor/Levels/index.tsx
-var import_react37 = require("react");
+var import_react35 = require("react");
 
-// app/modules/Constructor/Levels/components/Variants/index.tsx
-var import_react31 = require("react");
+// app/modules/Constructor/Levels/components/Variants/Variants.tsx
+var import_react30 = require("react");
 
 // app/modules/Constructor/Levels/components/MatchingPairs/reducer.ts
 var reducer = (state, action10) => {
@@ -4240,310 +4162,163 @@ var reducer = (state, action10) => {
 };
 
 // app/modules/Constructor/Levels/components/MatchingPairs/actions.ts
-var pairsSetup = (variantsCount, variants, pairs) => ({
-  type: "SETUP",
-  payload: { variantsCount, variants, pairs }
-}), variantsSetup = (variantsCount) => ({
+var variantsSetup = (variantsCount) => ({
   type: "VARIANTS_SETUP",
   payload: { variantsCount }
 }), variantSetValue = (idx, value) => ({
   type: "VARIANT_SET_VALUE",
   payload: { idx, value }
-}), pairsType = (value, idx) => ({
-  type: "TYPE",
-  payload: { value, idx }
-}), pairsChoose = (idx) => ({
-  type: "CHOOSE",
-  payload: {
-    idx
-  }
-}), variantChoose = (idx) => ({
+});
+var variantChoose = (idx) => ({
   type: "VARIANT_CHOOSE",
   payload: { idx }
-}), pairsConnect = (activeIdx, idx) => ({
-  type: "CONNECT",
-  payload: { activeIdx, idx }
 });
 
-// app/modules/Constructor/Levels/components/Variants/index.tsx
+// app/modules/Constructor/Levels/components/Variants/Variants.tsx
 var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), initialState = {
   variantsCount: 3,
   question: "",
   variants: [],
-  number: 0,
+  id: "",
   answer: "",
-  stepType: ""
+  stepType: "",
+  options: {
+    variants: [],
+    question: ""
+  }
 };
 function Variants2({ state = initialState }) {
-  let { number, answer, stepType, variantsCount = 3 } = state, initialQuestion = state.question, initialVariants = state.variants, { setStepReady, setAnswer } = useConstructor(), [{ variants }, dispatch] = (0, import_react31.useReducer)(reducer, {
+  let { id, answer, stepType, variantsCount = 3, options } = state, { question, variants: initialVariants } = options, { setStepReady, setAnswer, setStepOptions } = useConstructor(), [{ variants }, dispatch] = (0, import_react30.useReducer)(reducer, {
     variants: initialVariants,
     pairs: []
-  }), [question, setQuestion] = (0, import_react31.useState)(initialQuestion);
-  return (0, import_react31.useEffect)(() => {
+  });
+  (0, import_react30.useEffect)(() => {
     variants.length === 0 && dispatch(variantsSetup(variantsCount));
-  }, [variantsCount]), (0, import_react31.useEffect)(() => {
+  }, [variantsCount]), (0, import_react30.useEffect)(() => {
     if (variants.filter((variant) => variant.value.length === 0).length)
-      return setStepReady(!1, number);
+      return setStepReady(!1, id);
     if (variants.find(
       (variant) => variant.isFocused || variant.value === answer[0]
     ))
-      setStepReady(!0, number);
+      setStepReady(!0, id), setVariants(variants);
     else
-      return setStepReady(!1, number);
-    question != null && question.length ? setStepReady(!0, number) : setStepReady(!1, number);
-  }, [variants, question]), stepType === "Variants" ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(import_jsx_dev_runtime26.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("input", { type: "hidden", name: `answer${number}`, value: answer }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-      lineNumber: 69,
-      columnNumber: 7
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(LessonTitle2, { children: "Choose right variant" }, void 0, !1, {
-        fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-        lineNumber: 72,
-        columnNumber: 9
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { style: { marginTop: 30 }, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
-          Textarea,
-          {
-            name: `question${number}`,
-            placeholder: "Type question",
-            style: { minHeight: 100, marginBottom: 20 },
-            value: question === null ? "" : question,
-            onChange: (e) => setQuestion(e.target.value),
-            required: !0
-          },
-          void 0,
-          !1,
-          {
-            fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-            lineNumber: 75,
-            columnNumber: 11
-          },
-          this
-        ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(VariantsList, { children: variants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
-          VariantsItem,
-          {
-            style: { marginBottom: 5, width: "100%" },
-            children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("label", { style: { position: "relative" }, children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
-                VariantItemNumber,
-                {
-                  onClick: (e) => {
-                    e.preventDefault(), dispatch(variantChoose(index)), setAnswer(variant.value, number);
-                  },
-                  isFocused: variant.isFocused || variant.value === answer[0],
-                  children: variant.idx
-                },
-                void 0,
-                !1,
-                {
-                  fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-                  lineNumber: 90,
-                  columnNumber: 19
-                },
-                this
-              ),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
-                VariantItemInput,
-                {
-                  type: "text",
-                  name: `variant${number}`,
-                  placeholder: "Type variant",
-                  value: variant.value,
-                  onChange: (e) => {
-                    dispatch(variantSetValue(index, e.target.value)), variant.isFocused && setAnswer(e.target.value, number);
-                  },
-                  required: !0
-                },
-                void 0,
-                !1,
-                {
-                  fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-                  lineNumber: 100,
-                  columnNumber: 19
-                },
-                this
-              )
-            ] }, void 0, !0, {
-              fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-              lineNumber: 89,
-              columnNumber: 17
-            }, this)
-          },
-          variant.idx,
-          !1,
-          {
-            fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-            lineNumber: 85,
-            columnNumber: 15
-          },
-          this
-        )) }, void 0, !1, {
-          fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-          lineNumber: 83,
-          columnNumber: 11
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-        lineNumber: 74,
-        columnNumber: 9
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-      lineNumber: 71,
-      columnNumber: 7
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/modules/Constructor/Levels/components/Variants/index.tsx",
-    lineNumber: 68,
-    columnNumber: 5
-  }, this) : null;
-}
-
-// app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx
-var import_react32 = require("react");
-var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), initialState2 = {
-  variantsCount: 4,
-  initialVariants: [],
-  number: 0,
-  answer: [],
-  stepType: "",
-  options: {}
-};
-function MatchingPairs({ state = initialState2 }) {
-  let {
-    number,
-    answer,
-    stepType,
-    options,
-    variantsCount = 4,
-    initialVariants = []
-  } = state, { setStepReady, setAnswer } = useConstructor(), [{ variants, pairs }, dispatch] = (0, import_react32.useReducer)(reducer, {
-    variants: initialVariants,
-    pairs: []
-  }), isEditing = answer.length;
-  return (0, import_react32.useEffect)(() => {
-    if (isEditing)
-      return dispatch(pairsSetup(answer.length, options.variants, answer));
-    dispatch(pairsSetup(variantsCount, initialVariants, answer));
-  }, []), (0, import_react32.useEffect)(() => {
-    pairs.length === variantsCount / 2 && (setAnswer(pairs, number), setStepReady(!0, number)), pairs.length !== variantsCount / 2 && setStepReady(!1, number);
-  }, [pairs.length, pairs]), stepType === "Pairs" ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_jsx_dev_runtime27.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("fieldset", { style: { maxWidth: 600, margin: "0 auto" }, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("input", { type: "hidden", name: `answer${number}`, value: answer }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-      lineNumber: 63,
+      return setStepReady(!1, id);
+    question.length ? (setStepReady(!0, id), setVariants(variants)) : setStepReady(!1, id);
+  }, [variants, question]);
+  function setQuestion(question2) {
+    return setStepOptions({ ...options, question: question2 });
+  }
+  function setVariants(variants2) {
+    return setStepOptions({ ...options, variants: variants2 });
+  }
+  return stepType === "Variants" ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(import_jsx_dev_runtime26.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(LessonTitle2, { children: "Choose right variant" }, void 0, !1, {
+      fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+      lineNumber: 92,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(LessonTitle2, { children: "Connect pairs" }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-      lineNumber: 65,
-      columnNumber: 9
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { style: { marginTop: 30 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(PairsList, { children: [
-      variants.map((variant) => /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("li", { style: { marginBottom: 5 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("label", { style: { position: "relative" }, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
-          VariantItemNumber,
-          {
-            onClick: (e) => {
-              var _a;
-              e.preventDefault();
-              let activeIdx = (_a = variants.filter(
-                (variantItem) => variantItem.isFocused
-              )[0]) == null ? void 0 : _a.idx;
-              variants.filter(
-                (variantItem) => variantItem.isFocused
-              ).length === 1 || variant.isFocused ? dispatch(pairsConnect(activeIdx, variant.idx)) : dispatch(pairsChoose(variant.idx));
-            },
-            isConnected: variant.isConnected,
-            isFocused: variant.isFocused,
-            children: variant.idx
-          },
-          void 0,
-          !1,
-          {
-            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-            lineNumber: 72,
-            columnNumber: 19
-          },
-          this
-        ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
-          VariantItemInput,
-          {
-            type: "text",
-            name: `variant${number}`,
-            placeholder: "type first variant",
-            value: variant.value,
-            onChange: (e) => dispatch(pairsType(e.target.value, variant.idx)),
-            required: !0
-          },
-          void 0,
-          !1,
-          {
-            fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-            lineNumber: 94,
-            columnNumber: 19
-          },
-          this
-        )
-      ] }, void 0, !0, {
-        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-        lineNumber: 71,
-        columnNumber: 17
-      }, this) }, variant.idx, !1, {
-        fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-        lineNumber: 70,
-        columnNumber: 15
-      }, this)),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
-        LessonButton,
+    /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { style: { marginTop: 30 }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+        Textarea,
         {
-          type: "button",
-          onClick: () => dispatch({ type: "ADD_PAIR" }),
-          active: !0,
-          style: {
-            backgroundColor: "#1cb0f6",
-            borderBottomColor: "#1899d6"
-          },
-          children: "Add pair"
+          placeholder: "Type question",
+          style: { minHeight: 100, marginBottom: 20 },
+          value: question === null ? "" : question,
+          onChange: (e) => setQuestion(e.target.value),
+          required: !0
         },
         void 0,
         !1,
         {
-          fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-          lineNumber: 107,
-          columnNumber: 13
+          fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+          lineNumber: 95,
+          columnNumber: 11
         },
         this
-      )
+      ),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(VariantsList, { children: variants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+        VariantsItem,
+        {
+          style: { marginBottom: 5, width: "100%" },
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("label", { style: { position: "relative" }, children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+              VariantItemNumber,
+              {
+                onClick: (e) => {
+                  e.preventDefault(), dispatch(variantChoose(index)), setAnswer(variant.value, id);
+                },
+                isFocused: variant.isFocused || variant.value === answer[0],
+                children: variant.idx
+              },
+              void 0,
+              !1,
+              {
+                fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+                lineNumber: 110,
+                columnNumber: 19
+              },
+              this
+            ),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+              VariantItemInput,
+              {
+                type: "text",
+                placeholder: "Type variant",
+                value: variant.value,
+                onChange: (e) => {
+                  dispatch(variantSetValue(index, e.target.value)), variant.isFocused && setAnswer(e.target.value, id);
+                },
+                required: !0
+              },
+              void 0,
+              !1,
+              {
+                fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+                lineNumber: 120,
+                columnNumber: 19
+              },
+              this
+            )
+          ] }, void 0, !0, {
+            fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+            lineNumber: 109,
+            columnNumber: 17
+          }, this)
+        },
+        variant.idx,
+        !1,
+        {
+          fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+          lineNumber: 105,
+          columnNumber: 15
+        },
+        this
+      )) }, void 0, !1, {
+        fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+        lineNumber: 103,
+        columnNumber: 11
+      }, this)
     ] }, void 0, !0, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-      lineNumber: 68,
-      columnNumber: 11
-    }, this) }, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-      lineNumber: 67,
+      fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+      lineNumber: 94,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-    lineNumber: 62,
+    fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+    lineNumber: 91,
     columnNumber: 7
   }, this) }, void 0, !1, {
-    fileName: "app/modules/Constructor/Levels/components/MatchingPairs/MatchingPairs.tsx",
-    lineNumber: 61,
+    fileName: "app/modules/Constructor/Levels/components/Variants/Variants.tsx",
+    lineNumber: 88,
     columnNumber: 5
   }, this) : null;
 }
 
-// app/modules/Constructor/Levels/components/MatchingPairs/index.tsx
-var MatchingPairs_default = MatchingPairs;
+// app/modules/Constructor/Levels/components/Variants/index.tsx
+var Variants_default = Variants2;
 
 // app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
-var import_react34 = require("react");
+var import_react32 = require("react");
 
 // app/modules/Constructor/Levels/components/InsertWords/lib.tsx
 var import_styled7 = __toESM(require("@emotion/styled")), WordsList = (0, import_styled7.default)("ul")`
@@ -4565,55 +4340,10 @@ var import_styled7 = __toESM(require("@emotion/styled")), WordsList = (0, import
   &:hover {
     border-color: #1cb0f6;
   }
-`, Button = (0, import_styled7.default)("button")`
-  border: 0 solid transparent;
-  background-color: #1cb0f6;
-  color: #fff;
-  border-color: white;
-  border-width: 0;
-  border-bottom-width: 4px;
-  border-bottom-color: #1899d6;
-  height: 50px;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-family: "Nunito";
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  border-radius: 15px;
-  padding: 0 20px;
-  display: flex;
-  text-decoration: none;
-  justify-content: center;
-  align-items: center;
-  transition: filter 0.2s;
-  margin-right: 10px;
-  &:hover {
-    filter: brightness(1.1);
-  }
-  &:active {
-    border-bottom-width: 0;
-    margin-top: 4px;
-    height: 46px;
-  }
-  &:disabled {
-    background-color: #e5e5e5;
-    color: #afafaf;
-    border: 2px solid #e5e5e5;
-    cursor: default;
-    &:hover {
-      filter: none;
-    }
-  }
-`, SettingsContainer = (0, import_styled7.default)("div")`
-  padding: 30px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
 `;
 
 // app/modules/Constructor/Levels/components/InsertWords/Settings.tsx
-var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime");
 function getWordsOutOfText(text) {
   return text.split(" ").map(
     (word) => cleanWordFromSigns(word).newWord
@@ -4622,9 +4352,6 @@ function getWordsOutOfText(text) {
 function Settings({
   isEditingText,
   setEditingText,
-  setChooseVariants,
-  isChooseVariants,
-  answer,
   setIndexes,
   indexes,
   text
@@ -4641,24 +4368,24 @@ function Settings({
       return isItemInArray(prevIndexes, wordIndex) ? (prevIndexes.splice(prevIndexes.indexOf(wordIndex), 1), [...prevIndexes]) : [...prevIndexes, wordIndex];
     }), setEditingText(!1);
   }
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(SettingsContainer, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(WordsList, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("b", { style: { display: "block", padding: "4px 0" }, children: [
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(SettingsContainer, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(WordsList, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("b", { style: { display: "block", padding: "4px 0", marginBottom: 3 }, children: [
         "Choose words to be hidden:",
         " "
       ] }, void 0, !0, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-        lineNumber: 87,
+        lineNumber: 70,
         columnNumber: 11
       }, this) }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-        lineNumber: 86,
+        lineNumber: 69,
         columnNumber: 9
       }, this),
       words.map((word, wordIndex) => {
         var _a;
         let isActive = !!((_a = indexes.find((index) => index === wordIndex)) != null && _a.toString());
-        return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
+        return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
           WordsItem,
           {
             isActive,
@@ -4669,7 +4396,7 @@ function Settings({
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-            lineNumber: 96,
+            lineNumber: 79,
             columnNumber: 13
           },
           this
@@ -4677,10 +4404,10 @@ function Settings({
       })
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-      lineNumber: 85,
+      lineNumber: 68,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { style: { display: "flex", alignItems: "end", marginTop: "auto" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { style: { display: "flex", alignItems: "end", marginTop: "auto" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
       Button,
       {
         type: "button",
@@ -4692,30 +4419,30 @@ function Settings({
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-        lineNumber: 108,
+        lineNumber: 91,
         columnNumber: 9
       },
       this
     ) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-      lineNumber: 107,
+      lineNumber: 90,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/InsertWords/Settings.tsx",
-    lineNumber: 84,
+    lineNumber: 67,
     columnNumber: 5
   }, this);
 }
 
 // app/modules/Constructor/Levels/components/InsertWords/ChooseMissingWords.tsx
-var import_react33 = require("react");
-var import_jsx_dev_runtime29 = require("react/jsx-dev-runtime");
+var import_react31 = require("react");
+var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime");
 function ChooseMissingWords({ words }) {
-  let [variants, setVariants] = (0, import_react33.useState)(
+  let [variants, setVariants] = (0, import_react31.useState)(
     () => words.length ? [...words] : [""]
   );
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
     "ul",
     {
       style: {
@@ -4725,8 +4452,8 @@ function ChooseMissingWords({ words }) {
         display: words.length > 1 ? "flex" : "block",
         flexWrap: "wrap"
       },
-      children: words.length === 1 ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_jsx_dev_runtime29.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+      children: words.length === 1 ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(import_jsx_dev_runtime28.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
           VariantItem,
           {
             type: "button",
@@ -4747,7 +4474,7 @@ function ChooseMissingWords({ words }) {
           lineNumber: 23,
           columnNumber: 13
         }, this),
-        variants.map((variant, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+        variants.map((variant, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
           VariantItemInput,
           {
             type: "text",
@@ -4768,11 +4495,11 @@ function ChooseMissingWords({ words }) {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/ChooseMissingWords.tsx",
         lineNumber: 22,
         columnNumber: 11
-      }, this) : words.map((word, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+      }, this) : words.map((word, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
         "li",
         {
           style: { position: "relative", marginBottom: 8, marginRight: 16 },
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(VariantItem, { type: "button", isFocused: !1, children: word }, void 0, !1, {
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(VariantItem, { type: "button", isFocused: !1, children: word }, void 0, !1, {
             fileName: "app/modules/Constructor/Levels/components/InsertWords/ChooseMissingWords.tsx",
             lineNumber: 49,
             columnNumber: 15
@@ -4804,29 +4531,29 @@ function ChooseMissingWords({ words }) {
 }
 
 // app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx
-var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime29 = require("react/jsx-dev-runtime");
 function InsertWords2() {
-  let { steps, activeStepId } = useConstructor(), activeStep = steps.find((step) => step.id === activeStepId), { answer, id, stepType, options } = activeStep, defaultIndexes = answer ? JSON.parse(answer) : [], { setStepReady, setAnswer, setStepOptions } = useConstructor(), [isEditingText, setEditingText] = (0, import_react34.useState)(!0), [isChooseVariants, setChooseVariants] = (0, import_react34.useState)(!1), [indexes, setIndexes] = (0, import_react34.useState)(
+  let { steps, activeStepId } = useConstructor(), activeStep = steps.find((step) => step.id === activeStepId), { answer, id, stepType, options } = activeStep, defaultIndexes = answer ? JSON.parse(answer) : [], { setStepReady, setAnswer, setStepOptions } = useConstructor(), [isEditingText, setEditingText] = (0, import_react32.useState)(!0), [isChooseVariants, setChooseVariants] = (0, import_react32.useState)(!1), [indexes, setIndexes] = (0, import_react32.useState)(
     defaultIndexes.map((item) => Number(item))
   ), ref = useFocus();
-  (0, import_react34.useEffect)(() => {
+  (0, import_react32.useEffect)(() => {
     setAnswer(JSON.stringify(indexes), id), setStepReady(!!indexes.length, id);
-  }, [indexes.length]), (0, import_react34.useEffect)(() => {
+  }, [indexes.length]), (0, import_react32.useEffect)(() => {
     options.text && setEditingText(!1), setIndexes((prevIndexes) => prevIndexes.map((prevIndex) => Number(prevIndex)));
   }, []);
   let words = options.text ? options.text.split(" ") : answer.split(" "), filteredWords = words.filter((word, idx) => {
     if (indexes.find((index) => Number(index) === idx))
       return word;
   });
-  return stepType === "Insert" ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react34.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(LessonTitle2, { children: "Add missing words" }, void 0, !1, {
+  return stepType === "Insert" ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react32.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(LessonTitle2, { children: "Add missing words" }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
         lineNumber: 56,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { style: { marginTop: 30 }, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { style: { marginTop: 30 }, children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
           Textarea,
           {
             placeholder: "Type text and choose words which should be hidden",
@@ -4844,7 +4571,7 @@ function InsertWords2() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
           InsertWordsTextBlock,
           {
             isEditingText,
@@ -4852,13 +4579,13 @@ function InsertWords2() {
             children: [
               words.map((item, idx) => {
                 let { newWord, sign } = cleanWordFromSigns(item);
-                return isItemInArray(indexes, idx) ? sign ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react34.Fragment, { children: [
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(InsertWordsInput, { type: "text", length: newWord.length }, void 0, !1, {
+                return isItemInArray(indexes, idx) ? sign ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react32.Fragment, { children: [
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(InsertWordsInput, { type: "text", length: newWord.length }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
                     lineNumber: 85,
                     columnNumber: 23
                   }, this),
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: sign }, void 0, !1, {
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { style: { marginRight: 7 }, children: sign }, void 0, !1, {
                     fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
                     lineNumber: 86,
                     columnNumber: 23
@@ -4867,7 +4594,7 @@ function InsertWords2() {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
                   lineNumber: 84,
                   columnNumber: 21
-                }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+                }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
                   InsertWordsInput,
                   {
                     type: "text",
@@ -4881,13 +4608,13 @@ function InsertWords2() {
                     columnNumber: 19
                   },
                   this
-                ) : /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("span", { style: { marginRight: 7 }, children: item }, idx, !1, {
+                ) : /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { style: { marginRight: 7 }, children: item }, idx, !1, {
                   fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
                   lineNumber: 76,
                   columnNumber: 21
                 }, this);
               }),
-              isChooseVariants && !isEditingText && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ChooseMissingWords, { words: filteredWords }, void 0, !1, {
+              isChooseVariants && !isEditingText && /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(ChooseMissingWords, { words: filteredWords }, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/InsertWords/InsertWords.tsx",
                 lineNumber: 101,
                 columnNumber: 17
@@ -4917,7 +4644,7 @@ function InsertWords2() {
       lineNumber: 54,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
       Settings,
       {
         text: options.text,
@@ -4949,17 +4676,17 @@ function InsertWords2() {
 var InsertWords_default = InsertWords2;
 
 // app/modules/Constructor/Levels/components/Step.tsx
-var import_react35 = __toESM(require("react"));
+var import_react33 = __toESM(require("react"));
 
 // app/constants.ts
-var STEP_TYPES = ["Question", "Insert", "Variants", "Pairs"];
+var STEP_TYPES = ["Question", "Insert", "Variants"];
 
 // app/modules/Constructor/components/CloseBtn.tsx
-var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 function CloseBtn({
   onClickHandler
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(BtnClose, { type: "button", onClick: onClickHandler, children: /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(BtnCloseImage, { src: close_default, alt: "Close" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(BtnClose, { type: "button", onClick: onClickHandler, children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(BtnCloseImage, { src: close_default, alt: "Close" }, void 0, !1, {
     fileName: "app/modules/Constructor/components/CloseBtn.tsx",
     lineNumber: 11,
     columnNumber: 7
@@ -4971,24 +4698,24 @@ function CloseBtn({
 }
 
 // app/modules/Constructor/Levels/components/Step.tsx
-var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime"), Step = ({ data, index, children }) => {
-  let { parentLessonId, stepType, id, number } = data, { activeStepId, removeStepType, setStepType } = useConstructor();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(StepContainer, { className: `${activeStepId !== id && "visuallyHidden"}`, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Legend, { children: stepType || "Choose type" }, void 0, !1, {
+var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Step = ({ data, index, children }) => {
+  let { stepType, id } = data, { activeStepId, removeStepType, setStepType } = useConstructor();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(StepContainer, { className: `${activeStepId !== id && "visuallyHidden"}`, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(Legend, { children: stepType || "Choose type" }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 26,
+      lineNumber: 23,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(StepHeader, { children: stepType !== "" && /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(CloseBtn, { onClickHandler: () => removeStepType(id) }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(StepHeader, { children: stepType !== "" && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(CloseBtn, { onClickHandler: () => removeStepType(id) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 29,
+      lineNumber: 26,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 27,
+      lineNumber: 24,
       columnNumber: 7
     }, this),
-    stepType === "" ? /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(ChooseStyle, { children: STEP_TYPES.map((type, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+    stepType === "" ? /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(ChooseStyle, { children: STEP_TYPES.map((type, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(
       StyleButton,
       {
         type: "button",
@@ -4999,26 +4726,26 @@ var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime"), Step = ({ data,
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-        lineNumber: 38,
+        lineNumber: 34,
         columnNumber: 15
       },
       this
     )) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 36,
+      lineNumber: 32,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 35,
+      lineNumber: 31,
       columnNumber: 9
-    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react35.Fragment, { children: import_react35.default.Children.map(children, (child) => {
+    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(import_react33.Fragment, { children: import_react33.default.Children.map(children, (child) => {
       if (child !== null)
-        return import_react35.default.cloneElement(child, {
+        return import_react33.default.cloneElement(child, {
           state: data
         });
     }) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/Step.tsx",
-      lineNumber: 49,
+      lineNumber: 45,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
@@ -5029,7 +4756,7 @@ var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime"), Step = ({ data,
 }, Step_default = Step;
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
-var import_react36 = require("react");
+var import_react34 = require("react");
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/lib.tsx
 var import_styled8 = __toESM(require("@emotion/styled")), WordsList2 = (0, import_styled8.default)("ul")`
@@ -5054,7 +4781,7 @@ var import_styled8 = __toESM(require("@emotion/styled")), WordsList2 = (0, impor
 `;
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx
-var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 function Settings2({
   options,
   answer
@@ -5068,45 +4795,48 @@ function Settings2({
     return isItemInArray(keywords, word) ? (newKeywords.splice(newKeywords.indexOf(word), 1), setKeywords(newKeywords)) : setKeywords([...newKeywords, word]);
   }
   let isEditing = Boolean(Array.isArray(answer));
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(TextareaLabel, { htmlFor: "keywords", children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(WordsList2, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("b", { style: { display: "block", padding: "4px 0" }, children: "Choose words to be enough for answer:" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(SettingsContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(WordsList2, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("b", { style: { display: "block", padding: "4px 0", marginBottom: 3 }, children: "Choose words to be enough for answer:" }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
-      lineNumber: 46,
+      lineNumber: 37,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
-      lineNumber: 45,
+      lineNumber: 36,
       columnNumber: 9
     }, this),
-    !isEditing && answer.split(" ").map((answerItem, idx) => (answerItem.includes(",") && (answerItem = answerItem.slice(0, -1)), /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
-      WordsItem2,
-      {
-        onClick: () => onWordHandler(answerItem),
-        isActive: isItemInArray(keywords, answerItem),
-        children: answerItem
-      },
-      idx,
-      !1,
-      {
-        fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
-        lineNumber: 57,
-        columnNumber: 15
-      },
-      this
-    )))
+    !isEditing && answer.split(" ").map((answerItem, idx) => {
+      if (answerItem.includes(",") && (answerItem = answerItem.slice(0, -1)), !!answerItem.length)
+        return console.log({ keywords, answerItem }), /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+          WordsItem2,
+          {
+            onClick: () => onWordHandler(answerItem),
+            isActive: isItemInArray(keywords, answerItem),
+            children: answerItem
+          },
+          idx,
+          !1,
+          {
+            fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
+            lineNumber: 52,
+            columnNumber: 15
+          },
+          this
+        );
+    })
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
-    lineNumber: 44,
+    lineNumber: 35,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/Settings.tsx",
-    lineNumber: 37,
+    lineNumber: 34,
     columnNumber: 5
   }, this);
 }
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx
-var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime"), initialState3 = {
+var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime"), initialState2 = {
   answer: "",
   id: "",
   stepType: "",
@@ -5115,26 +4845,25 @@ var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime"), initialState3 =
     keywords: []
   }
 };
-function QuestionAnswer({ state = initialState3 }) {
+function QuestionAnswer2({ state = initialState2 }) {
   let { options, answer, id, stepType } = state, { question } = options, { setStepReady, setStepOptions, setAnswer } = useConstructor();
-  (0, import_react36.useEffect)(() => setStepReady(!!(question && answer), id), [question, answer]);
+  (0, import_react34.useEffect)(() => setStepReady(!!(question && answer), id), [question, answer]);
   function setQuestion(event) {
-    let target = event.target;
-    setStepOptions({ ...options, question: target.value });
+    setStepOptions({ ...options, question: event.target.value });
   }
-  return stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(LessonTitle2, { children: "Answer the question" }, void 0, !1, {
+  return stepType === "Question" ? /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(import_jsx_dev_runtime33.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(StepContent, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("fieldset", { style: { padding: "0 25%" }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(LessonTitle2, { children: "Answer the question" }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-        lineNumber: 65,
+        lineNumber: 50,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
         "div",
         {
           style: { display: "flex", alignItems: "center", margin: "30px 0" },
           children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
               "img",
               {
                 src: duo_default,
@@ -5146,16 +4875,15 @@ function QuestionAnswer({ state = initialState3 }) {
               !1,
               {
                 fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-                lineNumber: 69,
+                lineNumber: 54,
                 columnNumber: 13
               },
               this
             ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { style: { position: "relative" }, children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(LessonQuestion, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { style: { position: "relative" }, children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(LessonQuestion, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
                 Textarea,
                 {
-                  type: "text",
                   placeholder: "Set question",
                   style: {
                     border: "none",
@@ -5174,27 +4902,27 @@ function QuestionAnswer({ state = initialState3 }) {
                 !1,
                 {
                   fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-                  lineNumber: 77,
+                  lineNumber: 62,
                   columnNumber: 17
                 },
                 this
               ) }, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-                lineNumber: 76,
+                lineNumber: 61,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(LessonQuestionTriangleContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(LessonQuestionTriangle, {}, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(LessonQuestionTriangleContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(LessonQuestionTriangle, {}, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-                lineNumber: 109,
+                lineNumber: 79,
                 columnNumber: 17
               }, this) }, void 0, !1, {
                 fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-                lineNumber: 108,
+                lineNumber: 78,
                 columnNumber: 15
               }, this)
             ] }, void 0, !0, {
               fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-              lineNumber: 75,
+              lineNumber: 60,
               columnNumber: 13
             }, this)
           ]
@@ -5203,12 +4931,12 @@ function QuestionAnswer({ state = initialState3 }) {
         !0,
         {
           fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-          lineNumber: 66,
+          lineNumber: 51,
           columnNumber: 11
         },
         this
       ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
         Textarea,
         {
           placeholder: "Type answer",
@@ -5220,60 +4948,55 @@ function QuestionAnswer({ state = initialState3 }) {
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-          lineNumber: 114,
+          lineNumber: 84,
           columnNumber: 11
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-      lineNumber: 64,
+      lineNumber: 49,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-      lineNumber: 63,
+      lineNumber: 48,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Settings2, { answer, options }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(Settings2, { answer, options }, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-      lineNumber: 122,
+      lineNumber: 92,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/QuestionAnswer/QuestionAnswer.tsx",
-    lineNumber: 62,
+    lineNumber: 47,
     columnNumber: 5
   }, this) : null;
 }
 
 // app/modules/Constructor/Levels/components/QuestionAnswer/index.tsx
-var QuestionAnswer_default = QuestionAnswer;
+var QuestionAnswer_default2 = QuestionAnswer2;
 
 // app/modules/Constructor/Levels/index.tsx
-var import_jsx_dev_runtime35 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
 function Levels() {
   let { steps, setStepsReady, currentScreen, activeStepId } = useConstructor();
-  return (0, import_react37.useEffect)(() => {
+  return (0, import_react35.useEffect)(() => {
     setStepsReady(!steps.find((step) => step.ready === !1));
-  }, [steps]), /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(ScreenContainer, { screen: currentScreen, target: "Steps", children: steps.map((data, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Step_default, { data, index: idx, children: [
-    data.stepType === "Question" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(QuestionAnswer_default, {}, void 0, !1, {
+  }, [steps]), /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(ScreenContainer, { screen: currentScreen, target: "Steps", children: steps.map((data, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Step_default, { data, index: idx, children: [
+    data.stepType === "Question" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(QuestionAnswer_default2, {}, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/index.tsx",
       lineNumber: 23,
       columnNumber: 13
     }, this) : null,
-    data.stepType === "Insert" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(InsertWords_default, {}, void 0, !1, {
+    data.stepType === "Insert" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(InsertWords_default, {}, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/index.tsx",
       lineNumber: 26,
       columnNumber: 13
     }, this) : null,
-    data.stepType === "Variants" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Variants2, {}, void 0, !1, {
+    data.stepType === "Variants" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Variants_default, {}, void 0, !1, {
       fileName: "app/modules/Constructor/Levels/index.tsx",
       lineNumber: 29,
-      columnNumber: 13
-    }, this) : null,
-    data.stepType === "Pairs" && data.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(MatchingPairs_default, {}, void 0, !1, {
-      fileName: "app/modules/Constructor/Levels/index.tsx",
-      lineNumber: 32,
       columnNumber: 13
     }, this) : null
   ] }, data.id, !0, {
@@ -5288,8 +5011,8 @@ function Levels() {
 }
 
 // app/modules/Constructor/Levels/components/Sidebar.tsx
-var import_react38 = require("@remix-run/react");
-var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () => {
+var import_react36 = require("@remix-run/react");
+var import_jsx_dev_runtime35 = require("react/jsx-dev-runtime"), Sidebar = () => {
   let {
     steps,
     currentScreen,
@@ -5304,12 +5027,12 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
     removeStep,
     addLesson,
     addStep
-  } = useConstructor(), submitText = (0, import_react38.useTransition)().state === "submitting" ? "Saving" : "Save", isSubmitActive = stepsReady === !0 && basicInfoReady === !0, isSubmitDisabled = stepsReady === !1 || basicInfoReady === !1 || submitText !== "Save", lessonSteps = steps.filter(
+  } = useConstructor(), submitText = (0, import_react36.useFetcher)().state === "submitting" ? "Saving" : "Save", isSubmitActive = stepsReady === !0 && basicInfoReady === !0, isSubmitDisabled = stepsReady === !1 || basicInfoReady === !1 || submitText !== "Save", lessonSteps = steps.filter(
     (step) => step.parentLessonId === activeLessonId
   );
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(ConstructorSidebar, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(SidebarList, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(ConstructorSidebar, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(SidebarList, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
         SidebarBtn,
         {
           type: "button",
@@ -5323,16 +5046,16 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 46,
+          lineNumber: 39,
           columnNumber: 11
         },
         this
       ) }, void 0, !1, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 45,
+        lineNumber: 38,
         columnNumber: 9
       }, this),
-      lessons.map((lesson, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+      lessons.map((lesson, idx) => /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
         SidebarBtn,
         {
           type: "button",
@@ -5349,16 +5072,16 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !0,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 58,
+          lineNumber: 51,
           columnNumber: 13
         },
         this
       ) }, lesson.id, !1, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 57,
+        lineNumber: 50,
         columnNumber: 11
       }, this)),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
         "button",
         {
           type: "button",
@@ -5371,19 +5094,19 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 73,
+          lineNumber: 66,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-      lineNumber: 44,
+      lineNumber: 37,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(SidebarList, { children: [
-      lessonSteps.map((step, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("li", { style: { display: "flex" }, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(SidebarList, { children: [
+      lessonSteps.map((step, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("li", { style: { display: "flex" }, children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
           "button",
           {
             type: "button",
@@ -5402,12 +5125,12 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
           !0,
           {
             fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-            lineNumber: 89,
+            lineNumber: 82,
             columnNumber: 13
           },
           this
         ),
-        lessons.length > 1 && step.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+        lessonSteps.length > 1 && step.id === activeStepId ? /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
           "button",
           {
             type: "button",
@@ -5420,17 +5143,17 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
           !1,
           {
             fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-            lineNumber: 105,
+            lineNumber: 98,
             columnNumber: 15
           },
           this
         ) : null
       ] }, step.id, !0, {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 88,
+        lineNumber: 81,
         columnNumber: 11
       }, this)),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
         "button",
         {
           type: "button",
@@ -5443,17 +5166,17 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
         !1,
         {
           fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-          lineNumber: 116,
+          lineNumber: 109,
           columnNumber: 9
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-      lineNumber: 86,
+      lineNumber: 79,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
       FormButton,
       {
         type: "submit",
@@ -5465,31 +5188,30 @@ var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), Sidebar = () =>
       !1,
       {
         fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-        lineNumber: 129,
+        lineNumber: 122,
         columnNumber: 7
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/modules/Constructor/Levels/components/Sidebar.tsx",
-    lineNumber: 43,
+    lineNumber: 36,
     columnNumber: 5
   }, this);
 }, Sidebar_default = Sidebar;
 
 // app/modules/Constructor/index.tsx
-var import_react40 = require("@remix-run/react"), import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), ConstructorContext = (0, import_react39.createContext)(initialContext);
+var import_react38 = require("@remix-run/react"), import_jsx_dev_runtime36 = require("react/jsx-dev-runtime"), ConstructorContext = (0, import_react37.createContext)(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
 var useConstructor = () => {
-  let state = (0, import_react39.useContext)(ConstructorContext);
+  let state = (0, import_react37.useContext)(ConstructorContext);
   if (state === void 0)
     throw new Error("useConstructor must be used within a <Constructor />");
   return state;
 };
 function Constructor({
   data,
-  actionData,
-  lastAddedSkills
+  actionData
 }) {
   let state = useConstructorReducer(), {
     currentScreen,
@@ -5498,19 +5220,22 @@ function Constructor({
     steps,
     skillTitle,
     skillLineNumber
-  } = state, fetcher = (0, import_react40.useFetcher)();
-  (0, import_react39.useEffect)(() => {
+  } = state, fetcher = (0, import_react38.useFetcher)();
+  (0, import_react37.useEffect)(() => {
     data && setup(data);
-  }, [data]), (0, import_react39.useEffect)(() => {
+  }, [data]), (0, import_react37.useEffect)(() => {
     var _a;
     ((_a = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _a.title) && currentScreen !== "Skill" && changeCurrentScreen("Skill");
   }, [actionData]);
   function onHandleSubmit(e) {
     e.preventDefault();
-    let formattedSteps = steps.map(({ ready, id, options, ...rest }) => ({
-      ...rest,
-      options: JSON.stringify(options)
-    }));
+    let formattedSteps = steps.map(
+      ({ ready, id, options, answer, ...rest }) => ({
+        ...rest,
+        answer: typeof answer == "string" ? answer.trim() : answer,
+        options: JSON.stringify(options)
+      })
+    );
     fetcher.submit(
       {
         steps: JSON.stringify(formattedSteps),
@@ -5519,7 +5244,7 @@ function Constructor({
       { method: "post" }
     );
   }
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(ConstructorContext.Provider, { value: state, children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(ConstructorContext.Provider, { value: state, children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
     fetcher.Form,
     {
       method: "post",
@@ -5532,36 +5257,25 @@ function Constructor({
         height: "calc(100vh - 95px)"
       },
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(ConstructorFormInner, { children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
-            SkillInfo,
-            {
-              title: data == null ? void 0 : data.title,
-              actionData,
-              lastAddedSkills
-            },
-            void 0,
-            !1,
-            {
-              fileName: "app/modules/Constructor/index.tsx",
-              lineNumber: 87,
-              columnNumber: 11
-            },
-            this
-          ),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Levels, {}, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(ConstructorFormInner, { children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(SkillInfo, { isEditingSkill: Boolean(data), actionData }, void 0, !1, {
             fileName: "app/modules/Constructor/index.tsx",
-            lineNumber: 93,
+            lineNumber: 86,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Levels, {}, void 0, !1, {
+            fileName: "app/modules/Constructor/index.tsx",
+            lineNumber: 87,
             columnNumber: 11
           }, this)
         ] }, void 0, !0, {
           fileName: "app/modules/Constructor/index.tsx",
-          lineNumber: 86,
+          lineNumber: 85,
           columnNumber: 9
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Sidebar_default, {}, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Sidebar_default, {}, void 0, !1, {
           fileName: "app/modules/Constructor/index.tsx",
-          lineNumber: 95,
+          lineNumber: 89,
           columnNumber: 9
         }, this)
       ]
@@ -5582,7 +5296,7 @@ function Constructor({
 }
 
 // app/routes/$language/constructor/$skillId.tsx
-var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime"), action4 = async ({ request, params }) => {
+var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime"), action4 = async ({ request, params }) => {
   let form = await request.formData(), activeLanguage = await getActiveLanguage(request);
   if (!activeLanguage)
     throw new Error("Active language is not found in editting the skill");
@@ -5622,23 +5336,12 @@ var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime"), action4 = async
   return (0, import_node5.json)({ data, lastAddedSkills });
 };
 function ConstructorEdit() {
-  let actionData = (0, import_react41.useActionData)(), { data, lastAddedSkills } = (0, import_react41.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(
-    Constructor,
-    {
-      data,
-      lastAddedSkills,
-      actionData
-    },
-    void 0,
-    !1,
-    {
-      fileName: "app/routes/$language/constructor/$skillId.tsx",
-      lineNumber: 109,
-      columnNumber: 5
-    },
-    this
-  );
+  let actionData = (0, import_react39.useActionData)(), { data } = (0, import_react39.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Constructor, { data, actionData }, void 0, !1, {
+    fileName: "app/routes/$language/constructor/$skillId.tsx",
+    lineNumber: 112,
+    columnNumber: 10
+  }, this);
 }
 
 // app/routes/$language/constructor/new.tsx
@@ -5646,20 +5349,22 @@ var new_exports = {};
 __export(new_exports, {
   ErrorBoundary: () => ErrorBoundary4,
   action: () => action5,
-  default: () => New,
-  loader: () => loader5
+  default: () => New
 });
-var import_node6 = require("@remix-run/node"), import_react42 = require("@remix-run/react"), import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
+var import_node6 = require("@remix-run/node"), import_react40 = require("@remix-run/react"), import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
+function getRandomIntFromOneToThree() {
+  return Math.floor(Math.random() * 3 + 1);
+}
 function ErrorBoundary4() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("div", { className: "error-container", children: "There was an error loading the constructor. Sorry." }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("div", { className: "error-container", children: "There was an error loading the constructor. Sorry." }, void 0, !1, {
     fileName: "app/routes/$language/constructor/new.tsx",
-    lineNumber: 24,
+    lineNumber: 30,
     columnNumber: 5
   }, this);
 }
 var action5 = async ({ request, params }) => {
-  let activeLanguage = await getActiveLanguage(request), form = await request.formData(), { ...values } = Object.fromEntries(form), stepsData = JSON.parse(values.steps), skillData = JSON.parse(values.skillData), { skillTitle, skillLineNumber } = skillData, lineNumber = skillLineNumber, lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
-  if (lastAddedSkill && (lineNumber = lineNumber === "0" ? ((lastAddedSkill == null ? void 0 : lastAddedSkill.lineNumber) + 1).toString() : lineNumber), await checkTitleUnique(activeLanguage.id, skillTitle))
+  let activeLanguage = await getActiveLanguage(request), form = await request.formData(), { ...values } = Object.fromEntries(form), stepsData = JSON.parse(values.steps), skillData = JSON.parse(values.skillData), { skillTitle } = skillData, lineNumber = 0, amountData = await getAmountOfSkillsOnTheLastRow(activeLanguage.id);
+  if (amountData && (amountData.count >= getRandomIntFromOneToThree() ? lineNumber = amountData.lastLineNumber + 1 : lineNumber = amountData.lastLineNumber), await checkTitleUnique(activeLanguage.id, skillTitle))
     return (0, import_node6.json)(
       {
         errors: { title: "Title isn't unique" }
@@ -5685,15 +5390,12 @@ var action5 = async ({ request, params }) => {
     lineNumber: Number(lineNumber)
   }, skill = await prisma.skill.create({ data });
   return (0, import_node6.redirect)(`/skill/${skill.title}/1`);
-}, loader5 = async ({ request }) => {
-  let activeLanguage = await getActiveLanguage(request), lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
-  return (0, import_node6.json)({ lastAddedSkills });
 };
 function New() {
-  let actionData = (0, import_react42.useActionData)(), { lastAddedSkills } = (0, import_react42.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(Constructor, { actionData: {} }, void 0, !1, {
+  let actionData = (0, import_react40.useActionData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Constructor, { actionData: {} }, void 0, !1, {
     fileName: "app/routes/$language/constructor/new.tsx",
-    lineNumber: 101,
+    lineNumber: 108,
     columnNumber: 5
   }, this);
 }
@@ -5704,7 +5406,7 @@ __export(skills_exports, {
   ErrorBoundary: () => ErrorBoundary5,
   action: () => action6,
   default: () => SkillsPage,
-  loader: () => loader6
+  loader: () => loader5
 });
 var import_node7 = require("@remix-run/node");
 
@@ -5726,7 +5428,7 @@ var import_styled9 = __toESM(require("@emotion/styled")), ExpProgressBlock = (0,
 `;
 
 // app/modules/Common/components/WeeklyProgress/WeeklyProgress.tsx
-var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime"), DAY_COORDS = [
+var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime"), DAY_COORDS = [
   "0.5",
   "42.166666666666664,0",
   "83.83333333333333,0",
@@ -5759,19 +5461,19 @@ function WeeklyProgress({
     y: maxActivity && activity[day] / EXP_VALUES[4].val * 150,
     exp: activity[day]
   }));
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("div", { style: { position: "relative", display: "flex", flexGrow: "1" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(ExpProgressBlock, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(ExpProgressTitle, { children: "XP Progress" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("div", { style: { position: "relative", display: "flex", flexGrow: "1" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(ExpProgressBlock, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(ExpProgressTitle, { children: "XP Progress" }, void 0, !1, {
       fileName: "app/modules/Common/components/WeeklyProgress/WeeklyProgress.tsx",
       lineNumber: 56,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("svg", { direction: "ltr", height: "220", width: "340", children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("g", { transform: "translate(45, 35)", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("g", {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("svg", { direction: "ltr", height: "220", width: "340", children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("g", { transform: "translate(45, 35)", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("g", {}, void 0, !1, {
         fileName: "app/modules/Common/components/WeeklyProgress/WeeklyProgress.tsx",
         lineNumber: 59,
         columnNumber: 13
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
         "g",
         {
           transform: "translate(0, 150)",
@@ -5779,13 +5481,13 @@ function WeeklyProgress({
           fontSize: "10",
           fontFamily: "sans-serif",
           textAnchor: "middle",
-          children: days.map((day, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+          children: days.map((day, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
             "g",
             {
               className: "tick",
               opacity: "1",
               transform: `translate(${DAY_COORDS[index]})`,
-              children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+              children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
                 "text",
                 {
                   fill: "currentColor",
@@ -5825,7 +5527,7 @@ function WeeklyProgress({
         },
         this
       ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
         "g",
         {
           transform: "",
@@ -5834,7 +5536,7 @@ function WeeklyProgress({
           fontFamily: "sans-serif",
           textAnchor: "end",
           children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
               "path",
               {
                 className: "GNoB0",
@@ -5851,7 +5553,7 @@ function WeeklyProgress({
               },
               this
             ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
               "path",
               {
                 className: "GNoB0",
@@ -5869,7 +5571,7 @@ function WeeklyProgress({
               },
               this
             ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
               "path",
               {
                 className: "QZq6Z",
@@ -5889,14 +5591,14 @@ function WeeklyProgress({
               },
               this
             ),
-            EXP_VALUES.map(({ val, coords }) => /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+            EXP_VALUES.map(({ val, coords }) => /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
               "g",
               {
                 className: "tick",
                 opacity: "1",
                 transform: `translate(${coords})`,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
                     "line",
                     {
                       stroke: "#dedede",
@@ -5913,7 +5615,7 @@ function WeeklyProgress({
                     },
                     this
                   ),
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
                     "text",
                     {
                       fill: "currentColor",
@@ -5955,7 +5657,7 @@ function WeeklyProgress({
         },
         this
       ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("g", { children: dotsData.map(({ x, y, exp }) => /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("g", { children: dotsData.map(({ x, y, exp }) => /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
         "circle",
         {
           className: "_2Hihu",
@@ -5966,7 +5668,7 @@ function WeeklyProgress({
           stroke: "#ffc800",
           strokeWidth: "2",
           style: { transform: "scaleY(-1) translateY(-150px)" },
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("title", { children: [
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("title", { children: [
             exp,
             " XP"
           ] }, void 0, !0, {
@@ -6009,7 +5711,7 @@ function WeeklyProgress({
 }
 
 // app/routes/$language/skills.tsx
-var import_react46 = require("@remix-run/react");
+var import_react44 = require("@remix-run/react");
 
 // app/components/SkillsList.tsx
 var import_nanoid2 = require("nanoid");
@@ -6031,18 +5733,18 @@ var import_styled10 = __toESM(require("@emotion/styled")), FooterLine = (0, impo
 `;
 
 // app/modules/Common/components/Footer/Footer.tsx
-var import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
 function Footer2() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("footer", { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(FooterLine, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("footer", { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(FooterLine, {}, void 0, !1, {
       fileName: "app/modules/Common/components/Footer/Footer.tsx",
       lineNumber: 6,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("div", { style: { paddingBottom: 28 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(FooterText, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("div", { style: { paddingBottom: 28 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(FooterText, { children: [
       "Inspired by",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LinkWithHover, { href: "https://www.duolingo.com", target: "_blank", children: "Duolingo" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(LinkWithHover, { href: "https://www.duolingo.com", target: "_blank", children: "Duolingo" }, void 0, !1, {
         fileName: "app/modules/Common/components/Footer/Footer.tsx",
         lineNumber: 10,
         columnNumber: 11
@@ -6067,15 +5769,15 @@ function Footer2() {
 var Footer_default = Footer2;
 
 // app/components/LessonItem.tsx
-var import_react44 = require("react");
+var import_react42 = require("react");
 
 // app/styles/bin.svg
 var bin_default = "/build/_assets/bin-RYGYRSXA.svg";
 
 // app/hooks/useOnClickOutside.ts
-var import_react43 = require("react");
+var import_react41 = require("react");
 function useOnClickOutside(ref, handler) {
-  (0, import_react43.useEffect)(
+  (0, import_react41.useEffect)(
     () => {
       let listener = (event) => {
         !ref.current || ref.current.contains(event.target) || handler(event);
@@ -6089,7 +5791,7 @@ function useOnClickOutside(ref, handler) {
 }
 
 // app/components/LessonItem.tsx
-var import_react45 = require("@remix-run/react"), import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
+var import_react43 = require("@remix-run/react"), import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
 function LessonItem({
   id,
   title,
@@ -6097,8 +5799,8 @@ function LessonItem({
   lessonsAmount,
   editLink
 }) {
-  let [isOpened, setIsOpened] = (0, import_react44.useState)(!1), transition = (0, import_react45.useTransition)(), ref = (0, import_react44.useRef)(null);
-  (0, import_react44.useEffect)(() => {
+  let [isOpened, setIsOpened] = (0, import_react42.useState)(!1), transition = (0, import_react43.useTransition)(), ref = (0, import_react42.useRef)(null);
+  (0, import_react42.useEffect)(() => {
     transition.state === "loading" && setIsOpened(!1);
   }, [transition.state]), useOnClickOutside(ref, () => setIsOpened(!1));
   let isDisabled = transition.state !== "idle", exp = currentLesson / lessonsAmount * 100, skillLink = `/skill/${title}/${currentLesson / lessonsAmount === 1 ? "practice" : currentLesson + 1}`;
@@ -6106,9 +5808,9 @@ function LessonItem({
     setIsOpened(!isOpened);
   }
   let startButtonMessage = exp < 100 ? "Start +16 XP" : "Practice +16 XP";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonsContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlock, { ref, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("button", { "aria-labelledby": title, onClick: toggleMenu, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonProgress, { exp, children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonProgressInner, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonsContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlock, { ref, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("button", { "aria-labelledby": title, onClick: toggleMenu, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonProgress, { exp, children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonProgressInner, {}, void 0, !1, {
         fileName: "app/components/LessonItem.tsx",
         lineNumber: 60,
         columnNumber: 13
@@ -6117,7 +5819,7 @@ function LessonItem({
         lineNumber: 59,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonTitle, { children: title }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonTitle, { children: title }, void 0, !1, {
         fileName: "app/components/LessonItem.tsx",
         lineNumber: 62,
         columnNumber: 11
@@ -6127,8 +5829,8 @@ function LessonItem({
       lineNumber: 58,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockMenu, { isOpened, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockMenuTriangle, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockMenuTriangleContent, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockMenu, { isOpened, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockMenuTriangle, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockMenuTriangleContent, {}, void 0, !1, {
         fileName: "app/components/LessonItem.tsx",
         lineNumber: 66,
         columnNumber: 13
@@ -6137,20 +5839,20 @@ function LessonItem({
         lineNumber: 65,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockInner, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("div", { style: { display: "flex" }, children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockLink, { to: editLink, children: "Edit" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockInner, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("div", { style: { display: "flex" }, children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockLink, { to: editLink, children: "Edit" }, void 0, !1, {
             fileName: "app/components/LessonItem.tsx",
             lineNumber: 70,
             columnNumber: 15
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(import_react45.Form, { method: "post", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("input", { type: "hidden", name: "id", value: id }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(import_react43.Form, { method: "post", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("input", { type: "hidden", name: "id", value: id }, void 0, !1, {
               fileName: "app/components/LessonItem.tsx",
               lineNumber: 72,
               columnNumber: 17
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(
               LessonBlockButton,
               {
                 type: "submit",
@@ -6158,7 +5860,7 @@ function LessonItem({
                 title: "Delete skill",
                 name: "_action",
                 value: "Delete skill",
-                children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("img", { src: bin_default, alt: "delete", width: 20, height: 20 }, void 0, !1, {
+                children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("img", { src: bin_default, alt: "delete", width: 20, height: 20 }, void 0, !1, {
                   fileName: "app/components/LessonItem.tsx",
                   lineNumber: 80,
                   columnNumber: 19
@@ -6183,7 +5885,7 @@ function LessonItem({
           lineNumber: 69,
           columnNumber: 13
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(LessonBlockLink, { to: skillLink, children: startButtonMessage }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(LessonBlockLink, { to: skillLink, children: startButtonMessage }, void 0, !1, {
           fileName: "app/components/LessonItem.tsx",
           lineNumber: 86,
           columnNumber: 13
@@ -6213,9 +5915,9 @@ function LessonItem({
 var practice_last_added_default = "/build/_assets/practice_last_added-HKEJVFEX.svg";
 
 // app/components/PracticeLastAdded.tsx
-var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
 function PracticeLastAdded() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(PracticeLastAddedContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(PracticeLastAddedWrapper, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(PracticeLastAddedLink, { to: "/practice", title: "Practice", children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(PracticeLastAddedContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(PracticeLastAddedWrapper, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(PracticeLastAddedLink, { to: "/practice", title: "Practice", children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
     "img",
     {
       src: practice_last_added_default,
@@ -6247,7 +5949,7 @@ function PracticeLastAdded() {
 }
 
 // app/components/SkillsList.tsx
-var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime");
 function SkillsList({
   skills,
   languageTitle
@@ -6255,16 +5957,16 @@ function SkillsList({
   let lineNumbers = [
     ...new Set(skills.map((dataItem) => dataItem.lineNumber))
   ];
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SkillsListContainer, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { style: { display: "flex", flexGrow: 1 }, children: [
-      skills.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(PracticeLastAdded, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SkillsListContainer, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("div", { style: { display: "flex", flexGrow: 1 }, children: [
+      skills.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(PracticeLastAdded, {}, void 0, !1, {
         fileName: "app/components/SkillsList.tsx",
         lineNumber: 29,
         columnNumber: 31
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SkillsLineBlock, { children: lineNumbers.map((lineNumber) => /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(LessonsBlock, { children: skills.map((dataItem) => {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SkillsLineBlock, { children: lineNumbers.map((lineNumber) => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(LessonsBlock, { children: skills.map((dataItem) => {
         if (dataItem.lineNumber === lineNumber)
-          return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(
+          return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
             LessonItem,
             {
               ...dataItem,
@@ -6293,7 +5995,7 @@ function SkillsList({
       lineNumber: 28,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(Footer_default, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(Footer_default, {}, void 0, !1, {
       fileName: "app/components/SkillsList.tsx",
       lineNumber: 48,
       columnNumber: 7
@@ -6306,9 +6008,9 @@ function SkillsList({
 }
 
 // app/routes/$language/skills.tsx
-var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime");
 function ErrorBoundary5() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "error-container", children: "Issues during loading Skills route" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "error-container", children: "Issues during loading Skills route" }, void 0, !1, {
     fileName: "app/routes/$language/skills.tsx",
     lineNumber: 13,
     columnNumber: 5
@@ -6322,7 +6024,7 @@ var action6 = async ({ request }) => {
       throw new Error("Skill id wasn't found");
     return await deleteStepsFromSkill(id), await deleteSkillById(id);
   }
-}, loader6 = async ({ request }) => {
+}, loader5 = async ({ request }) => {
   let activeLanguage = await getActiveLanguage(request), user = await getUser(request);
   if (!user)
     return (0, import_node7.redirect)("/login");
@@ -6338,21 +6040,21 @@ var action6 = async ({ request }) => {
   });
 };
 function SkillsPage() {
-  let { skills, activity, languageTitle } = (0, import_react46.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("section", { style: { display: "flex", width: "100%" }, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(SkillsList, { skills, languageTitle }, void 0, !1, {
+  let { skills, activity, languageTitle } = (0, import_react44.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("section", { style: { display: "flex", width: "100%" }, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SkillsList, { skills, languageTitle }, void 0, !1, {
       fileName: "app/routes/$language/skills.tsx",
-      lineNumber: 61,
+      lineNumber: 60,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(WeeklyProgress, { activity }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(WeeklyProgress, { activity }, void 0, !1, {
       fileName: "app/routes/$language/skills.tsx",
-      lineNumber: 62,
+      lineNumber: 61,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/$language/skills.tsx",
-    lineNumber: 60,
+    lineNumber: 59,
     columnNumber: 5
   }, this);
 }
@@ -6363,13 +6065,13 @@ __export(practice_exports2, {
   ErrorBoundary: () => ErrorBoundary6,
   action: () => action7,
   default: () => Practice,
-  loader: () => loader7
+  loader: () => loader6
 });
-var import_node8 = require("@remix-run/node"), import_react47 = require("@remix-run/react");
-var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime");
+var import_node8 = require("@remix-run/node"), import_react45 = require("@remix-run/react");
+var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime");
 function ErrorBoundary6() {
-  let { lessonId } = (0, import_react47.useParams)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "error-container", children: `There was an error loading lesson by the id ${lessonId}. Sorry.` }, void 0, !1, {
+  let { lessonId } = (0, import_react45.useParams)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "error-container", children: `There was an error loading lesson by the id ${lessonId}. Sorry.` }, void 0, !1, {
     fileName: "app/routes/practice.tsx",
     lineNumber: 16,
     columnNumber: 5
@@ -6388,7 +6090,7 @@ var action7 = async ({ request }) => {
       weeklyActivity: { ...newUserActivity }
     }
   }), (0, import_node8.redirect)("/");
-}, loader7 = async ({ request }) => {
+}, loader6 = async ({ request }) => {
   let activeLanguage = await getActiveLanguage(request);
   if (!activeLanguage)
     throw new Error("No active language has found");
@@ -6399,8 +6101,8 @@ var action7 = async ({ request }) => {
   return (0, import_node8.json)({ steps, totalXP });
 };
 function Practice() {
-  let { steps, totalXP } = (0, import_react47.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(Skill, { steps, totalXP }, void 0, !1, {
+  let { steps, totalXP } = (0, import_react45.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Skill, { steps, totalXP }, void 0, !1, {
     fileName: "app/routes/practice.tsx",
     lineNumber: 69,
     columnNumber: 10
@@ -6411,17 +6113,17 @@ function Practice() {
 var logout_exports = {};
 __export(logout_exports, {
   action: () => action8,
-  loader: () => loader8
+  loader: () => loader7
 });
 var import_node9 = require("@remix-run/node");
-var action8 = async ({ request }) => logout(request), loader8 = async () => (0, import_node9.redirect)("/");
+var action8 = async ({ request }) => logout(request), loader7 = async () => (0, import_node9.redirect)("/");
 
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
-  loader: () => loader9
+  loader: () => loader8
 });
-var import_node10 = require("@remix-run/node"), loader9 = async ({ request }) => {
+var import_node10 = require("@remix-run/node"), loader8 = async ({ request }) => {
   var _a;
   if (!await getUser(request))
     return (0, import_node10.redirect)("/login");
@@ -6434,11 +6136,11 @@ var login_exports = {};
 __export(login_exports, {
   action: () => action9,
   default: () => LoginPage,
-  loader: () => loader10,
+  loader: () => loader9,
   meta: () => meta
 });
-var import_node11 = require("@remix-run/node"), import_react48 = require("@remix-run/react");
-var import_react49 = require("react"), import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), action9 = async ({ request }) => {
+var import_node11 = require("@remix-run/node"), import_react46 = require("@remix-run/react");
+var import_react47 = require("react"), import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), action9 = async ({ request }) => {
   let formData = await request.formData(), action10 = formData.get("action"), username = formData.get("username"), password = formData.get("password"), user = await verifyLogin(username, password);
   if (user)
     return createUserSession({
@@ -6448,7 +6150,7 @@ var import_react49 = require("react"), import_jsx_dev_runtime47 = require("react
     });
   if (action10 === "register") {
     let newUser = await createUser(username, password);
-    await createUserSession({
+    return await createUserSession({
       request,
       userId: newUser.id,
       redirectTo: "/"
@@ -6463,25 +6165,25 @@ var import_react49 = require("react"), import_jsx_dev_runtime47 = require("react
   );
 }, meta = () => ({
   title: "Login"
-}), loader10 = async ({ request }) => await getUserId(request) ? (0, import_node11.redirect)("/") : (0, import_node11.json)({});
+}), loader9 = async ({ request }) => await getUserId(request) ? (0, import_node11.redirect)("/") : (0, import_node11.json)({});
 function LoginPage() {
   var _a, _b, _c, _d;
-  let actionData = (0, import_react48.useActionData)(), transition = (0, import_react48.useTransition)(), [isLogin, setIsLogin] = (0, import_react49.useState)(
+  let actionData = (0, import_react46.useActionData)(), transition = (0, import_react46.useTransition)(), [isLogin, setIsLogin] = (0, import_react47.useState)(
     actionData && ((_a = actionData == null ? void 0 : actionData.fields) == null ? void 0 : _a.action) === "login" ? !0 : !actionData
-  ), usernameRef = (0, import_react49.useRef)(null), passwordRef = (0, import_react49.useRef)(null);
-  (0, import_react49.useEffect)(() => {
+  ), usernameRef = (0, import_react47.useRef)(null), passwordRef = (0, import_react47.useRef)(null);
+  (0, import_react47.useEffect)(() => {
     var _a2, _b2, _c2, _d2;
     (_a2 = actionData == null ? void 0 : actionData.errors) != null && _a2.username && ((_b2 = usernameRef.current) == null || _b2.focus()), (_c2 = actionData == null ? void 0 : actionData.errors) != null && _c2.password && ((_d2 = passwordRef.current) == null || _d2.focus());
   }, [actionData]);
   let isLoginning = ((_b = transition.submission) == null ? void 0 : _b.formData.get("action")) === "login", isRegistering = ((_c = transition.submission) == null ? void 0 : _c.formData.get("action")) === "register", submitLoginText = isLoginning ? "Signing in..." : "Sign in", submitRegisterText = isRegistering ? "Signing up..." : "Sign up";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginContinerInner, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react48.Form, { method: "post", style: { width: "100%", maxWidth: 375 }, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginTitle, { children: isLogin ? "Login" : "Register" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginContainer, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginContinerInner, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(import_react46.Form, { method: "post", style: { width: "100%", maxWidth: 375 }, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginTitle, { children: isLogin ? "Login" : "Register" }, void 0, !1, {
       fileName: "app/routes/login.tsx",
       lineNumber: 108,
       columnNumber: 11
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginToggle, { htmlFor: "register", style: { zIndex: isLogin ? 1 : -1 }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginToggle, { htmlFor: "register", style: { zIndex: isLogin ? 1 : -1 }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
         "input",
         {
           type: "radio",
@@ -6507,8 +6209,8 @@ function LoginPage() {
       lineNumber: 109,
       columnNumber: 11
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginToggle, { htmlFor: "login", style: { zIndex: isLogin ? -1 : 1 }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginToggle, { htmlFor: "login", style: { zIndex: isLogin ? -1 : 1 }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
         "input",
         {
           type: "radio",
@@ -6534,8 +6236,8 @@ function LoginPage() {
       lineNumber: 121,
       columnNumber: 11
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { style: { marginTop: 8 }, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { style: { marginTop: 8 }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
         LoginInput,
         {
           type: "text",
@@ -6555,7 +6257,7 @@ function LoginPage() {
         },
         this
       ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
         LoginInput,
         {
           name: "password",
@@ -6574,7 +6276,7 @@ function LoginPage() {
         },
         this
       ),
-      ((_d = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _d.username) && /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(ErrorMessage, { role: "alert", id: "username-error", children: actionData.errors.username }, void 0, !1, {
+      ((_d = actionData == null ? void 0 : actionData.errors) == null ? void 0 : _d.username) && /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(ErrorMessage, { role: "alert", id: "username-error", children: actionData.errors.username }, void 0, !1, {
         fileName: "app/routes/login.tsx",
         lineNumber: 154,
         columnNumber: 15
@@ -6584,7 +6286,7 @@ function LoginPage() {
       lineNumber: 133,
       columnNumber: 11
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { style: { height: 50, marginTop: 20 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(LoginButton, { type: "submit", children: isLogin ? submitLoginText : submitRegisterText }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { style: { height: 50, marginTop: 20 }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(LoginButton, { type: "submit", children: isLogin ? submitLoginText : submitRegisterText }, void 0, !1, {
       fileName: "app/routes/login.tsx",
       lineNumber: 160,
       columnNumber: 13
@@ -6609,7 +6311,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "3fce83dc", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-D7SVKJ2A.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-HNDXXXBG.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-GK6C6BTO.js", imports: ["/build/_shared/chunk-JGWBBJ76.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-MBIGRO4V.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-FNFZNISV.js", imports: ["/build/_shared/chunk-JGWBBJ76.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-MBIGRO4V.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-GAXKGM6C.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-PBFOGQLV.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HNDXXXBG.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-HC3FAYIC.js", imports: ["/build/_shared/chunk-2XAPJ25M.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-MBIGRO4V.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-HNDXXXBG.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-HANKSVWS.js", imports: ["/build/_shared/chunk-2XAPJ25M.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-MBIGRO4V.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-HNDXXXBG.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-4GQNDLSB.js", imports: ["/build/_shared/chunk-2XAPJ25M.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-MBIGRO4V.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-HNDXXXBG.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-3FCE83DC.js" };
+var assets_manifest_default = { version: "39cf2f8c", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2BQOGYW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-LHYDM3RE.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-JDKSB3M4.js", imports: ["/build/_shared/chunk-CH5U3VPX.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-7NO5Y6JS.js", imports: ["/build/_shared/chunk-CH5U3VPX.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-5SUDC67L.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-BLJSELXL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-QRJVIDFD.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-OPX7VL4X.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-INZBGNSA.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-39CF2F8C.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

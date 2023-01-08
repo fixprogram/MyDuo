@@ -50,7 +50,7 @@ const Menu = ({
               <MenuNavLink
                 to={`${link}`}
                 className="nav-link"
-                prefetch="render"
+                prefetch="intent"
               >
                 {({ isActive }) => (
                   <>

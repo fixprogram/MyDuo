@@ -15,14 +15,11 @@ import {
 type StepProps = { data: StepType; index: number };
 
 const Step: React.FC<StepProps> = ({ data, index, children }) => {
-  const { parentLessonId, stepType, id, number } = data;
+  const { stepType, id } = data;
   const { activeStepId, removeStepType, setStepType } = useConstructor();
 
   return (
     <StepContainer className={`${activeStepId !== id && "visuallyHidden"}`}>
-      {/* <input type="hidden" name="stepsAmount" value={index} />
-      <input type="hidden" name={`parentLessonId`} value={parentLessonId} /> */}
-      {/* <input type="hidden" name={`type${number}`} value={stepType} /> */}
       <Legend>{stepType ? stepType : "Choose type"}</Legend>
       <StepHeader>
         {stepType !== "" && (
@@ -30,7 +27,6 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
         )}
       </StepHeader>
 
-      {/* <StepContent> */}
       {stepType === "" ? (
         <StepContent>
           <ChooseStyle>
@@ -47,7 +43,6 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
         </StepContent>
       ) : (
         <Fragment>
-          {/* <StepContent> */}
           {React.Children.map(children, (child) => {
             if (child === null) {
               return;
@@ -56,11 +51,8 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
               state: data,
             });
           })}
-          {/* </StepContent>
-          <h2>Step settings</h2> */}
         </Fragment>
       )}
-      {/* </StepContent> */}
     </StepContainer>
   );
 };

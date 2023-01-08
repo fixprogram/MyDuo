@@ -20,7 +20,6 @@ export const action = async ({ request }: ActionArgs) => {
 
   // Add popup to these funcitonality so the user thinks twice before deleting
   if (_action === "Delete skill") {
-    // console.log("values: ", values);
     const id = values.id as string;
     if (!id) {
       throw new Error("Skill id wasn't found");

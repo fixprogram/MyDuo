@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (action === "register") {
     const newUser = await createUser(username, password);
 
-    await createUserSession({
+    return await createUserSession({
       request,
       userId: newUser.id,
       redirectTo: "/",

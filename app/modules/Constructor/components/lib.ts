@@ -1,17 +1,9 @@
 import styled from "@emotion/styled";
-import { Form } from "@remix-run/react";
 
 type ScreenContainerProps = {
   screen: string;
   target: string;
 };
-
-const ConstructorForm = styled(Form)`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  height: calc(100vh - 95px);
-`;
 
 const ConstructorFormInner = styled("section")`
   max-width: 70%;
@@ -109,16 +101,30 @@ const PairsList = styled("ul")`
   margin: 0 auto;
 `;
 
+const SkillPositionContainer = styled("div")`
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+`;
+
+const SettingsContainer = styled("div")`
+  padding: 30px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
 export {
   LessonTitleInput,
   ConstructorMenu,
   ScreenContainer,
   ConstructorSidebar,
-  ConstructorForm,
   ConstructorFormInner,
   BtnClose,
   BtnCloseImage,
   PairsList,
   VariantsList,
   VariantsItem,
+  SkillPositionContainer,
+  SettingsContainer,
 };

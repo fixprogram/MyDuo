@@ -1,4 +1,4 @@
-import { Lesson } from "@prisma/client";
+import { Step } from "@prisma/client";
 
 export type Action =
   | { type: "START" }
@@ -9,7 +9,7 @@ export type Action =
   | { type: "CHANGE_DISABLED"; payload: { isDisabled: boolean } }
   | {
       type: "SET_CASE";
-      payload: { steps: Lesson[] };
+      payload: { steps: Step[] };
     }
   | { type: "CHANGE_USER_ANSWER"; payload: { newAnswer: string[] } };
 
@@ -21,7 +21,7 @@ const actionCreator = (dispatch: Function) => ({
   showResultsPractice: () => dispatch({ type: "RESULTS" }),
   changeDisabled: (isDisabled: boolean) =>
     dispatch({ type: "CHANGE_DISABLED", payload: { isDisabled } }),
-  setCase: (steps: Lesson[]) =>
+  setCase: (steps: Step[]) =>
     dispatch({ type: "SET_CASE", payload: { steps } }),
   setNewUserAnswer: (newAnswer: string[]) =>
     dispatch({ type: "CHANGE_USER_ANSWER", payload: { newAnswer } }),

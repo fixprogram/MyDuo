@@ -45,7 +45,7 @@ export default function Footer({
       }
       return text;
     }
-    if (stepType === "Question") {
+    if (stepType === "Question" || stepType === "Variants") {
       return answer;
     }
     if (text && answer.length) {

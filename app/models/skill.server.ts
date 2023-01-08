@@ -81,6 +81,26 @@ export async function getLastAddedSkills(languageId: string) {
   });
 }
 
+export async function getAmountOfSkillsOnTheLastRow(languageId: string) {
+  const lastAddedSkill = await prisma.skill.findFirst({
+    where: { languageId },
+    orderBy: { createdAt: "desc" },
+    select: {
+      lineNumber: true,
+    },
+  });
+
+  if (!lastAddedSkill) {
+    return null;
+  }
+
+  const count = await prisma.skill.count({
+    where: { languageId, lineNumber: lastAddedSkill.lineNumber },
+  });
+
+  return { count, lastLineNumber: lastAddedSkill.lineNumber };
+}
+
 export async function deleteSkillById(id: string) {
   return await prisma.skill.delete({ where: { id } });
 }

@@ -26,6 +26,10 @@ type LessonBlockMenuProps = {
   isOpened: boolean;
 };
 
+type LessonProgressInnerProps = {
+  isDisabled?: boolean;
+};
+
 const HorizontalList = styled.ul((props) => ({
   display: "flex",
   alignItems: "center",
@@ -397,7 +401,7 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   position: relative;
 `;
 
-const LessonProgressInner = styled("div")`
+const LessonProgressInner = styled("div")<LessonProgressInnerProps>`
   border-radius: 50%;
   height: 68%;
   left: 50%;
@@ -411,7 +415,7 @@ const LessonProgressInner = styled("div")`
   justify-content: center;
   align-items: center;
   &:hover {
-    opacity: 0.85;
+    opacity: ${(props) => (props.isDisabled ? 1 : 0.85)};
   }
 `;
 
@@ -668,6 +672,7 @@ const PracticeLastAddedWrapper = styled("div")`
   margin-bottom: 54px;
   bottom: 24px;
   background-color: #fff;
+  transition: filter 0.1s ease;
   &:hover {
     filter: brightness(0.9);
   }

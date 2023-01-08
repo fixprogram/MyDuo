@@ -39,6 +39,10 @@ export const action = async ({ request, params }: ActionArgs) => {
         : lineNumber;
   }
 
+  {
+    /* Fix title unique checking */
+  }
+
   // const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
 
   // console.log()
@@ -103,13 +107,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function ConstructorEdit() {
   const actionData = useActionData() as ActionData;
-  const { data, lastAddedSkills } = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
 
-  return (
-    <Constructor
-      data={data}
-      lastAddedSkills={lastAddedSkills}
-      actionData={actionData}
-    />
-  );
+  return <Constructor data={data} actionData={actionData} />;
 }

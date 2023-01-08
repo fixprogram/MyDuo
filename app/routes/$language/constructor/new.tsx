@@ -6,12 +6,18 @@ import { createSteps } from "~/models/lesson.server";
 import {
   checkTitleUnique,
   getLastAddedSkills,
-  getLastAddedSkill,
+  getAmountOfSkillsOnTheLastRow,
 } from "~/models/skill.server";
 import { getTodayDate } from "~/utils";
 import { json, redirect } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
+
+// Temporary function for randomly set an amount of skills in a row.
+// In the future will be changed on functionality of setting position on your own
+function getRandomIntFromOneToThree() {
+  return Math.floor(Math.random() * 3 + 1);
+}
 
 export type ActionData = {
   errors?: {
@@ -34,15 +40,16 @@ export const action = async ({ request, params }: ActionArgs) => {
   const stepsData = JSON.parse(values.steps as string) as Step[];
   const skillData = JSON.parse(values.skillData as string);
 
-  const { skillTitle, skillLineNumber } = skillData;
+  const { skillTitle } = skillData;
 
-  let lineNumber = skillLineNumber;
-  const lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
-  if (lastAddedSkill) {
-    lineNumber =
-      lineNumber === "0"
-        ? (lastAddedSkill?.lineNumber + 1).toString()
-        : lineNumber;
+  let lineNumber = 0;
+  const amountData = await getAmountOfSkillsOnTheLastRow(activeLanguage.id);
+  if (amountData) {
+    if (amountData.count >= getRandomIntFromOneToThree()) {
+      lineNumber = amountData.lastLineNumber + 1;
+    } else {
+      lineNumber = amountData.lastLineNumber;
+    }
   }
 
   const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
@@ -86,16 +93,16 @@ export const action = async ({ request, params }: ActionArgs) => {
   return redirect(`/skill/${skill.title}/1`);
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
+// export const loader = async ({ request }: LoaderArgs) => {
+//   const activeLanguage = (await getActiveLanguage(request)) as Language;
+//   const lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
 
-  return json({ lastAddedSkills });
-};
+//   return json({ lastAddedSkills });
+// };
 
 export default function New() {
   const actionData = useActionData<typeof action>();
-  const { lastAddedSkills } = useLoaderData<typeof loader>();
+  // const { lastAddedSkills } = useLoaderData<typeof loader>();
 
   return (
     <Constructor actionData={{}} />

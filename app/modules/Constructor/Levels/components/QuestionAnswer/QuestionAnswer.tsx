@@ -1,8 +1,6 @@
 import { useEffect } from "react";
-import { LabelText, Textarea, TextareaLabel } from "~/components/lib";
-import { cleanWordFromSigns } from "~/utils";
+import { Textarea } from "~/components/lib";
 import { useConstructor } from "~/modules/Constructor";
-import Keywords from "~/modules/Constructor/components/Keywords";
 import { Step } from "../../types";
 import {
   LessonQuestion,
@@ -18,11 +16,7 @@ const initialState: Omit<
   Step,
   "variants" | "parentLessonId" | "active" | "chapter"
 > = {
-  // const initialState: Omit<Step, "id" | "variants" | "active" | "chapter"> = {
-  // question: "",
   answer: "",
-  // number: 0,
-  // keywords: [""],
   id: "",
   stepType: "",
   options: {
@@ -45,18 +39,9 @@ export default function QuestionAnswer({ state = initialState }) {
     return setStepReady(false, id);
   }, [question, answer]);
 
-  // useEffect(() => {
-  //   setKeywords(keywords ? keywords : []);
-  // }, []);
-
-  function setQuestion(event: React.ChangeEvent<HTMLInputElement>) {
-    const target = event.target as HTMLInputElement;
-    setStepOptions({ ...options, question: target.value });
+  function setQuestion(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setStepOptions({ ...options, question: event.target.value });
   }
-
-  // function setKeywords(keywords: string[]) {
-  //   setStepOptions({ ...options, keywords });
-  // }
 
   return stepType === "Question" ? (
     <>
@@ -75,7 +60,6 @@ export default function QuestionAnswer({ state = initialState }) {
             <div style={{ position: "relative" }}>
               <LessonQuestion>
                 <Textarea
-                  type="text"
                   placeholder="Set question"
                   style={{
                     border: "none",
@@ -87,23 +71,9 @@ export default function QuestionAnswer({ state = initialState }) {
                   }}
                   value={question === null ? "" : question}
                   onChange={setQuestion}
-                  // onChange={(evt) => setQuestion(evt.target.value, id)}
                   autoFocus={true}
                   required
                 />
-                {/* <input
-                type="text"
-                placeholder="Set question"
-                style={{
-                  border: "none",
-                  width: "100%",
-                }}
-                value={question === null ? "" : question}
-                onChange={setQuestion}
-                // onChange={(evt) => setQuestion(evt.target.value, id)}
-                autoFocus={true}
-                required
-              /> */}
               </LessonQuestion>
               <LessonQuestionTriangleContainer>
                 <LessonQuestionTriangle />

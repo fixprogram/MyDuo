@@ -7,7 +7,6 @@ import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
 import { ConstructorData } from "./Levels/types";
 import { useFetcher } from "@remix-run/react";
-import { ConstructorSkillData } from "./types";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -23,9 +22,7 @@ export const useConstructor = () => {
 export default function Constructor({
   data,
   actionData,
-  lastAddedSkills,
 }: {
-  lastAddedSkills?: ConstructorSkillData[];
   data?: ConstructorData;
   actionData: ActionData;
 }) {
@@ -55,10 +52,13 @@ export default function Constructor({
   function onHandleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const formattedSteps = steps.map(({ ready, id, options, ...rest }) => ({
-      ...rest,
-      options: JSON.stringify(options),
-    }));
+    const formattedSteps = steps.map(
+      ({ ready, id, options, answer, ...rest }) => ({
+        ...rest,
+        answer: typeof answer === "string" ? answer.trim() : answer,
+        options: JSON.stringify(options),
+      })
+    );
 
     fetcher.submit(
       {
@@ -82,18 +82,11 @@ export default function Constructor({
           height: "calc(100vh - 95px)",
         }}
       >
-        {/* <ConstructorForm method="post" autoComplete="off"> */}
         <ConstructorFormInner>
-          <SkillInfo
-            title={data?.title}
-            // title={skillTitle}
-            actionData={actionData}
-            lastAddedSkills={lastAddedSkills}
-          />
+          <SkillInfo isEditingSkill={Boolean(data)} actionData={actionData} />
           <Levels />
         </ConstructorFormInner>
         <Sidebar />
-        {/* </ConstructorForm> */}
       </fetcher.Form>
     </ConstructorContext.Provider>
   );

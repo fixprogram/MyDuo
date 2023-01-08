@@ -25,7 +25,7 @@ const getBasicState = (): State => {
   };
 };
 
-const createStep = (parentLessonId = "qwerty"): Step => {
+const createStep = (parentLessonId: string): Step => {
   return {
     id: nanoid(),
     answer: "",
@@ -127,11 +127,17 @@ function constructorReducer(state: State, action: Action): State {
       switch (stepType) {
         case "Question": {
           options = { question: "", keywords: [] };
+          break;
+        }
+        case "Variants": {
+          options = { question: "", variants: [] };
+          break;
         }
       }
       const newSteps = steps.map((step: Step) =>
         step.id === id ? { ...step, stepType: stepType, options } : { ...step }
       );
+      console.log({ newSteps });
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.removeStepType: {
@@ -141,7 +147,7 @@ function constructorReducer(state: State, action: Action): State {
           return {
             ...step,
             stepType: "",
-            keywords: [],
+            options: {},
             answer: "",
             ready: false,
           };
@@ -180,7 +186,6 @@ function constructorReducer(state: State, action: Action): State {
           return {
             ...step,
             answer,
-            // answer: typeof answer === "string" ? answer.trim() : answer,
           };
         }
         return { ...step };

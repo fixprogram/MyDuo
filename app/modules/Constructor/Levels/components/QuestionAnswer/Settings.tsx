@@ -1,6 +1,5 @@
-import { TextareaLabel, LabelText } from "~/components/lib";
 import { useConstructor } from "~/modules/Constructor";
-import Keywords from "~/modules/Constructor/components/Keywords";
+import { SettingsContainer } from "~/modules/Constructor/components/lib";
 import { isItemInArray } from "~/utils";
 import { StepOptions } from "../../types";
 import { WordsItem, WordsList } from "./lib";
@@ -15,8 +14,6 @@ export default function Settings({
   const { setStepOptions } = useConstructor();
 
   const { keywords } = options as { keywords: string[] };
-
-  // console.log({ keywords });
 
   function setKeywords(keywords: string[]) {
     setStepOptions({ ...options, keywords });
@@ -34,16 +31,10 @@ export default function Settings({
   const isEditing = Boolean(Array.isArray(answer));
 
   return (
-    <TextareaLabel htmlFor={`keywords`}>
-      {/* <LabelText>Choose keywords</LabelText> */}
-      {/* <Keywords
-        answer={answer}
-        initialKeywords={keywords}
-        onSet={setKeywords}
-      /> */}
+    <SettingsContainer>
       <WordsList>
         <li>
-          <b style={{ display: "block", padding: "4px 0" }}>
+          <b style={{ display: "block", padding: "4px 0", marginBottom: 3 }}>
             Choose words to be enough for answer:
           </b>
         </li>
@@ -53,18 +44,21 @@ export default function Settings({
             if (answerItem.includes(",")) {
               answerItem = answerItem.slice(0, -1);
             }
+            if (!answerItem.length) {
+              return;
+            }
+            console.log({ keywords, answerItem });
             return (
               <WordsItem
                 key={idx}
                 onClick={() => onWordHandler(answerItem)}
                 isActive={isItemInArray(keywords, answerItem)}
-                //   initiallyActive={!!keywords.find((keyword) => keyword === answerItem)}
               >
                 {answerItem}
               </WordsItem>
             );
           })}
       </WordsList>
-    </TextareaLabel>
+    </SettingsContainer>
   );
 }

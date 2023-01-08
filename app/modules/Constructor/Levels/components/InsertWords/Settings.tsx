@@ -1,6 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
+import { SettingsContainer } from "~/modules/Constructor/components/lib";
 import { cleanWordFromSigns, isItemInArray } from "~/utils";
-import { SettingsContainer, Button, WordsItem, WordsList } from "./lib";
+import { Button } from "../lib";
+import { WordsItem, WordsList } from "./lib";
 
 type BackendProps = {
   isEditingText: boolean;
@@ -24,30 +26,11 @@ function getWordsOutOfText(text: string) {
 export default function Settings({
   isEditingText,
   setEditingText,
-  setChooseVariants,
-  isChooseVariants,
-  answer,
   setIndexes,
   indexes,
   text,
 }: BackendProps) {
   const words: string[] = text ? getWordsOutOfText(text) : [];
-  // if (text) {
-  //   text.split(" ").forEach((textItem) => {
-  //     words.push(doesItemContainSign(textItem).newItem);
-  //   });
-  // }
-  // if(answer) {
-  //   JSON.parse(answer).forEach(answerItem => {
-  //     words.push(answerItem)
-  //   })
-  // }
-
-  // ? text.split(" ")
-  // : JSON.parse(answer ? answer : "[]");
-  // const words: string[] = text
-  //   ? text.split(" ")
-  //   : JSON.parse(answer ? answer : "[]");
 
   //  ---------
   //  Filter words from dots, commas etc
@@ -84,7 +67,7 @@ export default function Settings({
     <SettingsContainer>
       <WordsList>
         <li>
-          <b style={{ display: "block", padding: "4px 0" }}>
+          <b style={{ display: "block", padding: "4px 0", marginBottom: 3 }}>
             Choose words to be hidden:{" "}
           </b>
         </li>

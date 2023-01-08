@@ -28,9 +28,11 @@ export default function Levels() {
           {data.stepType === "Variants" && data.id === activeStepId ? (
             <Variants />
           ) : null}
-          {data.stepType === "Pairs" && data.id === activeStepId ? (
+
+          {/* Let's fix Pairs and show it in the next release */}
+          {/* {data.stepType === "Pairs" && data.id === activeStepId ? (
             <MatchingPairs />
-          ) : null}
+          ) : null} */}
 
           {/* {
             const activeStep = ...

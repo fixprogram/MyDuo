@@ -1,4 +1,4 @@
-import { useTransition } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { FormButton } from "~/components/lib";
 import { useConstructor } from "../..";
 import { ConstructorSidebar } from "../../components/lib";
@@ -21,8 +21,8 @@ const Sidebar = () => {
     addStep,
   } = useConstructor();
 
-  const transition = useTransition();
-  const submitText = transition.state === "submitting" ? "Saving" : "Save";
+  const fetcher = useFetcher();
+  const submitText = fetcher.state === "submitting" ? "Saving" : "Save";
 
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled =
@@ -31,13 +31,6 @@ const Sidebar = () => {
   const lessonSteps = steps.filter(
     (step) => step.parentLessonId === activeLessonId
   );
-
-  // const uniqueLessons: string[] = [];
-  // steps.forEach((step) => {
-  //   if (uniqueLessons.indexOf(step.parentLessonId) === -1) {
-  //     uniqueLessons.push(step.parentLessonId);
-  //   }
-  // });
 
   return (
     <ConstructorSidebar>
@@ -101,7 +94,7 @@ const Sidebar = () => {
             >
               Step {index + 1}
             </button>
-            {lessons.length > 1 && step.id === activeStepId ? (
+            {lessonSteps.length > 1 && step.id === activeStepId ? (
               <button
                 type="button"
                 onClick={() => {

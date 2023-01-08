@@ -1,15 +1,21 @@
+import { Variant } from "~/modules/Constructor/Levels/components/MatchingPairs/reducer";
 import VariantsScreen from "~/modules/Constructor/Levels/components/Variants/VariantsScreen";
 import { useSkill } from "..";
 import { Lesson } from "./Lesson";
 
 export default function VariantsPractice() {
   const { content, setStateRight, setStateWrong } = useSkill();
-  const { question, variants, stepType } = content;
+  const { options, stepType, answer } = content;
+  const { question, variants } = options as {
+    question: string;
+    variants: Variant[];
+  };
 
-  const lessonQuestion = question as string;
+  const lessonQuestion = question;
 
   const checkAnswer = (userAnswer: string) => {
-    if (userAnswer === content.answer[0]) {
+    console.log({ answer, userAnswer });
+    if (userAnswer === answer) {
       return setStateRight();
     }
     return setStateWrong();
