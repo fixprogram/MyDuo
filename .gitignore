@@ -1,8 +1,8 @@
 node_modules
+api/_build
 
 /.cache
 /build
 /public/build
 .env
 .vercel
-/api/_build
