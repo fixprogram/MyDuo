@@ -36,6 +36,9 @@ const Sidebar = () => {
 
   return (
     <ConstructorSidebar>
+      <button type="button" onClick={() => console.log("Click!")}>
+        Click me
+      </button>
       <SidebarList>
         <li>
           <SidebarBtn
