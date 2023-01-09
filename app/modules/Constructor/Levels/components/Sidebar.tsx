@@ -32,6 +32,8 @@ const Sidebar = () => {
     (step) => step.parentLessonId === activeLessonId
   );
 
+  console.log("Initial render: ", { setLessonActive, setStepActive });
+
   return (
     <ConstructorSidebar>
       <SidebarList>
@@ -51,6 +53,7 @@ const Sidebar = () => {
             <SidebarBtn
               type="button"
               onClick={() => {
+                console.log("On lesson click: ", { setLessonActive, lesson });
                 changeCurrentScreen("Steps");
                 setLessonActive(lesson.id);
               }}
@@ -66,6 +69,7 @@ const Sidebar = () => {
         <button
           type="button"
           onClick={() => {
+            console.log("On add Lesson: ", { changeCurrentScreen, addLesson });
             if (currentScreen !== "Steps") {
               changeCurrentScreen("Steps");
             }
