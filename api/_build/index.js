@@ -5347,7 +5347,8 @@ var new_exports = {};
 __export(new_exports, {
   ErrorBoundary: () => ErrorBoundary4,
   action: () => action5,
-  default: () => New
+  default: () => New,
+  loader: () => loader5
 });
 var import_node6 = require("@remix-run/node"), import_react40 = require("@remix-run/react"), import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
 function getRandomIntFromOneToThree() {
@@ -5388,9 +5389,12 @@ var action5 = async ({ request, params }) => {
     lineNumber: Number(lineNumber)
   }, skill = await prisma.skill.create({ data });
   return (0, import_node6.redirect)(`/skill/${skill.title}/1`);
+}, loader5 = async ({ request }) => {
+  let activeLanguage = await getActiveLanguage(request), lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
+  return (0, import_node6.json)({ lastAddedSkills });
 };
 function New() {
-  let actionData = (0, import_react40.useActionData)();
+  let actionData = (0, import_react40.useActionData)(), { lastAddedSkills } = (0, import_react40.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Constructor, { actionData: {} }, void 0, !1, {
     fileName: "app/routes/$language/constructor/new.tsx",
     lineNumber: 108,
@@ -5404,7 +5408,7 @@ __export(skills_exports, {
   ErrorBoundary: () => ErrorBoundary5,
   action: () => action6,
   default: () => SkillsPage,
-  loader: () => loader5
+  loader: () => loader6
 });
 var import_node7 = require("@remix-run/node");
 
@@ -6022,7 +6026,7 @@ var action6 = async ({ request }) => {
       throw new Error("Skill id wasn't found");
     return await deleteStepsFromSkill(id), await deleteSkillById(id);
   }
-}, loader5 = async ({ request }) => {
+}, loader6 = async ({ request }) => {
   let activeLanguage = await getActiveLanguage(request), user = await getUser(request);
   if (!user)
     return (0, import_node7.redirect)("/login");
@@ -6063,7 +6067,7 @@ __export(practice_exports2, {
   ErrorBoundary: () => ErrorBoundary6,
   action: () => action7,
   default: () => Practice,
-  loader: () => loader6
+  loader: () => loader7
 });
 var import_node8 = require("@remix-run/node"), import_react45 = require("@remix-run/react");
 var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime");
@@ -6088,7 +6092,7 @@ var action7 = async ({ request }) => {
       weeklyActivity: { ...newUserActivity }
     }
   }), (0, import_node8.redirect)("/");
-}, loader6 = async ({ request }) => {
+}, loader7 = async ({ request }) => {
   let activeLanguage = await getActiveLanguage(request);
   if (!activeLanguage)
     throw new Error("No active language has found");
@@ -6111,17 +6115,17 @@ function Practice() {
 var logout_exports = {};
 __export(logout_exports, {
   action: () => action8,
-  loader: () => loader7
+  loader: () => loader8
 });
 var import_node9 = require("@remix-run/node");
-var action8 = async ({ request }) => logout(request), loader7 = async () => (0, import_node9.redirect)("/");
+var action8 = async ({ request }) => logout(request), loader8 = async () => (0, import_node9.redirect)("/");
 
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
-  loader: () => loader8
+  loader: () => loader9
 });
-var import_node10 = require("@remix-run/node"), loader8 = async ({ request }) => {
+var import_node10 = require("@remix-run/node"), loader9 = async ({ request }) => {
   var _a;
   if (!await getUser(request))
     return (0, import_node10.redirect)("/login");
@@ -6134,7 +6138,7 @@ var login_exports = {};
 __export(login_exports, {
   action: () => action9,
   default: () => LoginPage,
-  loader: () => loader9,
+  loader: () => loader10,
   meta: () => meta
 });
 var import_node11 = require("@remix-run/node"), import_react46 = require("@remix-run/react");
@@ -6163,7 +6167,7 @@ var import_react47 = require("react"), import_jsx_dev_runtime46 = require("react
   );
 }, meta = () => ({
   title: "Login"
-}), loader9 = async ({ request }) => await getUserId(request) ? (0, import_node11.redirect)("/") : (0, import_node11.json)({});
+}), loader10 = async ({ request }) => await getUserId(request) ? (0, import_node11.redirect)("/") : (0, import_node11.json)({});
 function LoginPage() {
   var _a, _b, _c, _d;
   let actionData = (0, import_react46.useActionData)(), transition = (0, import_react46.useTransition)(), [isLogin, setIsLogin] = (0, import_react47.useState)(
@@ -6309,7 +6313,7 @@ function LoginPage() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "44322178", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-U322HWBF.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-TOVCD6O5.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-SDV3726X.js", imports: ["/build/_shared/chunk-A5PMTVXH.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-3L235VVZ.js", imports: ["/build/_shared/chunk-A5PMTVXH.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-5SUDC67L.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-BLJSELXL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-QRJVIDFD.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-OPX7VL4X.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-INZBGNSA.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-44322178.js" };
+var assets_manifest_default = { version: "249ba4d4", entry: { module: "/build/entry.client-K6CGFP7E.js", imports: ["/build/_shared/chunk-JVI2X3JW.js", "/build/_shared/chunk-5KL4PAQL.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-U322HWBF.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language": { id: "routes/$language", parentId: "root", path: ":language", index: void 0, caseSensitive: void 0, module: "/build/routes/$language-TOVCD6O5.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/$language/constructor/$skillId": { id: "routes/$language/constructor/$skillId", parentId: "routes/$language", path: "constructor/:skillId", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/$skillId-SDV3726X.js", imports: ["/build/_shared/chunk-A5PMTVXH.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/$language/constructor/new": { id: "routes/$language/constructor/new", parentId: "routes/$language", path: "constructor/new", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/constructor/new-DHEAXB4A.js", imports: ["/build/_shared/chunk-A5PMTVXH.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/$language/skills": { id: "routes/$language/skills", parentId: "routes/$language", path: "skills", index: void 0, caseSensitive: void 0, module: "/build/routes/$language/skills-5SUDC67L.js", imports: ["/build/_shared/chunk-DCURUL57.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-IBPJR7UM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-BLJSELXL.js", imports: ["/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-DOMDNNGV.js", imports: void 0, hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/practice": { id: "routes/practice", parentId: "root", path: "practice", index: void 0, caseSensitive: void 0, module: "/build/routes/practice-QRJVIDFD.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-WOBLJIZQ.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-GLWAIFE6.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/$lesson": { id: "routes/skill/$title/$lesson", parentId: "root", path: "skill/:title/:lesson", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/$lesson-OPX7VL4X.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/skill/$title/practice": { id: "routes/skill/$title/practice", parentId: "root", path: "skill/:title/practice", index: void 0, caseSensitive: void 0, module: "/build/routes/skill/$title/practice-INZBGNSA.js", imports: ["/build/_shared/chunk-GPOYFIFR.js", "/build/_shared/chunk-M2ND3YFM.js", "/build/_shared/chunk-Q72OY2FZ.js", "/build/_shared/chunk-727OU6UJ.js", "/build/_shared/chunk-HS3CV63H.js", "/build/_shared/chunk-7BU3RBR5.js", "/build/_shared/chunk-BGW22GDJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 } }, url: "/build/manifest-249BA4D4.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
