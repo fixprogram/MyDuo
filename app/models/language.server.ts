@@ -6,7 +6,7 @@ export type { Language } from "@prisma/client";
 
 export async function createInitialLanguage(userId: string) {
   return await prisma.language.create({
-    data: { userId, active: true, title: "My First Language" },
+    data: { userId, active: true, title: "MyFirstLanguage" },
   });
 }
 
