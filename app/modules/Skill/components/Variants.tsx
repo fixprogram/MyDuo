@@ -14,7 +14,6 @@ export default function VariantsPractice() {
   const lessonQuestion = question;
 
   const checkAnswer = (userAnswer: string) => {
-    console.log({ answer, userAnswer });
     if (userAnswer === answer) {
       return setStateRight();
     }

@@ -13,6 +13,9 @@ import { getLastActivity, updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
 import { getTodayDate } from "~/utils";
+import Navigation from "~/components/Navigation";
+import { PHONE_MEDIA_MAX } from "~/constants";
+import useMediaQuery from "~/hooks/useMediaQuery";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -85,6 +88,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function LanguagePage() {
   const { userData, languages } = useLoaderData<typeof loader>();
   const [isOverlay, setIsOverlay] = useState(false);
+
+  const matches = useMediaQuery(`(max-width: ${PHONE_MEDIA_MAX}px)`);
+
   return (
     <>
       <Menu
@@ -95,6 +101,8 @@ export default function LanguagePage() {
       <Main>
         <Outlet />
       </Main>
+
+      {matches ? <Navigation /> : null}
       <Overlay active={isOverlay} />
     </>
   );

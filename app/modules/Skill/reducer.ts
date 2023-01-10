@@ -6,8 +6,6 @@ const continueContent = (
   content: PracticeStepType,
   lessonSteps: PracticeStepType[]
 ) => {
-  console.log("Continuing: ", lessonSteps);
-
   const newContent = lessonSteps.shift();
   if (!newContent) {
     return content;

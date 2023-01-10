@@ -35,7 +35,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   // const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
 
-  // console.log()
   // if (isTitleUnique) {
   //   return json<ActionData>(
   //     {

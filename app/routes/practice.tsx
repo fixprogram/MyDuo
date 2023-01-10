@@ -52,8 +52,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const steps = await getStepsForPracticing(activeLanguage.id);
 
-  console.log("Steps: ", steps);
-
   if (steps.length === 0) {
     throw new Error("Steps for practicing are not found");
   }

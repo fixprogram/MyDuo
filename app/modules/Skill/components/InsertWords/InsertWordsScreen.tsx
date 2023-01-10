@@ -33,7 +33,6 @@ export default function InsertWordsScreen({
   );
 
   const [values, setValues] = useState(initalValues);
-  // console.log("Valuessss: ", values);
 
   useEffect(() => {
     if (areArraysEqual(userAnswer, values) && !isToChoose) {
@@ -60,7 +59,6 @@ export default function InsertWordsScreen({
     // if (skillState.formDisabled) {
     //   return;
     // }
-    // console.log("Wow");
     setValues(initalValues);
     // }, [difficulty, skillState.formDisabled]);
   }, [difficulty]);

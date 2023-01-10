@@ -47,7 +47,6 @@ export default function Settings({
             if (!answerItem.length) {
               return;
             }
-            console.log({ keywords, answerItem });
             return (
               <WordsItem
                 key={idx}

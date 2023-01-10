@@ -7,6 +7,7 @@ import Sidebar from "./Levels/components/Sidebar";
 import { ActionData } from "~/routes/$language/constructor/new";
 import { ConstructorData } from "./Levels/types";
 import { useFetcher } from "@remix-run/react";
+import { ConstructorContainer } from "./Levels/components/lib";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -72,23 +73,26 @@ export default function Constructor({
 
   return (
     <ConstructorContext.Provider value={state}>
-      <fetcher.Form
-        method="post"
-        autoComplete="off"
-        onSubmit={(e) => onHandleSubmit(e)}
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          height: "calc(100vh - 95px)",
-        }}
-      >
-        <ConstructorFormInner>
-          <SkillInfo isEditingSkill={Boolean(data)} actionData={actionData} />
-          <Levels />
-        </ConstructorFormInner>
-        <Sidebar />
-      </fetcher.Form>
+      <ConstructorContainer>
+        <fetcher.Form
+          method="post"
+          autoComplete="off"
+          onSubmit={(e) => onHandleSubmit(e)}
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            height: "100%",
+            flexWrap: "wrap",
+          }}
+        >
+          <ConstructorFormInner>
+            <SkillInfo isEditingSkill={Boolean(data)} actionData={actionData} />
+            <Levels />
+          </ConstructorFormInner>
+          <Sidebar />
+        </fetcher.Form>
+      </ConstructorContainer>
     </ConstructorContext.Provider>
   );
 }

@@ -61,8 +61,6 @@ export default function Text({ values, setValues }: TextProps) {
     });
   };
 
-  // console.log("Values: ", values);
-
   return (
     <section>
       {text?.split(" ").map((textItem: string, textItemIndex: number) => {

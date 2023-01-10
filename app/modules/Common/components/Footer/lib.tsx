@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { PHONE_MEDIA_MAX } from "~/constants";
 
 const FooterLine = styled("hr")`
   border: 0;
@@ -19,4 +20,10 @@ const LinkWithHover = styled("a")`
   }
 `;
 
-export { FooterLine, FooterText, LinkWithHover };
+const MainFooter = styled("footer")`
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    display: none;
+  }
+`;
+
+export { FooterLine, FooterText, LinkWithHover, MainFooter };

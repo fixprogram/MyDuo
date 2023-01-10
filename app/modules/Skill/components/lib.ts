@@ -3,6 +3,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Form } from "@remix-run/react";
+import { TABLET_MEDIA_MAX } from "~/constants";
 import RightIcon from "~/styles/right.svg";
 import WrongIcon from "~/styles/wrong.svg";
 
@@ -43,6 +44,10 @@ const LessonFooter = styled("section")<LessonFooterProps>`
     status === "right" ? "#d7ffb8" : status === "wrong" ? "#ffdfe0" : "#fff"};
   color: ${({ status }) =>
     status === "right" ? "#58a700" : status === "wrong" ? "#ea2b2b" : "#fff"};
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    padding: 0 10px;
+  }
 `;
 
 const LessonFooterInner = styled("div")`
@@ -165,6 +170,9 @@ const LessonBody = styled("div")`
   max-height: calc(100% - 240px);
   animation-name: ${LessonAppear};
   animation-duration: 0.2s;
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    margin: 72px 18% 4%;
+  }
 `;
 
 const LessonBodyTitle = styled("h3")`
@@ -257,8 +265,8 @@ const VariantItem = styled("button")<VariantItemProps>`
   }
 `;
 
-const LessonTitle = styled("h1")`
-  font-size: 30px;
+const LessonTitle = styled("h2")`
+  font-size: 1.5em;
   font-family: "Nunito", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
@@ -398,6 +406,25 @@ const PairsItem = styled("li")`
   width: 48%;
 `;
 
+const LessonDuolingoPicture = styled("img")`
+  max-height: 150px;
+  margin-bottom: -50px;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    max-height: 100px;
+  }
+`;
+
+const LessonAnswerWrapper = styled("div")`
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    margin-bottom: 0;
+  }
+`;
+
 export {
   LessonContainer,
   LessonFooter,
@@ -427,4 +454,6 @@ export {
   ChangeDifficultyBtn,
   PairsList,
   PairsItem,
+  LessonDuolingoPicture,
+  LessonAnswerWrapper,
 };

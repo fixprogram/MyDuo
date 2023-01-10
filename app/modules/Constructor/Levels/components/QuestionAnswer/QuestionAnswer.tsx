@@ -3,6 +3,8 @@ import { Textarea } from "~/components/lib";
 import { useConstructor } from "~/modules/Constructor";
 import { Step } from "../../types";
 import {
+  LessonAnswerWrapper,
+  LessonDuolingoPicture,
   LessonQuestion,
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
@@ -48,15 +50,8 @@ export default function QuestionAnswer({ state = initialState }) {
       <StepContent>
         <fieldset style={{ padding: "0 25%" }}>
           <LessonTitle>Answer the question</LessonTitle>
-          <div
-            style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
-          >
-            <img
-              src={Duo}
-              alt="Duo"
-              height={150}
-              style={{ marginBottom: -50 }}
-            />
+          <LessonAnswerWrapper>
+            <LessonDuolingoPicture src={Duo} alt="Duolingo picture" />
             <div style={{ position: "relative" }}>
               <LessonQuestion>
                 <Textarea
@@ -79,7 +74,7 @@ export default function QuestionAnswer({ state = initialState }) {
                 <LessonQuestionTriangle />
               </LessonQuestionTriangleContainer>
             </div>
-          </div>
+          </LessonAnswerWrapper>
 
           <Textarea
             placeholder="Type answer"

@@ -21,7 +21,6 @@ export default function Puzzle({ values, setValues }: PuzzleProps) {
           return { item, idx };
         }
       });
-      // console.log("Empty: ", empty);
       const inx = prevArray.indexOf(empty as string);
       if (inx.toString() && inx !== -1) {
         const newArr = prevArray;

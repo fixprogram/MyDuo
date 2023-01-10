@@ -110,8 +110,6 @@ function constructorReducer(state: State, action: Action): State {
         }
       });
 
-      // console.log("Unique lessons: ", uniqueLessons);
-
       return {
         ...state,
         steps,
@@ -137,7 +135,6 @@ function constructorReducer(state: State, action: Action): State {
       const newSteps = steps.map((step: Step) =>
         step.id === id ? { ...step, stepType: stepType, options } : { ...step }
       );
-      console.log({ newSteps });
       return { ...state, steps: [...newSteps] };
     }
     case actionTypes.removeStepType: {

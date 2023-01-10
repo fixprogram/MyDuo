@@ -36,14 +36,10 @@ export default function MatchingPairs({ state = initialState }) {
 
   useEffect(() => {
     if (isEditing) {
-      // return console.log("123");
       return dispatch(pairsSetup(answer.length, options.variants, answer));
-      // return dispatch(pairsSetup(answer.length, state.variants, answer));
     }
     dispatch(pairsSetup(variantsCount, initialVariants, answer as string[]));
   }, []);
-
-  // console.log("State: ", state);
 
   useEffect(() => {
     if (pairs.length === variantsCount / 2) {
@@ -54,8 +50,6 @@ export default function MatchingPairs({ state = initialState }) {
       setStepReady(false, number);
     }
   }, [pairs.length, pairs]);
-
-  // console.log("Variants: ", variants);
 
   return stepType === "Pairs" ? (
     <>

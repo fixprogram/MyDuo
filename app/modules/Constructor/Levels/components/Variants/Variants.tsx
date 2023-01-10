@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from "react";
 import { Textarea } from "~/components/lib";
-import { VariantItemInput, VariantItemNumber } from "../lib";
+import { StepInner, VariantItemInput, VariantItemNumber } from "../lib";
 import { reducer, Variant } from "../MatchingPairs/reducer";
 import {
   variantChoose,
@@ -88,7 +88,8 @@ export default function Variants({ state = initialState }) {
     <>
       {/* <input type="hidden" name={`answer${id}`} value={answer} /> */}
 
-      <fieldset style={{ padding: "0 25%" }}>
+      {/* <fieldset style={{ padding: "0 25%" }}> */}
+      <StepInner>
         <LessonTitle>Choose right variant</LessonTitle>
 
         <div style={{ marginTop: 30 }}>
@@ -136,7 +137,7 @@ export default function Variants({ state = initialState }) {
             ))}
           </VariantsList>
         </div>
-      </fieldset>
+      </StepInner>
     </>
   ) : null;
 }

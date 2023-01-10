@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { PHONE_MEDIA_MAX, TABLET_MEDIA_MAX } from "~/constants";
 import Sidebar from "./Sidebar";
 
 type InsertWordsTextBlockProps = {
@@ -18,6 +19,15 @@ type InsertWordsInputProps = {
 type SidebarBtnProps = {
   isActive: boolean;
 };
+
+const ConstructorContainer = styled("section")`
+  width: 100%;
+  height: calc(100vh - 95px);
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    min-height: calc(100vh - 165px);
+  }
+`;
 
 const StepContainer = styled("section")`
   min-height: 100%;
@@ -232,7 +242,16 @@ const SidebarBtn = styled("button")<SidebarBtnProps>`
   }
 `;
 
+const StepInner = styled("div")`
+  padding: 0 25%;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    padding: 0 20px;
+  }
+`;
+
 export {
+  ConstructorContainer,
   StepContainer,
   StepHeader,
   StepContent,
@@ -248,4 +267,5 @@ export {
   VariantItemNumber,
   SidebarList,
   SidebarBtn,
+  StepInner,
 };

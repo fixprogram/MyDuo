@@ -3,34 +3,15 @@ import {
   ListItem,
   Logout,
   MenuContainer,
-  MenuNavLink,
   MenuStreak,
-  NavIcon,
-  Navigation,
 } from "./lib";
-import study from "~/styles/study.svg";
-import shop from "~/styles/shop.svg";
-import studyActive from "~/styles/study-active.svg";
 import streak from "~/styles/streak.svg";
 import streakActive from "~/styles/streak-active.svg";
-import shopActive from "~/styles/shop-active.svg";
 import Projects from "./Projects";
 import { Language, User } from "@prisma/client";
-
-const MENU = [
-  {
-    title: "Study",
-    link: "skills",
-    icon: study,
-    activeIcon: studyActive,
-  },
-  {
-    title: "Constructor",
-    link: "new",
-    icon: shop,
-    activeIcon: shopActive,
-  },
-];
+import Navigation from "./Navigation";
+import useMediaQuery from "~/hooks/useMediaQuery";
+import { PHONE_MEDIA_MAX } from "~/constants";
 
 type UserData = Pick<User, "streak" | "wasToday">;
 
@@ -43,24 +24,11 @@ const Menu = ({
   languages: Language[];
   onOverlay: Function;
 }) => {
+  const matches = useMediaQuery(`(max-width: ${PHONE_MEDIA_MAX}px)`);
+
   return (
     <MenuContainer>
-      <Navigation>
-        <HorizontalList>
-          {MENU.map(({ title, icon, activeIcon, link }) => (
-            <ListItem key={title}>
-              <MenuNavLink to={`${link}`} className="nav-link">
-                {({ isActive }) => (
-                  <>
-                    <NavIcon src={isActive ? activeIcon : icon} alt={title} />
-                    {title}
-                  </>
-                )}
-              </MenuNavLink>
-            </ListItem>
-          ))}
-        </HorizontalList>
-      </Navigation>
+      {matches ? null : <Navigation />}
       <HorizontalList>
         <ListItem>
           <Projects languages={languages} onOverlay={onOverlay} />

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { PHONE_MEDIA_MAX } from "~/constants";
 
 type ScreenContainerProps = {
   screen: string;
@@ -11,8 +12,13 @@ const ConstructorFormInner = styled("section")`
   flex-direction: column;
   flex-grow: 1;
   position: relative;
-  padding-left: 30px;
-  margin-bottom: 24px;
+  padding-left: 20px;
+  margin: 20px 0;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    max-width: 100%;
+    width: 100%;
+  }
 `;
 
 const LessonTitleInput = styled("input")`
@@ -48,16 +54,22 @@ const ScreenContainer = styled("section")<ScreenContainerProps>`
 `;
 
 const ConstructorSidebar = styled("section")`
-  max-width: 25%;
+  max-width: 30%;
   display: flex;
   flex-direction: column;
   padding-bottom: 71px;
   position: relative;
   background-color: #fff;
-  // border: 2px solid #e5e5e5;
-  border-radius: 16px;
-  margin: 0 24px 24px;
-  padding: 24px;
+  padding: 0 20px;
+  margin: 20px 0;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    max-width: 100%;
+    width: 100%;
+    flex-direction: row;
+    margin-top: auto;
+    justify-content: space-between;
+  }
 `;
 
 const BtnClose = styled("button")`

@@ -1,7 +1,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { NavLink, Link } from "@remix-run/react";
-import { TABLET_MEDIA_MAX } from "~/constants";
+import { PHONE_MEDIA_MAX, TABLET_MEDIA_MAX } from "~/constants";
 
 type FormButtonProps = {
   active?: boolean;
@@ -35,14 +35,17 @@ type MenuStreakProps = {
   wasToday: boolean;
 };
 
-const HorizontalList = styled.ul((props) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  margin: 0,
-  height: "100%",
-  padding: "0 9px",
-}));
+const HorizontalList = styled("ul")`
+  display: flex;
+  align-ttems: center;
+  justify-content: space-between;
+  margin: 0;
+  height: 100%;
+  padding: 0 9px;
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+  }
+`;
 
 const ListItem = styled("li")`
   height: 100%;
@@ -339,7 +342,7 @@ const LabelText = styled("span")`
 
 const Legend = styled("legend")`
   color: #4b4b4b;
-  font-size: 34px;
+  font-size: 2em;
   font-weight: 700;
   line-height: 1.6;
   margin-bottom: 14px;
@@ -404,6 +407,11 @@ const LessonProgress = styled("div")<LessonProgressProps>`
   font-family: "Nunito";
   color: #1cb0f6;
   position: relative;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 65px;
+    height: 65px;
+  }
 `;
 
 const LessonProgressInner = styled("div")<LessonProgressInnerProps>`
@@ -550,10 +558,25 @@ const MenuContainer = styled("div")`
   }
 `;
 
-const Navigation = styled("nav")`
+const NavigationWrapper = styled("nav")`
   min-width: 35%;
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
     min-width: 0;
+  }
+`;
+
+const NavigationList = styled(HorizontalList)`
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    border-top: 2px solid #dadcde;
+    min-height: 68px;
+    justify-content: space-evenly;
+  }
+`;
+
+const NavigationListItem = styled(ListItem)`
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    flex-grow: 1;
+    height: 68px;
   }
 `;
 
@@ -724,7 +747,12 @@ const SkillsListContainer = styled("section")`
   flex-direction: column;
   height: calc(100vh - 95px);
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    padding: 0 20px;
     width: 100%;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    min-height: calc(100vh - 165px);
   }
 `;
 
@@ -737,6 +765,11 @@ const SkillsLineBlock = styled("div")`
   width: 100%;
   max-width: 440px;
   margin: 0 auto 38px auto;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    max-width: 100%;
+    margin-left: -72px;
+  }
 `;
 
 const MenuStreak = styled("b")<MenuStreakProps>`
@@ -782,7 +815,9 @@ export {
   LoginInput,
   LoginToggle,
   MenuContainer,
-  Navigation,
+  NavigationWrapper,
+  NavigationList,
+  NavigationListItem,
   MenuNavLink,
   Logout,
   Overlay,

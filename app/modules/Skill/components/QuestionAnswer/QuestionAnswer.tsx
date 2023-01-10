@@ -23,8 +23,6 @@ export default function QuestionAnswer() {
       }
     }
 
-    console.log({ correctAnswer, userAnswer });
-
     const isAnswerRight =
       correctAnswer.toLowerCase() === userAnswer.toLowerCase();
 

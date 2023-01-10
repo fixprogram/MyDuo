@@ -1,8 +1,8 @@
-import { FooterLine, FooterText, LinkWithHover } from "./lib";
+import { FooterLine, FooterText, LinkWithHover, MainFooter } from "./lib";
 
 export default function Footer() {
   return (
-    <footer>
+    <MainFooter>
       <FooterLine />
       <div style={{ paddingBottom: 28 }}>
         <FooterText>
@@ -12,6 +12,6 @@ export default function Footer() {
           </LinkWithHover>
         </FooterText>
       </div>
-    </footer>
+    </MainFooter>
   );
 }

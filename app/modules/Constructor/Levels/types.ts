@@ -14,21 +14,13 @@ export type StepOptions = {
 };
 
 export type Step = {
-  // question: string | null;
   id: string;
   answer: string;
-  // number: number;
-  // keywords: string[];
   stepType: string;
   ready?: boolean;
-  // text?: string | null;
-  // variants: Variant[] | [];
   parentLessonId: string;
-  // active: boolean;
   options: StepOptions;
 };
-
-// export type TypeOfStep = "Pairs" | "Question" | "Insert" | "Variants" | "";
 
 export type State = {
   lessons: Lesson[];
