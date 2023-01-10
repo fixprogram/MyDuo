@@ -93,19 +93,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   return redirect(`/skill/${skill.title}/1`);
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const activeLanguage = (await getActiveLanguage(request)) as Language;
-  const lastAddedSkills = await getLastAddedSkills(activeLanguage.id);
-
-  return json({ lastAddedSkills });
-};
-
-export default function New() {
+export default function ConstructorNew() {
   const actionData = useActionData<typeof action>();
-  const { lastAddedSkills } = useLoaderData<typeof loader>();
 
-  return (
-    <Constructor actionData={{}} />
-    // <Constructor actionData={actionData} lastAddedSkills={lastAddedSkills} />
-  );
+  return <Constructor actionData={{}} />;
 }

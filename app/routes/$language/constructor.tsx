@@ -30,7 +30,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({});
 };
 
-export default function Constructor() {
+export default function ConstructorPage() {
   const {} = useLoaderData<typeof loader>();
 
   return (

@@ -105,7 +105,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json({ data, lastAddedSkills });
 };
 
-export default function ConstructorEdit() {
+export default function ConstructorPageEdit() {
   const actionData = useActionData() as ActionData;
   const { data } = useLoaderData<typeof loader>();
 
