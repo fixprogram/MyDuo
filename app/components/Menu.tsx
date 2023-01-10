@@ -4,7 +4,9 @@ import {
   Logout,
   MenuContainer,
   MenuNavLink,
+  MenuStreak,
   NavIcon,
+  Navigation,
 } from "./lib";
 import study from "~/styles/study.svg";
 import shop from "~/styles/shop.svg";
@@ -23,7 +25,7 @@ const MENU = [
     activeIcon: studyActive,
   },
   {
-    title: "constructor",
+    title: "Constructor",
     link: "new",
     icon: shop,
     activeIcon: shopActive,
@@ -43,15 +45,11 @@ const Menu = ({
 }) => {
   return (
     <MenuContainer>
-      <nav style={{ width: "35%" }}>
+      <Navigation>
         <HorizontalList>
           {MENU.map(({ title, icon, activeIcon, link }) => (
             <ListItem key={title}>
-              <MenuNavLink
-                to={`${link}`}
-                className="nav-link"
-                // prefetch="intent"
-              >
+              <MenuNavLink to={`${link}`} className="nav-link">
                 {({ isActive }) => (
                   <>
                     <NavIcon src={isActive ? activeIcon : icon} alt={title} />
@@ -62,7 +60,7 @@ const Menu = ({
             </ListItem>
           ))}
         </HorizontalList>
-      </nav>
+      </Navigation>
       <HorizontalList>
         <ListItem>
           <Projects languages={languages} onOverlay={onOverlay} />
@@ -75,14 +73,9 @@ const Menu = ({
             height={30}
             style={{ marginRight: 6 }}
           />
-          <b
-            style={{
-              fontFamily: "Nunito",
-              color: userData.wasToday ? "#ff9600" : "#e5e5e5",
-            }}
-          >
+          <MenuStreak wasToday={userData.wasToday}>
             {userData.streak}
-          </b>
+          </MenuStreak>
         </ListItem>
         <ListItem>
           <form action="/logout" method="post">

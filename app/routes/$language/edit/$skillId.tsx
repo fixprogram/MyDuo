@@ -27,16 +27,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const stepsData = JSON.parse(values.steps as string) as Step[];
   const skillData = JSON.parse(values.skillData as string);
 
-  const { skillTitle, skillLineNumber } = skillData;
-
-  let lineNumber = skillLineNumber;
-  const lastAddedSkill = await getLastAddedSkill(activeLanguage.id);
-  if (lastAddedSkill) {
-    lineNumber =
-      lineNumber === "0"
-        ? (lastAddedSkill?.lineNumber + 1).toString()
-        : lineNumber;
-  }
+  const { skillTitle } = skillData;
 
   {
     /* Fix title unique checking */
@@ -63,7 +54,6 @@ export const action = async ({ request, params }: ActionArgs) => {
     currentLesson: 0,
     level: 0,
     updatedAt: getTodayDate(),
-    lineNumber: Number(lineNumber),
   };
 
   await prisma.skill.update({

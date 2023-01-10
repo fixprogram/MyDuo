@@ -1,6 +1,10 @@
 import { WeeklyActivity } from "@prisma/client";
 import { getCurrentWeek } from "~/utils";
-import { ExpProgressBlock, ExpProgressTitle } from "./lib";
+import {
+  ExpProgressBlock,
+  ExpProgressTitle,
+  WeeklyProgressContainer,
+} from "./lib";
 
 const DAY_COORDS = [
   "0.5",
@@ -51,10 +55,10 @@ export default function WeeklyProgress({
   }));
 
   return (
-    <div style={{ position: "relative", display: "flex", flexGrow: "1" }}>
+    <WeeklyProgressContainer>
       <ExpProgressBlock>
         <ExpProgressTitle>XP Progress</ExpProgressTitle>
-        <svg direction="ltr" height="220" width="340">
+        <svg direction="ltr" height="220" width="320">
           <g transform="translate(45, 35)">
             <g></g>
             <g
@@ -166,6 +170,6 @@ export default function WeeklyProgress({
           </g>
         </svg>
       </ExpProgressBlock>
-    </div>
+    </WeeklyProgressContainer>
   );
 }

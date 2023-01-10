@@ -1,7 +1,12 @@
 import { nanoid } from "nanoid";
 import Footer from "~/modules/Common/components/Footer";
 import LessonItem from "./LessonItem";
-import { LessonsBlock, SkillsLineBlock, SkillsListContainer } from "./lib";
+import {
+  LessonsBlock,
+  SkillsLineBlock,
+  SkillsListContainer,
+  SkillsListInner,
+} from "./lib";
 import PracticeLastAdded from "./PracticeLastAdded";
 
 export type SkillsListItemType = {
@@ -25,7 +30,7 @@ export default function SkillsList({
 
   return (
     <SkillsListContainer>
-      <div style={{ display: "flex", flexGrow: 1 }}>
+      <SkillsListInner>
         {skills.length > 0 && <PracticeLastAdded />}
         <SkillsLineBlock>
           {lineNumbers.map((lineNumber) => (
@@ -44,7 +49,7 @@ export default function SkillsList({
             </LessonsBlock>
           ))}
         </SkillsLineBlock>
-      </div>
+      </SkillsListInner>
       <Footer />
     </SkillsListContainer>
   );

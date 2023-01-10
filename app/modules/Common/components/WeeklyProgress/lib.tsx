@@ -1,10 +1,19 @@
 import styled from "@emotion/styled";
+import { TABLET_MEDIA_MAX } from "~/constants";
+
+const WeeklyProgressContainer = styled("section")`
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    display: none;
+  }
+`;
 
 const ExpProgressBlock = styled("section")`
   background: #fff;
   border: 2px solid #e5e5e5;
   border-radius: 16px;
-  margin: 0 24px 24px;
   padding: 24px;
   position: fixed;
 `;
@@ -18,4 +27,4 @@ const ExpProgressTitle = styled("h2")`
   font-weight: 700;
 `;
 
-export { ExpProgressBlock, ExpProgressTitle };
+export { WeeklyProgressContainer, ExpProgressBlock, ExpProgressTitle };

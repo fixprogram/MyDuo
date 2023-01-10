@@ -1,6 +1,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { NavLink, Link } from "@remix-run/react";
+import { TABLET_MEDIA_MAX } from "~/constants";
 
 type FormButtonProps = {
   active?: boolean;
@@ -28,6 +29,10 @@ type LessonBlockMenuProps = {
 
 type LessonProgressInnerProps = {
   isDisabled?: boolean;
+};
+
+type MenuStreakProps = {
+  wasToday: boolean;
 };
 
 const HorizontalList = styled.ul((props) => ({
@@ -424,6 +429,9 @@ const Main = styled("main")`
   display: flex;
   justify-content: space-between;
   overflow-x: hidden;
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    padding: 24px 10px 0;
+  }
 `;
 
 const LessonTitle = styled("b")`
@@ -537,6 +545,16 @@ const MenuContainer = styled("div")`
   padding: 0 10%;
   display: flex;
   justify-content: space-between;
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    padding: 0 10px;
+  }
+`;
+
+const Navigation = styled("nav")`
+  min-width: 35%;
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    min-width: 0;
+  }
 `;
 
 const MenuNavLink = styled(NavLink)`
@@ -555,6 +573,9 @@ const MenuNavLink = styled(NavLink)`
   }
   &.active:hover {
     filter: none;
+  }
+  @media (max-width: 720px) {
+    font-size: 0;
   }
 `;
 
@@ -702,6 +723,14 @@ const SkillsListContainer = styled("section")`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 95px);
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    width: 100%;
+  }
+`;
+
+const SkillsListInner = styled("div")`
+  display: flex;
+  flex-grow: 1;
 `;
 
 const SkillsLineBlock = styled("div")`
@@ -710,8 +739,14 @@ const SkillsLineBlock = styled("div")`
   margin: 0 auto 38px auto;
 `;
 
+const MenuStreak = styled("b")<MenuStreakProps>`
+  font-family: "Nunito";
+  color: ${(props) => (props.wasToday ? "#ff9600" : "#e5e5e5")};
+`;
+
 export {
   ProgressBarContainer,
+  SkillsListInner,
   ProgressBar,
   LeaveLessonButton,
   LeaveLessonLink,
@@ -747,6 +782,7 @@ export {
   LoginInput,
   LoginToggle,
   MenuContainer,
+  Navigation,
   MenuNavLink,
   Logout,
   Overlay,
@@ -767,4 +803,5 @@ export {
   ErrorMessage,
   SkillsListContainer,
   SkillsLineBlock,
+  MenuStreak,
 };
