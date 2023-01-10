@@ -36,7 +36,8 @@ export default function SkillsList({
                     <LessonItem
                       key={dataItem.id}
                       {...dataItem}
-                      editLink={`/${languageTitle}/constructor/${dataItem.id}`}
+                      editLink={`/${languageTitle}/edit/${dataItem.id}`}
+                      // editLink={`/${languageTitle}/constructor/${dataItem.id}`}
                     />
                   );
                 }

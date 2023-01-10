@@ -9,7 +9,6 @@ import {
   deleteStepsFromSkill,
   getStepsBySkillId,
 } from "~/models/lesson.server";
-import { ActionData } from "./new";
 import { getLastAddedSkill, getLastAddedSkills } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
@@ -106,7 +105,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function EditSkill() {
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const { data } = useLoaderData<typeof loader>();
 
   return <Constructor data={data} actionData={actionData} />;
