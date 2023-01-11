@@ -4,7 +4,9 @@ import {
   Grid,
   Inner,
   QuitButton,
+  QuitButtonWrapper,
   StayButton,
+  StayButtonWrapper,
   Title,
   Wrapper,
 } from "./lib";
@@ -17,13 +19,13 @@ export default function AreYouSureBlock() {
         <Grid>
           <Title>Are you sure you want to quit?</Title>
           <Description>All progress in this session will be lost.</Description>
-          <div style={{ marginRight: "-12px", gridArea: "dismiss" }}>
-            <StayButton onClick={() => resetStatus()}>Stay</StayButton>
-          </div>
-
-          <div style={{ marginRight: "-12px", gridArea: "quit" }}>
+          <QuitButtonWrapper>
             <QuitButton to="/">Quit</QuitButton>
-          </div>
+          </QuitButtonWrapper>
+
+          <StayButtonWrapper>
+            <StayButton onClick={() => resetStatus()}>Stay</StayButton>
+          </StayButtonWrapper>
         </Grid>
       </Inner>
     </Wrapper>

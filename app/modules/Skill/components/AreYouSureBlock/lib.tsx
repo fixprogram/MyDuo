@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Link } from "@remix-run/react";
+import { PHONE_MEDIA_MAX } from "~/constants";
 
 const Wrapper = styled("div")`
   background: #fff;
@@ -24,6 +25,11 @@ const Grid = styled("div")`
     "title dismiss quit"
     "description dismiss quit";
   grid-template-columns: 1fr repeat(2, minmax(min-content, 172px));
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    grid-template-areas: none;
+    grid-template-columns: none;
+  }
 `;
 
 const Title = styled("span")`
@@ -32,6 +38,11 @@ const Title = styled("span")`
   line-height: 30px;
   font-weight: 700;
   font-family: "Nunito";
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    grid-area: unset;
+    text-align: center;
+  }
 `;
 
 const Description = styled("span")`
@@ -41,6 +52,11 @@ const Description = styled("span")`
   padding: 0;
   color: #777;
   font-family: "Nunito";
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    grid-area: unset;
+    text-align: center;
+  }
 `;
 
 const QuitButton = styled(Link)`
@@ -66,6 +82,29 @@ const QuitButton = styled(Link)`
   justify-content: center;
   align-items: center;
   transition: filter 0.2s;
+  box-sizing: border-box;
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    border: none;
+    height: 46px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+  }
+`;
+
+const QuitButtonWrapper = styled("div")`
+  margin-right: -12px;
+  grid-area: quit;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    margin-right: 0;
+    grid-area: unset;
+  }
 `;
 
 const StayButton = styled("button")`
@@ -87,8 +126,45 @@ const StayButton = styled("button")`
   border-radius: 15px;
   padding: 0 20px;
   display: block;
-  -webkit-transition: filter 0.2s;
   transition: filter 0.2s;
+  box-sizing: border-box;
+  &:hover {
+    filter: brightness(0.9);
+  }
+  &:active {
+    border: none;
+    height: 46px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+    border: none;
+    color: #1cb0f6;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
 `;
 
-export { Wrapper, Inner, Grid, Title, Description, QuitButton, StayButton };
+const StayButtonWrapper = styled("div")`
+  margin-right: -12px;
+  grid-area: dismiss;
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    grid-area: unset;
+    margin-right: 0;
+  }
+`;
+
+export {
+  Wrapper,
+  Inner,
+  Grid,
+  Title,
+  Description,
+  QuitButton,
+  StayButton,
+  QuitButtonWrapper,
+  StayButtonWrapper,
+};

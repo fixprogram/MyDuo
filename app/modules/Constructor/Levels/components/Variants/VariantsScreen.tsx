@@ -1,5 +1,6 @@
 import { Variant } from "@prisma/client";
 import {
+  LessonDuolingoPicture,
   LessonQuestion,
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
@@ -29,7 +30,8 @@ export default function VariantsScreen({
         <div
           style={{ display: "flex", alignItems: "center", margin: "30px 0" }}
         >
-          <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} />
+          {/* <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} /> */}
+          <LessonDuolingoPicture src={Duo} alt="Duo" />
           <div style={{ position: "relative" }}>
             <LessonQuestion>{question}</LessonQuestion>
             <LessonQuestionTriangleContainer>

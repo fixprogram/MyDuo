@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import styled from "@emotion/styled";
+import { PHONE_MEDIA_MAX } from "~/constants";
 
 type PuzzleItemProps = {
   alreadyChoosen: boolean;
@@ -39,12 +40,21 @@ const VariantsList = styled("ul")`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    justify-content: center;
+  }
 `;
 
 const VariantsItem = styled("li")`
   position: relative;
   margin-bottom: 8px;
   width: 49%;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: auto;
+    margin: 8px;
+  }
 `;
 
 export {

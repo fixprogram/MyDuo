@@ -25,7 +25,8 @@ const ConstructorContainer = styled("section")`
   height: calc(100vh - 95px);
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    min-height: calc(100vh - 165px);
+    height: calc(100vh - 165px);
+    overflow-y: scroll;
   }
 `;
 
@@ -216,6 +217,10 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   justify-content: center;
   align-items: center;
   font-family: "Nunito";
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    display: none;
+  }
 `;
 
 const SidebarList = styled("ul")`

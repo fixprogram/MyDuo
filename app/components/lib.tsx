@@ -752,7 +752,9 @@ const SkillsListContainer = styled("section")`
   }
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    min-height: calc(100vh - 165px);
+    padding: 0 10px;
+    height: calc(100vh - 165px);
+    overflow-y: scroll;
   }
 `;
 

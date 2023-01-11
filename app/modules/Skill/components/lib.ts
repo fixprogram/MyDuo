@@ -3,7 +3,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Form } from "@remix-run/react";
-import { TABLET_MEDIA_MAX } from "~/constants";
+import { PHONE_MEDIA_MAX, TABLET_MEDIA_MAX } from "~/constants";
 import RightIcon from "~/styles/right.svg";
 import WrongIcon from "~/styles/wrong.svg";
 
@@ -34,7 +34,7 @@ const LessonContainer = styled("section")`
 const LessonFooter = styled("section")<LessonFooterProps>`
   padding: 0 40px;
   width: 100%;
-  height: 140px;
+  min-height: 140px;
   border-top: 2px solid #e5e5e5;
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@ const LessonFooter = styled("section")<LessonFooterProps>`
     status === "right" ? "#58a700" : status === "wrong" ? "#ea2b2b" : "#fff"};
 
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    padding: 0 10px;
+    padding: 10px;
   }
 `;
 
@@ -57,6 +57,10 @@ const LessonFooterInner = styled("div")`
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const LessonFooterMessage = styled("div")<LessonFooterProps>`
@@ -64,6 +68,17 @@ const LessonFooterMessage = styled("div")<LessonFooterProps>`
   display: ${({ status }) =>
     status === "right" || status === "wrong" ? "flex" : "none"};
   align-items: center;
+`;
+
+const LessonFooterText = styled("div")`
+  margin-left: 16px;
+  width: calc(100% - 209px);
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    margin: 0;
+    margin-bottom: 20px;
+    width: 100%;
+  }
 `;
 
 const LessonFooterTitle = styled("h2")`
@@ -75,7 +90,7 @@ const LessonFooterTitle = styled("h2")`
   letter-spacing: 0.2px;
 `;
 
-const LessonFooterText = styled("p")`
+const LessonFooterDescription = styled("p")`
   margin: 5px 0 0 0;
   font-size: 17px;
   font-family: "Nunito";
@@ -130,6 +145,11 @@ const LessonButton = styled("button")<LessonButtonProps>`
     height: 46px;
     transform: translateY(4px);
   }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+    margin: 10px 0;
+  }
 `;
 
 const ChangeDifficultyBtn = styled("button")`
@@ -145,7 +165,13 @@ const ChangeDifficultyBtn = styled("button")`
   color: #afafaf;
   cursor: pointer;
   &:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.1);
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
   }
 `;
 
@@ -172,6 +198,10 @@ const LessonBody = styled("div")`
   animation-duration: 0.2s;
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
     margin: 72px 18% 4%;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    margin: 42px 18% 4%;
   }
 `;
 
@@ -347,6 +377,10 @@ const LessonFooterIcon = styled("div")<LessonFooterProps>`
   animation-duration: 0.3s;
   animation-fill-mode: forwards;
   animation-timing-function: linear;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    display: none;
+  }
 `;
 
 const ResultsContainer = styled("section")`
@@ -389,6 +423,10 @@ const ResultsBlock = styled("div")`
   justify-content: center;
   position: relative;
   box-sizing: border-box;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    padding: 50px 20px;
+  }
 `;
 
 const PairsList = styled("ul")`
@@ -432,6 +470,7 @@ export {
   LessonFooterMessage,
   LessonFooterTitle,
   LessonFooterText,
+  LessonFooterDescription,
   LessonButton,
   LessonBody,
   LessonBodyTitle,

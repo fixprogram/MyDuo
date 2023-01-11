@@ -9,6 +9,7 @@ import {
   LessonFooterText,
   LessonButton,
   ChangeDifficultyBtn,
+  LessonFooterDescription,
 } from "./lib";
 import Easier from "~/styles/easier.svg";
 import Harder from "~/styles/harder.svg";
@@ -107,14 +108,16 @@ export default function Footer({
           {(status === "right" || status === "wrong") && (
             <LessonFooterIcon status={status} />
           )}
-          <div style={{ marginLeft: 16, width: "calc(100% - 209px)" }}>
+          <LessonFooterText>
             <LessonFooterTitle>
               {status === "wrong" ? "Right answer: " : "Great!"}
             </LessonFooterTitle>
             {status === "wrong" && (
-              <LessonFooterText>{getFooterText(text, answer)}</LessonFooterText>
+              <LessonFooterDescription>
+                {getFooterText(text, answer)}
+              </LessonFooterDescription>
             )}
-          </div>
+          </LessonFooterText>
         </LessonFooterMessage>
 
         <LessonButton
