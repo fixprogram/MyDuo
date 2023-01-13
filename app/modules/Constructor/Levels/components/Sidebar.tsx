@@ -1,8 +1,18 @@
 import { useFetcher } from "@remix-run/react";
+import { Fragment } from "react";
 import { FormButton } from "~/components/lib";
+import { useScrollRefs } from "~/hooks/useScrollRefs";
 import { useConstructor } from "../..";
 import { ConstructorSidebar } from "../../components/lib";
-import { SidebarBtn, SidebarList } from "./lib";
+import {
+  SidebarBtn,
+  SidebarBtnAdd,
+  SidebarList,
+  SidebarListItem,
+  SidebarStepsButton,
+  SidebarStepsList,
+  SidebarStepsListItem,
+} from "./lib";
 
 const Sidebar = () => {
   const {
@@ -32,10 +42,32 @@ const Sidebar = () => {
     (step) => step.parentLessonId === activeLessonId
   );
 
+  const { itemsRefs: lessonsRefs, elementRef: addLessonRef } = useScrollRefs(
+    lessons.length
+  );
+
+  const { itemsRefs: stepsRefs, elementRef: addStepRef } = useScrollRefs(
+    lessons.length
+  );
+
+  function onLessonClick(id: string, idx: number) {
+    changeCurrentScreen("Steps");
+    setLessonActive(id);
+
+    lessonsRefs.current[idx]?.scrollIntoView();
+  }
+
+  function onStepClick(id: string, idx: number) {
+    changeCurrentScreen("Steps");
+    setStepActive(id);
+
+    stepsRefs.current[idx]?.scrollIntoView();
+  }
+
   return (
     <ConstructorSidebar>
       <SidebarList>
-        <li>
+        <SidebarListItem>
           <SidebarBtn
             type="button"
             onClick={() => {
@@ -45,25 +77,23 @@ const Sidebar = () => {
           >
             Skill Info
           </SidebarBtn>
-        </li>
-        {lessons.map((lesson, idx) => (
-          <li key={lesson.id}>
+        </SidebarListItem>
+        {lessons.map((lesson, index) => (
+          <SidebarListItem key={lesson.id}>
             <SidebarBtn
               type="button"
-              onClick={() => {
-                changeCurrentScreen("Steps");
-                setLessonActive(lesson.id);
-              }}
+              onClick={() => onLessonClick(lesson.id, index)}
               isActive={
                 lesson.id === activeLessonId && currentScreen === "Steps"
               }
+              ref={(el) => (lessonsRefs.current[index] = el)}
             >
-              Lesson {idx + 1}
+              Lesson {index + 1}
             </SidebarBtn>
-          </li>
+          </SidebarListItem>
         ))}
 
-        <button
+        <SidebarBtnAdd
           type="button"
           onClick={() => {
             if (currentScreen !== "Steps") {
@@ -71,29 +101,23 @@ const Sidebar = () => {
             }
             addLesson();
           }}
+          ref={addLessonRef}
         >
           Add lesson
-        </button>
+        </SidebarBtnAdd>
       </SidebarList>
 
-      <SidebarList>
+      <SidebarStepsList>
         {lessonSteps.map((step, index) => (
-          <li key={step.id} style={{ display: "flex" }}>
-            <button
+          <SidebarStepsListItem key={step.id}>
+            <SidebarStepsButton
               type="button"
-              onClick={() => {
-                changeCurrentScreen("Steps");
-                setStepActive(step.id);
-              }}
-              style={{
-                color:
-                  step.id === activeStepId && currentScreen === "Steps"
-                    ? "#1cb0f6"
-                    : "#3c3c3c",
-              }}
+              onClick={() => onStepClick(step.id, index)}
+              isActive={step.id === activeStepId && currentScreen === "Steps"}
+              ref={(el) => (stepsRefs.current[index] = el)}
             >
               Step {index + 1}
-            </button>
+            </SidebarStepsButton>
             {lessonSteps.length > 1 && step.id === activeStepId ? (
               <button
                 type="button"
@@ -104,20 +128,23 @@ const Sidebar = () => {
                 x
               </button>
             ) : null}
-          </li>
+            {step.id === activeStepId && (
+              <SidebarBtnAdd
+                type="button"
+                onClick={() => {
+                  addStep();
+                  if (currentScreen !== "Steps") {
+                    changeCurrentScreen("Steps");
+                  }
+                }}
+                ref={addStepRef}
+              >
+                +
+              </SidebarBtnAdd>
+            )}
+          </SidebarStepsListItem>
         ))}
-        <button
-          type="button"
-          onClick={() => {
-            addStep();
-            if (currentScreen !== "Steps") {
-              changeCurrentScreen("Steps");
-            }
-          }}
-        >
-          Add step
-        </button>
-      </SidebarList>
+      </SidebarStepsList>
 
       <FormButton
         type="submit"

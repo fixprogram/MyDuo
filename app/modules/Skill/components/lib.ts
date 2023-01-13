@@ -445,7 +445,7 @@ const PairsItem = styled("li")`
 `;
 
 const LessonDuolingoPicture = styled("img")`
-  max-height: 150px;
+  max-height: 125px;
   margin-bottom: -50px;
 
   @media (max-width: ${TABLET_MEDIA_MAX}px) {

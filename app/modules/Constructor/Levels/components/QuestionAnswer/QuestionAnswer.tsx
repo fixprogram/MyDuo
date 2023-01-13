@@ -12,7 +12,7 @@ import {
 } from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
 import Settings from "./Settings";
-import { StepContent } from "../lib";
+import { StepContent, StepInner } from "../lib";
 
 const initialState: Omit<
   Step,
@@ -48,7 +48,7 @@ export default function QuestionAnswer({ state = initialState }) {
   return stepType === "Question" ? (
     <>
       <StepContent>
-        <fieldset style={{ padding: "0 25%" }}>
+        <StepInner>
           <LessonTitle>Answer the question</LessonTitle>
           <LessonAnswerWrapper>
             <LessonDuolingoPicture src={Duo} alt="Duolingo picture" />
@@ -82,7 +82,7 @@ export default function QuestionAnswer({ state = initialState }) {
             onChange={(evt) => setAnswer(evt.target.value, id)}
             required
           />
-        </fieldset>
+        </StepInner>
       </StepContent>
       <Settings answer={answer} options={options} />
     </>

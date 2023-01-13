@@ -34,11 +34,7 @@ export default function Navigation() {
             <MenuNavLink to={`${link}`} className="nav-link">
               {({ isActive }) => (
                 <>
-                  <NavIcon
-                    src={isActive ? activeIcon : icon}
-                    alt={title}
-                    style={{ margin: 0 }}
-                  />
+                  <NavIcon src={isActive ? activeIcon : icon} alt={title} />
                   {title}
                 </>
               )}

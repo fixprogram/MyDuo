@@ -139,6 +139,10 @@ const LessonBlockInner = styled("div")`
   border-radius: 15px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 170px;
+  }
 `;
 
 const LessonBlockLink = styled(Link)`
@@ -159,6 +163,10 @@ const LessonBlockLink = styled(Link)`
   letter-spacing: 0.8px;
   &:hover {
     filter: brightness(1.1);
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    font-size: 14px;
   }
 `;
 
@@ -181,6 +189,10 @@ const LessonBlockButton = styled("button")`
   letter-spacing: 0.8px;
   &:hover img {
     filter: brightness(1.1);
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    font-size: 14px;
   }
 `;
 
@@ -349,6 +361,11 @@ const Legend = styled("legend")`
   margin-top: 0;
   text-align: center;
   font-family: "Nunito", sans-serif;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    font-size: 1.5em;
+    margin: 0;
+  }
 `;
 
 const FormButton = styled("button")<FormButtonProps>`
@@ -371,6 +388,7 @@ const FormButton = styled("button")<FormButtonProps>`
   padding: 0 20px;
   display: ${(props) => (props.hidden ? "none" : "block")};
   transition: filter 0.2s;
+  order: 3;
   &:hover:enabled {
     filter: brightness(1.1);
   }
@@ -378,6 +396,10 @@ const FormButton = styled("button")<FormButtonProps>`
     filter: brightness(1.1);
     height: 46px;
     transform: translateY(4px);
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100px;
   }
 `;
 
@@ -455,6 +477,10 @@ const NavIcon = styled("img")`
   margin-right: 10px;
   width: 36px;
   height: 36px;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    margin: 0;
+  }
 `;
 
 const LoginContainer = styled("section")`

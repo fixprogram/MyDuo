@@ -4,7 +4,12 @@ import { useFocus } from "~/hooks/useFocus";
 import { useConstructor } from "~/modules/Constructor";
 import { LessonTitle } from "~/modules/Skill/components/lib";
 import { cleanWordFromSigns, isItemInArray } from "~/utils";
-import { InsertWordsInput, InsertWordsTextBlock, StepContent } from "../lib";
+import {
+  InsertWordsInput,
+  InsertWordsTextBlock,
+  StepContent,
+  StepInner,
+} from "../lib";
 import Settings from "./Settings";
 import ChooseMissingWords from "./ChooseMissingWords";
 import { Step } from "../../types";
@@ -52,7 +57,7 @@ export default function InsertWords() {
   return stepType === "Insert" ? (
     <Fragment>
       <StepContent>
-        <fieldset style={{ padding: "0 25%" }}>
+        <StepInner>
           <LessonTitle>Add missing words</LessonTitle>
 
           <div style={{ marginTop: 30 }}>
@@ -102,7 +107,7 @@ export default function InsertWords() {
               )}
             </InsertWordsTextBlock>
           </div>
-        </fieldset>
+        </StepInner>
       </StepContent>
 
       <Settings

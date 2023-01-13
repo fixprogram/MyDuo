@@ -20,6 +20,14 @@ type SidebarBtnProps = {
   isActive: boolean;
 };
 
+type StepContainerProps = {
+  isHidden: boolean;
+};
+
+type SidebarStepsButtonProps = {
+  isActive: boolean;
+};
+
 const ConstructorContainer = styled("section")`
   width: 100%;
   height: calc(100vh - 95px);
@@ -30,9 +38,9 @@ const ConstructorContainer = styled("section")`
   }
 `;
 
-const StepContainer = styled("section")`
+const StepContainer = styled("section")<StepContainerProps>`
   min-height: 100%;
-  display: flex;
+  display: ${(props) => (props.isHidden ? "none" : "flex")};
   flex-direction: column;
 `;
 
@@ -225,6 +233,36 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
 
 const SidebarList = styled("ul")`
   margin-bottom: auto;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    display: flex;
+    overflow-x: scroll;
+    order: 2;
+    width: calc(100% - 110px);
+    margin: 0;
+  }
+`;
+
+const SidebarListItem = styled("li")`
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    margin-right: 10px;
+  }
+`;
+
+const SidebarStepsList = styled(SidebarList)`
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    width: 100%;
+    order: 1;
+    margin-bottom: 15px;
+  }
+`;
+
+const SidebarStepsListItem = styled("li")`
+  display: flex;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    min-width: 65px;
+  }
 `;
 
 const SidebarBtn = styled("button")<SidebarBtnProps>`
@@ -245,13 +283,82 @@ const SidebarBtn = styled("button")<SidebarBtnProps>`
   &:hover {
     background: #dadada;
   }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    height: 100%;
+    padding: 5px 8px;
+    margin-right: 5px;
+  }
+`;
+
+const SidebarStepsButton = styled("button")<SidebarStepsButtonProps>`
+  color: ${(props) => (props.isActive ? "#1cb0f6" : "#3c3c3c")};
 `;
 
 const StepInner = styled("div")`
-  padding: 0 25%;
+  padding: 0 20%;
 
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    padding: 0 20px;
+    padding: 0 40px;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    padding: 0;
+  }
+`;
+
+const SidebarBtnAdd = styled("button")`
+  // cursor: pointer;
+  // border-radius: 8px;
+  // background-color: rgb(28, 176, 246);
+  // color: white;
+  // font-weight: 600;
+  // transition: filter 0.1s ease;
+  // font-size: 18px;
+
+  // align-self: center;
+
+  // &:hover {
+  //   filter: brightness(1.1);
+  // }
+
+  border: 0 solid transparent;
+  background-color: #1cb0f6;
+  color: #fff;
+  border-color: white;
+  border-width: 0;
+  border-bottom-width: 4px;
+  border-bottom-color: #1899d6;
+  height: 40px;
+  // width: 130px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: "Nunito";
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  border-radius: 12px;
+  padding: 0 15px;
+  display: flex;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.2s;
+  box-sizing: border-box;
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    border: none;
+    height: 36px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    padding: 0 10px 3px 10px;
+
+    width: 30px;
+    height: 30px;
   }
 `;
 
@@ -271,6 +378,11 @@ export {
   VariantItemInput,
   VariantItemNumber,
   SidebarList,
+  SidebarListItem,
+  SidebarStepsList,
+  SidebarStepsListItem,
   SidebarBtn,
   StepInner,
+  SidebarBtnAdd,
+  SidebarStepsButton,
 };

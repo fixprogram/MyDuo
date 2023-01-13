@@ -18,6 +18,8 @@ const ConstructorFormInner = styled("section")`
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
     max-width: 100%;
     width: 100%;
+    margin: 0;
+    padding: 0;
   }
 `;
 
@@ -49,8 +51,12 @@ const ScreenContainer = styled("section")<ScreenContainerProps>`
   width: calc(100% - 60px);
   height: 100%;
   text-align: center;
-  visibility: ${(props) =>
-    props.screen !== props.target ? "hidden" : "visible"};
+  display: ${(props) => (props.screen !== props.target ? "none" : "block")};
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    position: relative;
+    width: 100%;
+  }
 `;
 
 const ConstructorSidebar = styled("section")`
@@ -69,6 +75,12 @@ const ConstructorSidebar = styled("section")`
     flex-direction: row;
     margin-top: auto;
     justify-content: space-between;
+    position: sticky;
+    bottom: 0;
+    padding: 15px 0;
+    flex-wrap: wrap;
+    box-shadow: 0px 0px 5px rgb(0 0 0 / 10%);
+    margin-bottom: 0;
   }
 `;
 
@@ -81,7 +93,11 @@ const BtnClose = styled("button")`
   background-color: inherit;
   padding: 0;
   left: 30px;
-  bottom: -60px;
+  top: -50px;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    top: -30px;
+  }
 `;
 
 const BtnCloseImage = styled("img")`

@@ -19,7 +19,7 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
   const { activeStepId, removeStepType, setStepType } = useConstructor();
 
   return (
-    <StepContainer className={`${activeStepId !== id && "visuallyHidden"}`}>
+    <StepContainer isHidden={activeStepId !== id}>
       <Legend>{stepType ? stepType : "Choose type"}</Legend>
       <StepHeader>
         {stepType !== "" && (
