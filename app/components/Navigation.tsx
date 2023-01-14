@@ -3,7 +3,6 @@ import {
   NavIcon,
   NavigationList,
   NavigationListItem,
-  NavigationWrapper,
 } from "./lib";
 import shopActive from "~/styles/shop-active.svg";
 import study from "~/styles/study.svg";
@@ -27,7 +26,7 @@ const MENU = [
 
 export default function Navigation() {
   return (
-    <NavigationWrapper>
+    <nav>
       <NavigationList>
         {MENU.map(({ title, icon, activeIcon, link }) => (
           <NavigationListItem key={title}>
@@ -42,6 +41,6 @@ export default function Navigation() {
           </NavigationListItem>
         ))}
       </NavigationList>
-    </NavigationWrapper>
+    </nav>
   );
 }

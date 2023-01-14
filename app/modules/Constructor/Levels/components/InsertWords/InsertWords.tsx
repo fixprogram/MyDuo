@@ -58,8 +58,6 @@ export default function InsertWords() {
     <Fragment>
       <StepContent>
         <StepInner>
-          <LessonTitle>Add missing words</LessonTitle>
-
           <div style={{ marginTop: 30 }}>
             <Textarea
               placeholder="Type text and choose words which should be hidden"

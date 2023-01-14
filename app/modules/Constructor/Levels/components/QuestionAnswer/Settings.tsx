@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useConstructor } from "~/modules/Constructor";
 import { SettingsContainer } from "~/modules/Constructor/components/lib";
+import { getWordsOutOfText } from "~/modules/Constructor/utils/getWordsOutOfText";
 import { isItemInArray } from "~/utils";
 import { StepOptions } from "../../types";
 import { WordsItem, WordsList } from "./lib";
@@ -19,6 +21,18 @@ export default function Settings({
     setStepOptions({ ...options, keywords });
   }
 
+  // In this effect we check if the answer was changed but old keywords stayed in the array. If so, we remove them.
+  useEffect(() => {
+    const words = answer ? getWordsOutOfText(answer) : [];
+    const newKeywords = keywords.filter((keyword) =>
+      words.find((word) => word === keyword)
+    );
+
+    if (keywords.length !== newKeywords.length) {
+      setKeywords(newKeywords);
+    }
+  }, [answer]);
+
   function onWordHandler(word: string) {
     const newKeywords = keywords;
     if (isItemInArray(keywords, word)) {
@@ -29,6 +43,7 @@ export default function Settings({
   }
 
   const isEditing = Boolean(Array.isArray(answer));
+  const words: string[] = answer ? getWordsOutOfText(answer) : [];
 
   return (
     <SettingsContainer>
@@ -40,23 +55,15 @@ export default function Settings({
         </li>
 
         {!isEditing &&
-          answer.split(" ").map((answerItem: string, idx: number) => {
-            if (answerItem.includes(",")) {
-              answerItem = answerItem.slice(0, -1);
-            }
-            if (!answerItem.length) {
-              return;
-            }
-            return (
-              <WordsItem
-                key={idx}
-                onClick={() => onWordHandler(answerItem)}
-                isActive={isItemInArray(keywords, answerItem)}
-              >
-                {answerItem}
-              </WordsItem>
-            );
-          })}
+          words.map((word, index) => (
+            <WordsItem
+              key={index}
+              onClick={() => onWordHandler(word)}
+              isActive={isItemInArray(keywords, word)}
+            >
+              {word}
+            </WordsItem>
+          ))}
       </WordsList>
     </SettingsContainer>
   );

@@ -93,11 +93,7 @@ const BtnClose = styled("button")`
   background-color: inherit;
   padding: 0;
   left: 30px;
-  top: -50px;
-
-  @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    top: -30px;
-  }
+  top: -33px;
 `;
 
 const BtnCloseImage = styled("img")`

@@ -18,9 +18,22 @@ const Step: React.FC<StepProps> = ({ data, index, children }) => {
   const { stepType, id } = data;
   const { activeStepId, removeStepType, setStepType } = useConstructor();
 
+  function getStepTitle() {
+    switch (stepType) {
+      case "Question":
+        return "Answer the question";
+      case "Insert":
+        return "Add missing words";
+      case "Variants":
+        return "Choose right variant";
+      default:
+        return "Choose type";
+    }
+  }
+
   return (
     <StepContainer isHidden={activeStepId !== id}>
-      <Legend>{stepType ? stepType : "Choose type"}</Legend>
+      <Legend>{getStepTitle()}</Legend>
       <StepHeader>
         {stepType !== "" && (
           <CloseBtn onClickHandler={() => removeStepType(id)} />

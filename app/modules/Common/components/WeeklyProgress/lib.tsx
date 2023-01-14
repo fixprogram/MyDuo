@@ -4,7 +4,7 @@ import { TABLET_MEDIA_MAX } from "~/constants";
 const WeeklyProgressContainer = styled("section")`
   position: relative;
   display: flex;
-  flex-grow: 1;
+  min-width: 372px;
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
     display: none;
   }

@@ -13,6 +13,7 @@ import {
 import Duo from "~/styles/duo.svg";
 import Settings from "./Settings";
 import { StepContent, StepInner } from "../lib";
+import { QuestionTextarea } from "./lib";
 
 const initialState: Omit<
   Step,
@@ -49,21 +50,12 @@ export default function QuestionAnswer({ state = initialState }) {
     <>
       <StepContent>
         <StepInner>
-          <LessonTitle>Answer the question</LessonTitle>
           <LessonAnswerWrapper>
             <LessonDuolingoPicture src={Duo} alt="Duolingo picture" />
             <div style={{ position: "relative" }}>
               <LessonQuestion>
-                <Textarea
+                <QuestionTextarea
                   placeholder="Set question"
-                  style={{
-                    border: "none",
-                    backgroundColor: "inherit",
-                    width: "100%",
-                    padding: 0,
-                    minHeight: 0,
-                    letterSpacing: 0,
-                  }}
                   value={question === null ? "" : question}
                   onChange={setQuestion}
                   autoFocus={true}

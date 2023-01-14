@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import { SettingsContainer } from "~/modules/Constructor/components/lib";
+import { getWordsOutOfText } from "~/modules/Constructor/utils/getWordsOutOfText";
 import { cleanWordFromSigns, isItemInArray } from "~/utils";
 import { Button } from "../lib";
 import { WordsItem, WordsList } from "./lib";
@@ -14,14 +15,6 @@ type BackendProps = {
   setIndexes: Dispatch<SetStateAction<number[]>>;
   text: string;
 };
-
-function getWordsOutOfText(text: string) {
-  const wordsWithPossibleSigns = text.split(" ");
-  const words = wordsWithPossibleSigns.map(
-    (word) => cleanWordFromSigns(word).newWord
-  );
-  return words;
-}
 
 export default function Settings({
   isEditingText,
@@ -68,7 +61,7 @@ export default function Settings({
       <WordsList>
         <li>
           <b style={{ display: "block", padding: "4px 0", marginBottom: 3 }}>
-            Choose words to be hidden:{" "}
+            Choose words to be hidden:
           </b>
         </li>
         {words.map((word, wordIndex) => {

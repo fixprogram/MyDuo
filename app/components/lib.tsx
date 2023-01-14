@@ -41,19 +41,30 @@ const HorizontalList = styled("ul")`
   justify-content: space-between;
   margin: 0;
   height: 100%;
-  padding: 0 9px;
+  max-width: 400px;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    flex-grow: 1;
+  }
+
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    max-width: 100%;
     width: 100%;
+    padding: 0;
   }
 `;
 
 const ListItem = styled("li")`
   height: 100%;
-  margin: 0 15px;
+  margin: 0 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    margin: auto;
+  }
 `;
 
 const LessonsContainer = styled("section")`
@@ -354,18 +365,12 @@ const LabelText = styled("span")`
 
 const Legend = styled("legend")`
   color: #4b4b4b;
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: 700;
   line-height: 1.6;
-  margin-bottom: 14px;
-  margin-top: 0;
+  margin: 0;
   text-align: center;
   font-family: "Nunito", sans-serif;
-
-  @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    font-size: 1.5em;
-    margin: 0;
-  }
 `;
 
 const FormButton = styled("button")<FormButtonProps>`
@@ -455,12 +460,15 @@ const LessonProgressInner = styled("div")<LessonProgressInnerProps>`
 `;
 
 const Main = styled("main")`
-  padding: 24px 10% 0;
+  margin: 24px auto 0;
+  width: 100%;
+  max-width: 1328px;
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   overflow-x: hidden;
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    padding: 24px 10px 0;
+    padding: 0 16px;
   }
 `;
 
@@ -572,22 +580,26 @@ const LoginToggle = styled("label")`
 `;
 
 const MenuContainer = styled("div")`
-  height: 71px;
-  width: 100vw;
+  width: 100%;
   border-top: 1px solid #dadcde;
   border-bottom: 2px solid #dadcde;
-  padding: 0 10%;
-  display: flex;
-  justify-content: space-between;
-  @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    padding: 0 10px;
-  }
 `;
 
-const NavigationWrapper = styled("nav")`
-  min-width: 35%;
+const MenuInner = styled("div")`
+  width: 100%;
+  max-width: 1328px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  height: 68px;
+
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    min-width: 0;
+    padding: 0 16px;
+  }
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    padding: 0;
   }
 `;
 
@@ -600,6 +612,10 @@ const NavigationList = styled(HorizontalList)`
 `;
 
 const NavigationListItem = styled(ListItem)`
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    margin: 0 24px;
+  }
+
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
     flex-grow: 1;
     height: 68px;
@@ -767,11 +783,11 @@ const ErrorMessage = styled("p")`
 `;
 
 const SkillsListContainer = styled("section")`
-  width: 65%;
   padding: 0 30px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 95px);
+  flex-grow: 1;
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
     padding: 0 20px;
     width: 100%;
@@ -843,7 +859,7 @@ export {
   LoginInput,
   LoginToggle,
   MenuContainer,
-  NavigationWrapper,
+  MenuInner,
   NavigationList,
   NavigationListItem,
   MenuNavLink,

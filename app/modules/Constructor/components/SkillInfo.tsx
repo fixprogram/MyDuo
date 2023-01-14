@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { ErrorMessage, Legend, LessonProgress } from "~/components/lib";
-import { ActionData } from "~/routes/$language/constructor/new";
+import { ActionData } from "~/routes/$language/new";
 import { useConstructor } from "..";
 
 import { LessonTitleInput, ScreenContainer } from "./lib";

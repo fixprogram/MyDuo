@@ -4,10 +4,13 @@ import { initialContext, useConstructorReducer } from "./Levels/reducer";
 import { ConstructorFormInner } from "./components/lib";
 import Levels from "./Levels";
 import Sidebar from "./Levels/components/Sidebar";
-import { ActionData } from "~/routes/$language/constructor/new";
 import { ConstructorData } from "./Levels/types";
 import { useFetcher } from "@remix-run/react";
-import { ConstructorContainer } from "./Levels/components/lib";
+import {
+  ConstructorContainer,
+  ConstructorInner,
+} from "./Levels/components/lib";
+import { ActionData } from "~/routes/$language/new";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -71,6 +74,8 @@ export default function Constructor({
     );
   }
 
+  const submitText = fetcher.state === "submitting" ? "Saving..." : "Save";
+
   return (
     <ConstructorContext.Provider value={state}>
       <ConstructorContainer>
@@ -78,19 +83,17 @@ export default function Constructor({
           method="post"
           autoComplete="off"
           onSubmit={(e) => onHandleSubmit(e)}
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            height: "100%",
-            flexWrap: "wrap",
-          }}
         >
-          <ConstructorFormInner>
-            <SkillInfo isEditingSkill={Boolean(data)} actionData={actionData} />
-            <Levels />
-          </ConstructorFormInner>
-          <Sidebar />
+          <ConstructorInner>
+            <ConstructorFormInner>
+              <SkillInfo
+                isEditingSkill={Boolean(data)}
+                actionData={actionData}
+              />
+              <Levels />
+            </ConstructorFormInner>
+            <Sidebar submitText={submitText} />
+          </ConstructorInner>
         </fetcher.Form>
       </ConstructorContainer>
     </ConstructorContext.Provider>

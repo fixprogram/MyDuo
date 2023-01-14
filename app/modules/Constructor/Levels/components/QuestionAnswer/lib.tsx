@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Textarea } from "~/components/lib";
 
 type WordsItemProps = {
   isActive: boolean;
@@ -29,4 +30,13 @@ const WordsItem = styled("li")<WordsItemProps>`
   }
 `;
 
-export { WordsList, WordsItem };
+const QuestionTextarea = styled(Textarea)`
+  border: none;
+  background-color: inherit;
+  width: 100%;
+  padding: 0;
+  min-height: 0;
+  letter-spacing: 0;
+`;
+
+export { WordsList, WordsItem, QuestionTextarea };

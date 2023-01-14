@@ -1,5 +1,3 @@
-import { useFetcher } from "@remix-run/react";
-import { Fragment } from "react";
 import { FormButton } from "~/components/lib";
 import { useScrollRefs } from "~/hooks/useScrollRefs";
 import { useConstructor } from "../..";
@@ -14,7 +12,7 @@ import {
   SidebarStepsListItem,
 } from "./lib";
 
-const Sidebar = () => {
+const Sidebar = ({ submitText }: { submitText: string }) => {
   const {
     steps,
     currentScreen,
@@ -30,9 +28,6 @@ const Sidebar = () => {
     addLesson,
     addStep,
   } = useConstructor();
-
-  const fetcher = useFetcher();
-  const submitText = fetcher.state === "submitting" ? "Saving" : "Save";
 
   const isSubmitActive = stepsReady === true && basicInfoReady === true;
   const isSubmitDisabled =

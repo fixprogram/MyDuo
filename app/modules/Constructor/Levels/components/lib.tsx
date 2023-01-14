@@ -30,12 +30,20 @@ type SidebarStepsButtonProps = {
 
 const ConstructorContainer = styled("section")`
   width: 100%;
-  height: calc(100vh - 95px);
+  // height: calc(100vh - 95px);
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
     height: calc(100vh - 165px);
     overflow-y: scroll;
   }
+`;
+
+const ConstructorInner = styled("div")`
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 95px);
+  justify-content: space-between;
+  flex-wrap: wrap;
 `;
 
 const StepContainer = styled("section")<StepContainerProps>`
@@ -364,6 +372,7 @@ const SidebarBtnAdd = styled("button")`
 
 export {
   ConstructorContainer,
+  ConstructorInner,
   StepContainer,
   StepHeader,
   StepContent,
