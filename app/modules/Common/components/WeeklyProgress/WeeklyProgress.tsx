@@ -8,20 +8,20 @@ import {
 
 const DAY_COORDS = [
   "0.5",
-  "42.166666666666664,0",
-  "83.83333333333333,0",
-  "125.5,0",
-  "167.16666666666666,0",
-  "208.83333333333334,0",
-  "250.5,0",
+  "42.166666666666664 0",
+  "83.83333333333333 0",
+  "125.5 0",
+  "167.16666666666666 0",
+  "208.83333333333334 0",
+  "250.5 0",
 ];
 
 const EXP_VALUES = [
-  { val: 0, coords: "0,150.5" },
-  { val: 0, coords: "0,113" },
-  { val: 0, coords: "0,75.5" },
-  { val: 0, coords: "0,38" },
-  { val: 0, coords: "0,0.5" },
+  { val: 0, coords: "0 150.5" },
+  { val: 0, coords: "0 113" },
+  { val: 0, coords: "0 75.5" },
+  { val: 0, coords: "0 38" },
+  { val: 0, coords: "0 0.5" },
 ];
 
 const DOTS_X_COORDS = [
@@ -53,6 +53,22 @@ export default function WeeklyProgress({
       (activity[day as keyof WeeklyActivity] / EXP_VALUES[4].val) * 150,
     exp: activity[day as keyof WeeklyActivity],
   }));
+
+  const filledBackgroundCoords = dotsData
+    .map(({ x, y }, idx) => {
+      if (idx === 0) return "M" + x + " " + y + " ";
+      return "L" + x + " " + y + " ";
+    })
+    .join()
+    .replace(/,/g, "");
+
+  const progressLine = dotsData
+    .map(({ x, y }, idx) => {
+      if (idx === 0) return "M" + x + " " + y + " ";
+      return "L" + x + " " + y + " ";
+    })
+    .join()
+    .replace(/,/g, "");
 
   return (
     <WeeklyProgressContainer>
@@ -97,16 +113,13 @@ export default function WeeklyProgress({
             >
               <path
                 className="GNoB0"
-                d={`M0,0L250,0L250,150L0,150Z`}
+                d={`M0 0L250 0L250 150L0 150Z`}
                 fill="#ffc800"
                 fillOpacity="0.1"
               ></path>
               <path
                 className="GNoB0"
-                d={`M0,0${dotsData.map(({ x, y }, idx) => {
-                  if (idx === 0) return "M" + x + "," + y;
-                  return "L" + x + "," + y;
-                })}L250,150L208.33333333333334,150L166.66666666666666,150L125,150L83.33333333333333,150L41.666666666666664,150L0,150Z`}
+                d={`M0 0${filledBackgroundCoords} L250 150L208.33333333333334 150L166.66666666666666 150L125 150L83.33333333333333 150L41.666666666666664 150L0 150Z`}
                 fill="#fff"
                 fillOpacity="1"
                 style={{ transform: "scaleY(-1) translateY(-150px)" }}
@@ -114,10 +127,7 @@ export default function WeeklyProgress({
 
               <path
                 className="QZq6Z"
-                d={`${dotsData.map(({ x, y }, idx) => {
-                  if (idx === 0) return "M" + x + "," + y;
-                  return "L" + x + "," + y;
-                })}`}
+                d={progressLine}
                 fillOpacity="0"
                 stroke="#ffc800"
                 strokeOpacity="0.5"
