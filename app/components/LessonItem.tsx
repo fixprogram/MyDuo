@@ -39,17 +39,15 @@ export default function LessonItem({
   }, [transition.state]);
   useOnClickOutside(ref, () => setIsOpened(false));
 
-  const isDisabled = transition.state !== "idle";
-
-  const exp = (currentLesson / lessonsAmount) * 100;
-  const skillLink = `/skill/${title}/${
-    currentLesson / lessonsAmount === 1 ? "practice" : currentLesson + 1
-  }`;
-
   function toggleMenu() {
     setIsOpened(!isOpened);
   }
 
+  const isDisabled = transition.state !== "idle";
+  const exp = (currentLesson / lessonsAmount) * 100;
+  const skillLink = `/skill/${title}/${
+    exp >= 100 ? "practice" : currentLesson + 1
+  }`;
   const startButtonMessage = exp < 100 ? "Start +16 XP" : "Practice +16 XP";
 
   return (

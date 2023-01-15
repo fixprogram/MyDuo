@@ -312,7 +312,7 @@ const Input = styled("input")`
 const Textarea = styled("textarea")`
   background-color: rgb(247, 247, 247);
   border: 2px solid rgb(229, 229, 229);
-  border-radius: 10px;
+  // border-radius: 10px;
   padding: 10px 12px;
   min-height: 170px;
   width: 100%;
