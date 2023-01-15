@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { VariantItemNumber } from "~/modules/Constructor/Levels/components/lib";
+import { VariantItemNumber } from "~/modules/Constructor/components/Levels/components/lib";
 import { useSkill } from "../..";
 import { VariantItem } from "../lib";
 import { VariantsContainer, VariantsItem, VariantsList } from "./lib";

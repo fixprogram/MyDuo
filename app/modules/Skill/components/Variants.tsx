@@ -1,5 +1,5 @@
-import { Variant } from "~/modules/Constructor/Levels/components/MatchingPairs/reducer";
-import VariantsScreen from "~/modules/Constructor/Levels/components/Variants/VariantsScreen";
+import { Variant } from "~/modules/Constructor/components/Levels/components/MatchingPairs/reducer";
+import VariantsScreen from "~/modules/Constructor/components/Levels/components/Variants/VariantsScreen";
 import { useSkill } from "..";
 import { Lesson } from "./Lesson";
 

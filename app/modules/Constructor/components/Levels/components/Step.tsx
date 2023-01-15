@@ -1,8 +1,8 @@
 import React, { Fragment, ReactElement } from "react";
 import { Legend } from "~/components/lib";
 import { STEP_TYPES } from "~/constants";
-import { useConstructor } from "../..";
-import CloseBtn from "../../components/CloseBtn";
+import { useConstructor } from "../../..";
+import CloseBtn from "../../CloseBtn";
 import { Step as StepType } from "../types";
 import {
   StepHeader,

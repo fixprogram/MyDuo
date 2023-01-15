@@ -138,6 +138,12 @@ const SettingsContainer = styled("div")`
   flex-direction: column;
 `;
 
+const SettingsItemTitle = styled("b")`
+  display: block;
+  padding: 4px 0;
+  margin-bottom: 3px;
+`;
+
 export {
   LessonTitleInput,
   ConstructorMenu,
@@ -151,4 +157,5 @@ export {
   VariantsItem,
   SkillPositionContainer,
   SettingsContainer,
+  SettingsItemTitle,
 };

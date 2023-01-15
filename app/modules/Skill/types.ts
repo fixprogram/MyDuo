@@ -1,5 +1,5 @@
 import { Step } from "@prisma/client";
-import { StepOptions } from "../Constructor/Levels/types";
+import { StepOptions } from "../Constructor/components/Levels/types";
 
 // export type Step = Omit<Lesson, "createdAt" | "updatedAt"> & {
 //   difficulty: "easy" | "hard" | null;

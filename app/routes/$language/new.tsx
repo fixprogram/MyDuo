@@ -10,6 +10,7 @@ import {
 import { getTodayDate } from "~/utils";
 import { json, redirect } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 
 // Temporary function for randomly set an amount of skills in a row.
 // In the future will be changed on functionality of setting position on your own
@@ -29,7 +30,7 @@ export function ErrorBoundary() {
   );
 }
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request }: ActionArgs) => {
   const activeLanguage = (await getActiveLanguage(request)) as Language;
   const form = await request.formData();
 
@@ -40,57 +41,71 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const { skillTitle } = skillData;
 
-  let lineNumber = 0;
-  const amountData = await getAmountOfSkillsOnTheLastRow(activeLanguage.id);
-  if (amountData) {
-    if (amountData.count >= getRandomIntFromOneToThree()) {
-      lineNumber = amountData.lastLineNumber + 1;
-    } else {
-      lineNumber = amountData.lastLineNumber;
-    }
-  }
-
-  const isTitleUnique = await checkTitleUnique(activeLanguage.id, skillTitle);
-
-  if (isTitleUnique) {
-    return json<ActionData>(
-      {
-        errors: { title: "Title isn't unique" },
-      },
-      { status: 400 }
-    );
-  }
-
-  const createdStepIDs = await createSteps(
-    stepsData.map((step) => ({ ...step, languageId: activeLanguage.id }))
+  const doesTitleAlreadyExist = await checkTitleUnique(
+    activeLanguage.id,
+    skillTitle
   );
 
-  const uniqueLessons: string[] = [];
-  stepsData.map((step) => {
-    if (
-      !Boolean(
-        uniqueLessons.find((lessonId) => lessonId === step.parentLessonId)
-      )
-    ) {
-      uniqueLessons.push(step.parentLessonId);
-    }
-  });
-  const lessonsAmount = uniqueLessons.length;
+  // if (doesTitleAlreadyExist) {
+  //   return json<ActionData>(
+  //     {
+  //       errors: { title: "Title isn't unique" },
+  //     },
+  //     { status: 400 }
+  //   );
+  // }
 
-  const data = {
-    title: skillTitle,
-    stepIDs: createdStepIDs,
-    currentLesson: 0,
-    lessonsAmount,
-    level: 0,
-    languageId: activeLanguage.id,
-    updatedAt: getTodayDate(),
-    lineNumber: Number(lineNumber),
-  };
-  const skill = await prisma.skill.create({ data });
-  return redirect(`/skill/${skill.title}/1`);
+  if (!doesTitleAlreadyExist) {
+    let lineNumber = 0;
+    const amountData = await getAmountOfSkillsOnTheLastRow(activeLanguage.id);
+    if (amountData) {
+      if (amountData.count >= getRandomIntFromOneToThree()) {
+        lineNumber = amountData.lastLineNumber + 1;
+      } else {
+        lineNumber = amountData.lastLineNumber;
+      }
+    }
+
+    const createdStepIDs = await createSteps(
+      stepsData.map((step) => ({ ...step, languageId: activeLanguage.id }))
+    );
+
+    const uniqueLessons: string[] = [];
+    stepsData.map((step) => {
+      if (
+        !Boolean(
+          uniqueLessons.find((lessonId) => lessonId === step.parentLessonId)
+        )
+      ) {
+        uniqueLessons.push(step.parentLessonId);
+      }
+    });
+    const lessonsAmount = uniqueLessons.length;
+
+    const data = {
+      title: skillTitle,
+      stepIDs: createdStepIDs,
+      currentLesson: 0,
+      lessonsAmount,
+      level: 0,
+      languageId: activeLanguage.id,
+      updatedAt: getTodayDate(),
+      lineNumber: Number(lineNumber),
+    };
+    const skill = await prisma.skill.create({ data });
+    return redirect(`/skill/${skill.title}/1`);
+  }
+
+  return json<ActionData>(
+    {
+      errors: { title: "Title isn't unique" },
+    },
+    { status: 400 }
+  );
 };
 
 export default function NewSkillPage() {
-  return <Constructor actionData={{}} />;
+  const actionData = useActionData<typeof action>();
+
+  return <Constructor actionData={actionData ? actionData : {}} />;
 }

@@ -87,7 +87,7 @@ export default function Footer({
           Skip
         </LessonButton>
 
-        {difficulty && status === "idle" && (
+        {difficulty && status === "idle" && stepType === "Insert" && (
           <ChangeDifficultyBtn
             onClick={() =>
               setDifficulty(difficulty === "easy" ? "hard" : "easy")

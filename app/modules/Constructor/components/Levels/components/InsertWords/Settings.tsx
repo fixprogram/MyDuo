@@ -1,7 +1,10 @@
-import type { Dispatch, SetStateAction } from "react";
-import { SettingsContainer } from "~/modules/Constructor/components/lib";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import {
+  SettingsContainer,
+  SettingsItemTitle,
+} from "~/modules/Constructor/components/lib";
 import { getWordsOutOfText } from "~/modules/Constructor/utils/getWordsOutOfText";
-import { cleanWordFromSigns, isItemInArray } from "~/utils";
+import { isItemInArray } from "~/utils";
 import { Button } from "../lib";
 import { WordsItem, WordsList } from "./lib";
 
@@ -24,10 +27,6 @@ export default function Settings({
   text,
 }: BackendProps) {
   const words: string[] = text ? getWordsOutOfText(text) : [];
-
-  //  ---------
-  //  Filter words from dots, commas etc
-  //  ---------
 
   function handleOnWordClick(wordIndex: number) {
     setIndexes((prevIndexes: number[]) => {
@@ -56,13 +55,23 @@ export default function Settings({
     setEditingText(false);
   }
 
+  // In this effect we check if the text was changed but old indexes stayed in the array. If so, we remove them.
+  useEffect(() => {
+    const words = text ? getWordsOutOfText(text) : [];
+    const newIndexes = indexes.filter((index) =>
+      words.find((word) => word === words[index])
+    );
+
+    if (indexes.length !== newIndexes.length) {
+      setIndexes(newIndexes);
+    }
+  }, [text]);
+
   return (
     <SettingsContainer>
       <WordsList>
         <li>
-          <b style={{ display: "block", padding: "4px 0", marginBottom: 3 }}>
-            Choose words to be hidden:
-          </b>
+          <SettingsItemTitle>Choose words to be hidden:</SettingsItemTitle>
         </li>
         {words.map((word, wordIndex) => {
           const isActive = !!indexes

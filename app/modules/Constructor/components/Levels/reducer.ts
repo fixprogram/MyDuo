@@ -59,7 +59,6 @@ enum actionTypes {
 
 type Action =
   | { type: actionTypes.setup; data: ConstructorData }
-  // | { type: actionTypes.setup; steps: Step[] }
   | {
       type: actionTypes.setStepType;
       payload: { stepType: string; id: string };
@@ -282,7 +281,6 @@ function useConstructorReducer({
 
   const setup = (data: ConstructorData) =>
     dispatch({ type: actionTypes.setup, data });
-  // const setup = (steps: Step[]) => dispatch({ type: actionTypes.setup, steps });
   const setStepType = (stepType: string, id: string) =>
     dispatch({ type: actionTypes.setStepType, payload: { stepType, id } });
   const removeStep = () => dispatch({ type: actionTypes.removeStep });
@@ -342,7 +340,6 @@ const initialContext = {
   ...basicState,
   setStepType: (stepType: string, id: string) => {},
   setup: (data: ConstructorData) => {},
-  // setup: (steps: Step[]) => {},
   removeStep: () => {},
   removeStepType: (id: string) => {},
   setStepActive: (id: string) => {},

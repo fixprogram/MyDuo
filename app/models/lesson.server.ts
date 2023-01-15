@@ -1,6 +1,6 @@
 import { Step, Skill } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { StepOptions } from "~/modules/Constructor/Levels/types";
+import { StepOptions } from "~/modules/Constructor/components/Levels/types";
 import { PracticeStepType } from "~/modules/Skill/types";
 import { getSkillByTitle } from "./skill.server";
 

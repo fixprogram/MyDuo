@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { PHONE_MEDIA_MAX, TABLET_MEDIA_MAX } from "~/constants";
 import Sidebar from "./Sidebar";
+import PlusIcon from "~/styles/plus.svg";
 
 type InsertWordsTextBlockProps = {
   isEditingText?: boolean;
@@ -28,9 +29,13 @@ type SidebarStepsButtonProps = {
   isActive: boolean;
 };
 
+type SidebarStepsListItemProps = {
+  isActive: boolean;
+};
+
 const ConstructorContainer = styled("section")`
   width: 100%;
-  // height: calc(100vh - 95px);
+  height: calc(100vh - 95px);
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
     height: calc(100vh - 165px);
@@ -41,7 +46,7 @@ const ConstructorContainer = styled("section")`
 const ConstructorInner = styled("div")`
   display: flex;
   width: 100%;
-  height: calc(100vh - 95px);
+  height: 100%;
   justify-content: space-between;
   flex-wrap: wrap;
 `;
@@ -234,9 +239,9 @@ const VariantItemNumber = styled("span")<VariantItemNumberProps>`
   align-items: center;
   font-family: "Nunito";
 
-  @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    display: none;
-  }
+  // @media (max-width: ${TABLET_MEDIA_MAX}px) {
+  //   display: none;
+  // }
 `;
 
 const SidebarList = styled("ul")`
@@ -258,18 +263,22 @@ const SidebarListItem = styled("li")`
 `;
 
 const SidebarStepsList = styled(SidebarList)`
+  max-height: 40%;
+  overflow-y: scroll;
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    max-height: 100%;
     width: 100%;
     order: 1;
     margin-bottom: 15px;
   }
 `;
 
-const SidebarStepsListItem = styled("li")`
+const SidebarStepsListItem = styled("li")<SidebarStepsListItemProps>`
   display: flex;
+  min-height: 30px;
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    min-width: 65px;
+    min-width: ${(props) => (props.isActive ? "115px" : "70px")};
   }
 `;
 
@@ -316,29 +325,15 @@ const StepInner = styled("div")`
 `;
 
 const SidebarBtnAdd = styled("button")`
-  // cursor: pointer;
-  // border-radius: 8px;
-  // background-color: rgb(28, 176, 246);
-  // color: white;
-  // font-weight: 600;
-  // transition: filter 0.1s ease;
-  // font-size: 18px;
-
-  // align-self: center;
-
-  // &:hover {
-  //   filter: brightness(1.1);
-  // }
-
   border: 0 solid transparent;
   background-color: #1cb0f6;
+
   color: #fff;
   border-color: white;
   border-width: 0;
   border-bottom-width: 4px;
   border-bottom-color: #1899d6;
   height: 40px;
-  // width: 130px;
   cursor: pointer;
   text-transform: uppercase;
   font-family: "Nunito";
@@ -363,10 +358,33 @@ const SidebarBtnAdd = styled("button")`
   }
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    padding: 0 10px 3px 10px;
+    padding: 0;
 
-    width: 30px;
+    min-width: 30px;
     height: 30px;
+    align-self: center;
+    background-image: url(${PlusIcon});
+    background-size: 17px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-size: 0;
+
+    &:active {
+      height: 26px;
+    }
+  }
+`;
+
+const SidebarBtnAddWithoutTitle = styled(SidebarBtnAdd)`
+  height: 30px;
+  background-image: url(${PlusIcon});
+  background-size: 17px;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &:active {
+    height: 26px;
   }
 `;
 
@@ -393,5 +411,6 @@ export {
   SidebarBtn,
   StepInner,
   SidebarBtnAdd,
+  SidebarBtnAddWithoutTitle,
   SidebarStepsButton,
 };

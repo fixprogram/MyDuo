@@ -9,10 +9,11 @@ import {
   deleteStepsFromSkill,
   getStepsBySkillId,
 } from "~/models/lesson.server";
-import { getLastAddedSkill, getLastAddedSkills } from "~/models/skill.server";
+import { checkTitleUnique, getLastAddedSkills } from "~/models/skill.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayDate } from "~/utils";
-import { StepOptions } from "~/modules/Constructor/Levels/types";
+import { StepOptions } from "~/modules/Constructor/components/Levels/types";
+import { ActionData } from "../new";
 
 export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
@@ -97,5 +98,5 @@ export default function EditSkill() {
   const actionData = useActionData<typeof action>();
   const { data } = useLoaderData<typeof loader>();
 
-  return <Constructor data={data} actionData={actionData} />;
+  return <Constructor data={data} actionData={actionData ? actionData : {}} />;
 }

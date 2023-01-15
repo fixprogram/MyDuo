@@ -41,7 +41,7 @@ export async function updateCurrentChapter(skill: Skill) {
 
 export async function checkTitleUnique(languageId: string, title: string) {
   const skills = await prisma.skill.findMany({ where: { languageId } });
-  return !!skills.find((skill) => skill.title === title);
+  return Boolean(skills.find((skill) => skill.title === title));
 }
 
 export async function getLastAddedSkill(languageId: string) {

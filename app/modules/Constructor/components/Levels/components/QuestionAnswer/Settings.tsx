@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useConstructor } from "~/modules/Constructor";
-import { SettingsContainer } from "~/modules/Constructor/components/lib";
+import {
+  SettingsContainer,
+  SettingsItemTitle,
+} from "~/modules/Constructor/components/lib";
 import { getWordsOutOfText } from "~/modules/Constructor/utils/getWordsOutOfText";
 import { isItemInArray } from "~/utils";
 import { StepOptions } from "../../types";
@@ -49,9 +52,9 @@ export default function Settings({
     <SettingsContainer>
       <WordsList>
         <li>
-          <b style={{ display: "block", padding: "4px 0", marginBottom: 3 }}>
+          <SettingsItemTitle>
             Choose words to be enough for answer:
-          </b>
+          </SettingsItemTitle>
         </li>
 
         {!isEditing &&

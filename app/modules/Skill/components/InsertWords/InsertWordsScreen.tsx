@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { InsertWordsTextBlock } from "~/modules/Constructor/Levels/components/lib";
+import { InsertWordsTextBlock } from "~/modules/Constructor/components/Levels/components/lib";
 import { useSkill } from "../..";
 import { LessonTitle } from "../lib";
 import Puzzle from "./Puzzle";

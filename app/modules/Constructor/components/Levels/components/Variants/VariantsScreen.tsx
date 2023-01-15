@@ -1,4 +1,3 @@
-import { Variant } from "@prisma/client";
 import {
   LessonDuolingoPicture,
   LessonQuestion,
@@ -9,6 +8,7 @@ import {
 } from "~/modules/Skill/components/lib";
 import { VariantItemNumber, VariantsItem, VariantsList } from "../lib";
 import Duo from "~/styles/duo.svg";
+import { Variant } from "../MatchingPairs/reducer";
 
 type VariantsScreenProps = {
   question: string;

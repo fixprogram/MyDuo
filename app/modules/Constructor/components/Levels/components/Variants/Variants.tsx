@@ -12,7 +12,7 @@ import {
   variantSetValue,
   variantsSetup,
 } from "../MatchingPairs/actions";
-import { useConstructor } from "../../..";
+import { useConstructor } from "../../../..";
 import {
   VariantsItem,
   VariantsList,

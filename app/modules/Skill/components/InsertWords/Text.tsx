@@ -1,5 +1,5 @@
 import { Fragment, SyntheticEvent, useEffect, useRef, useState } from "react";
-import { InsertWordsInput } from "~/modules/Constructor/Levels/components/lib";
+import { InsertWordsInput } from "~/modules/Constructor/components/Levels/components/lib";
 import { cleanWordFromSigns } from "~/utils";
 import { useSkill } from "../..";
 

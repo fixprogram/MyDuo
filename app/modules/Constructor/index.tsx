@@ -1,16 +1,20 @@
 import { createContext, useContext, useEffect } from "react";
 import SkillInfo from "./components/SkillInfo";
-import { initialContext, useConstructorReducer } from "./Levels/reducer";
+import {
+  initialContext,
+  useConstructorReducer,
+} from "./components/Levels/reducer";
 import { ConstructorFormInner } from "./components/lib";
-import Levels from "./Levels";
-import Sidebar from "./Levels/components/Sidebar";
-import { ConstructorData } from "./Levels/types";
+import Levels from "./components/Levels";
+import Sidebar from "./components/Levels/components/Sidebar";
+import { ConstructorData } from "./components/Levels/types";
 import { useFetcher } from "@remix-run/react";
 import {
   ConstructorContainer,
   ConstructorInner,
-} from "./Levels/components/lib";
+} from "./components/Levels/components/lib";
 import { ActionData } from "~/routes/$language/new";
+import { trimValuesFromVariants } from "./api/trimValuesFromVariants";
 
 const ConstructorContext = createContext(initialContext);
 ConstructorContext.displayName = "ConstructorContext";
@@ -61,7 +65,9 @@ export default function Constructor({
       ({ ready, id, options, answer, ...rest }) => ({
         ...rest,
         answer: typeof answer === "string" ? answer.trim() : answer,
-        options: JSON.stringify(options),
+        options: JSON.stringify(
+          options.variants ? trimValuesFromVariants(options) : options
+        ),
       })
     );
 
@@ -83,6 +89,7 @@ export default function Constructor({
           method="post"
           autoComplete="off"
           onSubmit={(e) => onHandleSubmit(e)}
+          style={{ height: "100%" }}
         >
           <ConstructorInner>
             <ConstructorFormInner>

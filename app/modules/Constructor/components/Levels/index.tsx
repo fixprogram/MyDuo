@@ -3,8 +3,8 @@ import type { Step as StepType } from "./types";
 import Variants from "./components/Variants";
 import MatchingPairs from "./components/MatchingPairs";
 import InsertWords from "./components/InsertWords";
-import { ScreenContainer } from "../components/lib";
-import { useConstructor } from "..";
+import { ScreenContainer } from "../lib";
+import { useConstructor } from "../..";
 import Step from "./components/Step";
 import QuestionAnswer from "./components/QuestionAnswer";
 
