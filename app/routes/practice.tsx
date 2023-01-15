@@ -1,11 +1,11 @@
 import { prisma } from "~/db.server";
 import Lesson from "~/modules/Skill";
 import { getUser } from "~/session.server";
-import { User, WeeklyActivity } from "@prisma/client";
+import { WeeklyActivity } from "@prisma/client";
 import { getWeekDay } from "~/utils";
 import { ActionArgs, json, redirect } from "@remix-run/node";
 import type { LoaderArgs } from "@remix-run/node";
-import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
 import { getStepsForPracticing } from "~/models/lesson.server";
 import { getActiveLanguage } from "~/models/language.server";
 import { getTodayTotalXP } from "~/models/user.server";

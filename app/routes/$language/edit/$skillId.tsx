@@ -47,7 +47,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   await deleteStepsFromSkill(params.skillId as string);
 
-  const createdStepIDs = await createSteps(stepsData);
+  const createdStepIDs = await createSteps(
+    stepsData.map((step) => ({ ...step, languageId: activeLanguage.id }))
+  );
   const data = {
     title: skillTitle,
     stepIDs: createdStepIDs,
