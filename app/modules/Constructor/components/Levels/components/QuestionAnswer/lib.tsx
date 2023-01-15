@@ -32,6 +32,8 @@ const WordsItem = styled("li")<WordsItemProps>`
 
 const QuestionTextarea = styled(Textarea)`
   border: none;
+  border-radius: 0;
+
   background-color: inherit;
   width: 100%;
   padding: 0;
