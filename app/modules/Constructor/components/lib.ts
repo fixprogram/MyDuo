@@ -81,6 +81,7 @@ const ConstructorSidebar = styled("section")`
     flex-wrap: wrap;
     box-shadow: 0px 0px 5px rgb(0 0 0 / 10%);
     margin-bottom: 0;
+    z-index: 5;
   }
 `;
 
