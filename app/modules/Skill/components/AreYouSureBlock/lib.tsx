@@ -33,14 +33,17 @@ const Grid = styled("div")`
 `;
 
 const Title = styled("span")`
-  font-size: 25px;
   grid-area: title;
-  line-height: 30px;
-  font-weight: 700;
+  min-width: 172px;
+
   font-family: "Nunito";
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 30px;
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
     grid-area: unset;
+
     text-align: center;
   }
 `;
@@ -68,7 +71,7 @@ const QuitButton = styled(Link)`
   border-bottom-width: 4px;
   border-bottom-color: #1899d6;
   height: 50px;
-  width: 150px;
+  width: 100%;
   cursor: pointer;
   text-transform: uppercase;
   font-family: "Nunito";
@@ -116,7 +119,7 @@ const StayButton = styled("button")`
   border-bottom-width: 4px;
   border-bottom-color: #e5e5e5;
   height: 50px;
-  width: 150px;
+  width: 100%;
   cursor: pointer;
   text-transform: uppercase;
   font-family: "Nunito";

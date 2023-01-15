@@ -24,9 +24,11 @@ function generateVariants(text: string, answer: string) {
     return variants;
   }
 
-  // if(words.length <= 2) {
+  if (words.length > 2) {
+    words.length = 2;
+  }
+
   return [...variants, ...words];
-  // }
 }
 
 export default function Variants({

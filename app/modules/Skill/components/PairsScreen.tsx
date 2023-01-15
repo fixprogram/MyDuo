@@ -1,5 +1,5 @@
-import { Variant } from "@prisma/client";
 import { useState } from "react";
+import { Variant } from "~/modules/Constructor/types";
 import { LessonTitle, PairsItem, PairsList, VariantItem } from "./lib";
 
 type PairsScreenProps = {

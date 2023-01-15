@@ -1,4 +1,4 @@
-import { Variant } from "@prisma/client";
+import { Variant } from "~/modules/Constructor/types";
 
 export type Action =
   | {

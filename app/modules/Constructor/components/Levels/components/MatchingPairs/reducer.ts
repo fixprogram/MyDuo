@@ -1,12 +1,5 @@
+import { Variant } from "~/modules/Constructor/types";
 import { Action } from "./actions";
-
-export type Variant = {
-  type: string | null;
-  value: string;
-  idx: number;
-  isFocused: boolean;
-  isConnected: boolean | null;
-};
 
 export type State = {
   variants: Variant[];

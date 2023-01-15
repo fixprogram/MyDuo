@@ -52,7 +52,7 @@ const VariantsItem = styled("li")`
   width: 49%;
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {
-    width: auto;
+    width: 100%;
     margin: 8px;
   }
 `;
