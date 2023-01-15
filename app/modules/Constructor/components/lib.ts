@@ -95,6 +95,11 @@ const BtnClose = styled("button")`
   padding: 0;
   left: 30px;
   top: -33px;
+
+  @media (max-width: ${PHONE_MEDIA_MAX}px) {
+    left: 0;
+    top: -30px;
+  }
 `;
 
 const BtnCloseImage = styled("img")`

@@ -315,8 +315,12 @@ const SidebarStepsButton = styled("button")<SidebarStepsButtonProps>`
 const StepInner = styled("div")`
   padding: 0 20%;
 
-  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+  @media (max-width: 820px) {
     padding: 0 40px;
+  }
+
+  @media (max-width: 720px) {
+    padding: 0;
   }
 
   @media (max-width: ${PHONE_MEDIA_MAX}px) {

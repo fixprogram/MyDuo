@@ -53,7 +53,7 @@ export default function Settings({
       <WordsList>
         <li>
           <SettingsItemTitle>
-            Choose words to be enough for answer:
+            Choose words to be enough for an answer:
           </SettingsItemTitle>
         </li>
 

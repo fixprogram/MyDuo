@@ -296,7 +296,7 @@ const VariantItem = styled("button")<VariantItemProps>`
 `;
 
 const LessonTitle = styled("h2")`
-  font-size: 1.5em;
+  font-size: 2em;
   font-family: "Nunito", sans-serif;
   line-height: 1.25;
   color: #3c3c3c;
@@ -304,6 +304,20 @@ const LessonTitle = styled("h2")`
   font-weight: 800;
   cursor: default;
   margin: 0;
+
+  @media (max-width: ${TABLET_MEDIA_MAX}px) {
+    font-size: 1.5em;
+  }
+`;
+
+const LessonQuestionWrapper = styled("div")`
+  padding: 2px 14px;
+  margin-left: 8px;
+  background-color: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 15px;
+  box-sizing: border-box;
+  cursor: default;
 `;
 
 const LessonQuestion = styled("p")`
@@ -311,13 +325,9 @@ const LessonQuestion = styled("p")`
   line-height: 39px;
   font-family: "Nunito", sans-serif;
   color: #3c3c3c;
-  padding: 12px 24px;
-  margin-left: 8px;
-  background-color: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 15px;
-  box-sizing: border-box;
-  cursor: default;
+  padding: 10px;
+  margin: 0;
+  // padding: 12px 24px;
 `;
 
 const LessonQuestionTriangleContainer = styled("div")`
@@ -445,7 +455,7 @@ const PairsItem = styled("li")`
 `;
 
 const LessonDuolingoPicture = styled("img")`
-  max-height: 125px;
+  max-height: 150px;
   margin-bottom: -50px;
 
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
@@ -456,10 +466,10 @@ const LessonDuolingoPicture = styled("img")`
 const LessonAnswerWrapper = styled("div")`
   display: flex;
   align-items: center;
-  margin: 30px 0;
+  margin: 60px 0 30px;
 
   @media (max-width: ${TABLET_MEDIA_MAX}px) {
-    margin-bottom: 0;
+    margin: 30px 0;
   }
 `;
 
@@ -481,6 +491,7 @@ export {
   LessonBodyResults,
   VariantItem,
   LessonTitle,
+  LessonQuestionWrapper,
   LessonQuestion,
   LessonQuestionTriangleContainer,
   LessonQuestionTriangle,

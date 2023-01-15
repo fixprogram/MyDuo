@@ -3,12 +3,13 @@ import {
   LessonQuestion,
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
+  LessonQuestionWrapper,
   LessonTitle,
   VariantItem,
 } from "~/modules/Skill/components/lib";
 import { VariantItemNumber, VariantsItem, VariantsList } from "../lib";
 import Duo from "~/styles/duo.svg";
-import { Variant } from "../MatchingPairs/reducer";
+import { Variant } from "~/modules/Constructor/types";
 
 type VariantsScreenProps = {
   question: string;
@@ -33,7 +34,9 @@ export default function VariantsScreen({
           {/* <img src={Duo} alt="Duo" height={150} style={{ marginBottom: -50 }} /> */}
           <LessonDuolingoPicture src={Duo} alt="Duo" />
           <div style={{ position: "relative" }}>
-            <LessonQuestion>{question}</LessonQuestion>
+            <LessonQuestionWrapper>
+              <LessonQuestion>{question}</LessonQuestion>
+            </LessonQuestionWrapper>
             <LessonQuestionTriangleContainer>
               <LessonQuestionTriangle />
             </LessonQuestionTriangleContainer>

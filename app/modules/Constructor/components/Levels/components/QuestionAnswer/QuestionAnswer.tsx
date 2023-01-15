@@ -8,6 +8,7 @@ import {
   LessonQuestion,
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
+  LessonQuestionWrapper,
   LessonTitle,
 } from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
@@ -53,15 +54,17 @@ export default function QuestionAnswer({ state = initialState }) {
           <LessonAnswerWrapper>
             <LessonDuolingoPicture src={Duo} alt="Duolingo picture" />
             <div style={{ position: "relative" }}>
-              <LessonQuestion>
-                <QuestionTextarea
-                  placeholder="Set question"
-                  value={question === null ? "" : question}
-                  onChange={setQuestion}
-                  autoFocus={true}
-                  required
-                />
-              </LessonQuestion>
+              <LessonQuestionWrapper>
+                <LessonQuestion>
+                  <QuestionTextarea
+                    placeholder="Set question"
+                    value={question === null ? "" : question}
+                    onChange={setQuestion}
+                    autoFocus={true}
+                    required
+                  />
+                </LessonQuestion>
+              </LessonQuestionWrapper>
               <LessonQuestionTriangleContainer>
                 <LessonQuestionTriangle />
               </LessonQuestionTriangleContainer>

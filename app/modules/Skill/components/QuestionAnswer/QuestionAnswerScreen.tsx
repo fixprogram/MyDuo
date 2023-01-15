@@ -7,6 +7,7 @@ import {
   LessonQuestionTriangle,
   LessonDuolingoPicture,
   LessonAnswerWrapper,
+  LessonQuestionWrapper,
 } from "../lib";
 import Duo from "~/styles/duo.svg";
 import { useSkill } from "../..";
@@ -41,7 +42,9 @@ export default function QuestionAnswerScreen({
           <LessonDuolingoPicture src={Duo} alt="Duolingo picture" />
           {/* <img src={Duo} alt="Duo" height="100%" style={{ marginBottom: -50 }} /> */}
           <div style={{ position: "relative" }}>
-            <LessonQuestion>{content.options.question}</LessonQuestion>
+            <LessonQuestionWrapper>
+              <LessonQuestion>{content.options.question}</LessonQuestion>
+            </LessonQuestionWrapper>
             <LessonQuestionTriangleContainer>
               <LessonQuestionTriangle />
             </LessonQuestionTriangleContainer>
