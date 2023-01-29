@@ -15,19 +15,19 @@ import {
 import Bin from "~/styles/bin.svg";
 import useOnClickOutside from "~/hooks/useOnClickOutside";
 import { Form, useTransition } from "@remix-run/react";
-import { SkillsListItemType } from "./SkillsList";
+import { SkillsListItemType } from "../../SkillsList";
 
-type LessonItem = SkillsListItemType & {
+type SkillsItemType = SkillsListItemType & {
   editLink: string;
 };
 
-export default function LessonItem({
+export default function SkillsItem({
   id,
   title,
   currentLesson,
   lessonsAmount,
   editLink,
-}: LessonItem) {
+}: SkillsItemType) {
   const [isOpened, setIsOpened] = useState(false);
   const transition = useTransition();
   const ref = useRef(null);

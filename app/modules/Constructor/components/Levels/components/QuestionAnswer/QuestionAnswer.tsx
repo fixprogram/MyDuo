@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Textarea } from "~/components/lib";
 import { useConstructor } from "~/modules/Constructor";
 import { Step } from "../../types";
 import {
@@ -9,12 +8,12 @@ import {
   LessonQuestionTriangle,
   LessonQuestionTriangleContainer,
   LessonQuestionWrapper,
-  LessonTitle,
 } from "~/modules/Skill/components/lib";
 import Duo from "~/styles/duo.svg";
 import Settings from "./Settings";
 import { StepContent, StepInner } from "../lib";
 import { QuestionTextarea } from "./lib";
+import { Textarea } from "~/modules/Common/components/FormTags/lib";
 
 const initialState: Omit<
   Step,

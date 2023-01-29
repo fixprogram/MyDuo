@@ -1,21 +1,15 @@
 import { json, redirect, Response } from "@remix-run/node";
 import type { LoaderArgs } from "@remix-run/node";
-import { Outlet, useCatch, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
-import { ErrorMessage, Main, Overlay } from "~/components/lib";
-import Menu from "~/components/Menu";
+import { useCatch, useLoaderData } from "@remix-run/react";
 import {
   createNewLanguage,
   getLanguages,
   setActiveLanguage,
 } from "~/models/language.server";
-import { getLastActivity, updateUserStreak } from "~/models/user.server";
 import { getUser } from "~/session.server";
 import styles from "~/styles/index.css";
-import { getTodayDate } from "~/utils";
-import Navigation from "~/components/Navigation";
-import { PHONE_MEDIA_MAX } from "~/constants";
-import useMediaQuery from "~/hooks/useMediaQuery";
+import ErrorMessage from "~/modules/Common/components/ErrorMessage";
+import MainPage from "~/pages/MainPage";
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -50,7 +44,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 
   const activeLanguage = languages.find((item) => item.active);
-  const today = getTodayDate();
 
   if (!activeLanguage) {
     throw new Response(`Active language wasn't found`, { status: 404 });
@@ -62,50 +55,13 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect(`/${activeLanguage.title}/skills`);
   }
 
-  const lastActive = await getLastActivity(request);
-  if (today - lastActive > 1 || lastActive === 0) {
-    user = await updateUserStreak(user.id, false, 0);
-    return json({ userData, languages });
-  }
-
-  if (today - lastActive === 1) {
-    user = await updateUserStreak(user.id, false, user.streak);
-    return json({ userData, languages });
-  }
-
-  if (!user.wasToday && lastActive === today) {
-    user = await updateUserStreak(user.id, true, user.streak + 1);
-    return json({ userData, languages });
-  }
-
-  if (user.wasToday) {
-    return json({ userData, languages });
-  }
-
   return json({ userData, languages });
 };
 
 export default function LanguagePage() {
   const { userData, languages } = useLoaderData<typeof loader>();
-  const [isOverlay, setIsOverlay] = useState(false);
 
-  const matches = useMediaQuery(`(max-width: ${PHONE_MEDIA_MAX}px)`);
-
-  return (
-    <>
-      <Menu
-        userData={userData}
-        languages={languages}
-        onOverlay={setIsOverlay}
-      />
-      <Main>
-        <Outlet />
-      </Main>
-
-      {matches ? <Navigation /> : null}
-      <Overlay active={isOverlay} />
-    </>
-  );
+  return <MainPage userData={userData} languages={languages} />;
 }
 
 export function CatchBoundary() {

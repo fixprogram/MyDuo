@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { ErrorMessage, Legend, LessonProgress } from "~/components/lib";
+import ErrorMessage from "~/modules/Common/components/ErrorMessage";
+import { Legend } from "~/modules/Common/components/FormTags/lib";
+import { LessonProgress } from "~/modules/Common/components/SkillsList/components/SkillsItem/lib";
 import { ActionData } from "~/routes/$language/new";
 import { useConstructor } from "..";
 

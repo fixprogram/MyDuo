@@ -11,7 +11,7 @@ import {
 } from "./lib";
 import { Language } from "@prisma/client";
 
-export default function Projects({
+export default function Languages({
   onOverlay,
   languages,
 }: {

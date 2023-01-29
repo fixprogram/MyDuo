@@ -1,12 +1,11 @@
 import { useEffect, useReducer } from "react";
-import { Textarea } from "~/components/lib";
 import {
   StepContent,
   StepInner,
   VariantItemInput,
   VariantItemNumber,
 } from "../lib";
-import { reducer, Variant } from "../MatchingPairs/reducer";
+import { reducer } from "../MatchingPairs/reducer";
 import {
   variantChoose,
   variantSetValue,
@@ -17,6 +16,8 @@ import {
   VariantsItem,
   VariantsList,
 } from "~/modules/Constructor/components/lib";
+import { Textarea } from "~/modules/Common/components/FormTags/lib";
+import { Variant } from "~/modules/Constructor/types";
 
 const initialState = {
   variantsCount: 3,

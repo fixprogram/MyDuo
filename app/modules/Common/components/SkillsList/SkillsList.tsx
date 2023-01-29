@@ -1,13 +1,13 @@
 import { nanoid } from "nanoid";
 import Footer from "~/modules/Common/components/Footer";
-import LessonItem from "./LessonItem";
+import SkillsItem from "./components/SkillsItem";
 import {
   LessonsBlock,
   SkillsLineBlock,
   SkillsListContainer,
   SkillsListInner,
 } from "./lib";
-import PracticeLastAdded from "./PracticeLastAdded";
+import PracticeSkills from "./components/PracticeSkills";
 
 export type SkillsListItemType = {
   id: string;
@@ -31,14 +31,14 @@ export default function SkillsList({
   return (
     <SkillsListContainer>
       <SkillsListInner>
-        {skills.length > 0 && <PracticeLastAdded />}
+        {skills.length > 0 && <PracticeSkills />}
         <SkillsLineBlock>
           {lineNumbers.map((lineNumber) => (
             <LessonsBlock key={nanoid()}>
               {skills.map((dataItem) => {
                 if (dataItem.lineNumber === lineNumber) {
                   return (
-                    <LessonItem
+                    <SkillsItem
                       key={dataItem.id}
                       {...dataItem}
                       editLink={`/${languageTitle}/edit/${dataItem.id}`}

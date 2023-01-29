@@ -1,12 +1,13 @@
 import { Skill } from "@prisma/client";
 import {
-  LessonsBlock,
   LessonsContainer,
   LessonBlock,
   LessonProgress,
   LessonProgressInner,
-  LessonTitle,
-} from "~/components/lib";
+} from "~/modules/Common/components/SkillsList/components/SkillsItem/lib";
+import { LessonsBlock } from "~/modules/Common/components/SkillsList/lib";
+import { LessonTitle } from "~/modules/Skill/components/lib";
+
 import { useConstructor } from "..";
 import { SkillPositionContainer } from "./lib";
 

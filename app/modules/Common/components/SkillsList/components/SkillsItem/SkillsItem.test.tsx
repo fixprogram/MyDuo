@@ -1,4 +1,4 @@
-import LessonItem from "./LessonItem";
+import SkillsItem from "./SkillsItem";
 import { screen, render } from "@testing-library/react";
 
 const defaultProps = {
@@ -12,7 +12,7 @@ const defaultProps = {
 
 describe("Lesson item", () => {
   test("It renders correctly", () => {
-    render(<LessonItem {...defaultProps} />);
+    render(<SkillsItem {...defaultProps} />);
 
     expect(screen.getByText(/test skill/i)).toBeInTheDocument();
   });

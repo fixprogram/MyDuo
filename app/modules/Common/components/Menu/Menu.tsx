@@ -1,18 +1,18 @@
 import {
   HorizontalList,
   ListItem,
-  Logout,
+  LogoutButton,
   MenuContainer,
   MenuInner,
   MenuStreak,
 } from "./lib";
 import streak from "~/styles/streak.svg";
 import streakActive from "~/styles/streak-active.svg";
-import Projects from "./Projects";
 import { Language, User } from "@prisma/client";
-import Navigation from "./Navigation";
+import Navigation from "./components/Navigation";
 import useMediaQuery from "~/hooks/useMediaQuery";
 import { PHONE_MEDIA_MAX } from "~/constants";
+import Languages from "./components/Languages";
 
 type UserData = Pick<User, "streak" | "wasToday">;
 
@@ -33,7 +33,7 @@ const Menu = ({
         {matches ? null : <Navigation />}
         <HorizontalList>
           <ListItem>
-            <Projects languages={languages} onOverlay={onOverlay} />
+            <Languages languages={languages} onOverlay={onOverlay} />
           </ListItem>
           <ListItem>
             <img
@@ -49,7 +49,7 @@ const Menu = ({
           </ListItem>
           <ListItem>
             <form action="/logout" method="post">
-              <Logout type="submit">Logout</Logout>
+              <LogoutButton type="submit">Logout</LogoutButton>
             </form>
           </ListItem>
         </HorizontalList>

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Textarea } from "~/components/lib";
+import { Textarea } from "~/modules/Common/components/FormTags/lib";
 
 type WordsItemProps = {
   isActive: boolean;

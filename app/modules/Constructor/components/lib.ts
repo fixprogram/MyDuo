@@ -6,6 +6,10 @@ type ScreenContainerProps = {
   target: string;
 };
 
+type KeywordProps = {
+  active: boolean;
+};
+
 const ConstructorFormInner = styled("section")`
   max-width: 70%;
   display: flex;
@@ -150,6 +154,12 @@ const SettingsItemTitle = styled("b")`
   margin-bottom: 3px;
 `;
 
+const KeywordTemplate = styled("span")<KeywordProps>`
+  margin-right: 10px;
+  cursor: pointer;
+  border: ${(props) => props.active && "1px solid blue"};
+`;
+
 export {
   LessonTitleInput,
   ConstructorMenu,
@@ -164,4 +174,5 @@ export {
   SkillPositionContainer,
   SettingsContainer,
   SettingsItemTitle,
+  KeywordTemplate,
 };

@@ -1,8 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
-import { Textarea } from "~/components/lib";
 import { useFocus } from "~/hooks/useFocus";
 import { useConstructor } from "~/modules/Constructor";
-import { LessonTitle } from "~/modules/Skill/components/lib";
 import { cleanWordFromSigns, isItemInArray } from "~/utils";
 import {
   InsertWordsInput,
@@ -13,6 +11,7 @@ import {
 import Settings from "./Settings";
 import ChooseMissingWords from "./ChooseMissingWords";
 import { Step } from "../../types";
+import { Textarea } from "~/modules/Common/components/FormTags/lib";
 
 export default function InsertWords() {
   const { steps, activeStepId } = useConstructor();
@@ -20,7 +19,6 @@ export default function InsertWords() {
   const { answer, id, stepType, options } = activeStep;
 
   const defaultIndexes: number[] = answer ? JSON.parse(answer) : [];
-  // const defaultIndexes = answer ? answer[0]?.split(",") : [];
   const { setStepReady, setAnswer, setStepOptions } = useConstructor();
   const [isEditingText, setEditingText] = useState(true);
   const [isChooseVariants, setChooseVariants] = useState(false);

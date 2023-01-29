@@ -5,8 +5,8 @@ import { getSkillByTitle, updateCurrentChapter } from "~/models/skill.server";
 import { useCatch, useLoaderData, useParams } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { ErrorMessage } from "~/components/lib";
 import { getStepsForPracticingSkill } from "~/models/lesson.server";
+import ErrorMessage from "~/modules/Common/components/ErrorMessage";
 
 export const action = async ({ request, params }: ActionArgs) => {
   const activeLanguage = await getActiveLanguage(request);

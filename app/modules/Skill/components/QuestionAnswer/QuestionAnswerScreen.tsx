@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Textarea } from "~/components/lib";
 import {
   LessonTitle,
   LessonQuestion,
@@ -11,6 +10,7 @@ import {
 } from "../lib";
 import Duo from "~/styles/duo.svg";
 import { useSkill } from "../..";
+import { Textarea } from "~/modules/Common/components/FormTags/lib";
 
 type QuestionAnswerScreenType = {
   userAnswer: string;

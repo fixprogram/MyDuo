@@ -1,6 +1,6 @@
 import {
-  MenuNavLink,
-  NavIcon,
+  NavigationLink,
+  NavigationIcon,
   NavigationList,
   NavigationListItem,
 } from "./lib";
@@ -30,14 +30,17 @@ export default function Navigation() {
       <NavigationList>
         {MENU.map(({ title, icon, activeIcon, link }) => (
           <NavigationListItem key={title}>
-            <MenuNavLink to={`${link}`} className="nav-link">
+            <NavigationLink to={`${link}`} className="nav-link">
               {({ isActive }) => (
                 <>
-                  <NavIcon src={isActive ? activeIcon : icon} alt={title} />
+                  <NavigationIcon
+                    src={isActive ? activeIcon : icon}
+                    alt={title}
+                  />
                   {title}
                 </>
               )}
-            </MenuNavLink>
+            </NavigationLink>
           </NavigationListItem>
         ))}
       </NavigationList>

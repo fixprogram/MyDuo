@@ -4,7 +4,7 @@ import { getActiveLanguage } from "~/models/language.server";
 import WeeklyProgress from "~/modules/Common/components/WeeklyProgress/WeeklyProgress";
 import { getUser } from "~/session.server";
 import { useLoaderData } from "@remix-run/react";
-import SkillsList from "~/components/SkillsList";
+import SkillsList from "~/modules/Common/components/SkillsList";
 import { deleteSkillById, getSkills } from "~/models/skill.server";
 import { deleteStepsFromSkill } from "~/models/lesson.server";
 

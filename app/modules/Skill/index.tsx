@@ -1,5 +1,4 @@
 import { useEffect, useContext, createContext, createRef } from "react";
-import Progress from "~/components/Progress";
 import { useSkillReducer, defaultSkillContextState } from "./reducer";
 import { Results } from "./components/Results";
 import Footer from "./components/Footer";
@@ -9,9 +8,10 @@ import Pairs from "./components/Pairs";
 import QuestionAnswerPractice from "./components/QuestionAnswer";
 import VariantsPractice from "./components/Variants";
 import { PracticeStepType, SkillContextType } from "./types";
-import { Overlay } from "~/components/lib";
 import AreYouSureBlock from "./components/AreYouSureBlock";
 import { useSubmit } from "@remix-run/react";
+import Progress from "./components/Progress";
+import Overlay from "../Common/components/Overlay";
 
 export const SkillContext = createContext<SkillContextType>(
   defaultSkillContextState

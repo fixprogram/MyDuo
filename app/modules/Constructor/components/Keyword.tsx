@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeywordTemplate } from "~/components/lib";
+import { KeywordTemplate } from "./lib";
 
 const Keyword: React.FC<{ onSet: Function; initiallyActive: boolean }> = ({
   onSet,

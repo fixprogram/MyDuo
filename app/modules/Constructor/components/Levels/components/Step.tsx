@@ -1,6 +1,6 @@
 import React, { Fragment, ReactElement } from "react";
-import { Legend } from "~/components/lib";
 import { STEP_TYPES } from "~/constants";
+import { Legend } from "~/modules/Common/components/FormTags/lib";
 import { useConstructor } from "../../..";
 import CloseBtn from "../../CloseBtn";
 import { Step as StepType } from "../types";

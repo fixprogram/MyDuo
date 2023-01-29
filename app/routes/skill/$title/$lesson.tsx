@@ -45,7 +45,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   const title = params.title as string;
-  // const lesson = Number(params.lesson as string);
 
   const steps = await getStepsForLesson(title, activeLanguage.id);
 
