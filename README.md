@@ -1,14 +1,10 @@
-
 # My Duo
 
-An open-source clone of language learning app [Duolingo](https://www.duolingo.com/) with additional functionality of adding custom lessons. 
-
-
-
+An open-source clone of language learning app [Duolingo](https://www.duolingo.com/) with additional functionality of adding custom lessons.
 
 ## Adding a skill
 
-Your first lesson you can add by going to Constructor page. Everything you need to do there is to: 
+Your first lesson you can add by going to Constructor page. Everything you need to do there is to:
 
     1. Set skill title
 
@@ -18,12 +14,35 @@ Your first lesson you can add by going to Constructor page. Everything you need 
 
     4. Click the button Save (if it's not clickable, then you didn't feel all the fields)
 
+## Tech Stack
 
+### Frontend
 
-## Technologies
-
-- Remix.run
-- React
 - TypeScript
-- Styled components
+- React
+- React Query
+- Vite
 
+### Backend
+
+- TypeScript
+- Fastify
+
+#### Testing
+
+- Vitest
+- React Testing Library
+- Playwright
+
+### DB
+
+- PostgreSQL (users-projects-lessons)
+- MongoDB (steps)
+
+### Other
+
+- Github Actions
+- Docker
+- Zod (possibly)
+- Sentry
+- (something for logging)
