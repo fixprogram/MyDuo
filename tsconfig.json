@@ -1,20 +1,16 @@
 {
-  "include": [
-    "remix.env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "app/components/Login/Login.test.js",
-    "jest.config.cjs"
-  ],
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "jest.config.cjs"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "isolatedModules": true,
     "esModuleInterop": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "ES2019",
-    "types": ["vitest/globals", "jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom"],
     "strict": true,
     "baseUrl": ".",
     "paths": {

@@ -7,5 +7,4 @@ module.exports = {
   publicPath: "/build/",
   serverBuildDirectory: "api/_build",
   ignoredRouteFiles: [".*"],
-  serverDependenciesToBundle: [/^d3-scale-chromatic.*/],
 };
